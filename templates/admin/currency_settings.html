@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dollar kursi - Admin Panel{% endblock %}
+{% block page_title %}Dollar kursi{% endblock %}
+{% block page_subtitle %}1 USD ning so'mdagi qiymatini boshqarish{% endblock %}
+
+{% block content %}
+<div class="max-w-xl">
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-dollar-sign text-white"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-[#232339]">Dollar kursi</h3>
+                    <p class="text-sm text-gray-500">Saytdagi barcha narxlar shu kurs bo'yicha so'mda ko'rinadi</p>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" class="p-6 space-y-5">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">1 USD = ... so'm</label>
+                <div class="relative">
+                    <input 
+                        type="number" step="1" min="1" name="value" 
+                        value="{{ '%.0f' % rate.value if rate and rate.value else '' }}"
+                        required
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 pr-16 text-lg font-semibold text-[#232339] focus:ring-2 focus:ring-[#232339] outline-none transition"
+                        placeholder="Masalan: 12500">
+                    <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 text-sm">
+                        so'm
+                    </span>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Barcha mahsulot narxlari USD dan so'mga shu kurs bo'yicha o'giriladi
+                </p>
+            </div>
+
+            <div class="flex items-center justify-between bg-[#F5F5F5] border border-gray-200 rounded-xl px-4 py-3 text-sm">
+                <div class="flex flex-col">
+                    <span class="text-gray-500">Joriy kurs:</span>
+                    <span class="font-semibold text-[#232339]">
+                        1 USD = {{ "{:,.0f}".format(rate.value) }} so'm
+                    </span>
+                </div>
+                <div class="text-xs text-gray-400 flex flex-col items-end">
+                    <span>Oxirgi yangilanish:</span>
+                    <span>{{ rate.updated_at.strftime('%d.%m.%Y %H:%M') if rate.updated_at else '-' }}</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <a href="/admin" class="px-5 py-3 rounded-xl border border-gray-300 text-gray-700 text-sm font-medium hover:bg-[#F5F5F5] transition">
+                    Bekor qilish
+                </a>
+                <button type="submit" class="px-6 py-3 rounded-xl bg-[#232339] hover:bg-black text-white text-sm font-medium transition flex items-center gap-2">
+                    <i class="fas fa-save"></i>
+                    Saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

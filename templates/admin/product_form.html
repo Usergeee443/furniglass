@@ -1,0 +1,372 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if product %}Mahsulotni tahrirlash{% else %}Yangi mahsulot{% endif %} - Admin Panel{% endblock %}
+{% block page_title %}{% if product %}Mahsulotni tahrirlash{% else %}Yangi mahsulot{% endif %}{% endblock %}
+{% block page_subtitle %}{% if product %}#{{ product.id }} - {{ product.name_uz }}{% else %}Yangi mahsulot qo'shish{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .loading-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    .loading-overlay.active {
+        display: flex;
+    }
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .main-image-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #F5C242;
+        color: #232339;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 6px;
+        z-index: 10;
+    }
+    .image-item {
+        position: relative;
+        cursor: pointer;
+    }
+    .image-item:hover .set-main-btn {
+        opacity: 1;
+    }
+    .set-main-btn {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="loading-overlay">
+    <div class="bg-white rounded-2xl p-8 flex flex-col items-center gap-4">
+        <div class="loading-spinner"></div>
+        <p class="text-[#232339] font-medium">Mahsulot qo'shilmoqda...</p>
+        <p class="text-sm text-gray-500">Iltimos, kuting</p>
+    </div>
+</div>
+
+<!-- Back Button -->
+<a href="/admin/products" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#232339] mb-6 transition">
+    <i class="fas fa-arrow-left"></i>
+    <span>Mahsulotlarga qaytish</span>
+</a>
+
+<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <form method="POST" enctype="multipart/form-data" id="product-form">
+        <!-- Auto-translate notice -->
+        <div class="p-6 bg-[#F5C242]/10 border-b border-[#F5C242]/30">
+            <div class="flex items-start gap-3">
+                <i class="fas fa-magic text-[#F5C242] mt-0.5"></i>
+                <div>
+                    <p class="font-medium text-[#232339]">Avtomatik tarjima</p>
+                    <p class="text-sm text-gray-600">Faqat o'zbekcha kiriting — ruscha va inglizchaga avtomatik tarjima qilinadi</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:divide-x divide-gray-200">
+            <!-- Left Column -->
+            <div class="p-6 lg:p-8 space-y-5">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-[#232339] rounded-xl flex items-center justify-center">
+                        <i class="fas fa-box text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-[#232339]">Asosiy ma'lumotlar</h3>
+                        <p class="text-sm text-gray-500">Mahsulot haqida</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Mahsulot nomi (O'zbekcha) *</label>
+                    <input type="text" name="name_uz" value="{{ product.name_uz if product else '' }}" required 
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                        placeholder="Masalan: Shkaf MODERN">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-[#232339] mb-2">Kategoriya *</label>
+                        <select name="category_id" required class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                            <option value="">Tanlang</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if product and product.category_id == cat.id %}selected{% endif %}>
+                                    {{ cat.name_uz }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-[#232339] mb-2">Narx (USD) *</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                            <input type="number" step="0.01" name="price" value="{{ product.price if product else '' }}" required 
+                                class="w-full bg-[#F5F5F5] border-0 rounded-xl pl-8 pr-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                                placeholder="0">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1.5">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Saytda avtomatik so'mga o'giriladi
+                        </p>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">O'lcham</label>
+                    <input type="text" name="size" value="{{ product.size if product else '' }}" 
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                        placeholder="Masalan: 200x80x45 sm">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Material (O'zbekcha)</label>
+                    <input type="text" name="material_uz" value="{{ product.material_uz if product else '' }}" 
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                        placeholder="Masalan: MDF, ЛДСП">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Kafolat (O'zbekcha)</label>
+                    <input type="text" name="warranty_uz" value="{{ product.warranty_uz if product else '' }}" 
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                        placeholder="Masalan: 2 yil">
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="p-6 lg:p-8 space-y-5 bg-[#FAF9F6]">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-[#232339] rounded-xl flex items-center justify-center">
+                        <i class="fas fa-image text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-[#232339]">Qo'shimcha</h3>
+                        <p class="text-sm text-gray-500">Tavsif va rasmlar</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Tavsif (O'zbekcha)</label>
+                    <textarea name="description_uz" rows="4" 
+                        class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition resize-none" 
+                        placeholder="Mahsulot tavsifini kiriting...">{{ product.description_uz if product else '' }}</textarea>
+                </div>
+                
+                <!-- Best Seller Toggle -->
+                <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-star text-[#F5C242]"></i>
+                        <div>
+                            <p class="font-medium text-[#232339]">Best Seller</p>
+                            <p class="text-sm text-gray-500">Bosh sahifada ko'rsatish</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="is_bestseller" {% if product and product.is_bestseller %}checked{% endif %} class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#F5C242]"></div>
+                    </label>
+                </div>
+                
+                <!-- Images Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">
+                        Rasmlar 
+                        <span class="text-xs text-gray-500">(5 tagacha, birinchi rasm asosiy bo'ladi)</span>
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-[#232339] transition cursor-pointer bg-white" onclick="document.getElementById('images-input').click()">
+                        <input type="file" name="images" id="images-input" multiple accept="image/*" class="hidden" onchange="handleImageUpload(this)" max="5">
+                        <div id="upload-placeholder">
+                            <div class="w-12 h-12 bg-[#F5F5F5] rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-cloud-upload-alt text-[#232339] text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">Rasmlarni yuklash uchun bosing</p>
+                            <p class="text-xs text-gray-400">PNG, JPG, WEBP (maksimal 5 ta rasm)</p>
+                        </div>
+                        <div id="images-preview" class="hidden grid grid-cols-5 gap-2 mt-4">
+                        </div>
+                        <input type="hidden" name="new_main_image_index" id="new-main-image-index" value="0">
+                    </div>
+                    
+                    {% if product and product.images %}
+                        {% set images = product.images|from_json %}
+                        {% if images %}
+                        <div class="mt-4">
+                            <p class="text-sm text-gray-500 mb-2">Mavjud rasmlar (birinchi rasm asosiy):</p>
+                            <div class="grid grid-cols-5 gap-3" id="existing-images">
+                                {% for image in images %}
+                                <div class="image-item aspect-square rounded-xl overflow-hidden border-2 {% if loop.index == 1 %}border-[#F5C242]{% else %}border-gray-200{% endif %} relative group">
+                                    <img src="/uploads/{{ image }}" alt="Product image" class="w-full h-full object-cover">
+                                    {% if loop.index == 1 %}
+                                    <div class="main-image-badge">ASOSIY</div>
+                                    {% endif %}
+                                    <div class="set-main-btn" onclick="setAsMain({{ loop.index0 }}, 'existing')">
+                                        <span class="bg-[#F5C242] text-[#232339] px-3 py-1.5 rounded-lg text-xs font-bold">Asosiy qilish</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="main_image_index" id="main-image-index" value="0">
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="px-6 lg:px-8 py-5 bg-[#F5F5F5] border-t border-gray-200 flex flex-col sm:flex-row gap-3 sm:justify-end">
+            <a href="/admin/products" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-white transition text-center">
+                Bekor qilish
+            </a>
+            <button type="submit" id="submit-btn" class="px-8 py-3 rounded-xl bg-[#232339] hover:bg-black text-white font-medium transition flex items-center justify-center gap-2">
+                <i class="fas fa-save"></i> 
+                {% if product %}Yangilash{% else %}Qo'shish{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+let selectedImages = [];
+let mainImageIndex = 0;
+
+function showLoading() {
+    document.getElementById('loading-overlay').classList.add('active');
+    document.getElementById('submit-btn').disabled = true;
+}
+
+function handleImageUpload(input) {
+    const files = Array.from(input.files);
+    
+    // 5 tagacha cheklash
+    if (files.length > 5) {
+        alert('Maksimal 5 ta rasm yuklash mumkin!');
+        input.value = '';
+        return;
+    }
+    
+    selectedImages = files;
+    const container = document.getElementById('images-preview');
+    const placeholder = document.getElementById('upload-placeholder');
+    
+    if (files.length > 0) {
+        container.innerHTML = '';
+        container.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        
+        files.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = `image-item aspect-square rounded-lg overflow-hidden border-2 ${index === 0 ? 'border-[#F5C242]' : 'border-gray-200'} relative group`;
+                div.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-full object-cover">
+                    ${index === 0 ? '<div class="main-image-badge">ASOSIY</div>' : ''}
+                    <div class="set-main-btn" onclick="setAsMain(${index}, 'new')">
+                        <span class="bg-[#F5C242] text-[#232339] px-3 py-1.5 rounded-lg text-xs font-bold">Asosiy qilish</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+            reader.readAsDataURL(file);
+        });
+        
+        mainImageIndex = 0;
+        document.getElementById('new-main-image-index').value = 0;
+    } else {
+        container.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+    }
+}
+
+function setAsMain(index, type) {
+    if (type === 'new') {
+        mainImageIndex = index;
+        // Hidden inputga saqlash
+        document.getElementById('new-main-image-index').value = index;
+        
+        // Yangi rasmlar uchun
+        const container = document.getElementById('images-preview');
+        const items = container.querySelectorAll('.image-item');
+        items.forEach((item, i) => {
+            const border = item.querySelector('img').parentElement;
+            if (i === index) {
+                border.classList.remove('border-gray-200');
+                border.classList.add('border-[#F5C242]');
+                if (!border.querySelector('.main-image-badge')) {
+                    const badge = document.createElement('div');
+                    badge.className = 'main-image-badge';
+                    badge.textContent = 'ASOSIY';
+                    border.appendChild(badge);
+                }
+            } else {
+                border.classList.remove('border-[#F5C242]');
+                border.classList.add('border-gray-200');
+                const badge = border.querySelector('.main-image-badge');
+                if (badge) badge.remove();
+            }
+        });
+    } else {
+        // Mavjud rasmlar uchun
+        const container = document.getElementById('existing-images');
+        const items = container.querySelectorAll('.image-item');
+        items.forEach((item, i) => {
+            if (i === index) {
+                item.classList.remove('border-gray-200');
+                item.classList.add('border-[#F5C242]');
+                if (!item.querySelector('.main-image-badge')) {
+                    const badge = document.createElement('div');
+                    badge.className = 'main-image-badge';
+                    badge.textContent = 'ASOSIY';
+                    item.appendChild(badge);
+                }
+            } else {
+                item.classList.remove('border-[#F5C242]');
+                item.classList.add('border-gray-200');
+                const badge = item.querySelector('.main-image-badge');
+                if (badge) badge.remove();
+            }
+        });
+        
+        // Hidden inputga saqlash
+        const hiddenInput = document.getElementById('main-image-index');
+        if (hiddenInput) {
+            hiddenInput.value = index;
+        }
+    }
+}
+
+// Form submit qilganda loading ko'rsatish
+document.getElementById('product-form')?.addEventListener('submit', function(e) {
+    showLoading();
+});
+</script>
+{% endblock %}

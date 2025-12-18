@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}{{ T.nav.team[lang] }} - Furni Glass{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+    .hero-title { font-family: 'Playfair Display', serif; }
+    .gradient-text {
+        background: linear-gradient(135deg, #232339 0%, #000000 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .team-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .team-card:hover { transform: translateY(-12px); }
+    .team-card:hover .team-overlay { opacity: 1; }
+    .team-overlay { opacity: 0; transition: all 0.3s ease; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-gradient-to-br from-[#FAF9F6] to-[#EDE9E3] py-20 lg:py-28">
+    <div class="container mx-auto px-4 text-center">
+        <div class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-8">
+            <a href="/" class="hover:text-[#232339]">{{ T.nav.home[lang] }}</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span class="text-[#232339]">{{ T.nav.team[lang] }}</span>
+        </div>
+        <div class="inline-flex items-center gap-2 bg-[#232339]/10 text-[#232339] px-5 py-2.5 rounded-full text-sm font-medium mb-8">
+            <i class="fas fa-users"></i>
+            {{ T.team.professional[lang] }}
+        </div>
+        <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-8">
+            {% if lang == 'ru' %}Наша<br><span class="gradient-text">Команда</span>{% elif lang == 'en' %}Our<br><span class="gradient-text">Team</span>{% else %}Bizning<br><span class="gradient-text">Jamoamiz</span>{% endif %}
+        </h1>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+            {% if lang == 'ru' %}50+ профессиональных специалистов - дизайнеры, мастера и менеджеры. Вместе воплотим ваши мечты.{% elif lang == 'en' %}50+ professional specialists - designers, craftsmen and managers. Together we make your dreams come true.{% else %}50+ dan ortiq professional mutaxassis - dizaynerlar, ustalar va menejerlar. Biz birgalikda sizning orzularingizni amalga oshiramiz.{% endif %}
+        </p>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="py-12 bg-[#232339]">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <p class="text-4xl font-bold text-white mb-1">50+</p>
+                <p class="text-white/70">Xodimlar</p>
+            </div>
+            <div class="text-center">
+                <p class="text-4xl font-bold text-white mb-1">15</p>
+                <p class="text-white/70">Yillik tajriba</p>
+            </div>
+            <div class="text-center">
+                <p class="text-4xl font-bold text-white mb-1">5</p>
+                <p class="text-white/70">Bo'limlar</p>
+            </div>
+            <div class="text-center">
+                <p class="text-4xl font-bold text-white mb-1">24/7</p>
+                <p class="text-white/70">Qo'llab-quvvatlash</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Leadership -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-4">Rahbariyat</h2>
+            <p class="text-gray-600">Kompaniya asoschilari va rahbarlari</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- CEO -->
+            <div class="team-card bg-[#FAF9F6] rounded-3xl overflow-hidden">
+                <div class="relative aspect-[4/5]">
+                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        <i class="fas fa-user text-6xl text-white/50"></i>
+                    </div>
+                    <div class="team-overlay absolute inset-0 bg-gradient-to-t from-[#232339] to-transparent flex items-end p-6">
+                        <div class="flex gap-3">
+                            <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-[#232339] transition">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-[#232339] transition">
+                                <i class="fab fa-telegram-plane"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#232339] mb-1">Abdullayev Karim</h3>
+                    <p class="text-[#232339] font-medium mb-3">Bosh direktor (CEO)</p>
+                    <p class="text-gray-500 text-sm">Kompaniya asoschisi. 20 yillik mebel sanoatidagi tajriba.</p>
+                </div>
+            </div>
+            
+            <!-- CTO -->
+            <div class="team-card bg-[#FAF9F6] rounded-3xl overflow-hidden">
+                <div class="relative aspect-[4/5]">
+                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        <i class="fas fa-user text-6xl text-white/50"></i>
+                    </div>
+                    <div class="team-overlay absolute inset-0 bg-gradient-to-t from-[#232339] to-transparent flex items-end p-6">
+                        <div class="flex gap-3">
+                            <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-[#232339] transition">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#232339] mb-1">Xolmatov Sardor</h3>
+                    <p class="text-[#232339] font-medium mb-3">Ishlab chiqarish direktori</p>
+                    <p class="text-gray-500 text-sm">Hammuassis va ishlab chiqarish bo'limi rahbari. 15 yillik tajriba.</p>
+                </div>
+            </div>
+            
+            <!-- Design Director -->
+            <div class="team-card bg-[#FAF9F6] rounded-3xl overflow-hidden">
+                <div class="relative aspect-[4/5]">
+                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                        <i class="fas fa-user text-6xl text-white/50"></i>
+                    </div>
+                    <div class="team-overlay absolute inset-0 bg-gradient-to-t from-[#232339] to-transparent flex items-end p-6">
+                        <div class="flex gap-3">
+                            <a href="#" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-[#232339] transition">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-[#232339] mb-1">Nazarova Dilnoza</h3>
+                    <p class="text-[#232339] font-medium mb-3">Bosh dizayner</p>
+                    <p class="text-gray-500 text-sm">Dizayn bo'limi rahbari. Italiyada o'qigan, 10 yillik tajriba.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Departments -->
+<section class="py-20 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-4">Bo'limlarimiz</h2>
+            <p class="text-gray-600">Professional bo'linmalar va mutaxassislar</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Dizayn -->
+            <div class="bg-white rounded-3xl p-8 text-center">
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <i class="fas fa-drafting-compass text-white text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-[#232339] mb-2">Dizayn bo'limi</h3>
+                <p class="text-3xl font-bold text-[#232339] mb-2">8</p>
+                <p class="text-gray-500 text-sm">professional dizayner</p>
+            </div>
+            
+            <!-- Ishlab chiqarish -->
+            <div class="bg-white rounded-3xl p-8 text-center">
+                <div class="w-20 h-20 bg-gradient-to-br from-#232339 to-#232339 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <i class="fas fa-hammer text-white text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-[#232339] mb-2">Ishlab chiqarish</h3>
+                <p class="text-3xl font-bold text-[#232339] mb-2">25</p>
+                <p class="text-gray-500 text-sm">tajribali usta</p>
+            </div>
+            
+            <!-- O'rnatish -->
+            <div class="bg-white rounded-3xl p-8 text-center">
+                <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <i class="fas fa-tools text-white text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-[#232339] mb-2">O'rnatish jamoasi</h3>
+                <p class="text-3xl font-bold text-[#232339] mb-2">10</p>
+                <p class="text-gray-500 text-sm">o'rnatuvchi usta</p>
+            </div>
+            
+            <!-- Xizmat ko'rsatish -->
+            <div class="bg-white rounded-3xl p-8 text-center">
+                <div class="w-20 h-20 bg-gradient-to-br from-[#F5C242] to-[#F5C242] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <i class="fas fa-headset text-white text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-[#232339] mb-2">Mijozlar xizmati</h3>
+                <p class="text-3xl font-bold text-[#232339] mb-2">7</p>
+                <p class="text-gray-500 text-sm">menejer va operator</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-4">Jamoa Qadriyatlari</h2>
+                <p class="text-gray-600">Biz rioya qiladigan tamoyillar</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex items-start gap-5 p-6 bg-[#FAF9F6] rounded-2xl">
+                    <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-handshake text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#232339] mb-2">Jamoaviy ish</h4>
+                        <p class="text-gray-500 text-sm">Har bir loyiha jamoa bo'lib ishlashni talab qiladi. Biz birgalikda eng yaxshi natijaga erishamiz.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-5 p-6 bg-[#FAF9F6] rounded-2xl">
+                    <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-gem text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#232339] mb-2">Sifatga sadoqat</h4>
+                        <p class="text-gray-500 text-sm">Har bir mahsulotda eng yuqori sifat standartlarini ta'minlaymiz. Bu bizning sha'nimiz.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-5 p-6 bg-[#FAF9F6] rounded-2xl">
+                    <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-lightbulb text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#232339] mb-2">Innovatsiya</h4>
+                        <p class="text-gray-500 text-sm">Yangi texnologiyalar va dizayn trendlarini doimo kuzatamiz va qo'llaymiz.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start gap-5 p-6 bg-[#FAF9F6] rounded-2xl">
+                    <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-heart text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#232339] mb-2">Mijoz mamnuniyati</h4>
+                        <p class="text-gray-500 text-sm">Mijoz mamnuniyati - bizning asosiy maqsadimiz. Har bir mijoz bizning oilamiz.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Join Us CTA -->
+<section class="py-20 bg-gradient-to-br from-[#232339] to-[#000000]">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="hero-title text-3xl md:text-4xl font-bold text-white mb-6">
+            Jamoamizga Qo'shiling
+        </h2>
+        <p class="text-white/70 text-lg mb-10 max-w-xl mx-auto">
+            Biz doimo iste'dodli mutaxassislarni izlaymiz. Agar siz mebel sanoatida ishlashni xohlasangiz, biz bilan bog'laning.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="mailto:hr@furniglass.uz" class="inline-flex items-center justify-center gap-2 bg-white text-[#232339] px-8 py-4 rounded-full font-medium hover:shadow-xl transition">
+                <i class="fas fa-envelope"></i>
+                hr@furniglass.uz
+            </a>
+            <a href="/contact" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-medium hover:bg-white hover:text-[#232339] transition">
+                <i class="fas fa-phone"></i>
+                Bog'lanish
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,83 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Kategoriyalar - Admin Panel{% endblock %}
+{% block page_title %}Kategoriyalar{% endblock %}
+{% block page_subtitle %}Mahsulot kategoriyalarini boshqarish{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-[#232339] rounded-xl flex items-center justify-center">
+            <i class="fas fa-folder text-white"></i>
+        </div>
+        <div>
+            <h2 class="text-lg font-bold text-[#232339]">Kategoriyalar ro'yxati</h2>
+            <p class="text-sm text-gray-500">Jami: {{ categories|length }} ta</p>
+        </div>
+    </div>
+    <a href="/admin/category/add" class="inline-flex items-center justify-center gap-2 bg-[#232339] hover:bg-black text-white px-5 py-2.5 rounded-xl font-medium transition">
+        <i class="fas fa-plus"></i>
+        <span>Yangi kategoriya</span>
+    </a>
+</div>
+
+{% if categories %}
+<!-- Categories Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    {% for category in categories %}
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden group hover:shadow-lg hover:border-[#232339]/30 transition-all duration-300">
+        <!-- Image -->
+        <div class="aspect-square bg-[#F5F5F5] relative overflow-hidden">
+            {% if category.image %}
+                <img src="/uploads/{{ category.image }}" alt="{{ category.name_uz }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                    <i class="fas fa-folder text-6xl text-gray-300"></i>
+                </div>
+            {% endif %}
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                <a href="/products?category={{ category.id }}" target="_blank" class="text-white text-sm hover:underline flex items-center gap-1">
+                    <i class="fas fa-external-link-alt"></i> Saytda ko'rish
+                </a>
+            </div>
+        </div>
+        
+        <!-- Info -->
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-[#232339] mb-1">{{ category.name_uz }}</h3>
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-500">
+                    <i class="fas fa-box text-[#F5C242] mr-1"></i>
+                    {{ category.products|length }} ta mahsulot
+                </span>
+                <div class="flex items-center gap-1">
+                    <a href="/admin/category/{{ category.id }}/edit" class="p-2 hover:bg-[#F5F5F5] text-[#232339] rounded-lg transition" title="Tahrirlash">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="/admin/category/{{ category.id }}/delete" method="POST" class="inline" onsubmit="return confirm('Rostdan ham o\'chirmoqchimisiz?');">
+                        <button type="submit" class="p-2 hover:bg-red-50 text-red-500 rounded-lg transition" title="O'chirish">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<!-- Empty State -->
+<div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+    <div class="w-20 h-20 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-folder text-gray-400 text-3xl"></i>
+    </div>
+    <h3 class="text-lg font-semibold text-[#232339] mb-2">Kategoriyalar yo'q</h3>
+    <p class="text-gray-500 mb-6">Birinchi kategoriyangizni qo'shishdan boshlang</p>
+    <a href="/admin/category/add" class="inline-flex items-center gap-2 bg-[#232339] hover:bg-black text-white px-6 py-3 rounded-xl font-medium transition">
+        <i class="fas fa-plus"></i> Kategoriya qo'shish
+    </a>
+</div>
+{% endif %}
+{% endblock %}

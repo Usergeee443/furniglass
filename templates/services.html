@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+
+{% block title %}{{ T.nav.services[lang] }} - Furni Glass{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+    .hero-title { font-family: 'Playfair Display', serif; }
+    .gradient-text {
+        background: linear-gradient(135deg, #232339 0%, #000000 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .service-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .service-card:hover { transform: translateY(-12px); }
+    .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); }
+    .service-icon { transition: all 0.3s ease; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-gradient-to-br from-[#FAF9F6] to-[#EDE9E3] py-20 lg:py-28">
+    <div class="container mx-auto px-4 text-center">
+        <div class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-8">
+            <a href="/" class="hover:text-[#232339]">{{ T.nav.home[lang] }}</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span class="text-[#232339]">{{ T.nav.services[lang] }}</span>
+        </div>
+        <div class="inline-flex items-center gap-2 bg-[#232339]/10 text-[#232339] px-5 py-2.5 rounded-full text-sm font-medium mb-8">
+            <i class="fas fa-concierge-bell"></i>
+            {% if lang == 'ru' %}Профессиональные услуги{% elif lang == 'en' %}Professional Services{% else %}Professional xizmatlar{% endif %}
+        </div>
+        <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-8">
+            {% if lang == 'ru' %}
+            Наши<br><span class="gradient-text">Услуги</span>
+            {% elif lang == 'en' %}
+            Our<br><span class="gradient-text">Services</span>
+            {% else %}
+            Bizning<br><span class="gradient-text">Xizmatlarimiz</span>
+            {% endif %}
+        </h1>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+            {{ T.services.subtitle[lang] }}
+        </p>
+    </div>
+</section>
+
+<!-- Main Services -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- 3D Dizayn -->
+            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
+                <div class="service-icon w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-blue-500/30">
+                    <i class="fas fa-drafting-compass text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[#232339] mb-4">3D Dizayn Xizmati</h3>
+                <p class="text-gray-600 mb-6">
+                    Professional dizaynerlarimiz sizning uyingiz uchun fotorealistik 3D loyiha tayyorlaydi. 
+                    Har bir burchakni oldindan ko'rasiz.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        3D vizualizatsiya
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Cheksiz tahrirlash
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Material va rang tanlash
+                    </li>
+                </ul>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                    <span class="text-2xl font-bold text-[#232339]">BEPUL</span>
+                    <a href="/order" class="text-[#232339] font-medium hover:underline">Buyurtma →</a>
+                </div>
+            </div>
+            
+            <!-- O'lchov xizmati -->
+            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
+                <div class="service-icon w-20 h-20 bg-gradient-to-br from-#232339 to-#232339 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-#232339/30">
+                    <i class="fas fa-ruler-combined text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[#232339] mb-4">O'lchov Xizmati</h3>
+                <p class="text-gray-600 mb-6">
+                    Mutaxassisimiz uyingizga kelib, lazer o'lchagich yordamida millimetrgacha aniq o'lchov oladi.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Uyga chiqish
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Lazer o'lchov
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Texnik maslahat
+                    </li>
+                </ul>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                    <span class="text-2xl font-bold text-[#232339]">BEPUL</span>
+                    <a href="/contact" class="text-[#232339] font-medium hover:underline">Bog'lanish →</a>
+                </div>
+            </div>
+            
+            <!-- Ishlab chiqarish -->
+            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
+                <div class="service-icon w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-purple-500/30">
+                    <i class="fas fa-industry text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[#232339] mb-4">Ishlab Chiqarish</h3>
+                <p class="text-gray-600 mb-6">
+                    5000 m² zamonaviy fabrikamizda CNC dastgohlarida yuqori aniqlikda ishlab chiqaramiz.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        CNC texnologiyasi
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Import materiallar
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        7-21 kun muddat
+                    </li>
+                </ul>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                    <span class="text-lg text-gray-500">Narx: loyihaga bog'liq</span>
+                    <a href="/products" class="text-[#232339] font-medium hover:underline">Ko'rish →</a>
+                </div>
+            </div>
+            
+            <!-- Yetkazish -->
+            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
+                <div class="service-icon w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-amber-500/30">
+                    <i class="fas fa-truck text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[#232339] mb-4">Yetkazib Berish</h3>
+                <p class="text-gray-600 mb-6">
+                    O'z transportimiz orqali O'zbekiston bo'ylab xavfsiz qadoqlash bilan yetkazamiz.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Toshkent - BEPUL
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Viloyatlarga yetkazish
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Xavfsiz qadoqlash
+                    </li>
+                </ul>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                    <span class="text-2xl font-bold text-[#232339]">BEPUL*</span>
+                    <span class="text-sm text-gray-400">*Toshkent bo'ylab</span>
+                </div>
+            </div>
+            
+            <!-- O'rnatish -->
+            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
+                <div class="service-icon w-20 h-20 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-rose-500/30">
+                    <i class="fas fa-tools text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[#232339] mb-4">O'rnatish Xizmati</h3>
+                <p class="text-gray-600 mb-6">
+                    Tajribali ustalarimiz mebelni professional tarzda o'rnatib, sozlab berishadi.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Professional o'rnatish
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Chiqindilarni olib ketish
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Sozlash va tekshirish
+                    </li>
+                </ul>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                    <span class="text-lg text-gray-500">Ko'pincha bepul</span>
+                    <a href="/contact" class="text-[#232339] font-medium hover:underline">So'rash →</a>
+                </div>
+            </div>
+            
+            <!-- Kafolat -->
+            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
+                <div class="service-icon w-20 h-20 bg-gradient-to-br from-[#232339] to-[#000000] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-[#232339]/30">
+                    <i class="fas fa-shield-alt text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[#232339] mb-4">Kafolat Xizmati</h3>
+                <p class="text-gray-600 mb-6">
+                    3 yilgacha kafolat. Muammo bo'lsa bepul ta'mirlaymiz yoki almashtiramiz.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        1-3 yil kafolat
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        Bepul ta'mirlash
+                    </li>
+                    <li class="flex items-center gap-3 text-gray-600">
+                        <i class="fas fa-check text-#232339"></i>
+                        24/7 qo'llab-quvvatlash
+                    </li>
+                </ul>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                    <span class="text-2xl font-bold text-[#232339]">3 YIL</span>
+                    <span class="text-sm text-gray-400">maksimal kafolat</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="py-20 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-6">
+                Biz Bilan Ishlash Jarayoni
+            </h2>
+            <p class="text-gray-600">Buyurtmadan tayyor mebelgacha - 5 oddiy qadam</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+                <h4 class="font-bold text-[#232339] mb-2">Murojaat</h4>
+                <p class="text-gray-500 text-sm">Telefon, Telegram yoki sayt orqali</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+                <h4 class="font-bold text-[#232339] mb-2">O'lchov</h4>
+                <p class="text-gray-500 text-sm">Bepul uyga chiqish</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+                <h4 class="font-bold text-[#232339] mb-2">Dizayn</h4>
+                <p class="text-gray-500 text-sm">3D loyiha tayyorlash</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
+                <h4 class="font-bold text-[#232339] mb-2">Ishlab chiqarish</h4>
+                <p class="text-gray-500 text-sm">7-21 kun</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-amber-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4 class="font-bold text-[#232339] mb-2">Yetkazish</h4>
+                <p class="text-gray-500 text-sm">O'rnatish bilan</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Table -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center mb-16">
+            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-6">
+                Xizmat Narxlari
+            </h2>
+            <p class="text-gray-600">Shaffof va adolatli narxlar</p>
+        </div>
+        
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-[#FAF9F6] rounded-3xl overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-[#232339] text-white">
+                        <tr>
+                            <th class="text-left py-5 px-6">Xizmat turi</th>
+                            <th class="text-center py-5 px-6">Narx</th>
+                            <th class="text-center py-5 px-6 hidden md:table-cell">Muddat</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="py-5 px-6 font-medium">3D Dizayn loyihasi</td>
+                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-3 kun</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="py-5 px-6 font-medium">O'lchov xizmati</td>
+                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1 kun</td>
+                        </tr>
+                        <tr>
+                            <td class="py-5 px-6 font-medium">Yetkazib berish (Toshkent)</td>
+                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-2 kun</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="py-5 px-6 font-medium">Yetkazib berish (Viloyatlar)</td>
+                            <td class="py-5 px-6 text-center text-[#232339] font-bold">200,000 {{ T.common.sum[lang] }}dan</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">2-5 kun</td>
+                        </tr>
+                        <tr>
+                            <td class="py-5 px-6 font-medium">O'rnatish xizmati</td>
+                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL*</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1 kun</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="py-5 px-6 font-medium">Kafolat xizmati</td>
+                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-3 yil</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-center text-gray-400 text-sm mt-4">* Murakkab loyihalar uchun alohida kelishiladi</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 bg-gradient-to-br from-[#232339] to-[#000000]">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="hero-title text-3xl md:text-4xl font-bold text-white mb-6">
+            Xizmatlarimizdan Foydalaning
+        </h2>
+        <p class="text-white/70 text-lg mb-10 max-w-xl mx-auto">
+            Bepul maslahat va 3D dizayn uchun hoziroq bog'laning
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/order" class="inline-flex items-center justify-center gap-2 bg-white text-[#232339] px-8 py-4 rounded-full font-medium hover:shadow-xl transition">
+                <i class="fas fa-paper-plane"></i>
+                Buyurtma Berish
+            </a>
+            <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-medium hover:bg-white hover:text-[#232339] transition">
+                <i class="fas fa-phone"></i>
+                +998 90 123 45 67
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}{{ T.nav.cart[lang] }} - Furni Glass{% endblock %}
+
+{% block extra_css %}
+<style>
+    .quantity-btn {
+        transition: all 0.2s ease;
+    }
+    .quantity-btn:hover {
+        background: #232339;
+        color: white;
+    }
+    .cart-item {
+        transition: all 0.3s ease;
+    }
+    .cart-item:hover {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="bg-[#F5F5F7] min-h-screen py-8 lg:py-12">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-[#232339] mb-2">{{ T.nav.cart[lang] }}</h1>
+            <p class="text-gray-500">{{ cart_items|length }} {% if lang == 'ru' %}товаров{% elif lang == 'en' %}products{% else %}ta mahsulot{% endif %}</p>
+        </div>
+        
+        {% if cart_items %}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            <!-- Cart Items -->
+            <div class="lg:col-span-2 space-y-4">
+                {% for item in cart_items %}
+                <div class="cart-item bg-white rounded-2xl p-4 md:p-6 flex gap-4 md:gap-6">
+                    <!-- Product Image -->
+                    <div class="w-24 h-24 md:w-32 md:h-32 bg-[#FAFAFA] rounded-xl overflow-hidden flex-shrink-0">
+                        {% if item.product.images %}
+                            {% set images = item.product.images|from_json %}
+                            {% if images %}
+                                <img src="/uploads/{{ images[0] }}" alt="{{ item.product.get_name(lang) }}" class="w-full h-full object-contain">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <i class="fas fa-image text-gray-300 text-2xl"></i>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-image text-gray-300 text-2xl"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <p class="text-xs text-gray-400 mb-1">{{ item.product.category.get_name(lang) if item.product.category else ('Mebel' if lang == 'uz' else ('Мебель' if lang == 'ru' else 'Furniture')) }}</p>
+                            <h3 class="font-semibold text-[#232339] text-sm md:text-base mb-2">{{ item.product.get_name(lang) }}</h3>
+                            <p class="text-lg md:text-xl font-bold text-[#232339]">
+                                {{ "{:,.0f}".format(item.product.price * usd_rate) }} {{ T.common.sum[lang] }}
+                            </p>
+                        </div>
+                        
+                        <!-- Quantity & Remove -->
+                        <div class="flex items-center justify-between mt-3">
+                            <div class="flex items-center gap-2">
+                                <form action="/cart/update/{{ item.product.id }}" method="POST" class="flex items-center gap-2">
+                                    <button type="submit" name="quantity" value="{{ item.quantity - 1 }}" class="quantity-btn w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <span class="w-8 text-center font-medium text-[#232339]">{{ item.quantity }}</span>
+                                    <button type="submit" name="quantity" value="{{ item.quantity + 1 }}" class="quantity-btn w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <form action="/cart/remove/{{ item.product.id }}" method="POST">
+                                <button type="submit" class="text-red-500 hover:text-red-600 text-sm flex items-center gap-1 transition">
+                                    <i class="fas fa-trash"></i>
+                                    <span class="hidden md:inline">{% if lang == 'ru' %}Удалить{% elif lang == 'en' %}Remove{% else %}O'chirish{% endif %}</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Subtotal (Desktop) -->
+                    <div class="hidden md:flex flex-col items-end justify-center">
+                        <p class="text-xs text-gray-400 mb-1">{% if lang == 'ru' %}Итого:{% elif lang == 'en' %}Total:{% else %}Jami:{% endif %}</p>
+                        <p class="text-xl font-bold text-[#232339]">{{ "{:,.0f}".format(item.subtotal) }} {{ T.common.sum[lang] }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Clear Cart -->
+                <div class="flex justify-end">
+                    <form action="/cart/clear" method="POST">
+                        <button type="submit" class="text-gray-500 hover:text-red-500 text-sm flex items-center gap-2 transition">
+                            <i class="fas fa-trash-alt"></i>
+                            {% if lang == 'ru' %}Очистить корзину{% elif lang == 'en' %}Clear cart{% else %}Savatchani tozalash{% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl p-6 sticky top-24">
+                    <h3 class="text-lg font-semibold text-[#232339] mb-6">{% if lang == 'ru' %}Итого заказа{% elif lang == 'en' %}Order Summary{% else %}Buyurtma xulosasi{% endif %}</h3>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between text-gray-600">
+                            <span>{{ T.nav.products[lang] }} ({{ cart_items|length }})</span>
+                            <span>{{ "{:,.0f}".format(total) }} {{ T.common.sum[lang] }}</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib berish{% endif %}</span>
+                            <span class="text-green-600">{{ T.common.free[lang] }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 pt-4 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-lg font-semibold text-[#232339]">{% if lang == 'ru' %}Итого:{% elif lang == 'en' %}Total:{% else %}Jami:{% endif %}</span>
+                            <span class="text-xl font-bold text-[#232339]">{{ "{:,.0f}".format(total) }} {{ T.common.sum[lang] }}</span>
+                        </div>
+                    </div>
+                    
+                    <a href="/checkout" class="block w-full bg-[#232339] hover:bg-[#000000] text-white text-center py-4 rounded-xl font-medium transition">
+                        {{ T.common.order_now[lang] }}
+                    </a>
+                    
+                    <a href="/products" class="block w-full text-center py-3 text-[#232339] hover:underline text-sm mt-3">
+                        {% if lang == 'ru' %}Продолжить покупки{% elif lang == 'en' %}Continue shopping{% else %}Xarid qilishni davom ettirish{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- Empty Cart -->
+        <div class="bg-white rounded-3xl p-12 md:p-16 text-center max-w-lg mx-auto">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-shopping-bag text-gray-300 text-4xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-[#232339] mb-2">{% if lang == 'ru' %}Ваша корзина пуста{% elif lang == 'en' %}Your cart is empty{% else %}Savatchingiz bo'sh{% endif %}</h3>
+            <p class="text-gray-500 mb-8">{% if lang == 'ru' %}Просмотрите продукцию и добавьте в корзину{% elif lang == 'en' %}Browse products and add to cart{% else %}Mahsulotlarni ko'rib chiqing va savatchaga qo'shing{% endif %}</p>
+            <a href="/products" class="inline-flex items-center gap-2 bg-[#232339] hover:bg-[#000000] text-white px-8 py-4 rounded-full font-medium transition">
+                <i class="fas fa-shopping-bag"></i>
+                {% if lang == 'ru' %}Перейти к покупкам{% elif lang == 'en' %}Start shopping{% else %}Xarid qilish{% endif %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Furni Glass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .login-gradient {
+            background: linear-gradient(135deg, #232339 0%, #1a1a2e 50%, #16213e 100%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .input-field:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+        
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="login-gradient min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <!-- Floating Shapes -->
+    <div class="floating-shape bg-emerald-400 w-64 h-64 -top-20 -left-20" style="animation-delay: 0s;"></div>
+    <div class="floating-shape bg-emerald-400 w-96 h-96 -bottom-32 -right-32" style="animation-delay: 2s;"></div>
+    <div class="floating-shape bg-white w-32 h-32 top-1/4 right-1/4" style="animation-delay: 4s;"></div>
+    
+    <div class="glass-card rounded-3xl shadow-2xl p-8 md:p-10 w-full max-w-md relative z-10">
+        <!-- Logo & Title -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-200">
+                <i class="fas fa-couch text-white text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-[#232339] mb-1">Furni Glass</h1>
+            <p class="text-gray-500 text-sm">Admin paneliga kirish</p>
+        </div>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-6 p-4 rounded-xl flex items-center gap-3 {% if category == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-emerald-50 text-emerald-700 border border-emerald-200{% endif %}">
+                        <i class="fas {% if category == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Login Form -->
+        <form method="POST" class="space-y-5">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Foydalanuvchi nomi</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input type="text" name="username" required 
+                        class="input-field w-full bg-gray-50 rounded-xl pl-11 pr-4 py-3.5 text-gray-700 outline-none" 
+                        placeholder="Username kiriting">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Parol</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input type="password" name="password" required id="password-field"
+                        class="input-field w-full bg-gray-50 rounded-xl pl-11 pr-12 py-3.5 text-gray-700 outline-none" 
+                        placeholder="••••••••">
+                    <button type="button" id="toggle-password" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="login-btn w-full text-white py-4 rounded-xl font-semibold text-base">
+                <i class="fas fa-sign-in-alt mr-2"></i> Kirish
+            </button>
+        </form>
+        
+        <!-- Footer -->
+        <div class="mt-8 text-center">
+            <a href="/" class="text-sm text-gray-500 hover:text-emerald-600 transition flex items-center justify-center gap-2">
+                <i class="fas fa-arrow-left"></i> Saytga qaytish
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordField = document.getElementById('password-field');
+        
+        togglePassword?.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>

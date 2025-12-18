@@ -1,0 +1,98 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Portfolio - Admin Panel{% endblock %}
+{% block page_title %}Portfolio{% endblock %}
+{% block page_subtitle %}Barcha portfolio loyihalarini boshqarish{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-[#232339] rounded-xl flex items-center justify-center">
+            <i class="fas fa-images text-white"></i>
+        </div>
+        <div>
+            <h2 class="text-lg font-bold text-[#232339]">Portfolio ro'yxati</h2>
+            <p class="text-sm text-gray-500">Jami: {{ portfolios|length }} ta</p>
+        </div>
+    </div>
+    <a href="/admin/portfolio/add" class="inline-flex items-center justify-center gap-2 bg-[#232339] hover:bg-black text-white px-5 py-2.5 rounded-xl font-medium transition">
+        <i class="fas fa-plus"></i>
+        <span>Yangi portfolio</span>
+    </a>
+</div>
+
+{% if portfolios %}
+<!-- Portfolios Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for portfolio in portfolios %}
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden group hover:shadow-lg hover:border-[#232339]/30 transition-all duration-300">
+        <!-- Images -->
+        <div class="grid grid-cols-2 gap-2 p-2 bg-[#F5F5F5]">
+            {% if portfolio.before_image %}
+            <div class="aspect-square rounded-lg overflow-hidden">
+                <img src="/uploads/{{ portfolio.before_image }}" alt="Before" class="w-full h-full object-cover">
+            </div>
+            {% else %}
+            <div class="aspect-square rounded-lg bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-image text-gray-400"></i>
+            </div>
+            {% endif %}
+            
+            {% if portfolio.after_image %}
+            <div class="aspect-square rounded-lg overflow-hidden">
+                <img src="/uploads/{{ portfolio.after_image }}" alt="After" class="w-full h-full object-cover">
+            </div>
+            {% else %}
+            <div class="aspect-square rounded-lg bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-image text-gray-400"></i>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Info -->
+        <div class="p-4">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs px-2 py-1 bg-[#F5C242]/20 text-[#232339] rounded-lg font-medium">
+                    {{ portfolio.room_type_uz or 'Boshqa' }}
+                </span>
+                <span class="text-xs text-gray-400">{{ portfolio.created_at.strftime('%d.%m.%Y') }}</span>
+            </div>
+            
+            <h3 class="font-semibold text-[#232339] mb-1 line-clamp-1">{{ portfolio.title_uz }}</h3>
+            {% if portfolio.description_uz %}
+            <p class="text-sm text-gray-500 line-clamp-2 mb-3">{{ portfolio.description_uz }}</p>
+            {% endif %}
+            
+            <div class="flex items-center justify-end gap-1">
+                <a href="/portfolio" target="_blank" class="p-2 hover:bg-[#F5F5F5] text-gray-500 rounded-lg transition" title="Ko'rish">
+                    <i class="fas fa-eye"></i>
+                </a>
+                <a href="/admin/portfolio/{{ portfolio.id }}/edit" class="p-2 hover:bg-[#F5F5F5] text-[#232339] rounded-lg transition" title="Tahrirlash">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <form action="/admin/portfolio/{{ portfolio.id }}/delete" method="POST" class="inline" onsubmit="return confirm('Rostdan ham o\'chirmoqchimisiz?');">
+                    <button type="submit" class="p-2 hover:bg-red-50 text-red-500 rounded-lg transition" title="O'chirish">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<!-- Empty State -->
+<div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+    <div class="w-20 h-20 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-images text-gray-400 text-3xl"></i>
+    </div>
+    <h3 class="text-lg font-semibold text-[#232339] mb-2">Portfolio yo'q</h3>
+    <p class="text-gray-500 mb-6">Birinchi portfolio loyihangizni qo'shishdan boshlang</p>
+    <a href="/admin/portfolio/add" class="inline-flex items-center gap-2 bg-[#232339] hover:bg-black text-white px-6 py-3 rounded-xl font-medium transition">
+        <i class="fas fa-plus"></i> Portfolio qo'shish
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+

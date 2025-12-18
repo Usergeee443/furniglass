@@ -1,0 +1,174 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if portfolio %}Portfolioni tahrirlash{% else %}Yangi portfolio{% endif %} - Admin Panel{% endblock %}
+{% block page_title %}{% if portfolio %}Portfolioni tahrirlash{% else %}Yangi portfolio{% endif %}{% endblock %}
+{% block page_subtitle %}{% if portfolio %}{{ portfolio.title_uz }}{% else %}Yangi portfolio qo'shish{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image-upload-area {
+        transition: all 0.3s ease;
+    }
+    .image-upload-area:hover {
+        border-color: #232339;
+    }
+    .image-preview {
+        position: relative;
+    }
+    .image-preview:hover .remove-btn {
+        opacity: 1;
+    }
+    .remove-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Back Button -->
+<a href="/admin/portfolios" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#232339] mb-6 transition">
+    <i class="fas fa-arrow-left"></i>
+    <span>Portfolioga qaytish</span>
+</a>
+
+<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <form method="POST" enctype="multipart/form-data" id="portfolio-form">
+        <!-- Auto-translate notice -->
+        <div class="p-6 bg-[#F5C242]/10 border-b border-[#F5C242]/30">
+            <div class="flex items-start gap-3">
+                <i class="fas fa-magic text-[#F5C242] mt-0.5"></i>
+                <div>
+                    <p class="font-medium text-[#232339]">Avtomatik tarjima</p>
+                    <p class="text-sm text-gray-600">Faqat o'zbekcha kiriting — ruscha va inglizchaga avtomatik tarjima qilinadi</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-6 lg:p-8 space-y-6">
+            <!-- Title -->
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Sarlavha (O'zbekcha) *</label>
+                <input type="text" name="title_uz" value="{{ portfolio.title_uz if portfolio else '' }}" required 
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                    placeholder="Masalan: Zamonaviy yotoqxona dizayni">
+            </div>
+            
+            <!-- Description -->
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Tavsif (O'zbekcha)</label>
+                <textarea name="description_uz" rows="4" 
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition resize-none" 
+                    placeholder="Loyiha haqida batafsil ma'lumot...">{{ portfolio.description_uz if portfolio else '' }}</textarea>
+            </div>
+            
+            <!-- Room Type -->
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Xona turi (O'zbekcha)</label>
+                <select name="room_type_uz" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                    <option value="">Tanlang</option>
+                    <option value="Yotoqxona" {% if portfolio and portfolio.room_type_uz == 'Yotoqxona' %}selected{% endif %}>Yotoqxona</option>
+                    <option value="Zal" {% if portfolio and portfolio.room_type_uz == 'Zal' %}selected{% endif %}>Zal</option>
+                    <option value="Oshxona" {% if portfolio and portfolio.room_type_uz == 'Oshxona' %}selected{% endif %}>Oshxona</option>
+                    <option value="Kabinet" {% if portfolio and portfolio.room_type_uz == 'Kabinet' %}selected{% endif %}>Kabinet</option>
+                    <option value="Bolalar xonasi" {% if portfolio and portfolio.room_type_uz == 'Bolalar xonasi' %}selected{% endif %}>Bolalar xonasi</option>
+                    <option value="Boshqa" {% if portfolio and portfolio.room_type_uz == 'Boshqa' %}selected{% endif %}>Boshqa</option>
+                </select>
+            </div>
+            
+            <!-- Images -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Before Image -->
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Oldingi rasm</label>
+                    <div class="image-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer bg-white" onclick="document.getElementById('before-image-input').click()">
+                        <input type="file" name="before_image" id="before-image-input" accept="image/*" class="hidden" onchange="previewImage(this, 'before-preview')">
+                        <div id="before-placeholder">
+                            <div class="w-12 h-12 bg-[#F5F5F5] rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-cloud-upload-alt text-[#232339] text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">Oldingi rasmni yuklash</p>
+                            <p class="text-xs text-gray-400">PNG, JPG, WEBP</p>
+                        </div>
+                        <div id="before-preview" class="hidden">
+                            <img id="before-img" src="" alt="Before" class="max-h-40 mx-auto rounded-lg">
+                            <p class="text-sm text-gray-500 mt-2">Boshqa rasm tanlash</p>
+                        </div>
+                    </div>
+                    
+                    {% if portfolio and portfolio.before_image %}
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-500 mb-2">Mavjud rasm:</p>
+                        <div class="image-preview w-full aspect-square rounded-xl overflow-hidden border border-gray-200">
+                            <img src="/uploads/{{ portfolio.before_image }}" alt="Before" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- After Image -->
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Keyingi rasm</label>
+                    <div class="image-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer bg-white" onclick="document.getElementById('after-image-input').click()">
+                        <input type="file" name="after_image" id="after-image-input" accept="image/*" class="hidden" onchange="previewImage(this, 'after-preview')">
+                        <div id="after-placeholder">
+                            <div class="w-12 h-12 bg-[#F5F5F5] rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-cloud-upload-alt text-[#232339] text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">Keyingi rasmni yuklash</p>
+                            <p class="text-xs text-gray-400">PNG, JPG, WEBP</p>
+                        </div>
+                        <div id="after-preview" class="hidden">
+                            <img id="after-img" src="" alt="After" class="max-h-40 mx-auto rounded-lg">
+                            <p class="text-sm text-gray-500 mt-2">Boshqa rasm tanlash</p>
+                        </div>
+                    </div>
+                    
+                    {% if portfolio and portfolio.after_image %}
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-500 mb-2">Mavjud rasm:</p>
+                        <div class="image-preview w-full aspect-square rounded-xl overflow-hidden border border-gray-200">
+                            <img src="/uploads/{{ portfolio.after_image }}" alt="After" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="px-6 lg:px-8 py-5 bg-[#F5F5F5] border-t border-gray-200 flex flex-col sm:flex-row gap-3 sm:justify-end">
+            <a href="/admin/portfolios" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-white transition text-center">
+                Bekor qilish
+            </a>
+            <button type="submit" class="px-8 py-3 rounded-xl bg-[#232339] hover:bg-black text-white font-medium transition flex items-center justify-center gap-2">
+                <i class="fas fa-save"></i> 
+                {% if portfolio %}Yangilash{% else %}Qo'shish{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+function previewImage(input, previewId) {
+    const placeholderId = previewId.replace('preview', 'placeholder');
+    const placeholder = document.getElementById(placeholderId);
+    const preview = document.getElementById(previewId);
+    const img = document.getElementById(previewId.replace('preview', 'img'));
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            img.src = e.target.result;
+            placeholder.classList.add('hidden');
+            preview.classList.remove('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,147 @@
+from db import db
+from flask_login import UserMixin
+from datetime import datetime
+
+
+class Admin(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    name_uz = db.Column(db.String(100), nullable=False)
+    name_ru = db.Column(db.String(100))  # Avtomatik tarjima
+    name_en = db.Column(db.String(100))  # Avtomatik tarjima
+    slug = db.Column(db.String(100), unique=True, nullable=False)
+    image = db.Column(db.String(200))
+    products = db.relationship('Product', backref='category', lazy=True)
+    
+    def get_name(self, lang='uz'):
+        """Get category name in specified language"""
+        if lang == 'ru' and self.name_ru:
+            return self.name_ru
+        elif lang == 'en' and self.name_en:
+            return self.name_en
+        return self.name_uz or self.name
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    name_uz = db.Column(db.String(200), nullable=False)
+    name_ru = db.Column(db.String(200))  # Avtomatik tarjima
+    name_en = db.Column(db.String(200))  # Avtomatik tarjima
+    description = db.Column(db.Text)
+    description_uz = db.Column(db.Text)
+    description_ru = db.Column(db.Text)  # Avtomatik tarjima
+    description_en = db.Column(db.Text)  # Avtomatik tarjima
+    price = db.Column(db.Float, nullable=False)
+    size = db.Column(db.String(100))
+    material = db.Column(db.String(100))
+    material_uz = db.Column(db.String(100))
+    material_ru = db.Column(db.String(100))  # Avtomatik tarjima
+    material_en = db.Column(db.String(100))  # Avtomatik tarjima
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    is_bestseller = db.Column(db.Boolean, default=False)
+    warranty = db.Column(db.String(50))
+    warranty_uz = db.Column(db.String(50))
+    images = db.Column(db.Text)  # JSON string of image paths
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_name(self, lang='uz'):
+        """Get product name in specified language"""
+        if lang == 'ru' and self.name_ru:
+            return self.name_ru
+        elif lang == 'en' and self.name_en:
+            return self.name_en
+        return self.name_uz or self.name
+    
+    def get_description(self, lang='uz'):
+        """Get product description in specified language"""
+        if lang == 'ru' and self.description_ru:
+            return self.description_ru
+        elif lang == 'en' and self.description_en:
+            return self.description_en
+        return self.description_uz or self.description or ''
+    
+    def get_material(self, lang='uz'):
+        """Get product material in specified language"""
+        if lang == 'ru' and self.material_ru:
+            return self.material_ru
+        elif lang == 'en' and self.material_en:
+            return self.material_en
+        return self.material_uz or self.material or ''
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    furniture_type = db.Column(db.String(200), nullable=False)
+    size = db.Column(db.String(100))
+    color = db.Column(db.String(50))
+    material = db.Column(db.String(100))
+    design_image = db.Column(db.String(200))
+    phone = db.Column(db.String(20), nullable=False)
+    name = db.Column(db.String(100))
+    address = db.Column(db.Text)
+    status = db.Column(db.String(50), default='Yangi')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    text = db.Column(db.Text, nullable=False)
+    text_uz = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, default=5)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Portfolio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    title_uz = db.Column(db.String(200), nullable=False)
+    title_ru = db.Column(db.String(200))  # Avtomatik tarjima
+    title_en = db.Column(db.String(200))  # Avtomatik tarjima
+    description = db.Column(db.Text)
+    description_uz = db.Column(db.Text)
+    description_ru = db.Column(db.Text)  # Avtomatik tarjima
+    description_en = db.Column(db.Text)  # Avtomatik tarjima
+    room_type = db.Column(db.String(50))  # Yotoqxona / Zal / Oshxona
+    room_type_uz = db.Column(db.String(50))
+    before_image = db.Column(db.String(200))
+    after_image = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_title(self, lang='uz'):
+        """Get portfolio title in specified language"""
+        if lang == 'ru' and self.title_ru:
+            return self.title_ru
+        elif lang == 'en' and self.title_en:
+            return self.title_en
+        return self.title_uz or self.title
+    
+    def get_description(self, lang='uz'):
+        """Get portfolio description in specified language"""
+        if lang == 'ru' and self.description_ru:
+            return self.description_ru
+        elif lang == 'en' and self.description_en:
+            return self.description_en
+        return self.description_uz or self.description or ''
+
+class FAQ(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(300), nullable=False)
+    question_uz = db.Column(db.String(300), nullable=False)
+    answer = db.Column(db.Text, nullable=False)
+    answer_uz = db.Column(db.Text, nullable=False)
+    order = db.Column(db.Integer, default=0)
+
+
+class ExchangeRate(db.Model):
+    """
+    Saqlanadigan yagona yozuv:
+    1 USD ning so'mdagi qiymati.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.Float, nullable=False, default=12000.0)  # 1 USD = 12 000 so'm (default)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+

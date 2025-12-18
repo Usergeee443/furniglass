@@ -1,0 +1,119 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if category %}Kategoriyani tahrirlash{% else %}Yangi kategoriya{% endif %} - Admin Panel{% endblock %}
+{% block page_title %}{% if category %}Kategoriyani tahrirlash{% else %}Yangi kategoriya{% endif %}{% endblock %}
+{% block page_subtitle %}{% if category %}{{ category.name_uz }}{% else %}Yangi kategoriya qo'shish{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Back Button -->
+<a href="/admin/categories" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#232339] mb-6 transition">
+    <i class="fas fa-arrow-left"></i>
+    <span>Kategoriyalarga qaytish</span>
+</a>
+
+<div class="max-w-2xl">
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="p-6 lg:p-8 space-y-6">
+                <!-- Header -->
+                <div class="flex items-center gap-3 pb-6 border-b border-gray-100">
+                    <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center">
+                        <i class="fas fa-folder text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-[#232339] text-lg">Kategoriya ma'lumotlari</h3>
+                        <p class="text-sm text-gray-500">Faqat o'zbekcha kiriting — ruscha va inglizchaga avtomatik tarjima qilinadi</p>
+                    </div>
+                </div>
+                
+                <!-- Auto-translate notice -->
+                <div class="bg-[#F5C242]/10 border border-[#F5C242]/30 rounded-xl p-4 flex items-start gap-3">
+                    <i class="fas fa-magic text-[#F5C242] mt-0.5"></i>
+                    <div>
+                        <p class="text-sm font-medium text-[#232339]">Avtomatik tarjima</p>
+                        <p class="text-sm text-gray-600">O'zbekcha matnni kiritganingizda, ruscha va inglizchaga avtomatik tarjima qilinadi.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Kategoriya nomi (O'zbekcha) *</label>
+                    <input type="text" name="name_uz" value="{{ category.name_uz if category else '' }}" required 
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                        placeholder="Masalan: Shkaflar">
+                    <p class="text-xs text-gray-500 mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Ruscha va inglizchaga avtomatik tarjima qilinadi
+                    </p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Slug (URL uchun)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">/products?category=</span>
+                        <input type="text" name="slug" value="{{ category.slug if category else '' }}" 
+                            class="w-full bg-[#F5F5F5] border-0 rounded-xl pl-40 pr-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                            placeholder="shkaflar">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Bo'sh qoldirilsa, nomdan avtomatik yaratiladi
+                    </p>
+                </div>
+                
+                <!-- Image Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Rasm</label>
+                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-[#232339] transition cursor-pointer" onclick="document.getElementById('image-input').click()">
+                        <input type="file" name="image" id="image-input" accept="image/*" class="hidden" onchange="previewImage(this)">
+                        <div id="upload-placeholder">
+                            <div class="w-12 h-12 bg-[#F5F5F5] rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-cloud-upload-alt text-[#232339] text-xl"></i>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-1">Rasm yuklash uchun bosing</p>
+                            <p class="text-xs text-gray-400">PNG, JPG, WEBP (max 5MB)</p>
+                        </div>
+                        <div id="image-preview" class="hidden">
+                            <img id="preview-img" src="" alt="Preview" class="max-h-40 mx-auto rounded-lg">
+                            <p class="text-sm text-gray-500 mt-2">Boshqa rasm tanlash uchun bosing</p>
+                        </div>
+                    </div>
+                    
+                    {% if category and category.image %}
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-500 mb-2">Mavjud rasm:</p>
+                        <div class="w-32 h-32 rounded-xl overflow-hidden border border-gray-200">
+                            <img src="/uploads/{{ category.image }}" alt="{{ category.name_uz }}" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="px-6 lg:px-8 py-5 bg-[#F5F5F5] border-t border-gray-200 flex flex-col sm:flex-row gap-3 sm:justify-end">
+                <a href="/admin/categories" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-white transition text-center">
+                    Bekor qilish
+                </a>
+                <button type="submit" class="px-8 py-3 rounded-xl bg-[#232339] hover:bg-black text-white font-medium transition flex items-center justify-center gap-2">
+                    <i class="fas fa-save"></i> 
+                    {% if category %}Yangilash{% else %}Qo'shish{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-img').src = e.target.result;
+            document.getElementById('upload-placeholder').classList.add('hidden');
+            document.getElementById('image-preview').classList.remove('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}

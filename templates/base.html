@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Furni Glass - Premium Mebel{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+        }
+        
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #232339;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .bottom-nav-item.active {
+            color: #232339;
+        }
+        
+        .bottom-nav-item:not(.active) {
+            color: #6B7280;
+        }
+        
+        .bottom-nav-item img {
+            transition: all 0.3s ease;
+            filter: brightness(0) saturate(100%) invert(47%) sepia(6%) saturate(464%) hue-rotate(202deg) brightness(94%) contrast(88%);
+        }
+        
+        .bottom-nav-item.active img {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(11%) saturate(1358%) hue-rotate(208deg) brightness(95%) contrast(96%);
+        }
+        
+        .bottom-nav-item:not(.active) img {
+            filter: brightness(0) saturate(100%) invert(47%) sepia(6%) saturate(464%) hue-rotate(202deg) brightness(94%) contrast(88%);
+        }
+        
+        /* Header hide/show on scroll - improved */
+        .header-hidden {
+            transform: translateY(-100%);
+        }
+        
+        .header-visible {
+            transform: translateY(0);
+        }
+        
+        /* Premium icon styling - thicker strokes */
+        .header-icon {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2;
+            stroke: currentColor;
+            transition: all 0.3s ease;
+        }
+        
+        .header-icon:hover {
+            stroke-width: 2.5;
+        }
+        
+        /* Premium typography for navigation */
+        .premium-nav {
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            font-size: 15px;
+        }
+        
+        /* Search Modal */
+        .search-modal {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        .search-result-item {
+            transition: all 0.2s ease;
+        }
+        
+        .search-result-item:hover {
+            background: #F5F5F7;
+            transform: translateX(4px);
+        }
+        
+        .search-loading {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 pt-16 md:pt-20 pb-20 md:pb-0">
+    <!-- Desktop Header - Glass Effect -->
+    <header id="main-header" class="glass-header fixed top-0 left-0 right-0 z-50 shadow-sm transition-transform duration-300 ease-in-out">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Logo - Chap -->
+                <a href="/" class="flex-shrink-0">
+                    <img src="/uploads/designs/logo.png" alt="Furni Glass" class="h-8 md:h-10">
+                </a>
+                
+                <!-- Navigation - O'rta (Desktop only) -->
+                <nav class="hidden lg:flex items-center space-x-4 xl:space-x-5">
+                    <a href="/" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'index' %}active text-[#232339]{% endif %}">{{ T.nav.home[lang] }}</a>
+                    <a href="/about" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'about' %}active text-[#232339]{% endif %}">{{ T.nav.about[lang] }}</a>
+                    <a href="/products" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'products' %}active text-[#232339]{% endif %}">{{ T.nav.products[lang] }}</a>
+                    <a href="/services" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'services' %}active text-[#232339]{% endif %}">{{ T.nav.services[lang] }}</a>
+                    <a href="/portfolio" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'portfolio' %}active text-[#232339]{% endif %}">{{ T.nav.portfolio[lang] }}</a>
+                    <a href="/why-us" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'why_us' %}active text-[#232339]{% endif %}">{{ T.nav.why_us[lang] }}</a>
+                    <a href="/faq" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'faq' %}active text-[#232339]{% endif %}">{{ T.nav.faq[lang] }}</a>
+                    <a href="/contact" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'contact' %}active text-[#232339]{% endif %}">{{ T.nav.contact[lang] }}</a>
+                </nav>
+                
+                <!-- Icons - O'ng -->
+                <div class="flex items-center space-x-4 md:space-x-5">
+                    <!-- Qidiruv -->
+                    <button class="text-gray-600 hover:text-[#232339] transition p-2" id="search-btn" title="Qidiruv">
+                        <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <!-- Til (Desktop) -->
+                    <div class="hidden md:block relative" id="lang-dropdown">
+                        <button class="flex items-center gap-1 text-gray-600 hover:text-[#232339] transition p-2" id="lang-btn">
+                            <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M2 12H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="text-sm font-medium uppercase">{{ lang }}</span>
+                        </button>
+                        <!-- Language Dropdown -->
+                        <div id="lang-menu" class="hidden absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 py-2 min-w-[140px] z-50">
+                            <a href="/set-language/uz" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'uz' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
+                                <span class="text-lg">🇺🇿</span>
+                                <span class="font-medium">O'zbekcha</span>
+                                {% if lang == 'uz' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
+                            </a>
+                            <a href="/set-language/ru" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'ru' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
+                                <span class="text-lg">🇷🇺</span>
+                                <span class="font-medium">Русский</span>
+                                {% if lang == 'ru' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
+                            </a>
+                            <a href="/set-language/en" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'en' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
+                                <span class="text-lg">🇬🇧</span>
+                                <span class="font-medium">English</span>
+                                {% if lang == 'en' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Til (Mobile) -->
+                    <div class="md:hidden relative" id="mobile-lang-dropdown">
+                        <button class="flex items-center gap-1 text-gray-600 hover:text-[#232339] transition p-2" id="mobile-lang-btn-header">
+                            <img src="/static/uploads/icons/global.svg" alt="Til" class="w-5 h-5">
+                            <span class="text-sm font-medium uppercase">{{ lang }}</span>
+                        </button>
+                        <!-- Language Dropdown -->
+                        <div id="mobile-lang-menu-header" class="hidden absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 py-2 min-w-[140px] z-50">
+                            <a href="/set-language/uz" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'uz' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
+                                <span class="text-lg">🇺🇿</span>
+                                <span class="font-medium">O'zbekcha</span>
+                                {% if lang == 'uz' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
+                            </a>
+                            <a href="/set-language/ru" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'ru' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
+                                <span class="text-lg">🇷🇺</span>
+                                <span class="font-medium">Русский</span>
+                                {% if lang == 'ru' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
+                            </a>
+                            <a href="/set-language/en" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'en' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
+                                <span class="text-lg">🇬🇧</span>
+                                <span class="font-medium">English</span>
+                                {% if lang == 'en' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Savatcha (Desktop only) -->
+                    <a href="/cart" class="hidden md:flex text-gray-600 hover:text-[#232339] transition p-2 relative" title="Savatcha">
+                        <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19C19.2652 16 19.5196 15.8946 19.7071 15.7071C19.8946 15.5196 20 15.2652 20 15V9H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        {% if cart_count > 0 %}
+                        <span class="absolute -top-1 -right-1 bg-[#232339] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium cart-badge">{{ cart_count }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg">
+        <div class="flex items-center justify-around h-16 px-2">
+            <!-- Asosiy -->
+            <a href="/" class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 {% if request.endpoint == 'index' %}active{% endif %}">
+                <img src="/static/uploads/icons/home.svg" alt="Asosiy" class="w-6 h-6 mb-1">
+                <span class="text-xs font-medium">{{ T.nav.home[lang] }}</span>
+            </a>
+            <!-- Mahsulotlar -->
+            <a href="/products" class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 {% if request.endpoint == 'products' %}active{% endif %}">
+                <img src="/static/uploads/icons/shop.svg" alt="Mahsulotlar" class="w-6 h-6 mb-1">
+                <span class="text-xs font-medium">{{ T.nav.products[lang] }}</span>
+            </a>
+            <!-- Savatcha -->
+            <a href="/cart" class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 relative {% if request.endpoint == 'cart' %}active{% endif %}">
+                <div class="relative">
+                    <img src="/static/uploads/icons/shopping-cart.svg" alt="Savatcha" class="w-6 h-6 mb-1">
+                    {% if cart_count > 0 %}
+                    <span class="absolute -top-2 -right-2 bg-[#232339] text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium cart-badge">{{ cart_count }}</span>
+                    {% endif %}
+                </div>
+                <span class="text-xs font-medium">{{ T.nav.cart[lang] }}</span>
+            </a>
+            <!-- Biz haqimizda -->
+            <a href="/about" class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 {% if request.endpoint == 'about' %}active{% endif %}">
+                <img src="/static/uploads/icons/bookmark.svg" alt="Biz haqimizda" class="w-6 h-6 mb-1">
+                <span class="text-xs font-medium">{{ T.nav.about[lang][:10] }}</span>
+            </a>
+            <!-- Ko'proq -->
+            <button class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 {% if request.endpoint in ['services', 'portfolio', 'faq', 'contact', 'why_us', 'order', 'team', 'gallery'] %}active{% endif %}" id="more-menu-btn">
+                <img src="/static/uploads/icons/more-square.svg" alt="Ko'proq" class="w-6 h-6 mb-1">
+                <span class="text-xs font-medium">{{ T.nav.more[lang] }}</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile More Menu -->
+    <div class="md:hidden fixed inset-0 bg-black/50 z-40 hidden" id="more-menu-overlay">
+        <div class="absolute bottom-16 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-4" id="more-menu">
+            <div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
+            <div class="grid grid-cols-3 gap-4">
+                <a href="/services" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
+                    <i class="fas fa-concierge-bell text-2xl text-[#232339] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.services[lang] }}</span>
+                </a>
+                <a href="/portfolio" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
+                    <i class="fas fa-images text-2xl text-[#232339] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.portfolio[lang] }}</span>
+                </a>
+                <a href="/gallery" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
+                    <i class="fas fa-camera text-2xl text-[#232339] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.gallery[lang] }}</span>
+                </a>
+                <a href="/team" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
+                    <i class="fas fa-users text-2xl text-[#232339] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.team[lang] }}</span>
+                </a>
+                <a href="/why-us" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
+                    <i class="fas fa-star text-2xl text-[#F5C242] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.why_us[lang][:12] }}</span>
+                </a>
+                <a href="/contact" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
+                    <i class="fas fa-phone text-2xl text-[#232339] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.contact[lang] }}</span>
+                </a>
+                <a href="/faq" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
+                    <i class="fas fa-question-circle text-2xl text-[#232339] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.faq[lang] }}</span>
+                </a>
+                <a href="/order" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
+                    <i class="fas fa-paper-plane text-2xl text-[#232339] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.order[lang] }}</span>
+                </a>
+                <button class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition" id="mobile-lang-btn">
+                    <i class="fas fa-globe text-2xl text-[#232339] mb-2"></i>
+                    <span class="text-sm text-gray-700">{{ T.nav.language[lang] }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Language Modal -->
+    <div class="md:hidden fixed inset-0 bg-black/50 z-50 hidden" id="mobile-lang-modal">
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6">
+            <div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
+            <h3 class="text-lg font-bold text-center mb-4">{{ T.nav.language[lang] }}</h3>
+            <div class="space-y-2">
+                <a href="/set-language/uz" class="flex items-center gap-4 p-4 rounded-xl {% if lang == 'uz' %}bg-[#232339] text-white{% else %}bg-[#FAF9F6] text-gray-700{% endif %} transition">
+                    <span class="text-2xl">🇺🇿</span>
+                    <span class="font-medium">O'zbekcha</span>
+                    {% if lang == 'uz' %}<i class="fas fa-check ml-auto"></i>{% endif %}
+                </a>
+                <a href="/set-language/ru" class="flex items-center gap-4 p-4 rounded-xl {% if lang == 'ru' %}bg-[#232339] text-white{% else %}bg-[#FAF9F6] text-gray-700{% endif %} transition">
+                    <span class="text-2xl">🇷🇺</span>
+                    <span class="font-medium">Русский</span>
+                    {% if lang == 'ru' %}<i class="fas fa-check ml-auto"></i>{% endif %}
+                </a>
+                <a href="/set-language/en" class="flex items-center gap-4 p-4 rounded-xl {% if lang == 'en' %}bg-[#232339] text-white{% else %}bg-[#FAF9F6] text-gray-700{% endif %} transition">
+                    <span class="text-2xl">🇬🇧</span>
+                    <span class="font-medium">English</span>
+                    {% if lang == 'en' %}<i class="fas fa-check ml-auto"></i>{% endif %}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="fixed inset-0 z-50 hidden search-modal">
+        <div class="absolute inset-0 bg-black/40" id="search-overlay"></div>
+        <div class="absolute top-0 left-0 right-0 bg-white shadow-2xl">
+            <div class="container mx-auto px-4 py-6">
+                <!-- Search Input -->
+                <div class="relative mb-6">
+                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <input type="text" 
+                           id="search-input" 
+                           placeholder="{% if lang == 'ru' %}Поиск продуктов, категорий...{% elif lang == 'en' %}Search products, categories...{% else %}Mahsulot, kategoriya yoki boshqa narsani qidiring...{% endif %}" 
+                           class="w-full pl-12 pr-12 py-4 text-lg border-0 border-b-2 border-gray-200 focus:border-[#232339] outline-none bg-transparent"
+                           autocomplete="off">
+                    <button id="close-search" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-2">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Search Results -->
+                <div id="search-results" class="max-h-[60vh] overflow-y-auto">
+                    <div id="search-loading" class="hidden text-center py-12">
+                        <div class="inline-block w-8 h-8 border-4 border-[#232339] border-t-transparent rounded-full search-loading"></div>
+                        <p class="mt-4 text-gray-500">{% if lang == 'ru' %}Поиск...{% elif lang == 'en' %}Searching...{% else %}Qidirilmoqda...{% endif %}</p>
+                    </div>
+                    
+                    <div id="search-empty" class="hidden text-center py-12">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500">{% if lang == 'ru' %}Ничего не найдено{% elif lang == 'en' %}Nothing found{% else %}Hech narsa topilmadi{% endif %}</p>
+                        <p class="text-sm text-gray-400 mt-2">{% if lang == 'ru' %}Попробуйте другой запрос{% elif lang == 'en' %}Try another search{% else %}Boshqa so'z bilan qidiring{% endif %}</p>
+                    </div>
+                    
+                    <div id="search-content" class="space-y-6">
+                        <!-- Results will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mx-auto px-4 mt-4">
+                {% for category, message in messages %}
+                    <div class="p-4 rounded-lg mb-4 {% if category == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-[#232339] text-white mt-16 mb-16 md:mb-0">
+        <div class="container mx-auto px-6 lg:px-16 py-10">
+            <!-- 1-qator: Logo -->
+            <div class="mb-8">
+                <img src="/uploads/designs/Logo-white.png" alt="Furni Glass" class="h-10 md:h-12">
+            </div>
+            
+            <!-- 2-qator: Tafsif | Obuna | Rasm bir tekisda -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                <!-- Tafsif -->
+                <div>
+                    <p class="text-white/70 text-sm leading-relaxed">
+                        {{ T.footer.description[lang] }}
+                    </p>
+                </div>
+                
+                <!-- Obuna bo'ling -->
+                <div class="md:flex md:justify-center">
+                    <div>
+                    <h4 class="text-lg font-semibold mb-4 text-white">{{ T.common.subscribe[lang] }}</h4>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 bg-white/70 hover:bg-white rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-facebook-f text-[#232339]"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/70 hover:bg-white rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-instagram text-[#232339]"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/70 hover:bg-white rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-telegram-plane text-[#232339]"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white/70 hover:bg-white rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-youtube text-[#232339]"></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rasm -->
+                <div class="flex justify-center md:justify-end items-start">
+                    <img src="/uploads/designs/Frame 55.png" alt="Furni Glass Furniture" class="h-40 md:h-48 object-contain md:-mt-20">
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="flex flex-row justify-between items-center mt-10 pt-0 text-sm">
+                <p class="text-white/70">Copyright © 2025 Furni Glass. {{ T.footer.copyright[lang] }}</p>
+                <div class="flex gap-4 md:gap-8">
+                    <a href="#" class="text-white/70 hover:text-white transition text-xs md:text-sm">{{ T.footer.terms[lang] }}</a>
+                    <a href="#" class="text-white/70 hover:text-white transition text-xs md:text-sm">{{ T.footer.privacy[lang] }}</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header hide/show on scroll - improved with longer scroll thresholds
+        const header = document.getElementById('main-header');
+        let lastScrollY = window.scrollY;
+        let scrollDeltaDown = 0; // Pastga scroll qilish uchun delta
+        let scrollDeltaUp = 0; // Yuqoriga scroll qilish uchun delta
+        let lastScrollDirection = null; // 'down' yoki 'up'
+        let ticking = false;
+        const SCROLL_THRESHOLD_DOWN = 250; // Pastga scroll qilish uchun minimum px (uzunroq)
+        const SCROLL_THRESHOLD_UP = 300; // Yuqoriga scroll qilish uchun minimum px (uzunroq)
+        
+        function updateHeader() {
+            const currentScrollY = window.scrollY;
+            const scrollDifference = Math.abs(currentScrollY - lastScrollY);
+            const isScrollingDown = currentScrollY > lastScrollY;
+            const isScrollingUp = currentScrollY < lastScrollY;
+            
+            // Scroll direction o'zgarganda delta larni qayta tiklash
+            if (lastScrollDirection !== null && 
+                ((isScrollingDown && lastScrollDirection === 'up') || 
+                 (isScrollingUp && lastScrollDirection === 'down'))) {
+                scrollDeltaDown = 0;
+                scrollDeltaUp = 0;
+            }
+            
+            if (isScrollingDown && currentScrollY > 100) {
+                // Pastga scroll qilmoqda
+                scrollDeltaDown += scrollDifference;
+                scrollDeltaUp = 0; // Yuqoriga scroll delta ni tozalash
+                lastScrollDirection = 'down';
+                
+                if (scrollDeltaDown >= SCROLL_THRESHOLD_DOWN) {
+                    // Scrolling down - hide header
+                    header.classList.add('header-hidden');
+                    header.classList.remove('header-visible');
+                }
+            } else if (isScrollingUp) {
+                // Yuqoriga scroll qilmoqda
+                scrollDeltaUp += scrollDifference;
+                scrollDeltaDown = 0; // Pastga scroll delta ni tozalash
+                lastScrollDirection = 'up';
+                
+                if (scrollDeltaUp >= SCROLL_THRESHOLD_UP || currentScrollY <= 50) {
+                    // Scrolling up - show header
+                    header.classList.remove('header-hidden');
+                    header.classList.add('header-visible');
+                }
+            } else if (currentScrollY <= 50) {
+                // Sahifa tepasida - header ko'rsatish
+                header.classList.remove('header-hidden');
+                header.classList.add('header-visible');
+                scrollDeltaDown = 0;
+                scrollDeltaUp = 0;
+            }
+            
+            lastScrollY = currentScrollY;
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateHeader);
+                ticking = true;
+            }
+        });
+
+        // Mobile More Menu toggle
+        const moreMenuBtn = document.getElementById('more-menu-btn');
+        const moreMenuOverlay = document.getElementById('more-menu-overlay');
+        
+        moreMenuBtn?.addEventListener('click', function() {
+            moreMenuOverlay.classList.remove('hidden');
+        });
+        
+        moreMenuOverlay?.addEventListener('click', function(e) {
+            if (e.target === moreMenuOverlay) {
+                moreMenuOverlay.classList.add('hidden');
+            }
+        });
+
+        // Search functionality
+        const searchModal = document.getElementById('search-modal');
+        const searchBtn = document.getElementById('search-btn');
+        const closeSearch = document.getElementById('close-search');
+        const searchOverlay = document.getElementById('search-overlay');
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const searchContent = document.getElementById('search-content');
+        const searchLoading = document.getElementById('search-loading');
+        const searchEmpty = document.getElementById('search-empty');
+        
+        let searchTimeout = null;
+        
+        // Open search modal
+        searchBtn?.addEventListener('click', function() {
+            searchModal.classList.remove('hidden');
+            setTimeout(() => searchInput.focus(), 100);
+        });
+        
+        // Close search modal
+        closeSearch?.addEventListener('click', closeSearchModal);
+        searchOverlay?.addEventListener('click', closeSearchModal);
+        
+        function closeSearchModal() {
+            searchModal.classList.add('hidden');
+            searchInput.value = '';
+            searchContent.innerHTML = '';
+            searchLoading.classList.add('hidden');
+            searchEmpty.classList.add('hidden');
+        }
+        
+        // ESC key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !searchModal.classList.contains('hidden')) {
+                closeSearchModal();
+            }
+        });
+        
+        // Search on input
+        searchInput?.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            // Clear previous timeout
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            
+            if (query.length < 2) {
+                searchContent.innerHTML = '';
+                searchLoading.classList.add('hidden');
+                searchEmpty.classList.add('hidden');
+                return;
+            }
+            
+            // Show loading
+            searchLoading.classList.remove('hidden');
+            searchEmpty.classList.add('hidden');
+            searchContent.innerHTML = '';
+            
+            // Debounce search
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+                    
+                    searchLoading.classList.add('hidden');
+                    
+                    if (data.products.length === 0 && data.categories.length === 0 && data.portfolios.length === 0) {
+                        searchEmpty.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    searchEmpty.classList.add('hidden');
+                    
+                    let html = '';
+                    
+                    // Products
+                    if (data.products.length > 0) {
+                        html += '<div class="mb-6"><h3 class="text-sm font-semibold text-gray-500 uppercase mb-3">Mahsulotlar</h3><div class="space-y-2">';
+                        data.products.forEach(product => {
+                            html += `
+                                <a href="${product.url}" class="search-result-item flex items-center gap-4 p-3 rounded-xl bg-white border border-gray-100">
+                                    <div class="w-16 h-16 bg-[#FAFAFA] rounded-lg overflow-hidden flex-shrink-0">
+                                        ${product.image ? 
+                                            `<img src="/uploads/${product.image}" alt="${product.name}" class="w-full h-full object-contain">` :
+                                            `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-image text-gray-300"></i></div>`
+                                        }
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="font-medium text-[#232339] truncate">${product.name}</p>
+                                        ${product.category ? `<p class="text-xs text-gray-400">${product.category}</p>` : ''}
+                                        <p class="text-sm font-semibold text-[#232339] mt-1">${new Intl.NumberFormat('uz-UZ').format(product.price)} so'm</p>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-300"></i>
+                                </a>
+                            `;
+                        });
+                        html += '</div></div>';
+                    }
+                    
+                    // Categories
+                    if (data.categories.length > 0) {
+                        html += '<div class="mb-6"><h3 class="text-sm font-semibold text-gray-500 uppercase mb-3">Kategoriyalar</h3><div class="space-y-2">';
+                        data.categories.forEach(category => {
+                            html += `
+                                <a href="${category.url}" class="search-result-item flex items-center gap-4 p-3 rounded-xl bg-white border border-gray-100">
+                                    <div class="w-16 h-16 bg-[#FAFAFA] rounded-lg overflow-hidden flex-shrink-0">
+                                        ${category.image ? 
+                                            `<img src="/uploads/${category.image}" alt="${category.name}" class="w-full h-full object-cover">` :
+                                            `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-folder text-gray-300"></i></div>`
+                                        }
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-[#232339]">${category.name}</p>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-300"></i>
+                                </a>
+                            `;
+                        });
+                        html += '</div></div>';
+                    }
+                    
+                    // Portfolios
+                    if (data.portfolios.length > 0) {
+                        html += '<div class="mb-6"><h3 class="text-sm font-semibold text-gray-500 uppercase mb-3">Portfolio</h3><div class="space-y-2">';
+                        data.portfolios.forEach(portfolio => {
+                            html += `
+                                <a href="${portfolio.url}" class="search-result-item flex items-center gap-4 p-3 rounded-xl bg-white border border-gray-100">
+                                    <div class="w-16 h-16 bg-[#FAFAFA] rounded-lg overflow-hidden flex-shrink-0">
+                                        ${portfolio.image ? 
+                                            `<img src="/uploads/${portfolio.image}" alt="${portfolio.title}" class="w-full h-full object-cover">` :
+                                            `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-images text-gray-300"></i></div>`
+                                        }
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-[#232339]">${portfolio.title}</p>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-300"></i>
+                                </a>
+                            `;
+                        });
+                        html += '</div></div>';
+                    }
+                    
+                    searchContent.innerHTML = html;
+                    
+                } catch (error) {
+                    console.error('Search error:', error);
+                    searchLoading.classList.add('hidden');
+                    searchEmpty.classList.remove('hidden');
+                }
+            }, 300); // 300ms debounce
+        });
+
+        // Desktop Language Dropdown
+        const langBtn = document.getElementById('lang-btn');
+        const langMenu = document.getElementById('lang-menu');
+        
+        langBtn?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langMenu.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (langMenu && !langMenu.contains(e.target) && e.target !== langBtn) {
+                langMenu.classList.add('hidden');
+            }
+        });
+
+        // Mobile Language Dropdown (Header)
+        const mobileLangBtnHeader = document.getElementById('mobile-lang-btn-header');
+        const mobileLangMenuHeader = document.getElementById('mobile-lang-menu-header');
+        
+        mobileLangBtnHeader?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            mobileLangMenuHeader.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (mobileLangMenuHeader && !mobileLangMenuHeader.contains(e.target) && e.target !== mobileLangBtnHeader) {
+                mobileLangMenuHeader.classList.add('hidden');
+            }
+        });
+
+        // Mobile Language Modal
+        const mobileLangBtn = document.getElementById('mobile-lang-btn');
+        const mobileLangModal = document.getElementById('mobile-lang-modal');
+        
+        mobileLangBtn?.addEventListener('click', function() {
+            moreMenuOverlay.classList.add('hidden');
+            mobileLangModal.classList.remove('hidden');
+        });
+        
+        mobileLangModal?.addEventListener('click', function(e) {
+            if (e.target === mobileLangModal) {
+                mobileLangModal.classList.add('hidden');
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

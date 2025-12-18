@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.get_name(lang) }} - Furni Glass{% endblock %}
+
+{% block extra_css %}
+<style>
+    .quantity-btn {
+        transition: all 0.2s ease;
+    }
+    .quantity-btn:hover {
+        background: #232339;
+        color: white;
+    }
+    .thumbnail {
+        transition: all 0.3s ease;
+    }
+    .thumbnail.active {
+        border-color: #232339;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="bg-[#F5F5F7] min-h-screen py-6 lg:py-12">
+    <div class="container mx-auto px-4">
+        <!-- Breadcrumb -->
+        <nav class="mb-6">
+            <ol class="flex items-center gap-2 text-sm text-gray-500">
+                <li><a href="/" class="hover:text-[#232339] transition">Asosiy</a></li>
+                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li><a href="/products" class="hover:text-[#232339] transition">Mahsulotlar</a></li>
+                {% if product.category %}
+                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li><a href="/products?category={{ product.category.id }}" class="hover:text-[#232339] transition">{{ product.category.get_name(lang) }}</a></li>
+                {% endif %}
+                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li class="text-[#232339]">{{ product.get_name(lang) }}</li>
+            </ol>
+        </nav>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <!-- Product Images -->
+            <div>
+                <div class="bg-white rounded-3xl overflow-hidden mb-4 shadow-sm">
+                    <div class="aspect-square bg-[#FAFAFA] p-8 flex items-center justify-center">
+                        {% if product.images %}
+                            {% set images = product.images|from_json %}
+                            {% if images %}
+                                <img id="main-image" src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" class="w-full h-full object-contain">
+                            {% else %}
+                                <i class="fas fa-image text-9xl text-gray-300"></i>
+                            {% endif %}
+                        {% else %}
+                            <i class="fas fa-image text-9xl text-gray-300"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if product.images %}
+                    {% set images = product.images|from_json %}
+                    {% if images|length > 1 %}
+                    <div class="grid grid-cols-4 gap-3">
+                        {% for image in images %}
+                        <div class="thumbnail bg-white rounded-xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#232339] transition {% if loop.first %}active border-[#232339]{% endif %}"
+                             onclick="changeImage(this, '/uploads/{{ image }}')">
+                            <div class="aspect-square bg-[#FAFAFA] p-2">
+                                <img src="/uploads/{{ image }}" alt="{{ product.get_name(lang) }}" class="w-full h-full object-contain">
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
+            <!-- Product Info -->
+            <div>
+                <!-- Category & Badges -->
+                <div class="flex items-center gap-3 mb-4">
+                    {% if product.category %}
+                    <span class="text-sm text-gray-500">{{ product.category.get_name(lang) }}</span>
+                    {% endif %}
+                    {% if product.is_bestseller %}
+                    <span class="bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-medium">Best Seller</span>
+                    {% endif %}
+                </div>
+                
+                <!-- Title -->
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#232339] mb-4">{{ product.get_name(lang) }}</h1>
+                
+                <!-- Rating -->
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="flex items-center gap-1">
+                        <i class="fas fa-star text-amber-400"></i>
+                        <i class="fas fa-star text-amber-400"></i>
+                        <i class="fas fa-star text-amber-400"></i>
+                        <i class="fas fa-star text-amber-400"></i>
+                        <i class="fas fa-star text-amber-400"></i>
+                    </div>
+                    <span class="text-sm text-gray-500">(5.0)</span>
+                </div>
+                
+                <!-- Price -->
+                <div class="mb-6">
+                    <span class="text-3xl md:text-4xl font-bold text-[#232339]">
+                        {{ "{:,.0f}".format(product.price * usd_rate) }}
+                    </span>
+                    <span class="text-lg text-gray-500">so'm</span>
+                    <p class="text-sm text-gray-400 mt-1">
+                        ≈ {{ "%.2f" % product.price }} $
+                    </p>
+                </div>
+                
+                <!-- Description -->
+                {% if product.get_description(lang) %}
+                <div class="mb-6">
+                    <p class="text-gray-600 leading-relaxed">{{ product.get_description(lang) }}</p>
+                </div>
+                {% endif %}
+                
+                <!-- Specifications -->
+                <div class="bg-white rounded-2xl p-5 mb-6 space-y-3">
+                    {% if product.size %}
+                    <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                        <span class="text-gray-500 flex items-center gap-2">
+                            <i class="fas fa-ruler-combined text-[#232339]"></i> O'lcham
+                        </span>
+                        <span class="font-medium text-[#232339]">{{ product.size }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.get_material(lang) %}
+                    <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                        <span class="text-gray-500 flex items-center gap-2">
+                            <i class="fas fa-layer-group text-[#232339]"></i> Material
+                        </span>
+                        <span class="font-medium text-[#232339]">{{ product.get_material(lang) }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.warranty_uz %}
+                    <div class="flex items-center justify-between py-2">
+                        <span class="text-gray-500 flex items-center gap-2">
+                            <i class="fas fa-shield-alt text-[#232339]"></i> Kafolat
+                        </span>
+                        <span class="font-medium text-[#232339]">{{ product.warranty_uz }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Quantity & Add to Cart -->
+                <form id="add-to-cart-form" action="/cart/add/{{ product.id }}" method="POST" class="mb-6">
+                    <div class="flex items-center gap-4 mb-4">
+                        <span class="text-gray-600">Miqdor:</span>
+                        <div class="flex items-center gap-3">
+                            <button type="button" class="quantity-btn w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500" onclick="decreaseQty()">
+                                <i class="fas fa-minus text-sm"></i>
+                            </button>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" class="w-16 text-center text-lg font-medium text-[#232339] border-0 focus:ring-0">
+                            <button type="button" class="quantity-btn w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500" onclick="increaseQty()">
+                                <i class="fas fa-plus text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <button type="submit" class="flex-1 bg-[#232339] hover:bg-[#000000] text-white py-4 rounded-xl font-medium transition flex items-center justify-center gap-2">
+                            <i class="fas fa-shopping-bag"></i>
+                            Savatchaga qo'shish
+                        </button>
+                        <button type="button" class="w-14 h-14 border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-500 transition">
+                            <i class="far fa-heart text-xl"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Delivery Info -->
+                <div class="bg-[#232339]/5 rounded-2xl p-5 space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-[#232339]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-truck text-[#232339]"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-[#232339]">Bepul yetkazib berish</p>
+                            <p class="text-sm text-gray-500">Toshkent shahri bo'ylab</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-[#232339]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-clock text-[#232339]"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-[#232339]">3-7 ish kuni</p>
+                            <p class="text-sm text-gray-500">Yetkazib berish muddati</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-[#232339]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-undo text-[#232339]"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-[#232339]">14 kun ichida qaytarish</p>
+                            <p class="text-sm text-gray-500">Oson va tez</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function changeImage(thumbnail, src) {
+        document.getElementById('main-image').src = src;
+        document.querySelectorAll('.thumbnail').forEach(t => {
+            t.classList.remove('active', 'border-[#232339]');
+        });
+        thumbnail.classList.add('active', 'border-[#232339]');
+    }
+    
+    function decreaseQty() {
+        const input = document.getElementById('quantity');
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    }
+    
+    function increaseQty() {
+        const input = document.getElementById('quantity');
+        input.value = parseInt(input.value) + 1;
+    }
+    
+    // AJAX form submit
+    document.getElementById('add-to-cart-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button[type="submit"]');
+        const originalHtml = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Qo\'shilmoqda...';
+        btn.disabled = true;
+        
+        try {
+            const formData = new FormData(this);
+            const response = await fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update cart badges
+                document.querySelectorAll('.cart-badge').forEach(badge => {
+                    badge.textContent = data.cart_count;
+                });
+                
+                btn.innerHTML = '<i class="fas fa-check"></i> Qo\'shildi!';
+                btn.classList.remove('bg-[#232339]');
+                btn.classList.add('bg-green-500');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.add('bg-[#232339]');
+                    btn.classList.remove('bg-green-500');
+                    btn.disabled = false;
+                }, 2000);
+            }
+        } catch (error) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+            console.error('Error:', error);
+        }
+    });
+</script>
+{% endblock %}

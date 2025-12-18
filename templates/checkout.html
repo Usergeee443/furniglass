@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Buyurtma berish - Furni Glass{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-input {
+        transition: all 0.3s ease;
+        border: 2px solid #e5e7eb;
+    }
+    .form-input:focus {
+        border-color: #232339;
+        box-shadow: 0 0 0 4px rgba(45, 74, 62, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="bg-[#F5F5F7] min-h-screen py-8 lg:py-12">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="/cart" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-4 transition">
+                <i class="fas fa-arrow-left"></i>
+                Savatchaga qaytish
+            </a>
+            <h1 class="text-2xl md:text-3xl font-bold text-[#232339]">Buyurtma berish</h1>
+        </div>
+        
+        <form method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            <!-- Checkout Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl p-6 md:p-8">
+                    <h3 class="text-lg font-semibold text-[#232339] mb-6 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-[#232339] text-white rounded-full flex items-center justify-center text-sm">1</div>
+                        Shaxsiy ma'lumotlar
+                    </h3>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Ismingiz *</label>
+                            <input type="text" name="name" required 
+                                class="form-input w-full rounded-xl px-4 py-3.5 outline-none" 
+                                placeholder="To'liq ismingizni kiriting">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Telefon raqam *</label>
+                            <input type="tel" name="phone" required 
+                                class="form-input w-full rounded-xl px-4 py-3.5 outline-none" 
+                                placeholder="+998 90 123 45 67">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Manzil *</label>
+                            <textarea name="address" rows="3" required 
+                                class="form-input w-full rounded-xl px-4 py-3.5 outline-none resize-none" 
+                                placeholder="Shahar, tuman, ko'cha, uy raqami"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Qo'shimcha izoh</label>
+                            <textarea name="comment" rows="2" 
+                                class="form-input w-full rounded-xl px-4 py-3.5 outline-none resize-none" 
+                                placeholder="Ixtiyoriy: qo'shimcha ma'lumotlar"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 pt-6 border-t border-gray-100">
+                        <h3 class="text-lg font-semibold text-[#232339] mb-4 flex items-center gap-2">
+                            <div class="w-8 h-8 bg-[#232339] text-white rounded-full flex items-center justify-center text-sm">2</div>
+                            To'lov usuli
+                        </h3>
+                        
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-4 p-4 border-2 border-[#232339] rounded-xl cursor-pointer bg-[#232339]/5">
+                                <input type="radio" name="payment" value="cash" checked class="w-5 h-5 text-[#232339]">
+                                <div class="flex-1">
+                                    <p class="font-medium text-[#232339]">Naqd pul</p>
+                                    <p class="text-sm text-gray-500">Yetkazib berishda to'lash</p>
+                                </div>
+                                <i class="fas fa-money-bill-wave text-[#232339] text-xl"></i>
+                            </label>
+                            
+                            <label class="flex items-center gap-4 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-gray-300 transition">
+                                <input type="radio" name="payment" value="card" class="w-5 h-5 text-[#232339]">
+                                <div class="flex-1">
+                                    <p class="font-medium text-[#232339]">Plastik karta</p>
+                                    <p class="text-sm text-gray-500">Payme, Click, Uzum Bank</p>
+                                </div>
+                                <i class="fas fa-credit-card text-gray-400 text-xl"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl p-6 sticky top-24">
+                    <h3 class="text-lg font-semibold text-[#232339] mb-6">Buyurtma</h3>
+                    
+                    <!-- Cart Items Preview -->
+                    <div class="space-y-4 mb-6 max-h-60 overflow-y-auto">
+                        {% for item in cart_items %}
+                        <div class="flex gap-3">
+                            <div class="w-16 h-16 bg-[#FAFAFA] rounded-lg overflow-hidden flex-shrink-0">
+                                {% if item.product.images %}
+                                    {% set images = item.product.images|from_json %}
+                                    {% if images %}
+                                        <img src="/uploads/{{ images[0] }}" alt="{{ item.product.get_name(lang) }}" class="w-full h-full object-contain">
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-[#232339] line-clamp-1">{{ item.product.get_name(lang) }}</p>
+                                <p class="text-xs text-gray-400">{{ item.quantity }} dona</p>
+                                <p class="text-sm font-semibold text-[#232339]">{{ "{:,.0f}".format(item.subtotal) }} so'm</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="space-y-3 mb-6 border-t border-gray-100 pt-4">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Mahsulotlar</span>
+                            <span>{{ "{:,.0f}".format(total) }} so'm</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Yetkazib berish</span>
+                            <span class="text-green-600">Bepul</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 pt-4 mb-6">
+                        <div class="flex justify-between">
+                            <span class="text-lg font-semibold text-[#232339]">Jami:</span>
+                            <span class="text-xl font-bold text-[#232339]">{{ "{:,.0f}".format(total) }} so'm</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-[#232339] hover:bg-[#000000] text-white py-4 rounded-xl font-medium transition flex items-center justify-center gap-2">
+                        <i class="fas fa-check"></i>
+                        Buyurtmani tasdiqlash
+                    </button>
+                    
+                    <p class="text-xs text-gray-400 text-center mt-4">
+                        Buyurtma berishda siz shartlarga rozilik bildirasiz
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+

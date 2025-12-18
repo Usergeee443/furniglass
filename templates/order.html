@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Buyurtma Berish - Furni Glass{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8 text-#232339 text-center">Individual Buyurtma Berish</h1>
+        
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="space-y-6">
+                    <!-- Furniture Type -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Mebel turi *</label>
+                        <select name="furniture_type" required class="w-full border rounded-lg px-4 py-2">
+                            <option value="">Tanlang</option>
+                            {% for category in categories %}
+                                <option value="{{ category.name_uz }}">{{ category.name_uz }}</option>
+                            {% endfor %}
+                            <option value="Boshqa">Boshqa</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Size -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">O'lcham</label>
+                        <input type="text" name="size" class="w-full border rounded-lg px-4 py-2" placeholder="Masalan: 200x80x45 sm">
+                    </div>
+                    
+                    <!-- Color -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Rang</label>
+                        <input type="text" name="color" class="w-full border rounded-lg px-4 py-2" placeholder="Masalan: Qora, Oq, Jigarrang">
+                    </div>
+                    
+                    <!-- Material -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Material</label>
+                        <select name="material" class="w-full border rounded-lg px-4 py-2">
+                            <option value="">Tanlang</option>
+                            <option value="Shisha">Shisha</option>
+                            <option value="Yog'och">Yog'och</option>
+                            <option value="Shisha + Yog'och">Shisha + Yog'och</option>
+                            <option value="Boshqa">Boshqa</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Design Image -->
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">Dizayn rasmi (ixtiyoriy)</label>
+                        <input type="file" name="design_image" accept="image/*" class="w-full border rounded-lg px-4 py-2">
+                        <p class="text-xs text-gray-500 mt-1">Agar sizda namuna yoki dizayn rasm bo'lsa, yuklashingiz mumkin</p>
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-semibold mb-4">Aloqa ma'lumotlari</h3>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold mb-2">Telefon raqam *</label>
+                            <input type="tel" name="phone" required class="w-full border rounded-lg px-4 py-2" placeholder="+998 XX XXX XX XX">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold mb-2">Ism</label>
+                            <input type="text" name="name" class="w-full border rounded-lg px-4 py-2" placeholder="Ismingiz">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Manzil</label>
+                            <textarea name="address" class="w-full border rounded-lg px-4 py-2" rows="3" placeholder="Yetkazib berish manzili"></textarea>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-#232339 hover:bg-#232339 text-white py-3 rounded-lg font-semibold transition">
+                        Buyurtma Berish
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="mt-8 bg-#232339 rounded-lg p-6">
+            <h3 class="font-semibold mb-2">Buyurtma jarayoni</h3>
+            <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
+                <li>Buyurtmangizni qabul qilamiz</li>
+                <li>24 soat ichida siz bilan bog'lanamiz</li>
+                <li>Dizayn va narx bo'yicha kelishamiz</li>
+                <li>Ishlab chiqarishga qo'yamiz</li>
+                <li>Yetkazib beramiz va o'rnatamiz</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

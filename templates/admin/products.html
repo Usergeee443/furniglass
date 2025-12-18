@@ -1,0 +1,128 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Mahsulotlar - Admin Panel{% endblock %}
+{% block page_title %}Mahsulotlar{% endblock %}
+{% block page_subtitle %}Barcha mahsulotlarni boshqarish{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-[#232339] rounded-xl flex items-center justify-center">
+            <i class="fas fa-box text-white"></i>
+        </div>
+        <div>
+            <h2 class="text-lg font-bold text-[#232339]">Mahsulotlar ro'yxati</h2>
+            <p class="text-sm text-gray-500">Jami: {{ products|length }} ta</p>
+        </div>
+    </div>
+    <a href="/admin/product/add" class="inline-flex items-center justify-center gap-2 bg-[#232339] hover:bg-black text-white px-5 py-2.5 rounded-xl font-medium transition">
+        <i class="fas fa-plus"></i>
+        <span>Yangi mahsulot</span>
+    </a>
+</div>
+
+{% if products %}
+<!-- Products Table -->
+<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-[#F5F5F5] border-b border-gray-200">
+                <tr>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Mahsulot</th>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Kategoriya</th>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Narx</th>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Status</th>
+                    <th class="text-right py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Amallar</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for product in products %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="py-4 px-5">
+                        <div class="flex items-center gap-4">
+                            {% if product.images %}
+                                {% set images = product.images|from_json %}
+                                {% if images %}
+                                    <img src="/uploads/{{ images[0] }}" alt="{{ product.name_uz }}" class="w-14 h-14 object-cover rounded-xl border border-gray-200">
+                                {% else %}
+                                    <div class="w-14 h-14 bg-[#F5F5F5] rounded-xl flex items-center justify-center">
+                                        <i class="fas fa-image text-gray-400"></i>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="w-14 h-14 bg-[#F5F5F5] rounded-xl flex items-center justify-center">
+                                    <i class="fas fa-image text-gray-400"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <p class="font-medium text-[#232339]">{{ product.name_uz }}</p>
+                                <p class="text-sm text-gray-500">#{{ product.id }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4 px-5 hidden md:table-cell">
+                        {% if product.category %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-lg bg-[#F5F5F5] text-sm text-gray-700">
+                                {{ product.category.name_uz }}
+                            </span>
+                        {% else %}
+                            <span class="text-gray-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-4 px-5">
+                        <div class="flex flex-col">
+                            <span class="font-semibold text-[#232339]">
+                                {{ "{:,.0f}".format(product.price * usd_rate) }} so'm
+                            </span>
+                            <span class="text-xs text-gray-400">
+                                ${{ "%.2f" % product.price }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-5 hidden sm:table-cell">
+                        {% if product.is_bestseller %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F5C242]/20 text-[#232339] text-xs font-medium">
+                                <i class="fas fa-star text-[#F5C242]"></i> Best Seller
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-medium">
+                                Oddiy
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="py-4 px-5">
+                        <div class="flex items-center justify-end gap-1">
+                            <a href="/product/{{ product.id }}" target="_blank" class="p-2 hover:bg-[#F5F5F5] text-gray-500 rounded-lg transition" title="Ko'rish">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="/admin/product/{{ product.id }}/edit" class="p-2 hover:bg-[#F5F5F5] text-[#232339] rounded-lg transition" title="Tahrirlash">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="/admin/product/{{ product.id }}/delete" method="POST" class="inline" onsubmit="return confirm('Rostdan ham o\'chirmoqchimisiz?');">
+                                <button type="submit" class="p-2 hover:bg-red-50 text-red-500 rounded-lg transition" title="O'chirish">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<!-- Empty State -->
+<div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+    <div class="w-20 h-20 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-box text-gray-400 text-3xl"></i>
+    </div>
+    <h3 class="text-lg font-semibold text-[#232339] mb-2">Mahsulotlar yo'q</h3>
+    <p class="text-gray-500 mb-6">Birinchi mahsulotingizni qo'shishdan boshlang</p>
+    <a href="/admin/product/add" class="inline-flex items-center gap-2 bg-[#232339] hover:bg-black text-white px-6 py-3 rounded-xl font-medium transition">
+        <i class="fas fa-plus"></i> Mahsulot qo'shish
+    </a>
+</div>
+{% endif %}
+{% endblock %}

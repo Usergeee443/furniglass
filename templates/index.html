@@ -1,0 +1,704 @@
+{% extends "base.html" %}
+
+{% block title %}Furni Glass - {% if lang == 'ru' %}Ведущий Производитель Мебели в Узбекистане{% elif lang == 'en' %}Uzbekistan's Leading Furniture Manufacturer{% else %}O'zbekistonning Yetakchi Mebel Ishlab Chiqaruvchisi{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+    
+    .line-clamp-1 {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .line-clamp-4 {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    /* Smooth scrolling for carousel */
+    #best-products-carousel {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure 4 cards fit perfectly on desktop */
+    @media (min-width: 1024px) {
+        .best-product-card {
+            width: calc(25% - 15px) !important;
+            min-width: 0 !important;
+        }
+    }
+    
+    /* Category filter animation */
+    .category-filter-btn {
+        transition: all 0.2s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section - Clean & Minimalistic -->
+<section class="relative bg-[#FAF9F6] py-16 lg:py-24">
+    <div class="container mx-auto px-4 lg:px-8">
+        <!-- Header Section -->
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] leading-tight mb-6">
+                {% if lang == 'ru' %}
+                Обустройте Дом<br>
+                <span class="text-[#232339]">Современным Стилем</span>
+                {% elif lang == 'en' %}
+                Furnish Your Home with<br>
+                <span class="text-[#232339]">Sustainable Style</span>
+                {% else %}
+                Uyingizni<br>
+                <span class="text-[#232339]">Zamonaviy Uslubda</span><br>
+                Bezang
+                {% endif %}
+            </h1>
+            
+            <p class="text-gray-600 text-lg md:text-xl mb-8 leading-relaxed">
+                {% if lang == 'ru' %}
+                Откройте для себя мебель, которая одновременно красива и экологически ответственна. 
+                Наши изделия изготовлены из экологически чистых материалов, сокращая отходы и сохраняя планету для будущих поколений.
+                {% elif lang == 'en' %}
+                Discover furniture that is both beautiful and environmentally responsible. 
+                Our pieces are crafted from sustainable materials, reducing waste and preserving the planet for future generations.
+                {% else %}
+                Chiroyli va ekologik mas'uliyatli mebellarni kashf eting. 
+                Bizning mahsulotlarimiz barqaror materiallardan yaratilgan bo'lib, chiqindilarni kamaytiradi va kelajak avlodlar uchun sayyorani saqlaydi.
+                {% endif %}
+            </p>
+            
+            <a href="/products" class="inline-flex items-center justify-center bg-[#232339] hover:bg-black text-white font-semibold px-8 py-4 rounded-xl transition-all hover:shadow-lg">
+                {% if lang == 'ru' %}Посмотреть магазин{% elif lang == 'en' %}View Shop{% else %}Do'konni ko'rish{% endif %}
+                    </a>
+                </div>
+        
+        <!-- Image Grid - 4 Images -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+            <div class="aspect-square overflow-hidden rounded-2xl">
+                <img src="/uploads/designs/3.jpg" alt="{% if lang == 'ru' %}Гостиная{% elif lang == 'en' %}Living Room{% else %}Zal{% endif %}" 
+                     class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+            </div>
+            <div class="aspect-square overflow-hidden rounded-2xl">
+                <img src="/uploads/designs/2.jpg" alt="{% if lang == 'ru' %}Современная мебель{% elif lang == 'en' %}Modern Furniture{% else %}Zamonaviy mebel{% endif %}" 
+                     class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                    </div>
+            <div class="aspect-square overflow-hidden rounded-2xl">
+                <img src="/uploads/designs/Frame 55.png" alt="{% if lang == 'ru' %}Интерьер{% elif lang == 'en' %}Interior{% else %}Interyer{% endif %}" 
+                     class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                </div>
+            <div class="aspect-square overflow-hidden rounded-2xl">
+                <img src="/uploads/designs/3.jpg" alt="{% if lang == 'ru' %}Мебель{% elif lang == 'en' %}Furniture{% else %}Mebel{% endif %}" 
+                     class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+            </div>
+        </div>
+        
+        <!-- Brand Logos -->
+        <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16">
+            <span class="text-gray-400 text-xl font-light tracking-wider opacity-60 hover:opacity-100 transition-opacity">artek</span>
+            <span class="text-gray-400 text-lg font-light tracking-wide opacity-60 hover:opacity-100 transition-opacity">louis<br>poulsen</span>
+            <span class="text-gray-400 text-2xl font-medium tracking-wider opacity-60 hover:opacity-100 transition-opacity">FLOS</span>
+            <span class="text-gray-400 text-xl font-light tracking-wide opacity-60 hover:opacity-100 transition-opacity">ferm</span>
+            <span class="text-gray-400 text-xl font-light tracking-wide opacity-60 hover:opacity-100 transition-opacity">vitra.</span>
+            <span class="text-gray-400 text-xl font-light tracking-wide opacity-60 hover:opacity-100 transition-opacity">oluce</span>
+        </div>
+    </div>
+</section>
+
+<!-- Best Selling Products Section -->
+{% if bestsellers %}
+<section class="py-16 lg:py-24 bg-[#F5F5F5]">
+    <div class="container mx-auto px-4 lg:px-8">
+        <!-- Section Title -->
+        <div class="text-center mb-4">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Лучшие Продажи{% elif lang == 'en' %}Best Selling Product{% else %}Eng Ko'p Sotilgan{% endif %}
+            </h2>
+                        </div>
+        
+        <!-- Category Filters -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-12">
+            <div class="inline-flex bg-[#EBEBEB] rounded-full p-1">
+                <button class="category-filter-btn px-5 py-2 rounded-full text-sm font-medium transition-all bg-white text-[#232339] shadow-sm" data-category="all">
+                    {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
+                </button>
+                {% for cat in categories[:4] %}
+                <button class="category-filter-btn px-5 py-2 rounded-full text-sm font-medium transition-all text-gray-600 hover:text-[#232339]" data-category="{{ cat.id }}">
+                    {{ cat.get_name(lang) }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Products Grid with Carousel -->
+        <div class="relative">
+            <!-- Navigation Buttons (hidden by default, shown only if needed) -->
+            <button id="carousel-prev" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-[#232339] hover:bg-[#232339] hover:text-white transition-all hidden">
+                <i class="fas fa-chevron-left text-sm"></i>
+            </button>
+            <button id="carousel-next" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-[#232339] hover:bg-[#232339] hover:text-white transition-all hidden">
+                <i class="fas fa-chevron-right text-sm"></i>
+            </button>
+            
+            <!-- Products Container -->
+            <div class="overflow-hidden px-4 lg:px-12">
+                <div id="best-products-carousel" class="flex gap-4 lg:gap-5 transition-transform duration-500 ease-out">
+                    {% for product in bestsellers %}
+                    <div class="best-product-card flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-[calc(25%-15px)] cursor-pointer group" 
+                         data-product-id="{{ product.id }}" 
+                         data-category="{{ product.category_id if product.category else 'all' }}">
+                        <!-- Product Card -->
+                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+                            <!-- Product Image -->
+                            <a href="/product/{{ product.id }}" class="block aspect-square bg-[#F8F8F8] relative overflow-hidden">
+                                {% if product.images %}
+                                    {% set images = product.images|from_json %}
+                                    {% if images %}
+                                        <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
+                                             class="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500">
+                                    {% else %}
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <i class="fas fa-image text-4xl text-gray-300"></i>
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <i class="fas fa-image text-4xl text-gray-300"></i>
+                </div>
+                                {% endif %}
+                            </a>
+                            
+                            <!-- Product Info -->
+                            <div class="p-4">
+                                <!-- Category -->
+                                <p class="text-xs text-gray-400 mb-1">
+                                    {{ product.category.get_name(lang) if product.category else ('Mebel' if lang == 'uz' else ('Мебель' if lang == 'ru' else 'Furniture')) }}
+                                </p>
+                                
+                                <!-- Name -->
+                                <a href="/product/{{ product.id }}" class="block">
+                                    <h3 class="font-semibold text-[#232339] text-base mb-2 line-clamp-1 group-hover:text-[#232339]/80 transition">
+                                        {{ product.get_name(lang) }}
+                                    </h3>
+                                </a>
+                                
+                                <!-- Rating -->
+                                <div class="flex items-center gap-0.5 mb-3">
+                                    <i class="fas fa-star text-[#F5C242] text-xs"></i>
+                                    <i class="fas fa-star text-[#F5C242] text-xs"></i>
+                                    <i class="fas fa-star text-[#F5C242] text-xs"></i>
+                                    <i class="fas fa-star text-[#F5C242] text-xs"></i>
+                                    <i class="fas fa-star text-[#F5C242] text-xs"></i>
+                        </div>
+                                
+                                <!-- Price and Add Button -->
+                                <div class="flex items-center justify-between mt-2">
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-xs text-gray-400">$</span>
+                                        <span class="text-xl font-bold text-[#232339]">{{ "{:,.0f}".format(product.price * usd_rate) }}</span>
+                        </div>
+                                    <button class="add-to-cart-btn w-9 h-9 bg-[#232339] hover:bg-black rounded-full flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95" 
+                                            data-product-id="{{ product.id }}"
+                                            onclick="event.stopPropagation();">
+                                        <i class="fas fa-plus text-sm"></i>
+                                    </button>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // === CAROUSEL FUNCTIONALITY ===
+    const carousel = document.getElementById('best-products-carousel');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    
+    if (carousel && prevBtn && nextBtn) {
+        const cards = carousel.querySelectorAll('.best-product-card');
+        if (cards.length === 0) return;
+        
+        // Show/hide navigation buttons based on number of cards
+        const totalCards = cards.length;
+        
+        // Determine how many cards to show based on screen size
+        function getCardsToShow() {
+            if (window.innerWidth >= 1024) return 4; // Desktop: 4 cards
+            if (window.innerWidth >= 768) return 3; // Tablet: 3 cards
+            if (window.innerWidth >= 640) return 2; // Small tablet: 2 cards
+            return 1; // Mobile: 1 card
+        }
+        
+        const cardsToShow = getCardsToShow();
+        
+        if (totalCards <= cardsToShow) {
+            // Hide navigation buttons if cards fit on screen
+            prevBtn.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+        } else {
+            // Show navigation buttons if more than 4 cards
+            prevBtn.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+            
+            let currentIndex = 0;
+            let maxIndex = totalCards - cardsToShow;
+            
+            function updateCarousel() {
+                // Recalculate cards to show on resize
+                const currentCardsToShow = getCardsToShow();
+                maxIndex = Math.max(0, totalCards - currentCardsToShow);
+                
+                // Reset currentIndex if it exceeds maxIndex
+                if (currentIndex > maxIndex) {
+                    currentIndex = maxIndex;
+                }
+                
+                // Calculate card width including gap
+                const cardWidth = cards[0].offsetWidth;
+                // Get gap from computed style (gap-4 = 16px on mobile, gap-5 = 20px on desktop)
+                const gap = window.innerWidth >= 1024 ? 20 : 16;
+                const totalCardWidth = cardWidth + gap;
+                
+                const translateX = -currentIndex * totalCardWidth;
+                carousel.style.transform = `translateX(${translateX}px)`;
+                
+                // Update button states
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex >= maxIndex;
+                prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
+                nextBtn.style.opacity = currentIndex >= maxIndex ? '0.5' : '1';
+                prevBtn.style.cursor = currentIndex === 0 ? 'not-allowed' : 'pointer';
+                nextBtn.style.cursor = currentIndex >= maxIndex ? 'not-allowed' : 'pointer';
+            }
+            
+            prevBtn.addEventListener('click', function() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                if (currentIndex < maxIndex) {
+                    currentIndex++;
+                    updateCarousel();
+                }
+            });
+            
+            // Touch/Swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, {passive: true});
+            
+            carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                const diff = touchStartX - touchEndX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0 && currentIndex < maxIndex) {
+                        // Swipe left - next
+                        currentIndex++;
+                    } else if (diff < 0 && currentIndex > 0) {
+                        // Swipe right - previous
+                        currentIndex--;
+                    }
+                    updateCarousel();
+                }
+            }, {passive: true});
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    const newCardsToShow = getCardsToShow();
+                    // Show/hide buttons based on new screen size
+                    if (totalCards <= newCardsToShow) {
+                        prevBtn.classList.add('hidden');
+                        nextBtn.classList.add('hidden');
+                    } else {
+                        prevBtn.classList.remove('hidden');
+                        nextBtn.classList.remove('hidden');
+                    }
+                    updateCarousel();
+                }, 250);
+            });
+            
+            updateCarousel();
+        }
+    }
+    
+    // === CATEGORY FILTER FUNCTIONALITY ===
+    const filterBtns = document.querySelectorAll('.category-filter-btn');
+    const productCards = document.querySelectorAll('.best-product-card');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const category = this.dataset.category;
+            
+            // Update active state
+            filterBtns.forEach(b => {
+                b.classList.remove('bg-white', 'text-[#232339]', 'shadow-sm');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-white', 'text-[#232339]', 'shadow-sm');
+            this.classList.remove('text-gray-600');
+            
+            // Filter products
+            productCards.forEach(card => {
+                const cardCategory = card.dataset.category;
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+    // === ADD TO CART FUNCTIONALITY ===
+    const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
+    
+    addToCartBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const productId = this.dataset.productId;
+            const button = this;
+            
+            // Visual feedback
+            button.innerHTML = '<i class="fas fa-spinner fa-spin text-sm"></i>';
+            button.disabled = true;
+            
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `product_id=${productId}&quantity=1`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.innerHTML = '<i class="fas fa-check text-sm"></i>';
+                    button.classList.remove('bg-[#232339]');
+                    button.classList.add('bg-green-500');
+                    
+                    // Update cart count
+                    const cartBadge = document.querySelector('.cart-badge');
+                    if (cartBadge) {
+                        cartBadge.textContent = data.cart_count || parseInt(cartBadge.textContent || 0) + 1;
+                    }
+                    
+                    setTimeout(() => {
+                        button.innerHTML = '<i class="fas fa-plus text-sm"></i>';
+                        button.classList.remove('bg-green-500');
+                        button.classList.add('bg-[#232339]');
+                        button.disabled = false;
+                    }, 1500);
+                } else {
+                    button.innerHTML = '<i class="fas fa-plus text-sm"></i>';
+                    button.disabled = false;
+                }
+            })
+            .catch(() => {
+                button.innerHTML = '<i class="fas fa-plus text-sm"></i>';
+                button.disabled = false;
+            });
+        });
+    });
+});
+</script>
+{% endif %}
+
+<!-- Categories Section -->
+<section class="py-16 lg:py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Категории{% elif lang == 'en' %}Categories{% else %}Kategoriyalar{% endif %}
+            </h2>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+            {% for category in categories[:8] %}
+            <a href="/products?category={{ category.id }}" class="group">
+                <div class="bg-[#F5F5F5] rounded-2xl overflow-hidden aspect-square relative">
+                        {% if category.image %}
+                        <img src="/uploads/{{ category.image }}" alt="{{ category.get_name(lang) }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center">
+                            <i class="fas fa-couch text-4xl text-gray-300"></i>
+                        </div>
+                        {% endif %}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4">
+                        <h3 class="text-white font-semibold text-lg">{{ category.get_name(lang) }}</h3>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-12 lg:py-16 bg-[#232339]">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+            <div class="text-center">
+                <p class="text-4xl lg:text-5xl font-bold text-white mb-2">25+</p>
+                <p class="text-white/60 text-sm">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years Experience{% else %}Yillik tajriba{% endif %}</p>
+                        </div>
+            <div class="text-center">
+                <p class="text-4xl lg:text-5xl font-bold text-white mb-2">5000+</p>
+                <p class="text-white/60 text-sm">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Happy Clients{% else %}Mamnun mijozlar{% endif %}</p>
+                    </div>
+            <div class="text-center">
+                <p class="text-4xl lg:text-5xl font-bold text-white mb-2">2500+</p>
+                <p class="text-white/60 text-sm">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects Done{% else %}Bajarilgan loyihalar{% endif %}</p>
+                    </div>
+            <div class="text-center">
+                <p class="text-4xl lg:text-5xl font-bold text-white mb-2">100%</p>
+                <p class="text-white/60 text-sm">{% if lang == 'ru' %}Качество{% elif lang == 'en' %}Quality{% else %}Sifat kafolati{% endif %}</p>
+                </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section - Compact -->
+<section class="py-16 lg:py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Наши Услуги{% elif lang == 'en' %}Our Services{% else %}Xizmatlarimiz{% endif %}
+            </h2>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+            <div class="text-center p-4">
+                <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-drafting-compass text-white text-xl"></i>
+                </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</p>
+            </div>
+            <div class="text-center p-4">
+                <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-ruler-combined text-white text-xl"></i>
+                        </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}Бесплатный замер{% elif lang == 'en' %}Free Measurement{% else %}Bepul O'lchov{% endif %}</p>
+                    </div>
+            <div class="text-center p-4">
+                <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-industry text-white text-xl"></i>
+                        </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab Chiqarish{% endif %}</p>
+                    </div>
+            <div class="text-center p-4">
+                <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-truck text-white text-xl"></i>
+                        </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}</p>
+                    </div>
+            <div class="text-center p-4">
+                <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-tools text-white text-xl"></i>
+                </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish{% endif %}</p>
+            </div>
+            <div class="text-center p-4">
+                <div class="w-14 h-14 bg-[#F5C242] rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-shield-alt text-white text-xl"></i>
+                </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}3 года гарантии{% elif lang == 'en' %}3 Year Warranty{% else %}3 Yil Kafolat{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Custom Order CTA Banner -->
+<section class="py-16 lg:py-20 bg-[#232339]">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div class="text-center lg:text-left">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4" style="font-family: 'Playfair Display', serif;">
+                    {% if lang == 'ru' %}Нужна индивидуальная мебель?{% elif lang == 'en' %}Need Custom Furniture?{% else %}Maxsus mebel kerakmi?{% endif %}
+                </h2>
+                <p class="text-white/70 text-lg max-w-xl">
+                    {% if lang == 'ru' %}Мы изготовим мебель по вашим размерам и дизайну. Бесплатная консультация!{% elif lang == 'en' %}We'll make furniture to your exact specifications. Free consultation!{% else %}Sizning o'lcham va dizayningiz bo'yicha mebel tayyorlaymiz. Bepul maslahat!{% endif %}
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#F5C242] hover:bg-[#F5C242]/90 text-[#232339] font-semibold px-8 py-4 rounded-xl transition-all">
+                    <i class="fas fa-paper-plane"></i>
+                    {% if lang == 'ru' %}Заказать{% elif lang == 'en' %}Order Now{% else %}Buyurtma berish{% endif %}
+                </a>
+                <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-2 border-2 border-white/30 hover:border-white text-white font-semibold px-8 py-4 rounded-xl transition-all">
+                    <i class="fas fa-phone"></i>
+                    +998 90 123 45 67
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio Preview -->
+{% if portfolios %}
+<section class="py-16 lg:py-20 bg-[#F5F5F5]">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between mb-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Наши Работы{% elif lang == 'en' %}Our Works{% else %}Bizning ishlarimiz{% endif %}
+            </h2>
+            <a href="/portfolio" class="hidden md:inline-flex items-center gap-2 text-[#232339] hover:text-black font-medium transition">
+                {% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All Projects{% else %}Barcha loyihalar{% endif %}
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+            {% for portfolio in portfolios[:3] %}
+            <a href="/portfolio" class="group">
+                <div class="bg-white rounded-2xl overflow-hidden">
+                {% if portfolio.after_image %}
+                    <div class="aspect-[4/3] relative overflow-hidden">
+                        <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.title_uz }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <h3 class="text-white font-semibold">{{ portfolio.title_uz }}</h3>
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-8 md:hidden">
+            <a href="/portfolio" class="inline-flex items-center gap-2 text-[#232339] font-medium">
+                {% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All Projects{% else %}Barcha loyihalar{% endif %}
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Reviews Section -->
+{% if reviews %}
+<section class="py-16 lg:py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Отзывы Клиентов{% elif lang == 'en' %}Customer Reviews{% else %}Mijozlar Fikrlari{% endif %}
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for review in reviews[:3] %}
+            <div class="bg-[#F5F5F5] rounded-2xl p-6">
+                <div class="flex items-center gap-0.5 mb-4">
+                        {% for i in range(review.rating) %}
+                    <i class="fas fa-star text-[#F5C242] text-sm"></i>
+                        {% endfor %}
+                </div>
+                <p class="text-gray-600 mb-4 line-clamp-4">"{{ review.text_uz }}"</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-[#232339] rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {{ review.name[0] }}
+                    </div>
+                    <div>
+                        <p class="font-medium text-[#232339]">{{ review.name }}</p>
+                        <p class="text-xs text-gray-400">{% if lang == 'ru' %}Клиент{% elif lang == 'en' %}Customer{% else %}Mijoz{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Contact Section -->
+<section class="py-16 lg:py-20 bg-[#F5F5F5]">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <!-- Left - Info -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-bold text-[#232339] mb-6" style="font-family: 'Playfair Display', serif;">
+                    {% if lang == 'ru' %}Свяжитесь с Нами{% elif lang == 'en' %}Get in Touch{% else %}Biz Bilan Bog'laning{% endif %}
+                </h2>
+                <p class="text-gray-600 mb-8">
+                    {% if lang == 'ru' %}Оставьте заявку и мы свяжемся с вами в течение 30 минут{% elif lang == 'en' %}Leave a request and we'll contact you within 30 minutes{% else %}So'rov qoldiring va 30 daqiqa ichida siz bilan bog'lanamiz{% endif %}
+                </p>
+                
+                <div class="space-y-4 mb-8">
+                    <a href="tel:+998901234567" class="flex items-center gap-4 text-[#232339] hover:text-black transition">
+                        <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center">
+                            <i class="fas fa-phone text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</p>
+                            <p class="font-semibold">+998 90 123 45 67</p>
+                        </div>
+                    </a>
+                    <a href="https://t.me/furniglass" class="flex items-center gap-4 text-[#232339] hover:text-black transition">
+                        <div class="w-12 h-12 bg-[#0088cc] rounded-xl flex items-center justify-center">
+                            <i class="fab fa-telegram-plane text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400">Telegram</p>
+                            <p class="font-semibold">@furniglass</p>
+                        </div>
+                    </a>
+                    <div class="flex items-center gap-4 text-[#232339]">
+                        <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
+                            <p class="font-semibold">Toshkent, Yunusobod tumani</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right - Form -->
+            <div class="bg-white rounded-2xl p-6 lg:p-8 shadow-sm">
+                <h3 class="text-xl font-bold text-[#232339] mb-6">
+                    {% if lang == 'ru' %}Оставить заявку{% elif lang == 'en' %}Send Request{% else %}So'rov qoldirish{% endif %}
+                </h3>
+                <form action="/contact" method="POST" class="space-y-4">
+                    <input type="text" name="name" placeholder="{% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your Name{% else %}Ismingiz{% endif %}" 
+                           class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                    <input type="tel" name="phone" placeholder="+998 __ ___ __ __" required 
+                           class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                    <textarea name="message" rows="3" placeholder="{% if lang == 'ru' %}Сообщение{% elif lang == 'en' %}Message{% else %}Xabar{% endif %}" 
+                              class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition resize-none"></textarea>
+                    <button type="submit" class="w-full bg-[#232339] hover:bg-black text-white py-4 rounded-xl font-semibold transition-all">
+                        {% if lang == 'ru' %}Отправить{% elif lang == 'en' %}Send{% else %}Yuborish{% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

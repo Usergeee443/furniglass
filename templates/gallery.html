@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+
+{% block title %}{{ T.nav.gallery[lang] }} - Furni Glass{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+    .hero-title { font-family: 'Playfair Display', serif; }
+    .gradient-text {
+        background: linear-gradient(135deg, #232339 0%, #000000 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .gallery-item { transition: all 0.4s ease; }
+    .gallery-item:hover { transform: scale(1.02); }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay { opacity: 0; transition: all 0.3s ease; }
+    
+    .masonry { column-count: 4; column-gap: 16px; }
+    @media (max-width: 1024px) { .masonry { column-count: 3; } }
+    @media (max-width: 768px) { .masonry { column-count: 2; } }
+    @media (max-width: 480px) { .masonry { column-count: 1; } }
+    .masonry-item { break-inside: avoid; margin-bottom: 16px; }
+    
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; }
+    .lightbox.active { display: flex; align-items: center; justify-content: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-gradient-to-br from-[#FAF9F6] to-[#EDE9E3] py-20 lg:py-28">
+    <div class="container mx-auto px-4 text-center">
+        <div class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-8">
+            <a href="/" class="hover:text-[#232339]">{{ T.nav.home[lang] }}</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span class="text-[#232339]">{{ T.nav.gallery[lang] }}</span>
+        </div>
+        <div class="inline-flex items-center gap-2 bg-[#232339]/10 text-[#232339] px-5 py-2.5 rounded-full text-sm font-medium mb-8">
+            <i class="fas fa-camera"></i>
+            {{ T.gallery.photo_gallery[lang] }}
+        </div>
+        <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-8">
+            {% if lang == 'ru' %}Наша<br><span class="gradient-text">Галерея</span>{% elif lang == 'en' %}Our<br><span class="gradient-text">Gallery</span>{% else %}Bizning<br><span class="gradient-text">Galereya</span>{% endif %}
+        </h1>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+            {% if lang == 'ru' %}Фотографии производственного процесса, готовой продукции и выполненных проектов{% elif lang == 'en' %}Photos of production process, finished products and completed projects{% else %}Ishlab chiqarish jarayoni, tayyor mahsulotlar va bajarilgan loyihalar fotosuratlari{% endif %}
+        </p>
+    </div>
+</section>
+
+<!-- Filter -->
+<section class="py-8 bg-white sticky top-16 md:top-20 z-30 shadow-sm">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap justify-center gap-3">
+            <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium bg-[#232339] text-white" data-filter="all">
+                Barchasi
+            </button>
+            <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium bg-[#FAF9F6] text-gray-700 hover:bg-[#232339] hover:text-white transition" data-filter="production">
+                Ishlab chiqarish
+            </button>
+            <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium bg-[#FAF9F6] text-gray-700 hover:bg-[#232339] hover:text-white transition" data-filter="products">
+                Mahsulotlar
+            </button>
+            <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium bg-[#FAF9F6] text-gray-700 hover:bg-[#232339] hover:text-white transition" data-filter="projects">
+                Loyihalar
+            </button>
+            <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-medium bg-[#FAF9F6] text-gray-700 hover:bg-[#232339] hover:text-white transition" data-filter="showroom">
+                Showroom
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="py-16 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4">
+        <div class="masonry">
+            <!-- Production Images -->
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="production">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="CNC dastgoh" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">CNC Dastgoh</p>
+                            <p class="text-sm text-white/70">Ishlab chiqarish</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="products">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Zamonaviy shkaf" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Zamonaviy Shkaf</p>
+                            <p class="text-sm text-white/70">Mahsulotlar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="projects">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Oshxona loyihasi" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Oshxona Loyihasi</p>
+                            <p class="text-sm text-white/70">Loyihalar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="showroom">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Showroom" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Ko'rgazma Zali</p>
+                            <p class="text-sm text-white/70">Showroom</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="production">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Material kesish" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Avtomatik Kesish</p>
+                            <p class="text-sm text-white/70">Ishlab chiqarish</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="products">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Oshxona mebeli" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Oshxona Garniturasi</p>
+                            <p class="text-sm text-white/70">Mahsulotlar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="projects">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Yotoqxona loyihasi" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Yotoqxona Loyihasi</p>
+                            <p class="text-sm text-white/70">Loyihalar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="production">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Bo'yash tsexi" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Bo'yash Tsexi</p>
+                            <p class="text-sm text-white/70">Ishlab chiqarish</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="showroom">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Namuna xonasi" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Namuna Xonasi</p>
+                            <p class="text-sm text-white/70">Showroom</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="products">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="TV stendi" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">TV Stendi</p>
+                            <p class="text-sm text-white/70">Mahsulotlar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="projects">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Ofis mebeli" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Ofis Loyihasi</p>
+                            <p class="text-sm text-white/70">Loyihalar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="masonry-item gallery-item rounded-2xl overflow-hidden shadow-lg cursor-pointer" data-category="production">
+                <div class="relative">
+                    <img src="/uploads/designs/3.jpg" alt="Material ombor" class="w-full">
+                    <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                        <div class="text-white">
+                            <p class="font-medium">Material Ombori</p>
+                            <p class="text-sm text-white/70">Ishlab chiqarish</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Video Section -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-4">Video Galereya</h2>
+            <p class="text-gray-600">Ishlab chiqarish jarayonini video orqali ko'ring</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="relative aspect-video bg-gray-200 rounded-2xl overflow-hidden group cursor-pointer">
+                <img src="/uploads/designs/3.jpg" alt="Video thumbnail" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/50 flex items-center justify-center group-hover:bg-black/40 transition">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                        <i class="fas fa-play text-[#232339] text-xl ml-1"></i>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 left-4 text-white">
+                    <p class="font-medium">Fabrika touri</p>
+                    <p class="text-sm text-white/70">3:45</p>
+                </div>
+            </div>
+            
+            <div class="relative aspect-video bg-gray-200 rounded-2xl overflow-hidden group cursor-pointer">
+                <img src="/uploads/designs/3.jpg" alt="Video thumbnail" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/50 flex items-center justify-center group-hover:bg-black/40 transition">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                        <i class="fas fa-play text-[#232339] text-xl ml-1"></i>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 left-4 text-white">
+                    <p class="font-medium">Ishlab chiqarish jarayoni</p>
+                    <p class="text-sm text-white/70">5:20</p>
+                </div>
+            </div>
+            
+            <div class="relative aspect-video bg-gray-200 rounded-2xl overflow-hidden group cursor-pointer">
+                <img src="/uploads/designs/3.jpg" alt="Video thumbnail" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/50 flex items-center justify-center group-hover:bg-black/40 transition">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                        <i class="fas fa-play text-[#232339] text-xl ml-1"></i>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 left-4 text-white">
+                    <p class="font-medium">Mijoz sharhlari</p>
+                    <p class="text-sm text-white/70">2:15</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 bg-gradient-to-br from-[#232339] to-[#000000]">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="hero-title text-3xl md:text-4xl font-bold text-white mb-6">
+            Loyihangizni Boshlang
+        </h2>
+        <p class="text-white/70 text-lg mb-10 max-w-xl mx-auto">
+            Sizning loyihangiz ham galereyadagi o'rnini topsin. Bepul maslahat uchun bog'laning.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/order" class="inline-flex items-center justify-center gap-2 bg-white text-[#232339] px-8 py-4 rounded-full font-medium hover:shadow-xl transition">
+                <i class="fas fa-paper-plane"></i>
+                Buyurtma Berish
+            </a>
+            <a href="/contact" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-medium hover:bg-white hover:text-[#232339] transition">
+                <i class="fas fa-phone"></i>
+                Bog'lanish
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const items = document.querySelectorAll('.gallery-item');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('bg-[#232339]', 'text-white'));
+            filterBtns.forEach(b => b.classList.add('bg-[#FAF9F6]', 'text-gray-700'));
+            this.classList.remove('bg-[#FAF9F6]', 'text-gray-700');
+            this.classList.add('bg-[#232339]', 'text-white');
+            
+            const filter = this.dataset.filter;
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}
+

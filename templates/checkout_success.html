@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Buyurtma qabul qilindi - Furni Glass{% endblock %}
+
+{% block content %}
+<section class="bg-[#F5F5F7] min-h-screen py-16 lg:py-24">
+    <div class="container mx-auto px-4">
+        <div class="max-w-lg mx-auto text-center">
+            <!-- Success Icon -->
+            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                <i class="fas fa-check text-green-500 text-4xl"></i>
+            </div>
+            
+            <h1 class="text-2xl md:text-3xl font-bold text-[#232339] mb-4">
+                Buyurtmangiz qabul qilindi!
+            </h1>
+            
+            <p class="text-gray-600 mb-8 leading-relaxed">
+                Rahmat! Sizning buyurtmangiz muvaffaqiyatli qabul qilindi. 
+                Tez orada operatorlarimiz siz bilan bog'lanishadi.
+            </p>
+            
+            <!-- Info Card -->
+            <div class="bg-white rounded-2xl p-6 mb-8 text-left">
+                <h3 class="font-semibold text-[#232339] mb-4">Keyingi qadamlar:</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-[#2D4A3E] text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">1</div>
+                        <div>
+                            <p class="font-medium text-[#232339]">Tasdiqlash qo'ng'irog'i</p>
+                            <p class="text-sm text-gray-500">Operatorimiz 30 daqiqa ichida qo'ng'iroq qiladi</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-[#2D4A3E] text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">2</div>
+                        <div>
+                            <p class="font-medium text-[#232339]">Buyurtma tayyorlanadi</p>
+                            <p class="text-sm text-gray-500">1-3 kun ichida mahsulot tayyorlanadi</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-[#2D4A3E] text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm">3</div>
+                        <div>
+                            <p class="font-medium text-[#232339]">Yetkazib berish</p>
+                            <p class="text-sm text-gray-500">Manzilingizga bepul yetkazamiz</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="bg-[#2D4A3E]/5 rounded-2xl p-6 mb-8">
+                <p class="text-sm text-gray-600 mb-3">Savollaringiz bo'lsa, biz bilan bog'laning:</p>
+                <a href="tel:+998901234567" class="inline-flex items-center gap-2 text-[#2D4A3E] font-semibold text-lg">
+                    <i class="fas fa-phone"></i>
+                    +998 90 123 45 67
+                </a>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/" class="inline-flex items-center justify-center gap-2 bg-[#2D4A3E] hover:bg-[#1f342b] text-white px-8 py-4 rounded-full font-medium transition">
+                    <i class="fas fa-home"></i>
+                    Bosh sahifa
+                </a>
+                <a href="/products" class="inline-flex items-center justify-center gap-2 border-2 border-[#2D4A3E] text-[#2D4A3E] hover:bg-[#2D4A3E] hover:text-white px-8 py-4 rounded-full font-medium transition">
+                    <i class="fas fa-shopping-bag"></i>
+                    Xarid qilishni davom ettirish
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,166 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Buyurtmalar - Admin Panel{% endblock %}
+{% block page_title %}Buyurtmalar{% endblock %}
+{% block page_subtitle %}Barcha buyurtmalarni boshqarish{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-[#F5C242] rounded-xl flex items-center justify-center">
+            <i class="fas fa-shopping-bag text-[#232339]"></i>
+        </div>
+        <div>
+            <h2 class="text-lg font-bold text-[#232339]">Buyurtmalar ro'yxati</h2>
+            <p class="text-sm text-gray-500">Jami: {{ orders|length }} ta</p>
+        </div>
+    </div>
+</div>
+
+{% if orders %}
+<!-- Stats Summary -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+    <div class="bg-yellow-50 rounded-xl p-4 border border-yellow-100">
+        <p class="text-yellow-600 text-sm font-medium">Yangi</p>
+        <p class="text-2xl font-bold text-yellow-700">{{ orders|selectattr('status', 'equalto', 'Yangi')|list|length }}</p>
+    </div>
+    <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+        <p class="text-blue-600 text-sm font-medium">Jarayonda</p>
+        <p class="text-2xl font-bold text-blue-700">{{ orders|selectattr('status', 'equalto', 'Jarayonda')|list|length }}</p>
+    </div>
+    <div class="bg-green-50 rounded-xl p-4 border border-green-100">
+        <p class="text-green-600 text-sm font-medium">Tayyor</p>
+        <p class="text-2xl font-bold text-green-700">{{ orders|selectattr('status', 'equalto', 'Tayyor')|list|length }}</p>
+    </div>
+    <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+        <p class="text-emerald-600 text-sm font-medium">Yetkazilgan</p>
+        <p class="text-2xl font-bold text-emerald-700">{{ orders|selectattr('status', 'equalto', 'Yetkazilgan')|list|length }}</p>
+    </div>
+    <div class="bg-red-50 rounded-xl p-4 border border-red-100">
+        <p class="text-red-600 text-sm font-medium">Bekor</p>
+        <p class="text-2xl font-bold text-red-700">{{ orders|selectattr('status', 'equalto', 'Bekor qilingan')|list|length }}</p>
+    </div>
+</div>
+
+<!-- Orders Table -->
+<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-[#F5F5F5] border-b border-gray-200">
+                <tr>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Buyurtma</th>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Ma'lumotlar</th>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Mijoz</th>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Holat</th>
+                    <th class="text-left py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Sana</th>
+                    <th class="text-right py-4 px-5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Qo'shimcha</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for order in orders %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="py-4 px-5">
+                        <span class="font-medium text-[#232339]">#{{ order.id }}</span>
+                    </td>
+                    <td class="py-4 px-5">
+                        <div>
+                            <p class="font-medium text-[#232339]">{{ order.furniture_type }}</p>
+                            {% if order.size %}
+                                <p class="text-xs text-gray-500 mt-0.5">O'lcham: {{ order.size }}</p>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="py-4 px-5 hidden lg:table-cell">
+                        <div class="flex flex-wrap gap-2">
+                            {% if order.color %}
+                                <span class="inline-flex items-center px-2 py-0.5 rounded bg-[#F5F5F5] text-xs text-gray-600">
+                                    <i class="fas fa-palette mr-1 text-gray-400"></i> {{ order.color }}
+                                </span>
+                            {% endif %}
+                            {% if order.material %}
+                                <span class="inline-flex items-center px-2 py-0.5 rounded bg-[#F5F5F5] text-xs text-gray-600">
+                                    <i class="fas fa-layer-group mr-1 text-gray-400"></i> {{ order.material }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="py-4 px-5">
+                        <div>
+                            <p class="font-medium text-[#232339]">{{ order.name or 'Noma\'lum' }}</p>
+                            <a href="tel:{{ order.phone }}" class="text-sm text-[#232339] hover:underline">{{ order.phone }}</a>
+                        </div>
+                    </td>
+                    <td class="py-4 px-5">
+                        <form action="/admin/order/{{ order.id }}/update-status" method="POST" class="inline">
+                            <select name="status" onchange="this.form.submit()" 
+                                class="status-select text-sm font-medium border-0 rounded-lg px-3 py-1.5 cursor-pointer focus:ring-2 focus:ring-offset-2
+                                {% if order.status == 'Yangi' %}bg-yellow-100 text-yellow-700 focus:ring-yellow-500
+                                {% elif order.status == 'Jarayonda' %}bg-blue-100 text-blue-700 focus:ring-blue-500
+                                {% elif order.status == 'Tayyor' %}bg-green-100 text-green-700 focus:ring-green-500
+                                {% elif order.status == 'Yetkazilgan' %}bg-emerald-100 text-emerald-700 focus:ring-emerald-500
+                                {% else %}bg-red-100 text-red-700 focus:ring-red-500{% endif %}">
+                                <option value="Yangi" {% if order.status == 'Yangi' %}selected{% endif %}>🆕 Yangi</option>
+                                <option value="Jarayonda" {% if order.status == 'Jarayonda' %}selected{% endif %}>⏳ Jarayonda</option>
+                                <option value="Tayyor" {% if order.status == 'Tayyor' %}selected{% endif %}>✅ Tayyor</option>
+                                <option value="Yetkazilgan" {% if order.status == 'Yetkazilgan' %}selected{% endif %}>🚚 Yetkazilgan</option>
+                                <option value="Bekor qilingan" {% if order.status == 'Bekor qilingan' %}selected{% endif %}>❌ Bekor qilingan</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td class="py-4 px-5 hidden md:table-cell">
+                        <div>
+                            <p class="text-sm text-[#232339]">{{ order.created_at.strftime('%d.%m.%Y') }}</p>
+                            <p class="text-xs text-gray-500">{{ order.created_at.strftime('%H:%M') }}</p>
+                        </div>
+                    </td>
+                    <td class="py-4 px-5">
+                        <div class="flex items-center justify-end gap-2">
+                            {% if order.address %}
+                                <button class="p-2 hover:bg-[#F5F5F5] text-gray-500 rounded-lg transition" title="{{ order.address }}">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </button>
+                            {% endif %}
+                            {% if order.design_image %}
+                                <a href="/uploads/{{ order.design_image }}" target="_blank" class="p-2 hover:bg-[#F5F5F5] text-[#232339] rounded-lg transition" title="Dizaynni ko'rish">
+                                    <i class="fas fa-image"></i>
+                                </a>
+                            {% endif %}
+                            {% if order.comment %}
+                                <button class="p-2 hover:bg-[#F5F5F5] text-gray-500 rounded-lg transition" title="{{ order.comment }}">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<!-- Empty State -->
+<div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+    <div class="w-20 h-20 bg-[#F5F5F5] rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-shopping-bag text-gray-400 text-3xl"></i>
+    </div>
+    <h3 class="text-lg font-semibold text-[#232339] mb-2">Buyurtmalar yo'q</h3>
+    <p class="text-gray-500">Yangi buyurtmalar shu yerda ko'rinadi</p>
+</div>
+{% endif %}
+{% endblock %}
