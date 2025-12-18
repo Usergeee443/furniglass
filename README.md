@@ -106,6 +106,33 @@ Modellar:
 - **Frontend**: HTML, Tailwind CSS
 - **Authentication**: Flask-Login
 
+## Deployment (Render.com)
+
+Loyiha Render.com ga deploy qilish uchun tayyor. Batafsil qo'llanma: [RENDER_DEPLOY.md](RENDER_DEPLOY.md)
+
+### Tezkor bosqichlar:
+
+1. **GitHub ga push qiling:**
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin <your-github-repo-url>
+git push -u origin main
+```
+
+2. **Render.com da Web Service yarating:**
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `gunicorn app:app`
+   - Environment Variables:
+     - `SECRET_KEY` - xavfsiz secret key
+     - `DATABASE_URL` - `sqlite:///furniglass.db` (yoki PostgreSQL)
+     - `RENDER=true`
+
+3. **Deploy!**
+
+Batafsil qo'llanma: [RENDER_DEPLOY.md](RENDER_DEPLOY.md)
+
 ## Litsenziya
 
 Bu loyiha Furni Glass kompaniyasi uchun yaratilgan.

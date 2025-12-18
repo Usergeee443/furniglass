@@ -107,11 +107,18 @@ def translate_filter(obj, field_base):
     return get_translated_text(obj, field_base, get_locale())
 
 # Ensure upload directories exist
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'products'), exist_ok=True)
-os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'categories'), exist_ok=True)
-os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'portfolio'), exist_ok=True)
-os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'designs'), exist_ok=True)
+def ensure_upload_dirs():
+    """Create upload directories if they don't exist"""
+    upload_folder = app.config['UPLOAD_FOLDER']
+    os.makedirs(upload_folder, exist_ok=True)
+    os.makedirs(os.path.join(upload_folder, 'products'), exist_ok=True)
+    os.makedirs(os.path.join(upload_folder, 'categories'), exist_ok=True)
+    os.makedirs(os.path.join(upload_folder, 'portfolio'), exist_ok=True)
+    os.makedirs(os.path.join(upload_folder, 'designs'), exist_ok=True)
+    os.makedirs(os.path.join(upload_folder, 'icons'), exist_ok=True)
+
+# Initialize upload directories
+ensure_upload_dirs()
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
@@ -1038,6 +1045,8 @@ def uploaded_file(filename):
 
 if __name__ == '__main__':
     with app.app_context():
+        # Ensure upload directories exist
+        ensure_upload_dirs()
         # Database migration: Add new columns for translations
         try:
             # Check and add columns to Category table
@@ -1126,5 +1135,11 @@ if __name__ == '__main__':
             db.session.commit()
             print("Default exchange rate created: 1 USD = 12000 UZS")
     
-    app.run(debug=True)
+    # Production mode - Render.com will use gunicorn
+    if os.environ.get('RENDER'):
+        # On Render.com, gunicorn will handle the app
+        pass
+    else:
+        # Local development
+        app.run(debug=True)
 
