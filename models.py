@@ -145,3 +145,120 @@ class ExchangeRate(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
+class Collection(db.Model):
+    """Collections - Sofa collections, Table collections, etc."""
+    id = db.Column(db.Integer, primary_key=True)
+    name_uz = db.Column(db.String(200), nullable=False)
+    name_ru = db.Column(db.String(200))
+    name_en = db.Column(db.String(200))
+    description_uz = db.Column(db.Text)
+    description_ru = db.Column(db.Text)
+    description_en = db.Column(db.Text)
+    image = db.Column(db.String(200))
+    slug = db.Column(db.String(100), unique=True, nullable=False)
+    category_type = db.Column(db.String(50))  # sofa, table, chair, bed, storage
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_name(self, lang='uz'):
+        if lang == 'ru' and self.name_ru:
+            return self.name_ru
+        elif lang == 'en' and self.name_en:
+            return self.name_en
+        return self.name_uz
+    
+    def get_description(self, lang='uz'):
+        if lang == 'ru' and self.description_ru:
+            return self.description_ru
+        elif lang == 'en' and self.description_en:
+            return self.description_en
+        return self.description_uz or ''
+
+
+class Store(db.Model):
+    """Store locations"""
+    id = db.Column(db.Integer, primary_key=True)
+    name_uz = db.Column(db.String(200), nullable=False)
+    name_ru = db.Column(db.String(200))
+    name_en = db.Column(db.String(200))
+    address_uz = db.Column(db.Text, nullable=False)
+    address_ru = db.Column(db.Text)
+    address_en = db.Column(db.Text)
+    phone = db.Column(db.String(50))
+    email = db.Column(db.String(100))
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    working_hours_uz = db.Column(db.String(200))
+    working_hours_ru = db.Column(db.String(200))
+    working_hours_en = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_name(self, lang='uz'):
+        if lang == 'ru' and self.name_ru:
+            return self.name_ru
+        elif lang == 'en' and self.name_en:
+            return self.name_en
+        return self.name_uz
+    
+    def get_address(self, lang='uz'):
+        if lang == 'ru' and self.address_ru:
+            return self.address_ru
+        elif lang == 'en' and self.address_en:
+            return self.address_en
+        return self.address_uz
+
+
+class SampleRequest(db.Model):
+    """Free sample requests"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(100))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    message = db.Column(db.Text)
+    status = db.Column(db.String(50), default='Yangi')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class Article(db.Model):
+    """Inspiration articles"""
+    id = db.Column(db.Integer, primary_key=True)
+    title_uz = db.Column(db.String(300), nullable=False)
+    title_ru = db.Column(db.String(300))
+    title_en = db.Column(db.String(300))
+    content_uz = db.Column(db.Text)
+    content_ru = db.Column(db.Text)
+    content_en = db.Column(db.Text)
+    image = db.Column(db.String(200))
+    slug = db.Column(db.String(200), unique=True, nullable=False)
+    category = db.Column(db.String(50))  # trends, tips, inspiration
+    featured = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_title(self, lang='uz'):
+        if lang == 'ru' and self.title_ru:
+            return self.title_ru
+        elif lang == 'en' and self.title_en:
+            return self.title_en
+        return self.title_uz
+    
+    def get_content(self, lang='uz'):
+        if lang == 'ru' and self.content_ru:
+            return self.content_ru
+        elif lang == 'en' and self.content_en:
+            return self.content_en
+        return self.content_uz or ''
+
+
+class DesignConsultation(db.Model):
+    """Interior Design Service consultations"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(100))
+    room_type = db.Column(db.String(50))  # living, dining, bedroom, etc.
+    budget = db.Column(db.String(50))
+    message = db.Column(db.Text)
+    status = db.Column(db.String(50), default='Yangi')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+

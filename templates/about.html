@@ -2,70 +2,29 @@
 
 {% block title %}{{ T.about.title[lang] }} - Furni Glass{% endblock %}
 
-{% block extra_css %}
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-    
-    /* Image Quality Improvements */
-    .story-image {
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
-        image-rendering: high-quality;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-        transform: translateZ(0);
-        will-change: transform;
-    }
-    
-    .story-image-container {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .story-image-container::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.02) 100%);
-        z-index: 1;
-        pointer-events: none;
-    }
-    
-    .story-image-container img {
-        filter: brightness(1.02) contrast(1.05) saturate(1.1);
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
-    }
-    
-    .story-image-container:hover img {
-        transform: scale(1.05);
-        filter: brightness(1.05) contrast(1.08) saturate(1.15);
-    }
-</style>
-{% endblock %}
-
 {% block content %}
 <!-- Hero Section -->
-<section class="relative bg-[#232339] py-20 lg:py-28">
-    <div class="container mx-auto px-4">
+<section class="relative bg-white py-20 lg:py-28">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-4xl">
             <!-- Breadcrumb -->
-            <div class="flex items-center gap-2 text-sm text-white/50 mb-8">
-                <a href="/" class="hover:text-white transition">{{ T.nav.home[lang] }}</a>
-                <i class="fas fa-chevron-right text-xs"></i>
-                <span class="text-white">{{ T.nav.about[lang] }}</span>
+            <div class="flex items-center gap-2 text-sm text-gray-400 mb-8">
+                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
+                <span>/</span>
+                <span class="text-[#1a1a2e]">{{ T.nav.about[lang] }}</span>
             </div>
             
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6" style="font-family: 'Playfair Display', serif;">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] leading-tight mb-6 font-display">
                 {% if lang == 'ru' %}
-                О Компании<br>Furni Glass
+                О Компании Furni Glass
                 {% elif lang == 'en' %}
-                About<br>Furni Glass
+                About Furni Glass
                 {% else %}
-                Furni Glass<br>Haqida
+                Furni Glass Haqida
                 {% endif %}
             </h1>
             
-            <p class="text-white/70 text-lg md:text-xl max-w-2xl leading-relaxed">
+            <p class="text-gray-600 text-lg md:text-xl max-w-2xl leading-relaxed">
                 {% if lang == 'ru' %}
                 С 2009 года мы производим качественную мебель для тысяч семей по всему Узбекистану. 
                 Наша миссия — сделать каждый дом красивым и уютным.
@@ -78,81 +37,86 @@
                 {% endif %}
             </p>
         </div>
-            </div>
-        </section>
-        
+    </div>
+</section>
+
+<!-- Hero Image -->
+<section class="bg-white pb-16">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="relative w-full aspect-[21/9] overflow-hidden">
+            <img src="/uploads/designs/3.jpg" alt="Furni Glass" class="w-full h-full object-cover">
+        </div>
+    </div>
+</section>
+
 <!-- Stats Section -->
-<section class="py-12 lg:py-16 bg-[#F5F5F5]">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+<section class="py-16 bg-[#1a1a2e]">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
             <div class="text-center">
-                <p class="text-4xl lg:text-5xl font-bold text-[#232339] mb-2">2009</p>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Год основания{% elif lang == 'en' %}Founded{% else %}Tashkil etilgan{% endif %}</p>
+                <p class="text-4xl lg:text-5xl font-bold text-white mb-2 font-display">2009</p>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Год основания{% elif lang == 'en' %}Founded{% else %}Tashkil etilgan{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl lg:text-5xl font-bold text-[#232339] mb-2">5000+</p>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Customers{% else %}Mijozlar{% endif %}</p>
+                <p class="text-4xl lg:text-5xl font-bold text-white mb-2 font-display">5000+</p>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Customers{% else %}Mijozlar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl lg:text-5xl font-bold text-[#232339] mb-2">50+</p>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Специалистов{% elif lang == 'en' %}Specialists{% else %}Mutaxassislar{% endif %}</p>
+                <p class="text-4xl lg:text-5xl font-bold text-white mb-2 font-display">50+</p>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Специалистов{% elif lang == 'en' %}Specialists{% else %}Mutaxassislar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl lg:text-5xl font-bold text-[#232339] mb-2">5000m²</p>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</p>
+                <p class="text-4xl lg:text-5xl font-bold text-white mb-2 font-display">5000m²</p>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</p>
             </div>
         </div>
-            </div>
-        </section>
-        
+    </div>
+</section>
+
 <!-- Our Story Section -->
-<section class="py-16 lg:py-24 bg-white">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <!-- Left - Images -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-4">
-                    <div class="story-image-container aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100 relative">
+                    <div class="aspect-[4/5] overflow-hidden bg-gray-100">
                         <img src="/uploads/designs/3.jpg" alt="Furni Glass ishlab chiqarish" 
-                             class="story-image w-full h-full object-cover"
-                             loading="eager"
-                             fetchpriority="high">
+                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
-                    <div class="bg-[#232339] rounded-2xl p-6 text-white">
-                        <p class="text-3xl font-bold mb-1">25+</p>
-                        <p class="text-white/70 text-sm">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years Experience{% else %}Yillik tajriba{% endif %}</p>
+                    <div class="bg-[#1a1a2e] p-6 text-white">
+                        <p class="text-3xl font-bold font-display mb-1">15+</p>
+                        <p class="text-white/60 text-sm">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years Experience{% else %}Yillik tajriba{% endif %}</p>
                     </div>
                 </div>
                 <div class="space-y-4 pt-8">
-                    <div class="bg-[#F5F5F5] rounded-2xl p-6">
-                        <p class="text-3xl font-bold text-[#232339] mb-1">100%</p>
+                    <div class="bg-[#FAF9F6] p-6">
+                        <p class="text-3xl font-bold text-[#1a1a2e] font-display mb-1">100%</p>
                         <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Гарантия качества{% elif lang == 'en' %}Quality Guarantee{% else %}Sifat kafolati{% endif %}</p>
                     </div>
-                    <div class="story-image-container aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100 relative">
+                    <div class="aspect-[4/5] overflow-hidden bg-gray-100">
                         <img src="/uploads/designs/2.jpg" alt="Furni Glass mahsulotlari" 
-                             class="story-image w-full h-full object-cover"
-                             loading="eager"
-                             fetchpriority="high">
+                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </div>
                 </div>
             </div>
             
             <!-- Right - Content -->
             <div>
-                <h2 class="text-3xl md:text-4xl font-bold text-[#232339] mb-6" style="font-family: 'Playfair Display', serif;">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-6 font-display">
                     {% if lang == 'ru' %}Наша История{% elif lang == 'en' %}Our Story{% else %}Bizning Tariximiz{% endif %}
                 </h2>
                 
                 <div class="space-y-4 text-gray-600 leading-relaxed">
                     <p>
                         {% if lang == 'ru' %}
-                        <strong class="text-[#232339]">Furni Glass</strong> был основан в 2009 году в Ташкенте как небольшая семейная мастерская. 
+                        <strong class="text-[#1a1a2e]">Furni Glass</strong> был основан в 2009 году в Ташкенте как небольшая семейная мастерская. 
                         Основатели — Абдуллаев Карим и Холматов Сардор — превратили свою страсть к мебельному производству в большую мечту.
                         {% elif lang == 'en' %}
-                        <strong class="text-[#232339]">Furni Glass</strong> was founded in 2009 in Tashkent as a small family workshop. 
+                        <strong class="text-[#1a1a2e]">Furni Glass</strong> was founded in 2009 in Tashkent as a small family workshop. 
                         The founders — Abdullayev Karim and Kholmatov Sardor — turned their passion for furniture making into a big dream.
                         {% else %}
-                        <strong class="text-[#232339]">Furni Glass</strong> kompaniyasi 2009-yilda Toshkent shahrida kichik oilaviy ustaxona sifatida boshlangan. 
+                        <strong class="text-[#1a1a2e]">Furni Glass</strong> kompaniyasi 2009-yilda Toshkent shahrida kichik oilaviy ustaxona sifatida boshlangan. 
                         Asoschilarimiz — Abdullayev Karim va Xolmatov Sardor — mebel ishlab chiqarishga bo'lgan ehtiroslarini katta orzuga aylantirdilar.
                         {% endif %}
                     </p>
@@ -172,22 +136,24 @@
                     
                     <p>
                         {% if lang == 'ru' %}
-                        Сегодня у нас производственная площадь более <strong class="text-[#232339]">5000 м²</strong>, более <strong class="text-[#232339]">50</strong> профессиональных мастеров и дизайнеров. 
+                        Сегодня у нас производственная площадь более <strong class="text-[#1a1a2e]">5000 м²</strong>, более <strong class="text-[#1a1a2e]">50</strong> профессиональных мастеров и дизайнеров. 
                         Мы доставляем мебель во все регионы Узбекистана.
                         {% elif lang == 'en' %}
-                        Today we have a production area of over <strong class="text-[#232339]">5000 m²</strong>, more than <strong class="text-[#232339]">50</strong> professional craftsmen and designers. 
+                        Today we have a production area of over <strong class="text-[#1a1a2e]">5000 m²</strong>, more than <strong class="text-[#1a1a2e]">50</strong> professional craftsmen and designers. 
                         We deliver furniture to all regions of Uzbekistan.
                         {% else %}
-                        Bugun <strong class="text-[#232339]">5000 m²</strong> dan ortiq ishlab chiqarish maydoniga ega bo'lib, <strong class="text-[#232339]">50</strong> dan ortiq professional ustamiz va dizaynerimiz bor. 
+                        Bugun <strong class="text-[#1a1a2e]">5000 m²</strong> dan ortiq ishlab chiqarish maydoniga ega bo'lib, <strong class="text-[#1a1a2e]">50</strong> dan ortiq professional ustamiz va dizaynerimiz bor. 
                         Biz O'zbekistonning barcha viloyatlariga mebel yetkazib beramiz.
                         {% endif %}
                     </p>
-                    </div>
+                </div>
                 
                 <div class="mt-8 flex flex-wrap gap-4">
-                    <a href="/portfolio" class="inline-flex items-center gap-2 bg-[#232339] hover:bg-black text-white px-6 py-3 rounded-xl font-medium transition">
+                    <a href="/portfolio" class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-black text-white px-8 py-4 font-medium transition">
                         {% if lang == 'ru' %}Наши работы{% elif lang == 'en' %}Our Works{% else %}Bizning ishlarimiz{% endif %}
-                        <i class="fas fa-arrow-right text-sm"></i>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </a>
                 </div>
             </div>
@@ -196,15 +162,15 @@
 </section>
 
 <!-- Mission & Vision -->
-<section class="py-16 lg:py-20 bg-[#F5F5F5]">
-    <div class="container mx-auto px-4">
+<section class="py-20 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             <!-- Mission -->
-            <div class="bg-white rounded-2xl p-8 lg:p-10">
-                <div class="w-14 h-14 bg-[#232339] rounded-xl flex items-center justify-center mb-6">
+            <div class="bg-white p-8 lg:p-10 border border-gray-100">
+                <div class="w-14 h-14 bg-[#1a1a2e] flex items-center justify-center mb-6">
                     <i class="fas fa-bullseye text-white text-xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[#232339] mb-4" style="font-family: 'Playfair Display', serif;">
+                <h3 class="text-2xl font-bold text-[#1a1a2e] mb-4 font-display">
                     {% if lang == 'ru' %}Наша Миссия{% elif lang == 'en' %}Our Mission{% else %}Bizning Missiyamiz{% endif %}
                 </h3>
                 <p class="text-gray-600 leading-relaxed">
@@ -222,11 +188,11 @@
             </div>
             
             <!-- Vision -->
-            <div class="bg-white rounded-2xl p-8 lg:p-10">
-                <div class="w-14 h-14 bg-[#F5C242] rounded-xl flex items-center justify-center mb-6">
+            <div class="bg-white p-8 lg:p-10 border border-gray-100">
+                <div class="w-14 h-14 bg-[#c9a96e] flex items-center justify-center mb-6">
                     <i class="fas fa-eye text-white text-xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[#232339] mb-4" style="font-family: 'Playfair Display', serif;">
+                <h3 class="text-2xl font-bold text-[#1a1a2e] mb-4 font-display">
                     {% if lang == 'ru' %}Наше Видение{% elif lang == 'en' %}Our Vision{% else %}Bizning Viziyamiz{% endif %}
                 </h3>
                 <p class="text-gray-600 leading-relaxed">
@@ -242,161 +208,77 @@
                     {% endif %}
                 </p>
             </div>
-                </div>
-            </div>
-        </section>
-        
-<!-- Timeline / History -->
-<section class="py-16 lg:py-24 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
+        </div>
+    </div>
+</section>
+
+<!-- Timeline -->
+<section class="py-20 lg:py-28 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] font-display">
                 {% if lang == 'ru' %}Наш Путь{% elif lang == 'en' %}Our Journey{% else %}Bizning Yo'limiz{% endif %}
             </h2>
         </div>
         
         <div class="max-w-4xl mx-auto">
-            <div class="space-y-8">
-                <!-- 2009 -->
-                <div class="flex gap-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-[#232339] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            2009
-                        </div>
-                        <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
-                        </div>
-                    <div class="pb-8">
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}Основание компании{% elif lang == 'en' %}Company Founded{% else %}Kompaniya tashkil etildi{% endif %}
-                        </h4>
-                        <p class="text-gray-600 text-sm">
-                            {% if lang == 'ru' %}
-                            Начали работу в небольшой мастерской в Ташкенте. 3 мастера и несколько станков.
-                            {% elif lang == 'en' %}
-                            Started work in a small workshop in Tashkent. 3 craftsmen and a few machines.
-                            {% else %}
-                            Toshkentda kichik ustaxonada ish boshlandi. 3 nafar usta va bir necha dastgoh.
-                            {% endif %}
-                        </p>
-                    </div>
-                </div>
+            <div class="relative">
+                <!-- Timeline line -->
+                <div class="absolute left-0 md:left-1/2 transform md:-translate-x-px w-0.5 h-full bg-gray-200"></div>
                 
-                <!-- 2012 -->
-                <div class="flex gap-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-[#232339] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            2012
+                <!-- 2009 -->
+                <div class="relative flex items-start mb-12">
+                    <div class="hidden md:flex md:w-1/2 md:pr-8 md:justify-end">
+                        <div class="text-right">
+                            <span class="inline-block bg-[#1a1a2e] text-white text-sm font-bold px-4 py-2 mb-3">2009</span>
+                            <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Основание компании{% elif lang == 'en' %}Company Founded{% else %}Kompaniya tashkil etildi{% endif %}</h4>
+                            <p class="text-gray-600 text-sm">{% if lang == 'ru' %}Начали работу в небольшой мастерской{% elif lang == 'en' %}Started work in a small workshop{% else %}Kichik ustaxonada ish boshlandi{% endif %}</p>
                         </div>
-                        <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
                     </div>
-                    <div class="pb-8">
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}Первый шоурум{% elif lang == 'en' %}First Showroom{% else %}Birinchi showroom{% endif %}
-                        </h4>
-                        <p class="text-gray-600 text-sm">
-                            {% if lang == 'ru' %}
-                            Открыли первый выставочный зал в центре Ташкента. Клиенты получили возможность увидеть продукцию.
-                            {% elif lang == 'en' %}
-                            Opened the first showroom in the center of Tashkent. Customers got the opportunity to see the products.
-                            {% else %}
-                            Toshkent markazida birinchi ko'rgazma zalini ochdik. Mijozlar mahsulotlarni ko'rish imkoniyatiga ega bo'ldi.
-                            {% endif %}
-                        </p>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-[#1a1a2e] border-4 border-white"></div>
+                    <div class="md:hidden pl-8">
+                        <span class="inline-block bg-[#1a1a2e] text-white text-sm font-bold px-4 py-2 mb-3">2009</span>
+                        <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Основание компании{% elif lang == 'en' %}Company Founded{% else %}Kompaniya tashkil etildi{% endif %}</h4>
+                        <p class="text-gray-600 text-sm">{% if lang == 'ru' %}Начали работу в небольшой мастерской{% elif lang == 'en' %}Started work in a small workshop{% else %}Kichik ustaxonada ish boshlandi{% endif %}</p>
                     </div>
                 </div>
                 
                 <!-- 2015 -->
-                <div class="flex gap-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-[#232339] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            2015
-                        </div>
-                        <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
-                    </div>
-                    <div class="pb-8">
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}Новая фабрика{% elif lang == 'en' %}New Factory{% else %}Yangi fabrika{% endif %}
-                        </h4>
-                        <p class="text-gray-600 text-sm">
-                            {% if lang == 'ru' %}
-                            Переехали на новую производственную площадь 1000 м². Оснастились CNC станками и современным оборудованием.
-                            {% elif lang == 'en' %}
-                            Moved to a new 1000 m² production area. Equipped with CNC machines and modern equipment.
-                            {% else %}
-                            1000 m² yangi ishlab chiqarish maydoniga ko'chdik. CNC dastgohlari va zamonaviy uskunalar bilan jihozlandik.
-                            {% endif %}
-                        </p>
+                <div class="relative flex items-start mb-12">
+                    <div class="hidden md:block md:w-1/2"></div>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-[#c9a96e] border-4 border-white"></div>
+                    <div class="md:w-1/2 pl-8">
+                        <span class="inline-block bg-[#c9a96e] text-white text-sm font-bold px-4 py-2 mb-3">2015</span>
+                        <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Новая фабрика{% elif lang == 'en' %}New Factory{% else %}Yangi fabrika{% endif %}</h4>
+                        <p class="text-gray-600 text-sm">{% if lang == 'ru' %}Переехали на производственную площадь 1000 м²{% elif lang == 'en' %}Moved to 1000 m² production area{% else %}1000 m² ishlab chiqarish maydoniga ko'chdik{% endif %}</p>
                     </div>
                 </div>
                 
                 <!-- 2018 -->
-                <div class="flex gap-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-[#232339] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            2018
+                <div class="relative flex items-start mb-12">
+                    <div class="hidden md:flex md:w-1/2 md:pr-8 md:justify-end">
+                        <div class="text-right">
+                            <span class="inline-block bg-[#1a1a2e] text-white text-sm font-bold px-4 py-2 mb-3">2018</span>
+                            <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}ISO Сертификация{% elif lang == 'en' %}ISO Certification{% else %}ISO Sertifikati{% endif %}</h4>
+                            <p class="text-gray-600 text-sm">{% if lang == 'ru' %}Получили международный сертификат ISO 9001:2015{% elif lang == 'en' %}Received ISO 9001:2015 certificate{% else %}ISO 9001:2015 sertifikatiga ega bo'ldik{% endif %}</p>
                         </div>
-                        <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
-                        </div>
-                    <div class="pb-8">
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}ISO Сертификация{% elif lang == 'en' %}ISO Certification{% else %}ISO Sertifikati{% endif %}
-                        </h4>
-                        <p class="text-gray-600 text-sm">
-                            {% if lang == 'ru' %}
-                            Получили международный сертификат качества ISO 9001:2015. Внедрили систему менеджмента качества.
-                            {% elif lang == 'en' %}
-                            Received international ISO 9001:2015 quality certificate. Implemented quality management system.
-                            {% else %}
-                            Xalqaro ISO 9001:2015 sifat sertifikatiga ega bo'ldik. Sifat menejmenti tizimini joriy etdik.
-                            {% endif %}
-                        </p>
                     </div>
-                </div>
-                
-                <!-- 2021 -->
-                <div class="flex gap-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-[#232339] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            2021
-                        </div>
-                        <div class="w-0.5 h-full bg-gray-200 mt-2"></div>
-                    </div>
-                    <div class="pb-8">
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}5000 м² комплекс{% elif lang == 'en' %}5000 m² Complex{% else %}5000 m² kompleks{% endif %}
-                        </h4>
-                        <p class="text-gray-600 text-sm">
-                            {% if lang == 'ru' %}
-                            Крупнейшее расширение — новый производственный комплекс 5000 м². 50+ сотрудников и современное оборудование.
-                            {% elif lang == 'en' %}
-                            Largest expansion — new 5000 m² production complex. 50+ employees and modern equipment.
-                            {% else %}
-                            Eng katta kengayish — 5000 m² yangi ishlab chiqarish kompleksi. 50+ xodim va zamonaviy jihozlar.
-                            {% endif %}
-                        </p>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-[#1a1a2e] border-4 border-white"></div>
+                    <div class="md:hidden pl-8">
+                        <span class="inline-block bg-[#1a1a2e] text-white text-sm font-bold px-4 py-2 mb-3">2018</span>
+                        <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}ISO Сертификация{% elif lang == 'en' %}ISO Certification{% else %}ISO Sertifikati{% endif %}</h4>
+                        <p class="text-gray-600 text-sm">{% if lang == 'ru' %}Получили международный сертификат ISO 9001:2015{% elif lang == 'en' %}Received ISO 9001:2015 certificate{% else %}ISO 9001:2015 sertifikatiga ega bo'ldik{% endif %}</p>
                     </div>
                 </div>
                 
                 <!-- 2024 -->
-                <div class="flex gap-6">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-[#F5C242] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            2024
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}Сегодня{% elif lang == 'en' %}Today{% else %}Bugun{% endif %}
-                        </h4>
-                        <p class="text-gray-600 text-sm">
-                            {% if lang == 'ru' %}
-                            5000+ довольных клиентов, доставка по всему Узбекистану, онлайн система заказов и планы дальнейшего расширения.
-                            {% elif lang == 'en' %}
-                            5000+ satisfied customers, delivery across Uzbekistan, online ordering system and plans for further expansion.
-                            {% else %}
-                            5000+ mamnun mijoz, O'zbekiston bo'ylab yetkazib berish, online buyurtma tizimi va yanada kengayish rejalari.
-                            {% endif %}
-                        </p>
+                <div class="relative flex items-start">
+                    <div class="hidden md:block md:w-1/2"></div>
+                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-[#c9a96e] border-4 border-white"></div>
+                    <div class="md:w-1/2 pl-8">
+                        <span class="inline-block bg-[#c9a96e] text-white text-sm font-bold px-4 py-2 mb-3">2024</span>
+                        <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Сегодня{% elif lang == 'en' %}Today{% else %}Bugun{% endif %}</h4>
+                        <p class="text-gray-600 text-sm">{% if lang == 'ru' %}5000+ клиентов, 5000 м² производство, доставка по всему Узбекистану{% elif lang == 'en' %}5000+ customers, 5000 m² production, delivery across Uzbekistan{% else %}5000+ mijoz, 5000 m² ishlab chiqarish, O'zbekiston bo'ylab yetkazib berish{% endif %}</p>
                     </div>
                 </div>
             </div>
@@ -404,239 +286,73 @@
     </div>
 </section>
 
-<!-- Production Section -->
-<section class="py-16 lg:py-24 bg-[#232339]">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <!-- Left Content -->
-            <div class="text-white">
-                <h2 class="text-3xl md:text-4xl font-bold mb-6" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Современное Производство{% elif lang == 'en' %}Modern Production{% else %}Zamonaviy Ishlab Chiqarish{% endif %}
-                </h2>
-                
-                <p class="text-white/70 text-lg leading-relaxed mb-8">
-                    {% if lang == 'ru' %}
-                    Наш производственный комплекс площадью 5000 м² — один из самых современных в Узбекистане. 
-                    Мы используем оборудование из Германии, Италии и Турции.
-                    {% elif lang == 'en' %}
-                    Our 5000 m² production complex is one of the most modern in Uzbekistan. 
-                    We use equipment from Germany, Italy and Turkey.
-                    {% else %}
-                    Bizning 5000 m² ishlab chiqarish kompleksimiz O'zbekistondagi eng zamonaviylardan biri. 
-                    Biz Germaniya, Italiya va Turkiyadan keltirilgan uskunalardan foydalanamiz.
-                    {% endif %}
-                </p>
-                
-                <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="bg-white/10 rounded-xl p-4">
-                        <i class="fas fa-microchip text-[#F5C242] text-xl mb-2"></i>
-                        <p class="font-medium">CNC {% if lang == 'ru' %}Станки{% elif lang == 'en' %}Machines{% else %}Dastgohlari{% endif %}</p>
-                        <p class="text-white/50 text-sm">Germaniya, SCM</p>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-4">
-                        <i class="fas fa-cut text-[#F5C242] text-xl mb-2"></i>
-                        <p class="font-medium">{% if lang == 'ru' %}Линия резки{% elif lang == 'en' %}Cutting Line{% else %}Kesish Liniyasi{% endif %}</p>
-                        <p class="text-white/50 text-sm">{% if lang == 'ru' %}Автоматическая{% elif lang == 'en' %}Automatic{% else %}Avtomatlashtirilgan{% endif %}</p>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-4">
-                        <i class="fas fa-spray-can text-[#F5C242] text-xl mb-2"></i>
-                        <p class="font-medium">{% if lang == 'ru' %}Покрасочный цех{% elif lang == 'en' %}Paint Shop{% else %}Bo'yash Tsexi{% endif %}</p>
-                        <p class="text-white/50 text-sm">{% if lang == 'ru' %}Эко краски{% elif lang == 'en' %}Eco paints{% else %}Ekologik bo'yoqlar{% endif %}</p>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-4">
-                        <i class="fas fa-box text-[#F5C242] text-xl mb-2"></i>
-                        <p class="font-medium">{% if lang == 'ru' %}Упаковка{% elif lang == 'en' %}Packaging{% else %}Qadoqlash{% endif %}</p>
-                        <p class="text-white/50 text-sm">{% if lang == 'ru' %}Безопасная{% elif lang == 'en' %}Safe{% else %}Xavfsiz{% endif %}</p>
-                    </div>
-                </div>
-                
-                <div class="flex flex-wrap gap-8">
-                    <div>
-                        <p class="text-3xl font-bold">5000m²</p>
-                        <p class="text-white/50 text-sm">{% if lang == 'ru' %}Площадь{% elif lang == 'en' %}Area{% else %}Maydon{% endif %}</p>
-                    </div>
-                    <div>
-                        <p class="text-3xl font-bold">20+</p>
-                        <p class="text-white/50 text-sm">{% if lang == 'ru' %}Станков{% elif lang == 'en' %}Machines{% else %}Dastgoh{% endif %}</p>
-                    </div>
-                    <div>
-                        <p class="text-3xl font-bold">50+</p>
-                        <p class="text-white/50 text-sm">{% if lang == 'ru' %}Мастеров{% elif lang == 'en' %}Masters{% else %}Usta{% endif %}</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Right - Images -->
-            <div class="grid grid-cols-2 gap-4">
-                <div class="aspect-square rounded-2xl overflow-hidden">
-                    <img src="/uploads/designs/3.jpg" alt="CNC dastgoh" class="w-full h-full object-cover">
-                </div>
-                <div class="aspect-square rounded-2xl overflow-hidden mt-8">
-                    <img src="/uploads/designs/2.jpg" alt="Ishlab chiqarish" class="w-full h-full object-cover">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Materials Section -->
-<section class="py-16 lg:py-24 bg-white">
-    <div class="container mx-auto px-4">
+<!-- Materials -->
+<section class="py-20 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] font-display">
                 {% if lang == 'ru' %}Премиум Материалы{% elif lang == 'en' %}Premium Materials{% else %}Premium Materiallar{% endif %}
             </h2>
             <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
-                {% if lang == 'ru' %}
-                Мы работаем только с лучшими мировыми поставщиками материалов
-                {% elif lang == 'en' %}
-                We work only with the best global material suppliers
-                {% else %}
-                Biz dunyoning eng yaxshi material yetkazib beruvchilari bilan ishlaymiz
-                {% endif %}
+                {% if lang == 'ru' %}Мы работаем только с лучшими мировыми поставщиками{% elif lang == 'en' %}We work only with the best global suppliers{% else %}Biz dunyoning eng yaxshi yetkazib beruvchilari bilan ishlaymiz{% endif %}
             </p>
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div class="text-center p-6 bg-[#F5F5F5] rounded-2xl">
+            <div class="text-center p-6 bg-white border border-gray-100">
                 <p class="text-2xl font-bold text-gray-300 mb-2">EGGER</p>
-                <p class="text-sm text-[#232339] font-medium">DSP, MDF</p>
+                <p class="text-sm text-[#1a1a2e] font-medium">DSP, MDF</p>
                 <p class="text-xs text-gray-400">Avstriya</p>
             </div>
-            <div class="text-center p-6 bg-[#F5F5F5] rounded-2xl">
+            <div class="text-center p-6 bg-white border border-gray-100">
                 <p class="text-2xl font-bold text-gray-300 mb-2">BLUM</p>
-                <p class="text-sm text-[#232339] font-medium">Furnitura</p>
+                <p class="text-sm text-[#1a1a2e] font-medium">Furnitura</p>
                 <p class="text-xs text-gray-400">Avstriya</p>
             </div>
-            <div class="text-center p-6 bg-[#F5F5F5] rounded-2xl">
+            <div class="text-center p-6 bg-white border border-gray-100">
                 <p class="text-2xl font-bold text-gray-300 mb-2">Hettich</p>
-                <p class="text-sm text-[#232339] font-medium">Furnitura</p>
+                <p class="text-sm text-[#1a1a2e] font-medium">Furnitura</p>
                 <p class="text-xs text-gray-400">Germaniya</p>
             </div>
-            <div class="text-center p-6 bg-[#F5F5F5] rounded-2xl">
+            <div class="text-center p-6 bg-white border border-gray-100">
                 <p class="text-2xl font-bold text-gray-300 mb-2">REHAU</p>
-                <p class="text-sm text-[#232339] font-medium">Kant tasma</p>
+                <p class="text-sm text-[#1a1a2e] font-medium">Kant tasma</p>
                 <p class="text-xs text-gray-400">Germaniya</p>
             </div>
-            <div class="text-center p-6 bg-[#F5F5F5] rounded-2xl">
+            <div class="text-center p-6 bg-white border border-gray-100">
                 <p class="text-2xl font-bold text-gray-300 mb-2">Grass</p>
-                <p class="text-sm text-[#232339] font-medium">Tortma</p>
+                <p class="text-sm text-[#1a1a2e] font-medium">Tortma</p>
                 <p class="text-xs text-gray-400">Avstriya</p>
             </div>
-            <div class="text-center p-6 bg-[#F5F5F5] rounded-2xl">
+            <div class="text-center p-6 bg-white border border-gray-100">
                 <p class="text-2xl font-bold text-gray-300 mb-2">Kronospan</p>
-                <p class="text-sm text-[#232339] font-medium">Plita</p>
+                <p class="text-sm text-[#1a1a2e] font-medium">Plita</p>
                 <p class="text-xs text-gray-400">Avstriya</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Values Section -->
-<section class="py-16 lg:py-20 bg-[#F5F5F5]">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Наши Ценности{% elif lang == 'en' %}Our Values{% else %}Bizning Qadriyatlarimiz{% endif %}
-            </h2>
-        </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-            <div class="bg-white rounded-2xl p-6 text-center">
-                <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-gem text-white"></i>
-                </div>
-                <h4 class="font-bold text-[#232339] mb-2">{% if lang == 'ru' %}Качество{% elif lang == 'en' %}Quality{% else %}Sifat{% endif %}</h4>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Высшие стандарты{% elif lang == 'en' %}Highest standards{% else %}Eng yuqori standartlar{% endif %}</p>
-            </div>
-            <div class="bg-white rounded-2xl p-6 text-center">
-                <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-handshake text-white"></i>
-                </div>
-                <h4 class="font-bold text-[#232339] mb-2">{% if lang == 'ru' %}Доверие{% elif lang == 'en' %}Trust{% else %}Ishonch{% endif %}</h4>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Долгосрочные отношения{% elif lang == 'en' %}Long-term relations{% else %}Uzoq muddatli munosabatlar{% endif %}</p>
-            </div>
-            <div class="bg-white rounded-2xl p-6 text-center">
-                <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-lightbulb text-white"></i>
-                </div>
-                <h4 class="font-bold text-[#232339] mb-2">{% if lang == 'ru' %}Инновации{% elif lang == 'en' %}Innovation{% else %}Innovatsiya{% endif %}</h4>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Новые технологии{% elif lang == 'en' %}New technologies{% else %}Yangi texnologiyalar{% endif %}</p>
-            </div>
-            <div class="bg-white rounded-2xl p-6 text-center">
-                <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-leaf text-white"></i>
-                </div>
-                <h4 class="font-bold text-[#232339] mb-2">{% if lang == 'ru' %}Экология{% elif lang == 'en' %}Ecology{% else %}Ekologiya{% endif %}</h4>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Эко материалы{% elif lang == 'en' %}Eco materials{% else %}Ekologik materiallar{% endif %}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-<!-- Certificates -->
-<section class="py-16 lg:py-20 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Сертификаты{% elif lang == 'en' %}Certificates{% else %}Sertifikatlar{% endif %}
-            </h2>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div class="text-center p-8 bg-[#F5F5F5] rounded-2xl">
-                <div class="w-16 h-16 bg-[#F5C242] rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-award text-white text-2xl"></i>
-                </div>
-                <h4 class="font-bold text-[#232339] mb-2">ISO 9001:2015</h4>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Международный сертификат качества{% elif lang == 'en' %}International quality certificate{% else %}Xalqaro sifat sertifikati{% endif %}</p>
-            </div>
-            <div class="text-center p-8 bg-[#F5F5F5] rounded-2xl">
-                <div class="w-16 h-16 bg-[#232339] rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-leaf text-white text-2xl"></i>
-                </div>
-                <h4 class="font-bold text-[#232339] mb-2">E1 {% if lang == 'ru' %}Стандарт{% elif lang == 'en' %}Standard{% else %}Standarti{% endif %}</h4>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Экологическая безопасность{% elif lang == 'en' %}Environmental safety{% else %}Ekologik xavfsizlik{% endif %}</p>
-            </div>
-            <div class="text-center p-8 bg-[#F5F5F5] rounded-2xl">
-                <div class="w-16 h-16 bg-[#232339] rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-shield-alt text-white text-2xl"></i>
-                </div>
-                <h4 class="font-bold text-[#232339] mb-2">3 {% if lang == 'ru' %}Года Гарантии{% elif lang == 'en' %}Year Warranty{% else %}Yil Kafolat{% endif %}</h4>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}На всю продукцию{% elif lang == 'en' %}On all products{% else %}Barcha mahsulotlarga{% endif %}</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA Section -->
-<section class="py-16 lg:py-20 bg-[#232339]">
-    <div class="container mx-auto px-4">
+<section class="py-20 bg-[#1a1a2e]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" style="font-family: 'Playfair Display', serif;">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 font-display">
                 {% if lang == 'ru' %}Готовы начать?{% elif lang == 'en' %}Ready to Start?{% else %}Boshlashga tayyormisiz?{% endif %}
             </h2>
-            <p class="text-white/70 text-lg mb-8">
-                {% if lang == 'ru' %}
-                Свяжитесь с нами для бесплатной консультации и замера
-                {% elif lang == 'en' %}
-                Contact us for free consultation and measurement
-                {% else %}
-                Bepul maslahat va o'lchov uchun biz bilan bog'laning
-                {% endif %}
+            <p class="text-white/60 text-lg mb-10">
+                {% if lang == 'ru' %}Свяжитесь с нами для бесплатной консультации{% elif lang == 'en' %}Contact us for free consultation{% else %}Bepul maslahat uchun biz bilan bog'laning{% endif %}
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#F5C242] hover:bg-[#F5C242]/90 text-[#232339] font-semibold px-8 py-4 rounded-xl transition">
-                    <i class="fas fa-paper-plane"></i>
+                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#c9a96e] hover:bg-[#b8956b] text-white font-medium px-8 py-4 transition">
                     {% if lang == 'ru' %}Заказать{% elif lang == 'en' %}Order Now{% else %}Buyurtma berish{% endif %}
                 </a>
-                <a href="/contact" class="inline-flex items-center justify-center gap-2 border-2 border-white/30 hover:border-white text-white font-semibold px-8 py-4 rounded-xl transition">
-                    <i class="fas fa-phone"></i>
+                <a href="/contact" class="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white text-white font-medium px-8 py-4 transition">
                     {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
                 </a>
             </div>
+        </div>
     </div>
-</div>
 </section>
 {% endblock %}

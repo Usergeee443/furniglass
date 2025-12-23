@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Furni Glass - {% if lang == 'ru' %}Найти магазин{% elif lang == 'en' %}Find a Store{% else %}Do'kon topish{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-[#FAF9F6] py-16 lg:py-24">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-6" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Найти магазин{% elif lang == 'en' %}Find a Store{% else %}Do'kon topish{% endif %}
+            </h1>
+        </div>
+    </div>
+</section>
+
+<!-- Stores List -->
+<section class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for store in stores %}
+            <div class="bg-white  shadow-lg p-6 lg:p-8">
+                <h3 class="text-2xl font-bold text-[#232339] mb-4">{{ store.get_name(lang) }}</h3>
+                <div class="space-y-3">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt text-[#232339] mt-1"></i>
+                        <p class="text-gray-600">{{ store.get_address(lang) }}</p>
+                    </div>
+                    {% if store.phone %}
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-phone text-[#232339]"></i>
+                        <a href="tel:{{ store.phone }}" class="text-gray-600 hover:text-[#232339]">{{ store.phone }}</a>
+                    </div>
+                    {% endif %}
+                    {% if store.email %}
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-envelope text-[#232339]"></i>
+                        <a href="mailto:{{ store.email }}" class="text-gray-600 hover:text-[#232339]">{{ store.email }}</a>
+                    </div>
+                    {% endif %}
+                    {% if store.working_hours_uz %}
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-clock text-[#232339] mt-1"></i>
+                        <p class="text-gray-600">
+                            {% if lang == 'ru' %}{{ store.working_hours_ru or store.working_hours_uz }}{% elif lang == 'en' %}{{ store.working_hours_en or store.working_hours_uz }}{% else %}{{ store.working_hours_uz }}{% endif %}
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-gray-500">{% if lang == 'ru' %}Магазины скоро появятся{% elif lang == 'en' %}Stores coming soon{% else %}Do'konlar tez orada{% endif %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+

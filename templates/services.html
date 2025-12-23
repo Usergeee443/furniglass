@@ -4,225 +4,222 @@
 
 {% block extra_css %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-    .hero-title { font-family: 'Playfair Display', serif; }
-    .gradient-text {
-        background: linear-gradient(135deg, #232339 0%, #000000 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
     .service-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-    .service-card:hover { transform: translateY(-12px); }
-    .service-card:hover .service-icon { transform: scale(1.1) rotate(5deg); }
-    .service-icon { transition: all 0.3s ease; }
+    .service-card:hover { transform: translateY(-8px); border-color: #1a1a2e; }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-gradient-to-br from-[#FAF9F6] to-[#EDE9E3] py-20 lg:py-28">
-    <div class="container mx-auto px-4 text-center">
-        <div class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-8">
-            <a href="/" class="hover:text-[#232339]">{{ T.nav.home[lang] }}</a>
-            <i class="fas fa-chevron-right text-xs"></i>
-            <span class="text-[#232339]">{{ T.nav.services[lang] }}</span>
+<!-- Hero Section -->
+<section class="relative bg-white py-20 lg:py-28">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <!-- Breadcrumb -->
+            <div class="flex items-center justify-center gap-2 text-sm text-gray-400 mb-8">
+                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
+                <span>/</span>
+                <span class="text-[#1a1a2e]">{{ T.nav.services[lang] }}</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] leading-tight mb-6 font-display">
+                {% if lang == 'ru' %}Наши Услуги{% elif lang == 'en' %}Our Services{% else %}Bizning Xizmatlarimiz{% endif %}
+            </h1>
+            
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                {{ T.services.subtitle[lang] }}
+            </p>
         </div>
-        <div class="inline-flex items-center gap-2 bg-[#232339]/10 text-[#232339] px-5 py-2.5 rounded-full text-sm font-medium mb-8">
-            <i class="fas fa-concierge-bell"></i>
-            {% if lang == 'ru' %}Профессиональные услуги{% elif lang == 'en' %}Professional Services{% else %}Professional xizmatlar{% endif %}
-        </div>
-        <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-8">
-            {% if lang == 'ru' %}
-            Наши<br><span class="gradient-text">Услуги</span>
-            {% elif lang == 'en' %}
-            Our<br><span class="gradient-text">Services</span>
-            {% else %}
-            Bizning<br><span class="gradient-text">Xizmatlarimiz</span>
-            {% endif %}
-        </h1>
-        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-            {{ T.services.subtitle[lang] }}
-        </p>
     </div>
 </section>
 
 <!-- Main Services -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<section class="py-20 lg:py-28 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             
             <!-- 3D Dizayn -->
-            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
-                <div class="service-icon w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-blue-500/30">
-                    <i class="fas fa-drafting-compass text-white text-3xl"></i>
+            <div class="service-card bg-white p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-[#1a1a2e] flex items-center justify-center mb-6">
+                    <i class="fas fa-drafting-compass text-white text-2xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[#232339] mb-4">3D Dizayn Xizmati</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-4 font-display">
+                    {% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn Xizmati{% endif %}
+                </h3>
                 <p class="text-gray-600 mb-6">
-                    Professional dizaynerlarimiz sizning uyingiz uchun fotorealistik 3D loyiha tayyorlaydi. 
-                    Har bir burchakni oldindan ko'rasiz.
+                    {% if lang == 'ru' %}Профессиональные дизайнеры создадут фотореалистичный 3D проект вашей мебели.{% elif lang == 'en' %}Professional designers will create a photorealistic 3D project of your furniture.{% else %}Professional dizaynerlarimiz sizning uyingiz uchun fotorealistik 3D loyiha tayyorlaydi.{% endif %}
                 </p>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        3D vizualizatsiya
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}3D визуализация{% elif lang == 'en' %}3D visualization{% else %}3D vizualizatsiya{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Cheksiz tahrirlash
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Безлимитные правки{% elif lang == 'en' %}Unlimited revisions{% else %}Cheksiz tahrirlash{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Material va rang tanlash
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Выбор материалов{% elif lang == 'en' %}Material selection{% else %}Material va rang tanlash{% endif %}
                     </li>
                 </ul>
-                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <span class="text-2xl font-bold text-[#232339]">BEPUL</span>
-                    <a href="/order" class="text-[#232339] font-medium hover:underline">Buyurtma →</a>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-100">
+                    <span class="text-xl font-bold text-[#c9a96e]">{% if lang == 'ru' %}БЕСПЛАТНО{% elif lang == 'en' %}FREE{% else %}BEPUL{% endif %}</span>
+                    <a href="/order" class="text-[#1a1a2e] font-medium hover:text-[#c9a96e] transition">{% if lang == 'ru' %}Заказать{% elif lang == 'en' %}Order{% else %}Buyurtma{% endif %} →</a>
                 </div>
             </div>
             
             <!-- O'lchov xizmati -->
-            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
-                <div class="service-icon w-20 h-20 bg-gradient-to-br from-#232339 to-#232339 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-#232339/30">
-                    <i class="fas fa-ruler-combined text-white text-3xl"></i>
+            <div class="service-card bg-white p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-[#c9a96e] flex items-center justify-center mb-6">
+                    <i class="fas fa-ruler-combined text-white text-2xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[#232339] mb-4">O'lchov Xizmati</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-4 font-display">
+                    {% if lang == 'ru' %}Замер{% elif lang == 'en' %}Measurement{% else %}O'lchov Xizmati{% endif %}
+                </h3>
                 <p class="text-gray-600 mb-6">
-                    Mutaxassisimiz uyingizga kelib, lazer o'lchagich yordamida millimetrgacha aniq o'lchov oladi.
+                    {% if lang == 'ru' %}Специалист приедет к вам домой и сделает точные замеры лазерным инструментом.{% elif lang == 'en' %}A specialist will come to your home and take precise measurements with a laser tool.{% else %}Mutaxassisimiz uyingizga kelib, lazer o'lchagich yordamida millimetrgacha aniq o'lchov oladi.{% endif %}
                 </p>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Uyga chiqish
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Выезд на дом{% elif lang == 'en' %}Home visit{% else %}Uyga chiqish{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Lazer o'lchov
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Лазерный замер{% elif lang == 'en' %}Laser measurement{% else %}Lazer o'lchov{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Texnik maslahat
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Texnik maslahat{% endif %}
                     </li>
                 </ul>
-                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <span class="text-2xl font-bold text-[#232339]">BEPUL</span>
-                    <a href="/contact" class="text-[#232339] font-medium hover:underline">Bog'lanish →</a>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-100">
+                    <span class="text-xl font-bold text-[#c9a96e]">{% if lang == 'ru' %}БЕСПЛАТНО{% elif lang == 'en' %}FREE{% else %}BEPUL{% endif %}</span>
+                    <a href="/contact" class="text-[#1a1a2e] font-medium hover:text-[#c9a96e] transition">{% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %} →</a>
                 </div>
             </div>
             
             <!-- Ishlab chiqarish -->
-            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
-                <div class="service-icon w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-purple-500/30">
-                    <i class="fas fa-industry text-white text-3xl"></i>
+            <div class="service-card bg-white p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-[#1a1a2e] flex items-center justify-center mb-6">
+                    <i class="fas fa-industry text-white text-2xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[#232339] mb-4">Ishlab Chiqarish</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-4 font-display">
+                    {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab Chiqarish{% endif %}
+                </h3>
                 <p class="text-gray-600 mb-6">
-                    5000 m² zamonaviy fabrikamizda CNC dastgohlarida yuqori aniqlikda ishlab chiqaramiz.
+                    {% if lang == 'ru' %}Современная фабрика 5000 м² с CNC станками для высокоточного производства.{% elif lang == 'en' %}Modern 5000 m² factory with CNC machines for high-precision manufacturing.{% else %}5000 m² zamonaviy fabrikamizda CNC dastgohlarida yuqori aniqlikda ishlab chiqaramiz.{% endif %}
                 </p>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        CNC texnologiyasi
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}CNC технология{% elif lang == 'en' %}CNC technology{% else %}CNC texnologiyasi{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Import materiallar
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Импортные материалы{% elif lang == 'en' %}Import materials{% else %}Import materiallar{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        7-21 kun muddat
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}7-21 день{% elif lang == 'en' %}7-21 days{% else %}7-21 kun muddat{% endif %}
                     </li>
                 </ul>
-                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <span class="text-lg text-gray-500">Narx: loyihaga bog'liq</span>
-                    <a href="/products" class="text-[#232339] font-medium hover:underline">Ko'rish →</a>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-100">
+                    <span class="text-gray-500 text-sm">{% if lang == 'ru' %}Цена по проекту{% elif lang == 'en' %}Price by project{% else %}Narx: loyihaga bog'liq{% endif %}</span>
+                    <a href="/products" class="text-[#1a1a2e] font-medium hover:text-[#c9a96e] transition">{% if lang == 'ru' %}Смотреть{% elif lang == 'en' %}View{% else %}Ko'rish{% endif %} →</a>
                 </div>
             </div>
             
             <!-- Yetkazish -->
-            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
-                <div class="service-icon w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-amber-500/30">
-                    <i class="fas fa-truck text-white text-3xl"></i>
+            <div class="service-card bg-white p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-[#c9a96e] flex items-center justify-center mb-6">
+                    <i class="fas fa-truck text-white text-2xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[#232339] mb-4">Yetkazib Berish</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-4 font-display">
+                    {% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib Berish{% endif %}
+                </h3>
                 <p class="text-gray-600 mb-6">
-                    O'z transportimiz orqali O'zbekiston bo'ylab xavfsiz qadoqlash bilan yetkazamiz.
+                    {% if lang == 'ru' %}Собственный транспорт для безопасной доставки по всему Узбекистану.{% elif lang == 'en' %}Own transport for safe delivery throughout Uzbekistan.{% else %}O'z transportimiz orqali O'zbekiston bo'ylab xavfsiz qadoqlash bilan yetkazamiz.{% endif %}
                 </p>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Toshkent - BEPUL
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Ташкент - бесплатно{% elif lang == 'en' %}Tashkent - free{% else %}Toshkent - BEPUL{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Viloyatlarga yetkazish
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Доставка в регионы{% elif lang == 'en' %}Regional delivery{% else %}Viloyatlarga yetkazish{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Xavfsiz qadoqlash
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Безопасная упаковка{% elif lang == 'en' %}Safe packaging{% else %}Xavfsiz qadoqlash{% endif %}
                     </li>
                 </ul>
-                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <span class="text-2xl font-bold text-[#232339]">BEPUL*</span>
-                    <span class="text-sm text-gray-400">*Toshkent bo'ylab</span>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-100">
+                    <span class="text-xl font-bold text-[#c9a96e]">{% if lang == 'ru' %}БЕСПЛАТНО{% elif lang == 'en' %}FREE{% else %}BEPUL{% endif %}*</span>
+                    <span class="text-sm text-gray-400">*{% if lang == 'ru' %}По Ташкенту{% elif lang == 'en' %}In Tashkent{% else %}Toshkent bo'ylab{% endif %}</span>
                 </div>
             </div>
             
             <!-- O'rnatish -->
-            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
-                <div class="service-icon w-20 h-20 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-rose-500/30">
-                    <i class="fas fa-tools text-white text-3xl"></i>
+            <div class="service-card bg-white p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-[#1a1a2e] flex items-center justify-center mb-6">
+                    <i class="fas fa-tools text-white text-2xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[#232339] mb-4">O'rnatish Xizmati</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-4 font-display">
+                    {% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish Xizmati{% endif %}
+                </h3>
                 <p class="text-gray-600 mb-6">
-                    Tajribali ustalarimiz mebelni professional tarzda o'rnatib, sozlab berishadi.
+                    {% if lang == 'ru' %}Опытные мастера профессионально установят и настроят вашу мебель.{% elif lang == 'en' %}Experienced craftsmen will professionally install and adjust your furniture.{% else %}Tajribali ustalarimiz mebelni professional tarzda o'rnatib, sozlab berishadi.{% endif %}
                 </p>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Professional o'rnatish
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Профессиональная установка{% elif lang == 'en' %}Professional installation{% else %}Professional o'rnatish{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Chiqindilarni olib ketish
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Вывоз мусора{% elif lang == 'en' %}Waste removal{% else %}Chiqindilarni olib ketish{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Sozlash va tekshirish
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Настройка{% elif lang == 'en' %}Adjustment{% else %}Sozlash va tekshirish{% endif %}
                     </li>
                 </ul>
-                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <span class="text-lg text-gray-500">Ko'pincha bepul</span>
-                    <a href="/contact" class="text-[#232339] font-medium hover:underline">So'rash →</a>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-100">
+                    <span class="text-gray-500 text-sm">{% if lang == 'ru' %}Часто бесплатно{% elif lang == 'en' %}Often free{% else %}Ko'pincha bepul{% endif %}</span>
+                    <a href="/contact" class="text-[#1a1a2e] font-medium hover:text-[#c9a96e] transition">{% if lang == 'ru' %}Спросить{% elif lang == 'en' %}Ask{% else %}So'rash{% endif %} →</a>
                 </div>
             </div>
             
             <!-- Kafolat -->
-            <div class="service-card bg-[#FAF9F6] rounded-3xl p-8 border border-gray-100">
-                <div class="service-icon w-20 h-20 bg-gradient-to-br from-[#232339] to-[#000000] rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-[#232339]/30">
-                    <i class="fas fa-shield-alt text-white text-3xl"></i>
+            <div class="service-card bg-white p-8 border border-gray-100">
+                <div class="w-16 h-16 bg-[#c9a96e] flex items-center justify-center mb-6">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-[#232339] mb-4">Kafolat Xizmati</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-4 font-display">
+                    {% if lang == 'ru' %}Гарантия{% elif lang == 'en' %}Warranty{% else %}Kafolat Xizmati{% endif %}
+                </h3>
                 <p class="text-gray-600 mb-6">
-                    3 yilgacha kafolat. Muammo bo'lsa bepul ta'mirlaymiz yoki almashtiramiz.
+                    {% if lang == 'ru' %}До 3 лет гарантии. При проблемах бесплатно отремонтируем или заменим.{% elif lang == 'en' %}Up to 3 years warranty. We'll repair or replace for free if there are issues.{% else %}3 yilgacha kafolat. Muammo bo'lsa bepul ta'mirlaymiz yoki almashtiramiz.{% endif %}
                 </p>
-                <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        1-3 yil kafolat
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}1-3 года гарантии{% elif lang == 'en' %}1-3 year warranty{% else %}1-3 yil kafolat{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        Bepul ta'mirlash
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Бесплатный ремонт{% elif lang == 'en' %}Free repair{% else %}Bepul ta'mirlash{% endif %}
                     </li>
-                    <li class="flex items-center gap-3 text-gray-600">
-                        <i class="fas fa-check text-#232339"></i>
-                        24/7 qo'llab-quvvatlash
+                    <li class="flex items-center gap-2 text-gray-600 text-sm">
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}24/7 поддержка{% elif lang == 'en' %}24/7 support{% else %}24/7 qo'llab-quvvatlash{% endif %}
                     </li>
                 </ul>
-                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <span class="text-2xl font-bold text-[#232339]">3 YIL</span>
-                    <span class="text-sm text-gray-400">maksimal kafolat</span>
+                <div class="flex items-center justify-between pt-6 border-t border-gray-100">
+                    <span class="text-xl font-bold text-[#1a1a2e]">3 {% if lang == 'ru' %}ГОДА{% elif lang == 'en' %}YEARS{% else %}YIL{% endif %}</span>
+                    <span class="text-sm text-gray-400">{% if lang == 'ru' %}максимум{% elif lang == 'en' %}maximum{% else %}maksimal kafolat{% endif %}</span>
                 </div>
             </div>
         </div>
@@ -230,121 +227,120 @@
 </section>
 
 <!-- Process Section -->
-<section class="py-20 bg-[#FAF9F6]">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-6">
-                Biz Bilan Ishlash Jarayoni
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-6 font-display">
+                {% if lang == 'ru' %}Процесс Работы{% elif lang == 'en' %}Work Process{% else %}Biz Bilan Ishlash Jarayoni{% endif %}
             </h2>
-            <p class="text-gray-600">Buyurtmadan tayyor mebelgacha - 5 oddiy qadam</p>
+            <p class="text-gray-600">{% if lang == 'ru' %}От заказа до готовой мебели - 5 простых шагов{% elif lang == 'en' %}From order to finished furniture - 5 simple steps{% else %}Buyurtmadan tayyor mebelgacha - 5 oddiy qadam{% endif %}</p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-6 lg:gap-8">
             <div class="text-center">
-                <div class="w-16 h-16 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
-                <h4 class="font-bold text-[#232339] mb-2">Murojaat</h4>
-                <p class="text-gray-500 text-sm">Telefon, Telegram yoki sayt orqali</p>
+                <div class="w-16 h-16 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold font-display">1</div>
+                <h4 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Заявка{% elif lang == 'en' %}Request{% else %}Murojaat{% endif %}</h4>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Телефон, Telegram или сайт{% elif lang == 'en' %}Phone, Telegram or website{% else %}Telefon, Telegram yoki sayt{% endif %}</p>
             </div>
             <div class="text-center">
-                <div class="w-16 h-16 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
-                <h4 class="font-bold text-[#232339] mb-2">O'lchov</h4>
-                <p class="text-gray-500 text-sm">Bepul uyga chiqish</p>
+                <div class="w-16 h-16 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold font-display">2</div>
+                <h4 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Замер{% elif lang == 'en' %}Measurement{% else %}O'lchov{% endif %}</h4>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Бесплатный выезд{% elif lang == 'en' %}Free home visit{% else %}Bepul uyga chiqish{% endif %}</p>
             </div>
             <div class="text-center">
-                <div class="w-16 h-16 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
-                <h4 class="font-bold text-[#232339] mb-2">Dizayn</h4>
-                <p class="text-gray-500 text-sm">3D loyiha tayyorlash</p>
+                <div class="w-16 h-16 bg-[#c9a96e] text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold font-display">3</div>
+                <h4 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Дизайн{% elif lang == 'en' %}Design{% else %}Dizayn{% endif %}</h4>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}3D проект{% elif lang == 'en' %}3D project{% else %}3D loyiha tayyorlash{% endif %}</p>
             </div>
             <div class="text-center">
-                <div class="w-16 h-16 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
-                <h4 class="font-bold text-[#232339] mb-2">Ishlab chiqarish</h4>
-                <p class="text-gray-500 text-sm">7-21 kun</p>
+                <div class="w-16 h-16 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold font-display">4</div>
+                <h4 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</h4>
+                <p class="text-gray-500 text-sm">7-21 {% if lang == 'ru' %}дней{% elif lang == 'en' %}days{% else %}kun{% endif %}</p>
             </div>
-            <div class="text-center">
-                <div class="w-16 h-16 bg-amber-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
-                    <i class="fas fa-check"></i>
+            <div class="text-center col-span-2 md:col-span-1">
+                <div class="w-16 h-16 bg-[#c9a96e] text-white flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-xl"></i>
                 </div>
-                <h4 class="font-bold text-[#232339] mb-2">Yetkazish</h4>
-                <p class="text-gray-500 text-sm">O'rnatish bilan</p>
+                <h4 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}</h4>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}С установкой{% elif lang == 'en' %}With installation{% else %}O'rnatish bilan{% endif %}</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Pricing Table -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-6">
-                Xizmat Narxlari
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-6 font-display">
+                {% if lang == 'ru' %}Цены на Услуги{% elif lang == 'en' %}Service Prices{% else %}Xizmat Narxlari{% endif %}
             </h2>
-            <p class="text-gray-600">Shaffof va adolatli narxlar</p>
+            <p class="text-gray-600">{% if lang == 'ru' %}Прозрачные и честные цены{% elif lang == 'en' %}Transparent and fair prices{% else %}Shaffof va adolatli narxlar{% endif %}</p>
         </div>
         
         <div class="max-w-4xl mx-auto">
-            <div class="bg-[#FAF9F6] rounded-3xl overflow-hidden">
+            <div class="bg-white overflow-hidden border border-gray-100">
                 <table class="w-full">
-                    <thead class="bg-[#232339] text-white">
+                    <thead class="bg-[#1a1a2e] text-white">
                         <tr>
-                            <th class="text-left py-5 px-6">Xizmat turi</th>
-                            <th class="text-center py-5 px-6">Narx</th>
-                            <th class="text-center py-5 px-6 hidden md:table-cell">Muddat</th>
+                            <th class="text-left py-5 px-6">{% if lang == 'ru' %}Услуга{% elif lang == 'en' %}Service{% else %}Xizmat turi{% endif %}</th>
+                            <th class="text-center py-5 px-6">{% if lang == 'ru' %}Цена{% elif lang == 'en' %}Price{% else %}Narx{% endif %}</th>
+                            <th class="text-center py-5 px-6 hidden md:table-cell">{% if lang == 'ru' %}Срок{% elif lang == 'en' %}Duration{% else %}Muddat{% endif %}</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200">
+                    <tbody class="divide-y divide-gray-100">
                         <tr>
-                            <td class="py-5 px-6 font-medium">3D Dizayn loyihasi</td>
-                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL</td>
-                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-3 kun</td>
+                            <td class="py-5 px-6 font-medium">{% if lang == 'ru' %}3D Дизайн проект{% elif lang == 'en' %}3D Design project{% else %}3D Dizayn loyihasi{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-[#c9a96e] font-bold">{% if lang == 'ru' %}БЕСПЛАТНО{% elif lang == 'en' %}FREE{% else %}BEPUL{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-3 {% if lang == 'ru' %}дня{% elif lang == 'en' %}days{% else %}kun{% endif %}</td>
                         </tr>
-                        <tr class="bg-white">
-                            <td class="py-5 px-6 font-medium">O'lchov xizmati</td>
-                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL</td>
-                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1 kun</td>
-                        </tr>
-                        <tr>
-                            <td class="py-5 px-6 font-medium">Yetkazib berish (Toshkent)</td>
-                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL</td>
-                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-2 kun</td>
-                        </tr>
-                        <tr class="bg-white">
-                            <td class="py-5 px-6 font-medium">Yetkazib berish (Viloyatlar)</td>
-                            <td class="py-5 px-6 text-center text-[#232339] font-bold">200,000 {{ T.common.sum[lang] }}dan</td>
-                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">2-5 kun</td>
+                        <tr class="bg-gray-50">
+                            <td class="py-5 px-6 font-medium">{% if lang == 'ru' %}Замер{% elif lang == 'en' %}Measurement{% else %}O'lchov xizmati{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-[#c9a96e] font-bold">{% if lang == 'ru' %}БЕСПЛАТНО{% elif lang == 'en' %}FREE{% else %}BEPUL{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1 {% if lang == 'ru' %}день{% elif lang == 'en' %}day{% else %}kun{% endif %}</td>
                         </tr>
                         <tr>
-                            <td class="py-5 px-6 font-medium">O'rnatish xizmati</td>
-                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL*</td>
-                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1 kun</td>
+                            <td class="py-5 px-6 font-medium">{% if lang == 'ru' %}Доставка (Ташкент){% elif lang == 'en' %}Delivery (Tashkent){% else %}Yetkazib berish (Toshkent){% endif %}</td>
+                            <td class="py-5 px-6 text-center text-[#c9a96e] font-bold">{% if lang == 'ru' %}БЕСПЛАТНО{% elif lang == 'en' %}FREE{% else %}BEPUL{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-2 {% if lang == 'ru' %}дня{% elif lang == 'en' %}days{% else %}kun{% endif %}</td>
                         </tr>
-                        <tr class="bg-white">
-                            <td class="py-5 px-6 font-medium">Kafolat xizmati</td>
-                            <td class="py-5 px-6 text-center text-#232339 font-bold">BEPUL</td>
-                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-3 yil</td>
+                        <tr class="bg-gray-50">
+                            <td class="py-5 px-6 font-medium">{% if lang == 'ru' %}Доставка (регионы){% elif lang == 'en' %}Delivery (regions){% else %}Yetkazib berish (Viloyatlar){% endif %}</td>
+                            <td class="py-5 px-6 text-center text-[#1a1a2e] font-bold">200,000 {{ T.common.sum[lang] }}{% if lang == 'ru' %}+{% elif lang == 'en' %}+{% else %}dan{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">2-5 {% if lang == 'ru' %}дней{% elif lang == 'en' %}days{% else %}kun{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-5 px-6 font-medium">{% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish xizmati{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-[#c9a96e] font-bold">{% if lang == 'ru' %}БЕСПЛАТНО{% elif lang == 'en' %}FREE{% else %}BEPUL{% endif %}*</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1 {% if lang == 'ru' %}день{% elif lang == 'en' %}day{% else %}kun{% endif %}</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="py-5 px-6 font-medium">{% if lang == 'ru' %}Гарантийное обслуживание{% elif lang == 'en' %}Warranty service{% else %}Kafolat xizmati{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-[#c9a96e] font-bold">{% if lang == 'ru' %}БЕСПЛАТНО{% elif lang == 'en' %}FREE{% else %}BEPUL{% endif %}</td>
+                            <td class="py-5 px-6 text-center text-gray-500 hidden md:table-cell">1-3 {% if lang == 'ru' %}года{% elif lang == 'en' %}years{% else %}yil{% endif %}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <p class="text-center text-gray-400 text-sm mt-4">* Murakkab loyihalar uchun alohida kelishiladi</p>
+            <p class="text-center text-gray-400 text-sm mt-4">* {% if lang == 'ru' %}Для сложных проектов обговаривается отдельно{% elif lang == 'en' %}Discussed separately for complex projects{% else %}Murakkab loyihalar uchun alohida kelishiladi{% endif %}</p>
         </div>
     </div>
 </section>
 
 <!-- CTA -->
-<section class="py-20 bg-gradient-to-br from-[#232339] to-[#000000]">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="hero-title text-3xl md:text-4xl font-bold text-white mb-6">
-            Xizmatlarimizdan Foydalaning
+<section class="py-20 lg:py-28 bg-[#1a1a2e]">
+    <div class="container mx-auto px-4 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 font-display">
+            {% if lang == 'ru' %}Воспользуйтесь Нашими Услугами{% elif lang == 'en' %}Use Our Services{% else %}Xizmatlarimizdan Foydalaning{% endif %}
         </h2>
-        <p class="text-white/70 text-lg mb-10 max-w-xl mx-auto">
-            Bepul maslahat va 3D dizayn uchun hoziroq bog'laning
+        <p class="text-white/60 text-lg mb-10 max-w-xl mx-auto">
+            {% if lang == 'ru' %}Бесплатная консультация и 3D дизайн - свяжитесь сейчас{% elif lang == 'en' %}Free consultation and 3D design - contact now{% else %}Bepul maslahat va 3D dizayn uchun hoziroq bog'laning{% endif %}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/order" class="inline-flex items-center justify-center gap-2 bg-white text-[#232339] px-8 py-4 rounded-full font-medium hover:shadow-xl transition">
-                <i class="fas fa-paper-plane"></i>
-                Buyurtma Berish
+            <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#c9a96e] hover:bg-[#b8956b] text-white px-8 py-4 font-medium transition">
+                {% if lang == 'ru' %}Заказать{% elif lang == 'en' %}Order{% else %}Buyurtma Berish{% endif %}
             </a>
-            <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-medium hover:bg-white hover:text-[#232339] transition">
+            <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-2 border border-white/30 text-white px-8 py-4 font-medium hover:bg-white hover:text-[#1a1a2e] transition">
                 <i class="fas fa-phone"></i>
                 +998 90 123 45 67
             </a>
@@ -352,4 +348,3 @@
     </div>
 </section>
 {% endblock %}
-

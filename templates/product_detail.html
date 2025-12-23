@@ -4,54 +4,60 @@
 
 {% block extra_css %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+    
     .quantity-btn {
         transition: all 0.2s ease;
     }
     .quantity-btn:hover {
-        background: #232339;
+        background: #1a1a2e;
         color: white;
+        border-color: #1a1a2e;
     }
     .thumbnail {
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
     .thumbnail.active {
-        border-color: #232339;
+        border-color: #1a1a2e;
+    }
+    .thumbnail:hover {
+        border-color: #1a1a2e;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="bg-[#F5F5F7] min-h-screen py-6 lg:py-12">
-    <div class="container mx-auto px-4">
+<section class="bg-white min-h-screen py-8 lg:py-16">
+    <div class="container mx-auto px-4 lg:px-8">
         <!-- Breadcrumb -->
-        <nav class="mb-6">
-            <ol class="flex items-center gap-2 text-sm text-gray-500">
-                <li><a href="/" class="hover:text-[#232339] transition">Asosiy</a></li>
-                <li><i class="fas fa-chevron-right text-xs"></i></li>
-                <li><a href="/products" class="hover:text-[#232339] transition">Mahsulotlar</a></li>
+        <nav class="mb-8">
+            <ol class="flex items-center gap-2 text-sm text-gray-400">
+                <li><a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a></li>
+                <li><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
+                <li><a href="/products" class="hover:text-[#1a1a2e] transition">{{ T.nav.products[lang] }}</a></li>
                 {% if product.category %}
-                <li><i class="fas fa-chevron-right text-xs"></i></li>
-                <li><a href="/products?category={{ product.category.id }}" class="hover:text-[#232339] transition">{{ product.category.get_name(lang) }}</a></li>
+                <li><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
+                <li><a href="/products?category={{ product.category.id }}" class="hover:text-[#1a1a2e] transition">{{ product.category.get_name(lang) }}</a></li>
                 {% endif %}
-                <li><i class="fas fa-chevron-right text-xs"></i></li>
-                <li class="text-[#232339]">{{ product.get_name(lang) }}</li>
+                <li><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
+                <li class="text-[#1a1a2e]">{{ product.get_name(lang) }}</li>
             </ol>
         </nav>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
             <!-- Product Images -->
             <div>
-                <div class="bg-white rounded-3xl overflow-hidden mb-4 shadow-sm">
-                    <div class="aspect-square bg-[#FAFAFA] p-8 flex items-center justify-center">
+                <div class="bg-[#f5f5f5] overflow-hidden mb-4">
+                    <div class="aspect-square p-8 flex items-center justify-center">
                         {% if product.images %}
                             {% set images = product.images|from_json %}
                             {% if images %}
                                 <img id="main-image" src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" class="w-full h-full object-contain">
                             {% else %}
-                                <i class="fas fa-image text-9xl text-gray-300"></i>
+                                <i class="fas fa-image text-8xl text-gray-300"></i>
                             {% endif %}
                         {% else %}
-                            <i class="fas fa-image text-9xl text-gray-300"></i>
+                            <i class="fas fa-image text-8xl text-gray-300"></i>
                         {% endif %}
                     </div>
                 </div>
@@ -61,9 +67,9 @@
                     {% if images|length > 1 %}
                     <div class="grid grid-cols-4 gap-3">
                         {% for image in images %}
-                        <div class="thumbnail bg-white rounded-xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-[#232339] transition {% if loop.first %}active border-[#232339]{% endif %}"
+                        <div class="thumbnail bg-[#f5f5f5] border-2 border-transparent overflow-hidden cursor-pointer {% if loop.first %}active border-[#1a1a2e]{% endif %}"
                              onclick="changeImage(this, '/uploads/{{ image }}')">
-                            <div class="aspect-square bg-[#FAFAFA] p-2">
+                            <div class="aspect-square p-2">
                                 <img src="/uploads/{{ image }}" alt="{{ product.get_name(lang) }}" class="w-full h-full object-contain">
                             </div>
                         </div>
@@ -81,129 +87,169 @@
                     <span class="text-sm text-gray-500">{{ product.category.get_name(lang) }}</span>
                     {% endif %}
                     {% if product.is_bestseller %}
-                    <span class="bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-medium">Best Seller</span>
+                    <span class="bg-[#8B7355] text-white px-2 py-0.5 text-xs font-medium">
+                        {% if lang == 'ru' %}Хит{% elif lang == 'en' %}Best{% else %}Top{% endif %}
+                    </span>
                     {% endif %}
                 </div>
                 
                 <!-- Title -->
-                <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#232339] mb-4">{{ product.get_name(lang) }}</h1>
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
+                    {{ product.get_name(lang) }}
+                </h1>
                 
                 <!-- Rating -->
                 <div class="flex items-center gap-2 mb-6">
-                    <div class="flex items-center gap-1">
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
+                    <div class="flex items-center gap-0.5">
+                        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
                     </div>
-                    <span class="text-sm text-gray-500">(5.0)</span>
+                    <span class="text-sm text-gray-400">(5.0)</span>
                 </div>
                 
                 <!-- Price -->
-                <div class="mb-6">
-                    <span class="text-3xl md:text-4xl font-bold text-[#232339]">
-                        {{ "{:,.0f}".format(product.price * usd_rate) }}
-                    </span>
-                    <span class="text-lg text-gray-500">so'm</span>
-                    <p class="text-sm text-gray-400 mt-1">
-                        ≈ {{ "%.2f" % product.price }} $
+                <div class="mb-6 pb-6 border-b border-gray-100">
+                    <p class="text-sm text-gray-400 mb-1">{% if lang == 'ru' %}Рек. цена{% elif lang == 'en' %}Rec. retail price{% else %}Tavsiya narxi{% endif %}</p>
+                    <div class="flex items-baseline gap-3">
+                        <span class="text-2xl text-gray-400 line-through">${{ "%.0f"|format(product.price * 1.2) }}</span>
+                        <span class="text-3xl md:text-4xl font-semibold text-[#1a1a2e]">From ${{ "%.0f"|format(product.price) }}</span>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2">
+                        ≈ {{ "{:,.0f}".format(product.price * usd_rate) }} so'm
                     </p>
                 </div>
                 
                 <!-- Description -->
                 {% if product.get_description(lang) %}
-                <div class="mb-6">
+                <div class="mb-6 pb-6 border-b border-gray-100">
                     <p class="text-gray-600 leading-relaxed">{{ product.get_description(lang) }}</p>
                 </div>
                 {% endif %}
                 
                 <!-- Specifications -->
-                <div class="bg-white rounded-2xl p-5 mb-6 space-y-3">
-                    {% if product.size %}
-                    <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                        <span class="text-gray-500 flex items-center gap-2">
-                            <i class="fas fa-ruler-combined text-[#232339]"></i> O'lcham
-                        </span>
-                        <span class="font-medium text-[#232339]">{{ product.size }}</span>
+                <div class="mb-6 pb-6 border-b border-gray-100">
+                    <h3 class="font-medium text-[#1a1a2e] mb-4">{% if lang == 'ru' %}Характеристики{% elif lang == 'en' %}Specifications{% else %}Xususiyatlar{% endif %}</h3>
+                    <div class="space-y-3">
+                        {% if product.size %}
+                        <div class="flex items-center justify-between py-2">
+                            <span class="text-gray-500">{% if lang == 'ru' %}Размер{% elif lang == 'en' %}Size{% else %}O'lcham{% endif %}</span>
+                            <span class="font-medium text-[#1a1a2e]">{{ product.size }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if product.get_material(lang) %}
+                        <div class="flex items-center justify-between py-2">
+                            <span class="text-gray-500">Material</span>
+                            <span class="font-medium text-[#1a1a2e]">{{ product.get_material(lang) }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if product.warranty_uz %}
+                        <div class="flex items-center justify-between py-2">
+                            <span class="text-gray-500">{% if lang == 'ru' %}Гарантия{% elif lang == 'en' %}Warranty{% else %}Kafolat{% endif %}</span>
+                            <span class="font-medium text-[#1a1a2e]">{{ product.warranty_uz }}</span>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                    
-                    {% if product.get_material(lang) %}
-                    <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                        <span class="text-gray-500 flex items-center gap-2">
-                            <i class="fas fa-layer-group text-[#232339]"></i> Material
-                        </span>
-                        <span class="font-medium text-[#232339]">{{ product.get_material(lang) }}</span>
+                </div>
+                
+                <!-- Color Options Placeholder -->
+                <div class="mb-6 pb-6 border-b border-gray-100">
+                    <h3 class="font-medium text-[#1a1a2e] mb-4">{% if lang == 'ru' %}Цвета{% elif lang == 'en' %}Colors{% else %}Ranglar{% endif %}</h3>
+                    <div class="flex items-center gap-2">
+                        <button class="w-8 h-8 rounded-full bg-[#1a1a2e] border-2 border-[#1a1a2e] ring-2 ring-offset-2 ring-[#1a1a2e]"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#8B7355] border-2 border-gray-200 hover:border-[#8B7355]"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#C4C4C4] border-2 border-gray-200 hover:border-[#C4C4C4]"></button>
+                        <span class="text-sm text-gray-400 ml-2">+ more options</span>
                     </div>
-                    {% endif %}
-                    
-                    {% if product.warranty_uz %}
-                    <div class="flex items-center justify-between py-2">
-                        <span class="text-gray-500 flex items-center gap-2">
-                            <i class="fas fa-shield-alt text-[#232339]"></i> Kafolat
-                        </span>
-                        <span class="font-medium text-[#232339]">{{ product.warranty_uz }}</span>
-                    </div>
-                    {% endif %}
                 </div>
                 
                 <!-- Quantity & Add to Cart -->
-                <form id="add-to-cart-form" action="/cart/add/{{ product.id }}" method="POST" class="mb-6">
+                <form id="add-to-cart-form" action="/cart/add/{{ product.id }}" method="POST" class="mb-8">
                     <div class="flex items-center gap-4 mb-4">
-                        <span class="text-gray-600">Miqdor:</span>
-                        <div class="flex items-center gap-3">
-                            <button type="button" class="quantity-btn w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500" onclick="decreaseQty()">
-                                <i class="fas fa-minus text-sm"></i>
+                        <span class="text-gray-600 text-sm">{% if lang == 'ru' %}Количество{% elif lang == 'en' %}Quantity{% else %}Miqdor{% endif %}</span>
+                        <div class="flex items-center">
+                            <button type="button" class="quantity-btn w-10 h-10 border border-gray-200 flex items-center justify-center text-gray-500" onclick="decreaseQty()">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
                             </button>
-                            <input type="number" name="quantity" id="quantity" value="1" min="1" class="w-16 text-center text-lg font-medium text-[#232339] border-0 focus:ring-0">
-                            <button type="button" class="quantity-btn w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500" onclick="increaseQty()">
-                                <i class="fas fa-plus text-sm"></i>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" class="w-14 text-center text-base font-medium text-[#1a1a2e] border-y border-gray-200 py-2.5 focus:outline-none">
+                            <button type="button" class="quantity-btn w-10 h-10 border border-gray-200 flex items-center justify-center text-gray-500" onclick="increaseQty()">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                             </button>
                         </div>
                     </div>
                     
                     <div class="flex gap-3">
-                        <button type="submit" class="flex-1 bg-[#232339] hover:bg-[#000000] text-white py-4 rounded-xl font-medium transition flex items-center justify-center gap-2">
-                            <i class="fas fa-shopping-bag"></i>
-                            Savatchaga qo'shish
+                        <button type="submit" class="flex-1 bg-[#1a1a2e] hover:bg-black text-white py-4 text-sm font-medium transition flex items-center justify-center gap-2">
+                            {% if lang == 'ru' %}Добавить в корзину{% elif lang == 'en' %}Add to cart{% else %}Savatchaga qo'shish{% endif %}
                         </button>
-                        <button type="button" class="w-14 h-14 border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-500 transition">
-                            <i class="far fa-heart text-xl"></i>
+                        <button type="button" class="w-14 h-14 border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-500 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                         </button>
                     </div>
                 </form>
                 
                 <!-- Delivery Info -->
-                <div class="bg-[#232339]/5 rounded-2xl p-5 space-y-4">
+                <div class="bg-[#f8f8f8] p-6 space-y-4">
                     <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-[#232339]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-truck text-[#232339]"></i>
+                        <div class="w-10 h-10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                            </svg>
                         </div>
                         <div>
-                            <p class="font-medium text-[#232339]">Bepul yetkazib berish</p>
-                            <p class="text-sm text-gray-500">Toshkent shahri bo'ylab</p>
+                            <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free delivery{% else %}Bepul yetkazish{% endif %}</p>
+                            <p class="text-sm text-gray-500">{% if lang == 'ru' %}По Ташкенту{% elif lang == 'en' %}In Tashkent{% else %}Toshkent bo'ylab{% endif %}</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-[#232339]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-clock text-[#232339]"></i>
+                        <div class="w-10 h-10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
                         </div>
                         <div>
-                            <p class="font-medium text-[#232339]">3-7 ish kuni</p>
-                            <p class="text-sm text-gray-500">Yetkazib berish muddati</p>
+                            <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}3-7 рабочих дней{% elif lang == 'en' %}3-7 business days{% else %}3-7 ish kuni{% endif %}</p>
+                            <p class="text-sm text-gray-500">{% if lang == 'ru' %}Срок доставки{% elif lang == 'en' %}Delivery time{% else %}Yetkazish muddati{% endif %}</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-[#232339]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-undo text-[#232339]"></i>
+                        <div class="w-10 h-10 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
                         </div>
                         <div>
-                            <p class="font-medium text-[#232339]">14 kun ichida qaytarish</p>
-                            <p class="text-sm text-gray-500">Oson va tez</p>
+                            <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}14 дней возврат{% elif lang == 'en' %}14 days return{% else %}14 kun qaytarish{% endif %}</p>
+                            <p class="text-sm text-gray-500">{% if lang == 'ru' %}Легко и быстро{% elif lang == 'en' %}Easy and fast{% else %}Oson va tez{% endif %}</p>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Help Section -->
+<section class="py-12 lg:py-16 bg-[#f8f8f8]">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <h3 class="text-xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">{% if lang == 'ru' %}Нужна помощь?{% elif lang == 'en' %}Need help?{% else %}Yordam kerakmi?{% endif %}</h3>
+                <p class="text-gray-500">{% if lang == 'ru' %}Свяжитесь с нами для консультации{% elif lang == 'en' %}Contact us for consultation{% else %}Maslahat uchun biz bilan bog'laning{% endif %}</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="tel:+998901234567" class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-black text-white px-6 py-3 text-sm font-medium transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    +998 90 123 45 67
+                </a>
+                <a href="https://t.me/furniglass" class="inline-flex items-center gap-2 border border-gray-200 hover:border-[#1a1a2e] text-[#1a1a2e] px-6 py-3 text-sm font-medium transition">
+                    <i class="fab fa-telegram text-lg"></i>
+                    Telegram
+                </a>
             </div>
         </div>
     </div>
@@ -215,9 +261,11 @@
     function changeImage(thumbnail, src) {
         document.getElementById('main-image').src = src;
         document.querySelectorAll('.thumbnail').forEach(t => {
-            t.classList.remove('active', 'border-[#232339]');
+            t.classList.remove('active', 'border-[#1a1a2e]');
+            t.classList.add('border-transparent');
         });
-        thumbnail.classList.add('active', 'border-[#232339]');
+        thumbnail.classList.add('active', 'border-[#1a1a2e]');
+        thumbnail.classList.remove('border-transparent');
     }
     
     function decreaseQty() {
@@ -238,7 +286,7 @@
         const btn = this.querySelector('button[type="submit"]');
         const originalHtml = btn.innerHTML;
         
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Qo\'shilmoqda...';
+        btn.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
         btn.disabled = true;
         
         try {
@@ -254,19 +302,18 @@
             const data = await response.json();
             
             if (data.success) {
-                // Update cart badges
                 document.querySelectorAll('.cart-badge').forEach(badge => {
                     badge.textContent = data.cart_count;
                 });
                 
-                btn.innerHTML = '<i class="fas fa-check"></i> Qo\'shildi!';
-                btn.classList.remove('bg-[#232339]');
-                btn.classList.add('bg-green-500');
+                btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> {% if lang == "ru" %}Добавлено{% elif lang == "en" %}Added{% else %}Qo\'shildi{% endif %}';
+                btn.classList.remove('bg-[#1a1a2e]');
+                btn.classList.add('bg-green-600');
                 
                 setTimeout(() => {
                     btn.innerHTML = originalHtml;
-                    btn.classList.add('bg-[#232339]');
-                    btn.classList.remove('bg-green-500');
+                    btn.classList.add('bg-[#1a1a2e]');
+                    btn.classList.remove('bg-green-600');
                     btn.disabled = false;
                 }, 2000);
             }

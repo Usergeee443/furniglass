@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Furni Glass - {% if lang == 'ru' %}Бесплатные образцы{% elif lang == 'en' %}Free Samples{% else %}Bepul namunalar{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-[#FAF9F6] py-16 lg:py-24">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-6" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Получить бесплатные образцы{% elif lang == 'en' %}Get Free Samples{% else %}Bepul namunalar olish{% endif %}
+            </h1>
+            <p class="text-gray-600 text-lg md:text-xl leading-relaxed">
+                {% if lang == 'ru' %}Закажите бесплатные образцы тканей и материалов для вашего проекта{% elif lang == 'en' %}Order free fabric and material samples for your project{% else %}Loyihangiz uchun bepul mato va material namunalarini buyurtma qiling{% endif %}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Form Section -->
+<section class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white  shadow-lg p-8 lg:p-12">
+                <h2 class="text-2xl md:text-3xl font-bold text-[#232339] mb-6">
+                    {% if lang == 'ru' %}Заполните форму{% elif lang == 'en' %}Fill out the form{% else %}Formani to'ldiring{% endif %}
+                </h2>
+                
+                <form method="POST" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your Name{% else %}Ismingiz{% endif %} *
+                        </label>
+                        <input type="text" name="name" required 
+                               class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} *
+                        </label>
+                        <input type="tel" name="phone" required 
+                               class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition"
+                               placeholder="+998 __ ___ __ __">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Email{% elif lang == 'en' %}Email{% else %}Email{% endif %}
+                        </label>
+                        <input type="email" name="email" 
+                               class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Выберите продукт{% elif lang == 'en' %}Select Product{% else %}Mahsulotni tanlang{% endif %}
+                        </label>
+                        <select name="product_id" 
+                                class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                            <option value="">{% if lang == 'ru' %}Выберите{% elif lang == 'en' %}Select{% else %}Tanlang{% endif %}</option>
+                            {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.get_name(lang) }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Сообщение{% elif lang == 'en' %}Message{% else %}Xabar{% endif %}
+                        </label>
+                        <textarea name="message" rows="4" 
+                                  class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition resize-none"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-[#232339] hover:bg-black text-white py-4  font-semibold transition-all">
+                        {% if lang == 'ru' %}Отправить{% elif lang == 'en' %}Submit{% else %}Yuborish{% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

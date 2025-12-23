@@ -4,109 +4,118 @@
 
 {% block extra_css %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-    .hero-title { font-family: 'Playfair Display', serif; }
-    .gradient-text {
-        background: linear-gradient(135deg, #232339 0%, #000000 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
     .faq-item { transition: all 0.3s ease; }
-    .faq-item:hover { transform: translateY(-2px); }
-    .faq-item[open] { box-shadow: 0 10px 40px rgba(45, 74, 62, 0.1); }
-    .faq-item[open] summary { color: #232339; }
+    .faq-item:hover { border-color: #1a1a2e; }
+    .faq-item[open] { border-color: #1a1a2e; }
+    .faq-item[open] summary { color: #1a1a2e; }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-gradient-to-br from-[#FAF9F6] to-[#EDE9E3] py-20 lg:py-28">
-    <div class="container mx-auto px-4 text-center">
-        <div class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-8">
-            <a href="/" class="hover:text-[#232339]">{{ T.nav.home[lang] }}</a>
-            <i class="fas fa-chevron-right text-xs"></i>
-            <span class="text-[#232339]">{{ T.nav.faq[lang] }}</span>
+<!-- Hero Section -->
+<section class="relative bg-white py-20 lg:py-28">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <!-- Breadcrumb -->
+            <div class="flex items-center justify-center gap-2 text-sm text-gray-400 mb-8">
+                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
+                <span>/</span>
+                <span class="text-[#1a1a2e]">{{ T.nav.faq[lang] }}</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] leading-tight mb-6 font-display">
+                {% if lang == 'ru' %}Часто Задаваемые Вопросы{% elif lang == 'en' %}Frequently Asked Questions{% else %}Ko'p So'raladigan Savollar{% endif %}
+            </h1>
+            
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                {% if lang == 'ru' %}Ответы на часто задаваемые вопросы. Если не нашли ответ - свяжитесь с нами.{% elif lang == 'en' %}Answers to frequently asked questions. If you can't find an answer - contact us.{% else %}Mijozlarimiz eng ko'p beradigan savollar va ularga javoblar. Savolingiz topilmasa, biz bilan bog'laning.{% endif %}
+            </p>
         </div>
-        <div class="inline-flex items-center gap-2 bg-[#232339]/10 text-[#232339] px-5 py-2.5 rounded-full text-sm font-medium mb-8">
-            <i class="fas fa-question-circle"></i>
-            {% if lang == 'ru' %}Вопросы и ответы{% elif lang == 'en' %}Questions & Answers{% else %}Savollar va javoblar{% endif %}
-        </div>
-        <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-8">
-            {% if lang == 'ru' %}Часто Задаваемые<br><span class="gradient-text">Вопросы</span>{% elif lang == 'en' %}Frequently Asked<br><span class="gradient-text">Questions</span>{% else %}Ko'p So'raladigan<br><span class="gradient-text">Savollar</span>{% endif %}
-        </h1>
-        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-            {% if lang == 'ru' %}Часто задаваемые вопросы клиентов и ответы на них. Если не нашли ответ - свяжитесь с нами.{% elif lang == 'en' %}Frequently asked customer questions and answers. If you can't find an answer - contact us.{% else %}Mijozlarimiz eng ko'p beradigan savollar va ularga javoblar. Savolingiz topilmasa, biz bilan bog'laning.{% endif %}
-        </p>
     </div>
 </section>
 
 <!-- FAQ Categories -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="flex flex-wrap justify-center gap-4">
-            <a href="#buyurtma" class="px-6 py-3 bg-[#232339] text-white rounded-full font-medium hover:bg-[#000000] transition">
-                <i class="fas fa-shopping-cart mr-2"></i>Buyurtma
+<section class="py-8 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="flex flex-wrap justify-center gap-3">
+            <a href="#buyurtma" class="px-6 py-3 bg-[#1a1a2e] text-white text-sm font-medium transition">
+                {% if lang == 'ru' %}Заказ{% elif lang == 'en' %}Order{% else %}Buyurtma{% endif %}
             </a>
-            <a href="#tolash" class="px-6 py-3 bg-[#FAF9F6] text-[#232339] rounded-full font-medium hover:bg-[#232339] hover:text-white transition">
-                <i class="fas fa-credit-card mr-2"></i>To'lash
+            <a href="#tolash" class="px-6 py-3 bg-white text-[#1a1a2e] border border-gray-200 text-sm font-medium hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] transition">
+                {% if lang == 'ru' %}Оплата{% elif lang == 'en' %}Payment{% else %}To'lash{% endif %}
             </a>
-            <a href="#yetkazish" class="px-6 py-3 bg-[#FAF9F6] text-[#232339] rounded-full font-medium hover:bg-[#232339] hover:text-white transition">
-                <i class="fas fa-truck mr-2"></i>Yetkazish
+            <a href="#yetkazish" class="px-6 py-3 bg-white text-[#1a1a2e] border border-gray-200 text-sm font-medium hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] transition">
+                {% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}
             </a>
-            <a href="#kafolat" class="px-6 py-3 bg-[#FAF9F6] text-[#232339] rounded-full font-medium hover:bg-[#232339] hover:text-white transition">
-                <i class="fas fa-shield-alt mr-2"></i>Kafolat
+            <a href="#kafolat" class="px-6 py-3 bg-white text-[#1a1a2e] border border-gray-200 text-sm font-medium hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] transition">
+                {% if lang == 'ru' %}Гарантия{% elif lang == 'en' %}Warranty{% else %}Kafolat{% endif %}
             </a>
         </div>
     </div>
 </section>
 
 <!-- FAQ Content -->
-<section class="py-20 bg-[#FAF9F6]">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-4xl mx-auto space-y-16">
             
             <!-- Buyurtma -->
             <div id="buyurtma">
-                <h2 class="text-2xl font-bold text-[#232339] mb-8 flex items-center gap-3">
-                    <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center">
+                <h2 class="text-2xl font-bold text-[#1a1a2e] mb-8 flex items-center gap-3 font-display">
+                    <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center">
                         <i class="fas fa-shopping-cart text-white"></i>
                     </div>
-                    Buyurtma berish
+                    {% if lang == 'ru' %}Заказ{% elif lang == 'en' %}Ordering{% else %}Buyurtma berish{% endif %}
                 </h2>
                 <div class="space-y-4">
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Qanday buyurtma beraman?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Как сделать заказ?{% elif lang == 'en' %}How to place an order?{% else %}Qanday buyurtma beraman?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Buyurtma berish juda oson! 3 ta usul bor: 1) Telefon orqali +998 90 123 45 67 raqamiga qo'ng'iroq qiling. 
-                            2) Telegram @furniglass ga yozing. 3) Saytdagi formani to'ldiring. Mutaxassisimiz 15 daqiqa ichida bog'lanadi.
+                            {% if lang == 'ru' %}
+                            Заказать очень просто! 3 способа: 1) Позвоните по номеру +998 90 123 45 67. 2) Напишите в Telegram @furniglass. 3) Заполните форму на сайте. Наш специалист свяжется с вами в течение 15 минут.
+                            {% elif lang == 'en' %}
+                            Ordering is very easy! 3 ways: 1) Call +998 90 123 45 67. 2) Write to Telegram @furniglass. 3) Fill out the form on the website. Our specialist will contact you within 15 minutes.
+                            {% else %}
+                            Buyurtma berish juda oson! 3 ta usul bor: 1) Telefon orqali +998 90 123 45 67 raqamiga qo'ng'iroq qiling. 2) Telegram @furniglass ga yozing. 3) Saytdagi formani to'ldiring. Mutaxassisimiz 15 daqiqa ichida bog'lanadi.
+                            {% endif %}
                         </p>
                     </details>
                     
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Individual o'lchamda mebel tayyorlaysizlarmi?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Делаете мебель по индивидуальным размерам?{% elif lang == 'en' %}Do you make custom-sized furniture?{% else %}Individual o'lchamda mebel tayyorlaysizlarmi?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Ha, albatta! Bu bizning asosiy yo'nalishimiz. Biz har qanday o'lcham va dizaynda mebel tayyorlaymiz. 
-                            Mutaxassisimiz uyingizga kelib bepul o'lchov oladi va 3D dizayn tayyorlaydi.
+                            {% if lang == 'ru' %}
+                            Да, конечно! Это наше основное направление. Мы изготавливаем мебель любых размеров и дизайна. Наш специалист приедет к вам домой для бесплатного замера и подготовит 3D дизайн.
+                            {% elif lang == 'en' %}
+                            Yes, of course! This is our main focus. We make furniture of any size and design. Our specialist will come to your home for free measurements and prepare a 3D design.
+                            {% else %}
+                            Ha, albatta! Bu bizning asosiy yo'nalishimiz. Biz har qanday o'lcham va dizaynda mebel tayyorlaymiz. Mutaxassisimiz uyingizga kelib bepul o'lchov oladi va 3D dizayn tayyorlaydi.
+                            {% endif %}
                         </p>
                     </details>
                     
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Dizayn uchun to'lash kerakmi?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Дизайн платный?{% elif lang == 'en' %}Is design paid?{% else %}Dizayn uchun to'lash kerakmi?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Yo'q! O'lchov olish va 3D dizayn tayyorlash mutlaqo bepul. Buyurtma berishga majbur emassiz - 
-                            dizaynni ko'rib, keyin qaror qilasiz. Biz mijozlarimizga maksimal qulaylik yaratishga harakat qilamiz.
+                            {% if lang == 'ru' %}
+                            Нет! Замер и 3D дизайн абсолютно бесплатны. Вы не обязаны заказывать — посмотрите дизайн и примите решение. Мы стараемся создать максимальный комфорт для наших клиентов.
+                            {% elif lang == 'en' %}
+                            No! Measurement and 3D design are absolutely free. You are not obligated to order — see the design and make a decision. We try to create maximum comfort for our clients.
+                            {% else %}
+                            Yo'q! O'lchov olish va 3D dizayn tayyorlash mutlaqo bepul. Buyurtma berishga majbur emassiz - dizaynni ko'rib, keyin qaror qilasiz. Biz mijozlarimizga maksimal qulaylik yaratishga harakat qilamiz.
+                            {% endif %}
                         </p>
                     </details>
                 </div>
@@ -114,46 +123,61 @@
             
             <!-- To'lash -->
             <div id="tolash">
-                <h2 class="text-2xl font-bold text-[#232339] mb-8 flex items-center gap-3">
-                    <div class="w-12 h-12 bg-#232339 rounded-xl flex items-center justify-center">
+                <h2 class="text-2xl font-bold text-[#1a1a2e] mb-8 flex items-center gap-3 font-display">
+                    <div class="w-12 h-12 bg-[#c9a96e] flex items-center justify-center">
                         <i class="fas fa-credit-card text-white"></i>
                     </div>
-                    To'lash usullari
+                    {% if lang == 'ru' %}Способы оплаты{% elif lang == 'en' %}Payment Methods{% else %}To'lash usullari{% endif %}
                 </h2>
                 <div class="space-y-4">
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Qanday to'lash usullari mavjud?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Какие способы оплаты доступны?{% elif lang == 'en' %}What payment methods are available?{% else %}Qanday to'lash usullari mavjud?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Biz quyidagi to'lash usullarini qabul qilamiz: Naqd pul, Plastik karta (Humo, UzCard), 
-                            Payme, Click, Uzum Bank, Bank o'tkazmasi. Bo'lib to'lash ham mavjud!
+                            {% if lang == 'ru' %}
+                            Мы принимаем следующие способы оплаты: Наличные, Пластиковая карта (Humo, UzCard), Payme, Click, Uzum Bank, Банковский перевод. Рассрочка также доступна!
+                            {% elif lang == 'en' %}
+                            We accept the following payment methods: Cash, Plastic card (Humo, UzCard), Payme, Click, Uzum Bank, Bank transfer. Installments are also available!
+                            {% else %}
+                            Biz quyidagi to'lash usullarini qabul qilamiz: Naqd pul, Plastik karta (Humo, UzCard), Payme, Click, Uzum Bank, Bank o'tkazmasi. Bo'lib to'lash ham mavjud!
+                            {% endif %}
                         </p>
                     </details>
                     
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Bo'lib to'lash shartlari qanday?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Условия рассрочки?{% elif lang == 'en' %}Installment terms?{% else %}Bo'lib to'lash shartlari qanday?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            3, 6 va 12 oylik bo'lib to'lash mavjud. Dastlabki to'lov 30% dan boshlanadi. 
-                            Foiz stavkasi bankka bog'liq (0-2% oyiga). Payme Nasiya, Uzum Nasiya orqali rasmiylashtiriladi.
+                            {% if lang == 'ru' %}
+                            Рассрочка на 3, 6 и 12 месяцев. Первоначальный взнос от 30%. Процентная ставка зависит от банка (0-2% в месяц). Оформляется через Payme Nasiya, Uzum Nasiya.
+                            {% elif lang == 'en' %}
+                            Installments for 3, 6 and 12 months. Down payment from 30%. Interest rate depends on the bank (0-2% per month). Processed through Payme Nasiya, Uzum Nasiya.
+                            {% else %}
+                            3, 6 va 12 oylik bo'lib to'lash mavjud. Dastlabki to'lov 30% dan boshlanadi. Foiz stavkasi bankka bog'liq (0-2% oyiga). Payme Nasiya, Uzum Nasiya orqali rasmiylashtiriladi.
+                            {% endif %}
                         </p>
                     </details>
                     
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Oldindan to'lov qancha?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Сколько предоплата?{% elif lang == 'en' %}How much is the down payment?{% else %}Oldindan to'lov qancha?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Buyurtma asosida tayyorlanadigan mahsulotlar uchun 50% oldindan to'lov. Qolgan 50% yetkazib berishda to'lanadi. 
-                            Tayyor mahsulotlar uchun to'liq to'lov yoki bo'lib to'lash.
+                            {% if lang == 'ru' %}
+                            Для изделий на заказ — 50% предоплата. Остальные 50% при доставке. Для готовых изделий — полная оплата или рассрочка.
+                            {% elif lang == 'en' %}
+                            For custom products — 50% down payment. Remaining 50% upon delivery. For ready products — full payment or installments.
+                            {% else %}
+                            Buyurtma asosida tayyorlanadigan mahsulotlar uchun 50% oldindan to'lov. Qolgan 50% yetkazib berishda to'lanadi. Tayyor mahsulotlar uchun to'liq to'lov yoki bo'lib to'lash.
+                            {% endif %}
                         </p>
                     </details>
                 </div>
@@ -161,46 +185,61 @@
             
             <!-- Yetkazish -->
             <div id="yetkazish">
-                <h2 class="text-2xl font-bold text-[#232339] mb-8 flex items-center gap-3">
-                    <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                <h2 class="text-2xl font-bold text-[#1a1a2e] mb-8 flex items-center gap-3 font-display">
+                    <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center">
                         <i class="fas fa-truck text-white"></i>
                     </div>
-                    Yetkazib berish
+                    {% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib berish{% endif %}
                 </h2>
                 <div class="space-y-4">
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Yetkazib berish qancha vaqt oladi?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Сколько времени занимает доставка?{% elif lang == 'en' %}How long does delivery take?{% else %}Yetkazib berish qancha vaqt oladi?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Tayyor mahsulotlar: 3-5 ish kuni. Buyurtma asosida: 7-21 ish kuni (murakkablikka qarab). 
-                            Toshkent bo'ylab yetkazish bepul. Viloyatlarga alohida kelishiladi.
+                            {% if lang == 'ru' %}
+                            Готовые изделия: 3-5 рабочих дней. Изделия на заказ: 7-21 рабочих дней (в зависимости от сложности). Доставка по Ташкенту бесплатная. Для регионов — по договоренности.
+                            {% elif lang == 'en' %}
+                            Ready products: 3-5 business days. Custom products: 7-21 business days (depending on complexity). Delivery in Tashkent is free. For regions — by agreement.
+                            {% else %}
+                            Tayyor mahsulotlar: 3-5 ish kuni. Buyurtma asosida: 7-21 ish kuni (murakkablikka qarab). Toshkent bo'ylab yetkazish bepul. Viloyatlarga alohida kelishiladi.
+                            {% endif %}
                         </p>
                     </details>
                     
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Viloyatlarga yetkazasizlarmi?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Доставляете в регионы?{% elif lang == 'en' %}Do you deliver to regions?{% else %}Viloyatlarga yetkazasizlarmi?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Ha! O'zbekistonning barcha viloyatlariga yetkazamiz. Narx masofaga qarab hisoblanadi. 
-                            Samarqand, Buxoro, Farg'ona va boshqa shaharlarga muntazam yetkazamiz.
+                            {% if lang == 'ru' %}
+                            Да! Доставляем во все регионы Узбекистана. Стоимость зависит от расстояния. Регулярно доставляем в Самарканд, Бухару, Фергану и другие города.
+                            {% elif lang == 'en' %}
+                            Yes! We deliver to all regions of Uzbekistan. Cost depends on distance. We regularly deliver to Samarkand, Bukhara, Fergana and other cities.
+                            {% else %}
+                            Ha! O'zbekistonning barcha viloyatlariga yetkazamiz. Narx masofaga qarab hisoblanadi. Samarqand, Buxoro, Farg'ona va boshqa shaharlarga muntazam yetkazamiz.
+                            {% endif %}
                         </p>
                     </details>
                     
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            O'rnatish xizmati bormi?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Есть услуга установки?{% elif lang == 'en' %}Do you offer installation?{% else %}O'rnatish xizmati bormi?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Ha, professional o'rnatish xizmati mavjud. Toshkent bo'ylab ko'p hollarda bepul. 
-                            Murakkab loyihalar uchun narx alohida kelishiladi. Ustalarimiz tajribali va malakali.
+                            {% if lang == 'ru' %}
+                            Да, профессиональная установка доступна. По Ташкенту в большинстве случаев бесплатно. Для сложных проектов стоимость оговаривается отдельно. Наши мастера опытные и квалифицированные.
+                            {% elif lang == 'en' %}
+                            Yes, professional installation is available. In Tashkent, mostly free. For complex projects, cost is discussed separately. Our craftsmen are experienced and qualified.
+                            {% else %}
+                            Ha, professional o'rnatish xizmati mavjud. Toshkent bo'ylab ko'p hollarda bepul. Murakkab loyihalar uchun narx alohida kelishiladi. Ustalarimiz tajribali va malakali.
+                            {% endif %}
                         </p>
                     </details>
                 </div>
@@ -208,46 +247,61 @@
             
             <!-- Kafolat -->
             <div id="kafolat">
-                <h2 class="text-2xl font-bold text-[#232339] mb-8 flex items-center gap-3">
-                    <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+                <h2 class="text-2xl font-bold text-[#1a1a2e] mb-8 flex items-center gap-3 font-display">
+                    <div class="w-12 h-12 bg-[#c9a96e] flex items-center justify-center">
                         <i class="fas fa-shield-alt text-white"></i>
                     </div>
-                    Kafolat xizmati
+                    {% if lang == 'ru' %}Гарантия{% elif lang == 'en' %}Warranty{% else %}Kafolat xizmati{% endif %}
                 </h2>
                 <div class="space-y-4">
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Kafolat muddati qancha?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Какой срок гарантии?{% elif lang == 'en' %}What is the warranty period?{% else %}Kafolat muddati qancha?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Barcha mahsulotlarimizga 1-3 yil kafolat beramiz. Oshxona mebeli - 3 yil, boshqa mebellar - 1-2 yil. 
-                            Kafolat davri va shartlari shartnomada ko'rsatiladi.
+                            {% if lang == 'ru' %}
+                            Гарантия 1-3 года на все изделия. Кухонная мебель — 3 года, остальная мебель — 1-2 года. Срок и условия гарантии указаны в договоре.
+                            {% elif lang == 'en' %}
+                            1-3 year warranty on all products. Kitchen furniture — 3 years, other furniture — 1-2 years. Warranty period and conditions are specified in the contract.
+                            {% else %}
+                            Barcha mahsulotlarimizga 1-3 yil kafolat beramiz. Oshxona mebeli - 3 yil, boshqa mebellar - 1-2 yil. Kafolat davri va shartlari shartnomada ko'rsatiladi.
+                            {% endif %}
                         </p>
                     </details>
                     
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Kafolat nimalarni qamrab oladi?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Что покрывает гарантия?{% elif lang == 'en' %}What does the warranty cover?{% else %}Kafolat nimalarni qamrab oladi?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Ishlab chiqarish nuqsonlari, furnitura nosozliklari, fasad deformatsiyasi. Mexanik shikastlanish, 
-                            noto'g'ri foydalanish va tabiiy eskirish kafolat tomonidan qoplanmaydi.
+                            {% if lang == 'ru' %}
+                            Производственные дефекты, неисправности фурнитуры, деформация фасадов. Механические повреждения, неправильное использование и естественный износ не покрываются гарантией.
+                            {% elif lang == 'en' %}
+                            Manufacturing defects, hardware malfunctions, facade deformation. Mechanical damage, improper use and natural wear are not covered by warranty.
+                            {% else %}
+                            Ishlab chiqarish nuqsonlari, furnitura nosozliklari, fasad deformatsiyasi. Mexanik shikastlanish, noto'g'ri foydalanish va tabiiy eskirish kafolat tomonidan qoplanmaydi.
+                            {% endif %}
                         </p>
                     </details>
                     
-                    <details class="faq-item bg-white rounded-2xl p-6 group">
-                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
-                            Muammo bo'lsa qanday murojaat qilaman?
-                            <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                            <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                    <details class="faq-item bg-white border border-gray-200 p-6 group">
+                        <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
+                            {% if lang == 'ru' %}Как обратиться по гарантии?{% elif lang == 'en' %}How to claim warranty?{% else %}Muammo bo'lsa qanday murojaat qilaman?{% endif %}
+                            <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                            <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Bizga qo'ng'iroq qiling yoki Telegram orqali yozing. Muammoni tushuntiring va rasm/video yuboring. 
-                            24-48 soat ichida usta uyingizga keladi va bepul ta'mirlaydi yoki almashtiradi.
+                            {% if lang == 'ru' %}
+                            Позвоните нам или напишите в Telegram. Объясните проблему и отправьте фото/видео. В течение 24-48 часов мастер приедет к вам и бесплатно отремонтирует или заменит.
+                            {% elif lang == 'en' %}
+                            Call us or write to Telegram. Explain the problem and send photos/videos. Within 24-48 hours a craftsman will come to you and repair or replace for free.
+                            {% else %}
+                            Bizga qo'ng'iroq qiling yoki Telegram orqali yozing. Muammoni tushuntiring va rasm/video yuboring. 24-48 soat ichida usta uyingizga keladi va bepul ta'mirlaydi yoki almashtiradi.
+                            {% endif %}
                         </p>
                     </details>
                 </div>
@@ -258,45 +312,47 @@
 </section>
 
 <!-- Database FAQs -->
-        {% if faqs %}
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4">
+{% if faqs %}
+<section class="py-20 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-2xl font-bold text-[#232339] mb-8 text-center">Boshqa Savollar</h2>
-        <div class="space-y-4">
-            {% for faq in faqs %}
-                <details class="faq-item bg-[#FAF9F6] rounded-2xl p-6 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339] text-lg">
+            <h2 class="text-2xl font-bold text-[#1a1a2e] mb-8 text-center font-display">
+                {% if lang == 'ru' %}Другие вопросы{% elif lang == 'en' %}Other Questions{% else %}Boshqa Savollar{% endif %}
+            </h2>
+            <div class="space-y-4">
+                {% for faq in faqs %}
+                <details class="faq-item bg-white border border-gray-200 p-6 group">
+                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#1a1a2e]">
                         {{ faq.question_uz }}
-                        <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                        <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
+                        <i class="fas fa-plus text-gray-400 group-open:hidden"></i>
+                        <i class="fas fa-minus text-[#1a1a2e] hidden group-open:block"></i>
                     </summary>
                     <p class="mt-4 text-gray-600 leading-relaxed">{{ faq.answer_uz }}</p>
                 </details>
                 {% endfor %}
             </div>
         </div>
-        </div>
+    </div>
 </section>
-        {% endif %}
-        
+{% endif %}
+
 <!-- CTA -->
-<section class="py-20 bg-gradient-to-br from-[#232339] to-[#000000]">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="hero-title text-3xl md:text-4xl font-bold text-white mb-6">
-            Savolingizga javob topmadingizmi?
+<section class="py-20 bg-[#1a1a2e]">
+    <div class="container mx-auto px-4 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 font-display">
+            {% if lang == 'ru' %}Не нашли ответ?{% elif lang == 'en' %}Didn't find an answer?{% else %}Savolingizga javob topmadingizmi?{% endif %}
         </h2>
-        <p class="text-white/70 text-lg mb-10 max-w-xl mx-auto">
-            Biz bilan bog'laning va barcha savollaringizga javob oling
+        <p class="text-white/60 text-lg mb-10 max-w-xl mx-auto">
+            {% if lang == 'ru' %}Свяжитесь с нами и получите ответы на все ваши вопросы{% elif lang == 'en' %}Contact us and get answers to all your questions{% else %}Biz bilan bog'laning va barcha savollaringizga javob oling{% endif %}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-2 bg-white text-[#232339] px-8 py-4 rounded-full font-medium hover:shadow-xl transition">
+            <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-2 bg-white text-[#1a1a2e] px-8 py-4 font-medium hover:bg-gray-100 transition">
                 <i class="fas fa-phone"></i>
                 +998 90 123 45 67
             </a>
-            <a href="/contact" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-medium hover:bg-white hover:text-[#232339] transition">
+            <a href="/contact" class="inline-flex items-center justify-center gap-2 border border-white/30 text-white px-8 py-4 font-medium hover:bg-white hover:text-[#1a1a2e] transition">
                 <i class="fas fa-envelope"></i>
-                Xabar yuborish
+                {% if lang == 'ru' %}Написать{% elif lang == 'en' %}Write to us{% else %}Xabar yuborish{% endif %}
             </a>
         </div>
     </div>

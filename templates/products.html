@@ -4,177 +4,269 @@
 
 {% block extra_css %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+    
+    .line-clamp-1 {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
     .category-tab {
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
+    
     .category-tab.active {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        color: #1a1a2e;
+        border-bottom-color: #1a1a2e;
     }
+    
     .product-card {
         transition: all 0.3s ease;
     }
+    
     .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
     }
-    .product-card:hover .add-btn {
-        background: #232339;
+    
+    .product-card:hover .product-image img {
+        transform: scale(1.05);
     }
-    .add-btn {
-        transition: all 0.3s ease;
+    
+    .product-image img {
+        transition: transform 0.5s ease;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="bg-[#F5F5F7] min-h-screen py-8 lg:py-12">
-    <div class="container mx-auto px-4">
-        <!-- Header -->
-        <div class="text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold text-[#232339] mb-3">{{ T.nav.products[lang] }}</h1>
-            <p class="text-gray-500">{% if lang == 'ru' %}Лучшая мебель для вашего дома{% elif lang == 'en' %}The best furniture for your home{% else %}Sizning uyingiz uchun eng yaxshi mebellar{% endif %}</p>
+<!-- Hero Section - Clean & Minimal -->
+<section class="bg-white py-12 lg:py-16 border-b border-gray-100">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-3xl">
+            <!-- Breadcrumb -->
+            <div class="flex items-center gap-2 text-sm text-gray-400 mb-6">
+                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+                <span class="text-[#1a1a2e]">{{ T.nav.products[lang] }}</span>
+            </div>
+            
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
+                {{ T.nav.products[lang] }}
+            </h1>
+            <p class="text-gray-500 text-lg">
+                {% if lang == 'ru' %}Откройте для себя нашу коллекцию мебели{% elif lang == 'en' %}Discover our furniture collection{% else %}Mebel kolleksiyamizni kashf eting{% endif %}
+            </p>
         </div>
-        
-        <!-- Category Tabs -->
-        <div class="flex justify-center mb-10">
-            <div class="inline-flex items-center bg-[#E8E8EC] rounded-full p-1.5">
-                <a href="/products" class="category-tab px-5 py-2.5 rounded-full text-sm font-medium {% if not request.args.get('category') %}active text-[#232339]{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+    </div>
+</section>
+
+<!-- Category Tabs & Products -->
+<section class="bg-white py-8 lg:py-12">
+    <div class="container mx-auto px-4 lg:px-8">
+        <!-- Category Tabs - Horizontal Scroll -->
+        <div class="border-b border-gray-100 mb-10 overflow-x-auto">
+            <div class="flex gap-6 md:gap-8 min-w-max pb-4">
+                <a href="/products" class="category-tab py-2 text-sm font-medium border-b-2 {% if not request.args.get('category') %}active border-[#1a1a2e] text-[#1a1a2e]{% else %}border-transparent text-gray-500 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
                     {{ T.common.all[lang] }}
                 </a>
                 {% for cat in categories %}
-                <a href="/products?category={{ cat.id }}" class="category-tab px-5 py-2.5 rounded-full text-sm font-medium {% if request.args.get('category', '')|string == cat.id|string %}active text-[#232339]{% else %}text-gray-500 hover:text-gray-700{% endif %}">
+                <a href="/products?category={{ cat.id }}" class="category-tab py-2 text-sm font-medium border-b-2 {% if request.args.get('category', '')|string == cat.id|string %}active border-[#1a1a2e] text-[#1a1a2e]{% else %}border-transparent text-gray-500 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
                     {{ cat.get_name(lang) }}
                 </a>
                 {% endfor %}
             </div>
         </div>
         
+        <!-- Products Count & Sort -->
+        <div class="flex items-center justify-between mb-8">
+            <p class="text-sm text-gray-500">
+                {{ products|length }} {% if lang == 'ru' %}продуктов{% elif lang == 'en' %}products{% else %}mahsulot{% endif %}
+            </p>
+            <button id="open-filter" class="md:hidden flex items-center gap-2 text-sm text-[#1a1a2e] font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                </svg>
+                {% if lang == 'ru' %}Фильтры{% elif lang == 'en' %}Filters{% else %}Filterlar{% endif %}
+            </button>
+        </div>
+        
         <!-- Products Grid -->
         {% if products %}
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {% for product in products %}
-            <div class="product-card bg-white rounded-3xl overflow-hidden">
+            <div class="product-card bg-white group">
                 <!-- Product Image -->
-                <a href="/product/{{ product.id }}" class="block relative">
-                    <div class="aspect-square bg-[#FAFAFA] p-4 flex items-center justify-center">
+                <a href="/product/{{ product.id }}" class="block relative product-image overflow-hidden bg-[#f5f5f5]">
+                    <div class="aspect-square p-4 flex items-center justify-center">
                         {% if product.images %}
                             {% set images = product.images|from_json %}
                             {% if images %}
-                                <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" class="w-full h-full object-contain hover:scale-105 transition-transform duration-500">
+                                <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
+                                     class="w-full h-full object-contain">
                             {% else %}
-                                <i class="fas fa-image text-5xl text-gray-300"></i>
+                                <i class="fas fa-image text-4xl text-gray-300"></i>
                             {% endif %}
                         {% else %}
-                            <i class="fas fa-image text-5xl text-gray-300"></i>
+                            <i class="fas fa-image text-4xl text-gray-300"></i>
                         {% endif %}
                     </div>
+                    
+                    <!-- Badge -->
                     {% if product.is_bestseller %}
-                    <div class="absolute top-3 left-3 bg-[#F5C242] text-white px-2.5 py-1 rounded-full text-xs font-medium">
-                        {{ T.index.bestsellers[lang] }}
-                    </div>
+                    <span class="absolute top-3 left-3 bg-[#8B7355] text-white text-[10px] md:text-xs px-2 py-1 font-medium">
+                        {% if lang == 'ru' %}Хит{% elif lang == 'en' %}Best{% else %}Top{% endif %}
+                    </span>
                     {% endif %}
+                    
+                    <!-- Quick Add Button -->
+                    <button class="add-to-cart-btn absolute bottom-3 right-3 w-10 h-10 bg-white shadow-lg flex items-center justify-center text-[#1a1a2e] opacity-0 group-hover:opacity-100 transition-all hover:bg-[#1a1a2e] hover:text-white"
+                            data-product-id="{{ product.id }}">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
+                        </svg>
+                    </button>
                 </a>
                 
                 <!-- Product Info -->
-                <div class="p-4 md:p-5">
-                    <!-- Category -->
-                    <p class="text-gray-400 text-xs md:text-sm mb-1">
-                        {{ product.category.get_name(lang) if product.category else ('Mebel' if lang == 'uz' else ('Мебель' if lang == 'ru' else 'Furniture')) }}
-                    </p>
-                    
-                    <!-- Name -->
+                <div class="pt-4 pb-2">
                     <a href="/product/{{ product.id }}" class="block">
-                        <h3 class="font-semibold text-[#232339] text-sm md:text-base mb-2 line-clamp-1 hover:text-[#232339] transition">
+                        <h3 class="text-sm md:text-base font-medium text-[#1a1a2e] mb-1 line-clamp-1 group-hover:underline">
                             {{ product.get_name(lang) }}
                         </h3>
                     </a>
+                    <p class="text-xs md:text-sm text-gray-500 mb-3">
+                        {{ product.category.get_name(lang) if product.category else ('Mebel' if lang == 'uz' else ('Мебель' if lang == 'ru' else 'Furniture')) }}
+                    </p>
                     
-                    <!-- Rating -->
-                    <div class="flex items-center gap-0.5 mb-3">
-                        <i class="fas fa-star text-amber-400 text-xs"></i>
-                        <i class="fas fa-star text-amber-400 text-xs"></i>
-                        <i class="fas fa-star text-amber-400 text-xs"></i>
-                        <i class="fas fa-star text-amber-400 text-xs"></i>
-                        <i class="fas fa-star text-amber-400 text-xs"></i>
+                    <!-- Color options -->
+                    <div class="flex items-center gap-1.5 mb-3">
+                        <span class="w-3 h-3 rounded-full bg-[#4a4a4a] border border-gray-200"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#1a1a2e] border border-gray-200"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#8B4513] border border-gray-200"></span>
+                        <span class="text-xs text-gray-400 ml-1">+ more</span>
                     </div>
                     
-                    <!-- Price & Add Button -->
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-xs text-gray-400 align-top">so'm</span>
-                            <span class="text-lg md:text-xl font-bold text-[#232339]">
-                                {{ "{:,.0f}".format(product.price * usd_rate) }}
-                            </span>
-                            <p class="text-xs text-gray-400 mt-0.5">
-                                ≈ {{ "%.2f" % product.price }} $
-                            </p>
-                        </div>
-                        <button type="button" 
-                            class="add-to-cart-btn add-btn w-10 h-10 md:w-11 md:h-11 bg-[#232339] hover:bg-[#232339] rounded-full flex items-center justify-center text-white transition"
-                            data-product-id="{{ product.id }}">
-                            <i class="fas fa-plus text-sm"></i>
-                        </button>
+                    <!-- Price -->
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-xs text-gray-400 line-through">${{ "%.0f"|format(product.price * 1.2) }}</span>
+                        <span class="text-base md:text-lg font-semibold text-[#1a1a2e]">From ${{ "%.0f"|format(product.price) }}</span>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
         
-        <!-- Load More (optional) -->
+        <!-- Load More -->
         {% if products|length >= 12 %}
         <div class="text-center mt-12">
-            <button class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-[#232339] px-8 py-3.5 rounded-full font-medium transition border border-gray-200">
-                Ko'proq ko'rish
-                <i class="fas fa-arrow-down text-sm"></i>
+            <button class="inline-flex items-center gap-2 border border-gray-200 hover:border-[#1a1a2e] text-[#1a1a2e] px-8 py-3.5 text-sm font-medium transition">
+                {% if lang == 'ru' %}Показать ещё{% elif lang == 'en' %}Show more{% else %}Ko'proq ko'rish{% endif %}
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
             </button>
         </div>
         {% endif %}
         
         {% else %}
         <!-- Empty State -->
-        <div class="bg-white rounded-3xl p-12 md:p-16 text-center max-w-lg mx-auto">
+        <div class="py-20 text-center max-w-md mx-auto">
             <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-search text-gray-400 text-3xl"></i>
+                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
             </div>
-            <h3 class="text-xl font-semibold text-[#232339] mb-2">Mahsulot topilmadi</h3>
-            <p class="text-gray-500 mb-6">Ushbu kategoriyada hozircha mahsulot yo'q</p>
-            <a href="/products" class="inline-flex items-center gap-2 bg-[#232339] hover:bg-[#000000] text-white px-6 py-3 rounded-full font-medium transition">
-                Barcha mahsulotlar
-                <i class="fas fa-arrow-right text-sm"></i>
+            <h3 class="text-xl font-medium text-[#1a1a2e] mb-2">
+                {% if lang == 'ru' %}Продукты не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulot topilmadi{% endif %}
+            </h3>
+            <p class="text-gray-500 mb-6">
+                {% if lang == 'ru' %}В этой категории пока нет товаров{% elif lang == 'en' %}There are no products in this category yet{% else %}Ushbu kategoriyada hozircha mahsulot yo'q{% endif %}
+            </p>
+            <a href="/products" class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-black text-white px-6 py-3 text-sm font-medium transition">
+                {% if lang == 'ru' %}Все продукты{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}
             </a>
         </div>
         {% endif %}
     </div>
 </section>
 
+<!-- Services Banner -->
+<section class="py-12 lg:py-16 bg-[#f8f8f8] border-t border-gray-100">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free delivery{% else %}Bepul yetkazish{% endif %}</p>
+                <p class="text-xs text-gray-400 mt-1">{% if lang == 'ru' %}По всему Узбекистану{% elif lang == 'en' %}Across Uzbekistan{% else %}Butun O'zbekiston bo'ylab{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-[#1a1a2e]">{% if lang == 'ru' %}3 года гарантии{% elif lang == 'en' %}3 year warranty{% else %}3 yil kafolat{% endif %}</p>
+                <p class="text-xs text-gray-400 mt-1">{% if lang == 'ru' %}На всю продукцию{% elif lang == 'en' %}On all products{% else %}Barcha mahsulotlarga{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-[#1a1a2e]">{% if lang == 'ru' %}14 дней возврат{% elif lang == 'en' %}14 days return{% else %}14 kun qaytarish{% endif %}</p>
+                <p class="text-xs text-gray-400 mt-1">{% if lang == 'ru' %}Без вопросов{% elif lang == 'en' %}No questions asked{% else %}Savolsiz{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Поддержка 24/7{% elif lang == 'en' %}24/7 support{% else %}24/7 qo'llab-quvvatlash{% endif %}</p>
+                <p class="text-xs text-gray-400 mt-1">{% if lang == 'ru' %}Всегда на связи{% elif lang == 'en' %}Always available{% else %}Doim aloqadamiz{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Filters Modal for Mobile -->
 <div id="filter-modal" class="fixed inset-0 bg-black/50 z-50 hidden">
-    <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 max-h-[80vh] overflow-y-auto">
+    <div class="absolute bottom-0 left-0 right-0 bg-white p-6 max-h-[80vh] overflow-y-auto rounded-t-2xl">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-semibold text-[#232339]">Filterlar</h3>
+            <h3 class="text-lg font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Фильтры{% elif lang == 'en' %}Filters{% else %}Filterlar{% endif %}</h3>
             <button id="close-filter" class="p-2 hover:bg-gray-100 rounded-full transition">
-                <i class="fas fa-times text-gray-500"></i>
+                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
             </button>
         </div>
         
-        <form method="GET" action="/products" class="space-y-5">
+        <form method="GET" action="/products" class="space-y-6">
             <!-- Price Filter -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Narx oralig'i</label>
+                <label class="block text-sm font-medium text-[#1a1a2e] mb-3">{% if lang == 'ru' %}Диапазон цен{% elif lang == 'en' %}Price range{% else %}Narx oralig'i{% endif %}</label>
                 <div class="flex gap-3">
                     <input type="number" name="min_price" placeholder="Min" value="{{ request.args.get('min_price', '') }}" 
-                        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-[#232339] focus:ring-1 focus:ring-[#232339] outline-none">
+                        class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#1a1a2e] outline-none rounded-none">
                     <input type="number" name="max_price" placeholder="Max" value="{{ request.args.get('max_price', '') }}" 
-                        class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-[#232339] focus:ring-1 focus:ring-[#232339] outline-none">
+                        class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#1a1a2e] outline-none rounded-none">
                 </div>
             </div>
             
             {% if materials %}
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Material</label>
-                <select name="material" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-[#232339] outline-none">
-                    <option value="">Barchasi</option>
+                <label class="block text-sm font-medium text-[#1a1a2e] mb-3">Material</label>
+                <select name="material" class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#1a1a2e] outline-none bg-white rounded-none">
+                    <option value="">{% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}</option>
                     {% for mat in materials %}
                         <option value="{{ mat }}" {% if request.args.get('material') == mat %}selected{% endif %}>{{ mat }}</option>
                     {% endfor %}
@@ -183,21 +275,16 @@
             {% endif %}
             
             <div class="flex gap-3 pt-4">
-                <a href="/products" class="flex-1 py-3 text-center border border-gray-200 rounded-xl text-gray-600 font-medium">
-                    Tozalash
+                <a href="/products" class="flex-1 py-3.5 text-center border border-gray-200 text-gray-600 text-sm font-medium hover:border-[#1a1a2e] transition">
+                    {% if lang == 'ru' %}Сбросить{% elif lang == 'en' %}Reset{% else %}Tozalash{% endif %}
                 </a>
-                <button type="submit" class="flex-1 py-3 bg-[#232339] text-white rounded-xl font-medium">
-                    Qo'llash
+                <button type="submit" class="flex-1 py-3.5 bg-[#1a1a2e] text-white text-sm font-medium hover:bg-black transition">
+                    {% if lang == 'ru' %}Применить{% elif lang == 'en' %}Apply{% else %}Qo'llash{% endif %}
                 </button>
             </div>
         </form>
     </div>
 </div>
-
-<!-- Floating Filter Button for Mobile -->
-<button id="open-filter" class="md:hidden fixed bottom-24 right-4 w-14 h-14 bg-[#232339] text-white rounded-full shadow-lg flex items-center justify-center z-40">
-    <i class="fas fa-sliders-h"></i>
-</button>
 {% endblock %}
 
 {% block extra_js %}
@@ -208,15 +295,18 @@
     
     openFilter?.addEventListener('click', () => {
         filterModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     });
     
     closeFilter?.addEventListener('click', () => {
         filterModal.classList.add('hidden');
+        document.body.style.overflow = '';
     });
     
     filterModal?.addEventListener('click', (e) => {
         if (e.target === filterModal) {
             filterModal.classList.add('hidden');
+            document.body.style.overflow = '';
         }
     });
 
@@ -224,11 +314,13 @@
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
-            const productId = this.dataset.productId;
-            const icon = this.querySelector('i');
+            e.stopPropagation();
             
-            // Show loading
-            icon.className = 'fas fa-spinner fa-spin text-sm';
+            const productId = this.dataset.productId;
+            const button = this;
+            const originalHTML = button.innerHTML;
+            
+            button.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
             
             try {
                 const formData = new FormData();
@@ -245,33 +337,33 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Update cart badges
                     document.querySelectorAll('.cart-badge').forEach(badge => {
                         badge.textContent = data.cart_count;
                     });
                     
-                    // Show success
-                    icon.className = 'fas fa-check text-sm';
+                    button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                    button.classList.add('bg-green-500', 'text-white');
+                    button.classList.remove('bg-white', 'hover:bg-[#1a1a2e]');
                     
-                    // Show toast notification
                     showToast(data.message);
                     
                     setTimeout(() => {
-                        icon.className = 'fas fa-plus text-sm';
-                    }, 1500);
+                        button.innerHTML = originalHTML;
+                        button.classList.remove('bg-green-500');
+                        button.classList.add('bg-white', 'hover:bg-[#1a1a2e]');
+                    }, 2000);
                 }
             } catch (error) {
-                icon.className = 'fas fa-plus text-sm';
+                button.innerHTML = originalHTML;
                 console.error('Error:', error);
             }
         });
     });
 
-    // Toast notification
     function showToast(message) {
         const toast = document.createElement('div');
-        toast.className = 'fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-[#232339] text-white px-6 py-3 rounded-full shadow-lg z-50 flex items-center gap-2 animate-fade-in';
-        toast.innerHTML = `<i class="fas fa-check-circle text-green-400"></i> ${message}`;
+        toast.className = 'fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-[#1a1a2e] text-white px-6 py-3 z-50 flex items-center gap-2 shadow-lg';
+        toast.innerHTML = `<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ${message}`;
         document.body.appendChild(toast);
         
         setTimeout(() => {
@@ -279,13 +371,4 @@
         }, 3000);
     }
 </script>
-<style>
-    @keyframes fade-in {
-        from { opacity: 0; transform: translate(-50%, 20px); }
-        to { opacity: 1; transform: translate(-50%, 0); }
-    }
-    .animate-fade-in {
-        animation: fade-in 0.3s ease-out;
-    }
-</style>
 {% endblock %}

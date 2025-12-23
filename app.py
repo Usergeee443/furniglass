@@ -3,9 +3,10 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import or_
+from sqlalchemy.exc import OperationalError
 from config import Config
 from db import db
-from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate
+from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, Collection, Store, SampleRequest, Article, DesignConsultation
 from translations import TRANSLATIONS, get_translation, t
 import os
 import json
@@ -120,6 +121,17 @@ def ensure_upload_dirs():
 # Initialize upload directories
 ensure_upload_dirs()
 
+# Ensure all tables exist (protect against missing tables in existing DB)
+def ensure_tables():
+    try:
+        with app.app_context():
+            db.create_all()
+    except OperationalError as e:
+        print(f"DB init error: {e}")
+
+# Run once on startup
+ensure_tables()
+
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
 
@@ -145,12 +157,14 @@ def get_exchange_rate() -> float:
 
 @app.route('/')
 def index():
-    categories = Category.query.limit(4).all()
-    bestsellers = Product.query.filter_by(is_bestseller=True).limit(4).all()
+    categories = Category.query.limit(8).all()
+    bestsellers = Product.query.filter_by(is_bestseller=True).limit(8).all()
     reviews = Review.query.order_by(Review.created_at.desc()).limit(5).all()
     portfolios = Portfolio.query.order_by(Portfolio.created_at.desc()).limit(3).all()
+    collections = Collection.query.limit(3).all()
+    articles = Article.query.filter_by(featured=True).limit(2).all()
     return render_template('index.html', categories=categories, bestsellers=bestsellers, 
-                         reviews=reviews, portfolios=portfolios)
+                         reviews=reviews, portfolios=portfolios, collections=collections, articles=articles)
 
 @app.route('/search')
 def search():
@@ -366,6 +380,105 @@ def team():
 @app.route('/gallery')
 def gallery():
     return render_template('gallery.html')
+
+@app.route('/collections')
+def collections():
+    """Collections page - Sofa, Table, Chair collections"""
+    collection_type = request.args.get('type', 'all')
+    collections = Collection.query
+    if collection_type != 'all':
+        collections = collections.filter_by(category_type=collection_type)
+    collections = collections.order_by(Collection.created_at.desc()).all()
+    return render_template('collections.html', collections=collections, collection_type=collection_type)
+
+@app.route('/rooms')
+def rooms():
+    """Rooms page - Living rooms, Dining rooms, Bedrooms, etc."""
+    room_type = request.args.get('type', 'all')
+    portfolios = Portfolio.query
+    if room_type != 'all':
+        portfolios = portfolios.filter_by(room_type_uz=room_type)
+    portfolios = portfolios.order_by(Portfolio.created_at.desc()).all()
+    
+    # Room types
+    room_types = {
+        'living': {'uz': 'Zal', 'ru': 'Гостиная', 'en': 'Living Room'},
+        'dining': {'uz': 'Oshxona', 'ru': 'Столовая', 'en': 'Dining Room'},
+        'bedroom': {'uz': 'Yotoqxona', 'ru': 'Спальня', 'en': 'Bedroom'},
+        'outdoor': {'uz': 'Tashqi maydon', 'ru': 'Наружное пространство', 'en': 'Outdoor Space'},
+        'office': {'uz': 'Ofis', 'ru': 'Офис', 'en': 'Home Office'},
+        'small': {'uz': 'Kichik xonalar', 'ru': 'Маленькие пространства', 'en': 'Small Spaces'}
+    }
+    
+    return render_template('rooms.html', portfolios=portfolios, room_type=room_type, room_types=room_types)
+
+@app.route('/interior-design', methods=['GET', 'POST'])
+def interior_design():
+    """Interior Design Service page"""
+    if request.method == 'POST':
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        room_type = request.form.get('room_type')
+        budget = request.form.get('budget')
+        message = request.form.get('message')
+        
+        consultation = DesignConsultation(
+            name=name,
+            phone=phone,
+            email=email,
+            room_type=room_type,
+            budget=budget,
+            message=message
+        )
+        db.session.add(consultation)
+        db.session.commit()
+        flash('So\'rovingiz qabul qilindi! Tez orada siz bilan bog\'lanamiz.', 'success')
+        return redirect(url_for('interior_design'))
+    
+    return render_template('interior_design.html')
+
+@app.route('/stores')
+def stores():
+    """Store locator page"""
+    stores = Store.query.order_by(Store.created_at.desc()).all()
+    return render_template('stores.html', stores=stores)
+
+@app.route('/samples', methods=['GET', 'POST'])
+def samples():
+    """Free samples request page"""
+    if request.method == 'POST':
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        product_id = request.form.get('product_id', type=int)
+        message = request.form.get('message')
+        
+        sample = SampleRequest(
+            name=name,
+            phone=phone,
+            email=email,
+            product_id=product_id,
+            message=message
+        )
+        db.session.add(sample)
+        db.session.commit()
+        flash('So\'rovingiz qabul qilindi! Tez orada siz bilan bog\'lanamiz.', 'success')
+        return redirect(url_for('samples'))
+    
+    products = Product.query.all()
+    return render_template('samples.html', products=products)
+
+@app.route('/inspiration')
+def inspiration():
+    """Inspiration/Articles page"""
+    category = request.args.get('category', 'all')
+    articles = Article.query
+    if category != 'all':
+        articles = articles.filter_by(category=category)
+    articles = articles.order_by(Article.created_at.desc()).all()
+    featured = Article.query.filter_by(featured=True).order_by(Article.created_at.desc()).limit(3).all()
+    return render_template('inspiration.html', articles=articles, featured=featured, category=category)
 
 # ============ CART ROUTES ============
 
@@ -1116,7 +1229,29 @@ if __name__ == '__main__':
             print(f"Migration note: {e}")
             db.session.rollback()
         
-        db.create_all()
+            # Create all tables including new models
+            db.create_all()
+            
+            # Create new tables for BoConcept features
+            try:
+                from sqlalchemy import inspect
+                inspector = inspect(db.engine)
+                existing_tables = inspector.get_table_names()
+                
+                if 'collection' not in existing_tables:
+                    print("Creating collection table...")
+                if 'store' not in existing_tables:
+                    print("Creating store table...")
+                if 'sample_request' not in existing_tables:
+                    print("Creating sample_request table...")
+                if 'article' not in existing_tables:
+                    print("Creating article table...")
+                if 'design_consultation' not in existing_tables:
+                    print("Creating design_consultation table...")
+            except Exception as e:
+                print(f"Migration check error: {e}")
+            
+            db.create_all()  # Ensure all tables are created
         
         # Create default admin user if not exists
         if not Admin.query.first():

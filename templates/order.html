@@ -1,96 +1,209 @@
 {% extends "base.html" %}
 
-{% block title %}Buyurtma Berish - Furni Glass{% endblock %}
+{% block title %}{% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Individual Buyurtma{% endif %} - Furni Glass{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+    .hero-title { font-family: 'Playfair Display', serif; }
+    .form-input {
+        transition: all 0.2s ease;
+        border: 2px solid #e5e7eb;
+    }
+    .form-input:focus {
+        border-color: #232339;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12">
-    <div class="max-w-3xl mx-auto">
-        <h1 class="text-4xl font-bold mb-8 text-#232339 text-center">Individual Buyurtma Berish</h1>
-        
-        <div class="bg-white rounded-lg shadow-md p-8">
-            <form method="POST" enctype="multipart/form-data">
-                <div class="space-y-6">
+<!-- Hero Section -->
+<section class="bg-[#232339] py-16 lg:py-20">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl">
+            <div class="flex items-center gap-2 text-sm text-white/50 mb-6">
+                <a href="/" class="hover:text-white transition">{{ T.nav.home[lang] }}</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <span class="text-white">{% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Individual buyurtma{% endif %}</span>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 hero-title">
+                {% if lang == 'ru' %}Индивидуальный<br>Заказ{% elif lang == 'en' %}Custom<br>Order{% else %}Individual<br>Buyurtma{% endif %}
+            </h1>
+            <p class="text-white/70 text-lg">
+                {% if lang == 'ru' %}Закажите мебель по вашему дизайну и размерам{% elif lang == 'en' %}Order furniture by your design and dimensions{% else %}O'z dizayningiz va o'lchamingiz bo'yicha mebel buyurtma qiling{% endif %}
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="py-12 lg:py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <!-- Form -->
+            <div class="bg-[#F5F5F5] border border-gray-200 p-6 lg:p-10">
+                <form method="POST" enctype="multipart/form-data" class="space-y-6">
                     <!-- Furniture Type -->
                     <div>
-                        <label class="block text-sm font-semibold mb-2">Mebel turi *</label>
-                        <select name="furniture_type" required class="w-full border rounded-lg px-4 py-2">
-                            <option value="">Tanlang</option>
+                        <label class="block text-sm font-semibold text-[#232339] mb-2">
+                            {% if lang == 'ru' %}Тип мебели{% elif lang == 'en' %}Furniture Type{% else %}Mebel turi{% endif %} *
+                        </label>
+                        <select name="furniture_type" required class="form-input w-full bg-white px-4 py-3.5 text-gray-700 outline-none">
+                            <option value="">{% if lang == 'ru' %}Выберите{% elif lang == 'en' %}Select{% else %}Tanlang{% endif %}</option>
                             {% for category in categories %}
-                                <option value="{{ category.name_uz }}">{{ category.name_uz }}</option>
+                                <option value="{{ category.name_uz }}">{{ category.get_name(lang) }}</option>
                             {% endfor %}
-                            <option value="Boshqa">Boshqa</option>
+                            <option value="Boshqa">{% if lang == 'ru' %}Другое{% elif lang == 'en' %}Other{% else %}Boshqa{% endif %}</option>
                         </select>
                     </div>
                     
                     <!-- Size -->
                     <div>
-                        <label class="block text-sm font-semibold mb-2">O'lcham</label>
-                        <input type="text" name="size" class="w-full border rounded-lg px-4 py-2" placeholder="Masalan: 200x80x45 sm">
+                        <label class="block text-sm font-semibold text-[#232339] mb-2">
+                            {% if lang == 'ru' %}Размер{% elif lang == 'en' %}Size{% else %}O'lcham{% endif %}
+                        </label>
+                        <input type="text" name="size" class="form-input w-full bg-white px-4 py-3.5 text-gray-700 outline-none" 
+                               placeholder="{% if lang == 'ru' %}Например: 200x80x45 см{% elif lang == 'en' %}Example: 200x80x45 cm{% else %}Masalan: 200x80x45 sm{% endif %}">
                     </div>
                     
-                    <!-- Color -->
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">Rang</label>
-                        <input type="text" name="color" class="w-full border rounded-lg px-4 py-2" placeholder="Masalan: Qora, Oq, Jigarrang">
-                    </div>
-                    
-                    <!-- Material -->
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">Material</label>
-                        <select name="material" class="w-full border rounded-lg px-4 py-2">
-                            <option value="">Tanlang</option>
-                            <option value="Shisha">Shisha</option>
-                            <option value="Yog'och">Yog'och</option>
-                            <option value="Shisha + Yog'och">Shisha + Yog'och</option>
-                            <option value="Boshqa">Boshqa</option>
-                        </select>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Color -->
+                        <div>
+                            <label class="block text-sm font-semibold text-[#232339] mb-2">
+                                {% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}
+                            </label>
+                            <input type="text" name="color" class="form-input w-full bg-white px-4 py-3.5 text-gray-700 outline-none" 
+                                   placeholder="{% if lang == 'ru' %}Например: Черный, Белый{% elif lang == 'en' %}Example: Black, White{% else %}Masalan: Qora, Oq{% endif %}">
+                        </div>
+                        
+                        <!-- Material -->
+                        <div>
+                            <label class="block text-sm font-semibold text-[#232339] mb-2">Material</label>
+                            <select name="material" class="form-input w-full bg-white px-4 py-3.5 text-gray-700 outline-none">
+                                <option value="">{% if lang == 'ru' %}Выберите{% elif lang == 'en' %}Select{% else %}Tanlang{% endif %}</option>
+                                <option value="MDF">MDF</option>
+                                <option value="DSP">DSP</option>
+                                <option value="Shisha">{% if lang == 'ru' %}Стекло{% elif lang == 'en' %}Glass{% else %}Shisha{% endif %}</option>
+                                <option value="Yog'och">{% if lang == 'ru' %}Дерево{% elif lang == 'en' %}Wood{% else %}Yog'och{% endif %}</option>
+                                <option value="Shisha + Yog'och">{% if lang == 'ru' %}Стекло + Дерево{% elif lang == 'en' %}Glass + Wood{% else %}Shisha + Yog'och{% endif %}</option>
+                                <option value="Boshqa">{% if lang == 'ru' %}Другое{% elif lang == 'en' %}Other{% else %}Boshqa{% endif %}</option>
+                            </select>
+                        </div>
                     </div>
                     
                     <!-- Design Image -->
                     <div>
-                        <label class="block text-sm font-semibold mb-2">Dizayn rasmi (ixtiyoriy)</label>
-                        <input type="file" name="design_image" accept="image/*" class="w-full border rounded-lg px-4 py-2">
-                        <p class="text-xs text-gray-500 mt-1">Agar sizda namuna yoki dizayn rasm bo'lsa, yuklashingiz mumkin</p>
+                        <label class="block text-sm font-semibold text-[#232339] mb-2">
+                            {% if lang == 'ru' %}Изображение дизайна{% elif lang == 'en' %}Design Image{% else %}Dizayn rasmi{% endif %} ({% if lang == 'ru' %}необязательно{% elif lang == 'en' %}optional{% else %}ixtiyoriy{% endif %})
+                        </label>
+                        <div class="border-2 border-dashed border-gray-300 bg-white p-6 text-center">
+                            <input type="file" name="design_image" accept="image/*" id="design-file" class="hidden">
+                            <label for="design-file" class="cursor-pointer">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                                <p class="text-gray-600">{% if lang == 'ru' %}Нажмите для загрузки{% elif lang == 'en' %}Click to upload{% else %}Yuklash uchun bosing{% endif %}</p>
+                                <p class="text-xs text-gray-400 mt-1">JPG, PNG ({% if lang == 'ru' %}максимум{% elif lang == 'en' %}max{% else %}maksimum{% endif %} 10MB)</p>
+                            </label>
+                        </div>
                     </div>
                     
                     <!-- Contact Info -->
-                    <div class="border-t pt-6">
-                        <h3 class="text-lg font-semibold mb-4">Aloqa ma'lumotlari</h3>
+                    <div class="border-t border-gray-300 pt-6">
+                        <h3 class="text-lg font-bold text-[#232339] mb-6">
+                            {% if lang == 'ru' %}Контактная информация{% elif lang == 'en' %}Contact Information{% else %}Aloqa ma'lumotlari{% endif %}
+                        </h3>
                         
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold mb-2">Telefon raqam *</label>
-                            <input type="tel" name="phone" required class="w-full border rounded-lg px-4 py-2" placeholder="+998 XX XXX XX XX">
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold mb-2">Ism</label>
-                            <input type="text" name="name" class="w-full border rounded-lg px-4 py-2" placeholder="Ismingiz">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-semibold mb-2">Manzil</label>
-                            <textarea name="address" class="w-full border rounded-lg px-4 py-2" rows="3" placeholder="Yetkazib berish manzili"></textarea>
+                        <div class="space-y-5">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-sm font-semibold text-[#232339] mb-2">
+                                        {% if lang == 'ru' %}Имя{% elif lang == 'en' %}Name{% else %}Ism{% endif %}
+                                    </label>
+                                    <input type="text" name="name" class="form-input w-full bg-white px-4 py-3.5 text-gray-700 outline-none" 
+                                           placeholder="{% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your name{% else %}Ismingiz{% endif %}">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-[#232339] mb-2">
+                                        {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} *
+                                    </label>
+                                    <input type="tel" name="phone" required class="form-input w-full bg-white px-4 py-3.5 text-gray-700 outline-none" 
+                                           placeholder="+998 XX XXX XX XX">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-[#232339] mb-2">
+                                    {% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}
+                                </label>
+                                <textarea name="address" rows="3" class="form-input w-full bg-white px-4 py-3.5 text-gray-700 outline-none resize-none" 
+                                          placeholder="{% if lang == 'ru' %}Адрес доставки{% elif lang == 'en' %}Delivery address{% else %}Yetkazib berish manzili{% endif %}"></textarea>
+                            </div>
                         </div>
                     </div>
                     
-                    <button type="submit" class="w-full bg-#232339 hover:bg-#232339 text-white py-3 rounded-lg font-semibold transition">
-                        Buyurtma Berish
+                    <button type="submit" class="w-full bg-[#232339] hover:bg-black text-white py-4 font-semibold transition flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i>
+                        {% if lang == 'ru' %}Отправить заказ{% elif lang == 'en' %}Submit Order{% else %}Buyurtma yuborish{% endif %}
                     </button>
+                </form>
+            </div>
+            
+            <!-- Process Info -->
+            <div class="mt-8 bg-[#232339] p-6 lg:p-8">
+                <h3 class="font-bold text-white mb-4">
+                    {% if lang == 'ru' %}Процесс заказа{% elif lang == 'en' %}Order Process{% else %}Buyurtma jarayoni{% endif %}
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-white/10 flex items-center justify-center flex-shrink-0 text-white font-bold">1</div>
+                        <p class="text-white/80 text-sm">{% if lang == 'ru' %}Принимаем ваш заказ{% elif lang == 'en' %}We receive your order{% else %}Buyurtmangizni qabul qilamiz{% endif %}</p>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-white/10 flex items-center justify-center flex-shrink-0 text-white font-bold">2</div>
+                        <p class="text-white/80 text-sm">{% if lang == 'ru' %}Свяжемся в течение 24 часов{% elif lang == 'en' %}We'll contact you within 24 hours{% else %}24 soat ichida siz bilan bog'lanamiz{% endif %}</p>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-white/10 flex items-center justify-center flex-shrink-0 text-white font-bold">3</div>
+                        <p class="text-white/80 text-sm">{% if lang == 'ru' %}Согласуем дизайн и цену{% elif lang == 'en' %}We agree on design and price{% else %}Dizayn va narx bo'yicha kelishamiz{% endif %}</p>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-white/10 flex items-center justify-center flex-shrink-0 text-white font-bold">4</div>
+                        <p class="text-white/80 text-sm">{% if lang == 'ru' %}Производим и доставляем{% elif lang == 'en' %}We produce and deliver{% else %}Ishlab chiqaramiz va yetkazamiz{% endif %}</p>
+                    </div>
                 </div>
-            </form>
-        </div>
-        
-        <div class="mt-8 bg-#232339 rounded-lg p-6">
-            <h3 class="font-semibold mb-2">Buyurtma jarayoni</h3>
-            <ul class="list-disc list-inside space-y-2 text-sm text-gray-700">
-                <li>Buyurtmangizni qabul qilamiz</li>
-                <li>24 soat ichida siz bilan bog'lanamiz</li>
-                <li>Dizayn va narx bo'yicha kelishamiz</li>
-                <li>Ishlab chiqarishga qo'yamiz</li>
-                <li>Yetkazib beramiz va o'rnatamiz</li>
-            </ul>
+            </div>
         </div>
     </div>
-</div>
-{% endblock %}
+</section>
 
+<!-- Features -->
+<section class="py-12 lg:py-16 bg-[#F5F5F5] border-t border-gray-200">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+            <div class="text-center">
+                <div class="w-14 h-14 bg-[#232339] flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-drafting-compass text-white text-xl"></i>
+                </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}Бесплатный 3D дизайн{% elif lang == 'en' %}Free 3D Design{% else %}Bepul 3D dizayn{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 bg-[#232339] flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-ruler-combined text-white text-xl"></i>
+                </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}Бесплатный замер{% elif lang == 'en' %}Free Measurement{% else %}Bepul o'lchov{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 bg-[#232339] flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-truck text-white text-xl"></i>
+                </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free Delivery{% else %}Bepul yetkazish{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 bg-[#232339] flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-shield-alt text-white text-xl"></i>
+                </div>
+                <p class="font-medium text-[#232339] text-sm">{% if lang == 'ru' %}3 года гарантии{% elif lang == 'en' %}3 Year Warranty{% else %}3 yil kafolat{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

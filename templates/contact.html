@@ -2,44 +2,35 @@
 
 {% block title %}{{ T.nav.contact[lang] }} - Furni Glass{% endblock %}
 
-{% block extra_css %}
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-</style>
-{% endblock %}
-
 {% block content %}
 <!-- Hero Section -->
-<section class="relative bg-[#232339] py-20 lg:py-28">
-    <div class="container mx-auto px-4">
+<section class="relative bg-white py-20 lg:py-28">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-4xl">
             <!-- Breadcrumb -->
-            <div class="flex items-center gap-2 text-sm text-white/50 mb-8">
-                <a href="/" class="hover:text-white transition">{{ T.nav.home[lang] }}</a>
-                <i class="fas fa-chevron-right text-xs"></i>
-                <span class="text-white">{{ T.nav.contact[lang] }}</span>
+            <div class="flex items-center gap-2 text-sm text-gray-400 mb-8">
+                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
+                <span>/</span>
+                <span class="text-[#1a1a2e]">{{ T.nav.contact[lang] }}</span>
             </div>
             
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6" style="font-family: 'Playfair Display', serif;">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] leading-tight mb-6 font-display">
                 {% if lang == 'ru' %}
-                Свяжитесь<br>С Нами
+                Свяжитесь С Нами
                 {% elif lang == 'en' %}
-                Get In<br>Touch
+                Get In Touch
                 {% else %}
-                Biz Bilan<br>Bog'laning
+                Biz Bilan Bog'laning
                 {% endif %}
             </h1>
             
-            <p class="text-white/70 text-lg md:text-xl max-w-2xl leading-relaxed">
+            <p class="text-gray-600 text-lg md:text-xl max-w-2xl leading-relaxed">
                 {% if lang == 'ru' %}
-                Есть вопросы? Хотите заказать мебель? Мы всегда готовы помочь. 
-                Выберите удобный способ связи.
+                Есть вопросы? Хотите заказать мебель? Мы всегда готовы помочь.
                 {% elif lang == 'en' %}
-                Have questions? Want to order furniture? We're always ready to help. 
-                Choose a convenient way to contact us.
+                Have questions? Want to order furniture? We're always ready to help.
                 {% else %}
-                Savollaringiz bormi? Mebel buyurtma bermoqchimisiz? Biz sizga yordam berishga doimo tayyormiz. 
-                Qulay usulni tanlang.
+                Savollaringiz bormi? Mebel buyurtma bermoqchimisiz? Biz sizga yordam berishga doimo tayyormiz.
                 {% endif %}
             </p>
         </div>
@@ -47,42 +38,42 @@
 </section>
 
 <!-- Quick Contact Cards -->
-<section class="py-12 lg:py-16 bg-[#F5F5F5]">
-    <div class="container mx-auto px-4">
+<section class="py-12 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
             <!-- Phone -->
-            <a href="tel:+998901234567" class="bg-white rounded-2xl p-6 text-center hover:shadow-lg transition">
-                <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-4">
+            <a href="tel:+998901234567" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+                <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-4 group-hover:bg-[#c9a96e] transition">
                     <i class="fas fa-phone-alt text-white"></i>
                 </div>
-                <h3 class="font-semibold text-[#232339] mb-1">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</h3>
+                <h3 class="font-semibold text-[#1a1a2e] mb-1">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</h3>
                 <p class="text-gray-500 text-sm">+998 90 123 45 67</p>
             </a>
             
             <!-- Telegram -->
-            <a href="https://t.me/furniglass" class="bg-white rounded-2xl p-6 text-center hover:shadow-lg transition">
-                <div class="w-12 h-12 bg-[#0088cc] rounded-xl flex items-center justify-center mx-auto mb-4">
+            <a href="https://t.me/furniglass" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+                <div class="w-12 h-12 bg-[#0088cc] flex items-center justify-center mx-auto mb-4">
                     <i class="fab fa-telegram-plane text-white"></i>
                 </div>
-                <h3 class="font-semibold text-[#232339] mb-1">Telegram</h3>
+                <h3 class="font-semibold text-[#1a1a2e] mb-1">Telegram</h3>
                 <p class="text-gray-500 text-sm">@furniglass</p>
             </a>
             
             <!-- WhatsApp -->
-            <a href="https://wa.me/998901234567" class="bg-white rounded-2xl p-6 text-center hover:shadow-lg transition">
-                <div class="w-12 h-12 bg-[#25D366] rounded-xl flex items-center justify-center mx-auto mb-4">
+            <a href="https://wa.me/998901234567" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+                <div class="w-12 h-12 bg-[#25D366] flex items-center justify-center mx-auto mb-4">
                     <i class="fab fa-whatsapp text-white"></i>
                 </div>
-                <h3 class="font-semibold text-[#232339] mb-1">WhatsApp</h3>
+                <h3 class="font-semibold text-[#1a1a2e] mb-1">WhatsApp</h3>
                 <p class="text-gray-500 text-sm">+998 90 123 45 67</p>
             </a>
             
             <!-- Email -->
-            <a href="mailto:info@furniglass.uz" class="bg-white rounded-2xl p-6 text-center hover:shadow-lg transition">
-                <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center mx-auto mb-4">
+            <a href="mailto:info@furniglass.uz" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+                <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-4 group-hover:bg-[#c9a96e] transition">
                     <i class="fas fa-envelope text-white"></i>
                 </div>
-                <h3 class="font-semibold text-[#232339] mb-1">Email</h3>
+                <h3 class="font-semibold text-[#1a1a2e] mb-1">Email</h3>
                 <p class="text-gray-500 text-sm">info@furniglass.uz</p>
             </a>
         </div>
@@ -90,49 +81,43 @@
 </section>
 
 <!-- Main Contact Section -->
-<section class="py-16 lg:py-24 bg-white">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             <!-- Left - Contact Form -->
-        <div>
-                <h2 class="text-3xl md:text-4xl font-bold text-[#232339] mb-6" style="font-family: 'Playfair Display', serif;">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-6 font-display">
                     {% if lang == 'ru' %}Отправить Сообщение{% elif lang == 'en' %}Send Message{% else %}Xabar Yuborish{% endif %}
                 </h2>
                 
                 <p class="text-gray-600 mb-8">
-                    {% if lang == 'ru' %}
-                    Заполните форму и мы свяжемся с вами в течение 15 минут.
-                    {% elif lang == 'en' %}
-                    Fill out the form and we'll contact you within 15 minutes.
-                    {% else %}
-                    Formani to'ldiring va biz 15 daqiqa ichida siz bilan bog'lanamiz.
-                    {% endif %}
+                    {% if lang == 'ru' %}Заполните форму и мы свяжемся с вами в течение 15 минут.{% elif lang == 'en' %}Fill out the form and we'll contact you within 15 minutes.{% else %}Formani to'ldiring va biz 15 daqiqa ichida siz bilan bog'lanamiz.{% endif %}
                 </p>
                 
                 <!-- Contact Form -->
-                <form method="POST" class="space-y-5">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <form method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-[#232339] mb-2">
+                            <label class="block text-sm font-medium text-[#1a1a2e] mb-2">
                                 {% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your Name{% else %}Ismingiz{% endif %}
                             </label>
                             <input type="text" name="name" placeholder="{% if lang == 'ru' %}Введите имя{% elif lang == 'en' %}Enter name{% else %}Ismingizni kiriting{% endif %}" 
-                                class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                                class="w-full bg-[#FAF9F6] border-0 px-4 py-4 text-gray-700 focus:ring-2 focus:ring-[#1a1a2e] outline-none transition">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-[#232339] mb-2">
+                            <label class="block text-sm font-medium text-[#1a1a2e] mb-2">
                                 {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} *
                             </label>
                             <input type="tel" name="phone" placeholder="+998 __ ___ __ __" required
-                                class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                                class="w-full bg-[#FAF9F6] border-0 px-4 py-4 text-gray-700 focus:ring-2 focus:ring-[#1a1a2e] outline-none transition">
                         </div>
                     </div>
                     
-                        <div>
-                        <label class="block text-sm font-medium text-[#232339] mb-2">
+                    <div>
+                        <label class="block text-sm font-medium text-[#1a1a2e] mb-2">
                             {% if lang == 'ru' %}Тема{% elif lang == 'en' %}Subject{% else %}Mavzu{% endif %}
                         </label>
-                        <select name="subject" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                        <select name="subject" class="w-full bg-[#FAF9F6] border-0 px-4 py-4 text-gray-700 focus:ring-2 focus:ring-[#1a1a2e] outline-none transition">
                             <option value="">{% if lang == 'ru' %}Выберите тему{% elif lang == 'en' %}Select subject{% else %}Mavzuni tanlang{% endif %}</option>
                             <option value="order">{% if lang == 'ru' %}Новый заказ{% elif lang == 'en' %}New Order{% else %}Yangi buyurtma{% endif %}</option>
                             <option value="consultation">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}</option>
@@ -142,28 +127,30 @@
                         </select>
                     </div>
                     
-                        <div>
-                        <label class="block text-sm font-medium text-[#232339] mb-2">
+                    <div>
+                        <label class="block text-sm font-medium text-[#1a1a2e] mb-2">
                             {% if lang == 'ru' %}Сообщение{% elif lang == 'en' %}Message{% else %}Xabar{% endif %}
                         </label>
-                        <textarea name="message" rows="4" placeholder="{% if lang == 'ru' %}Напишите сообщение...{% elif lang == 'en' %}Write your message...{% else %}Xabaringizni yozing...{% endif %}" 
-                            class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition resize-none"></textarea>
+                        <textarea name="message" rows="5" placeholder="{% if lang == 'ru' %}Напишите сообщение...{% elif lang == 'en' %}Write your message...{% else %}Xabaringizni yozing...{% endif %}" 
+                            class="w-full bg-[#FAF9F6] border-0 px-4 py-4 text-gray-700 focus:ring-2 focus:ring-[#1a1a2e] outline-none transition resize-none"></textarea>
                     </div>
                     
-                    <button type="submit" class="w-full bg-[#232339] hover:bg-black text-white py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
-                        <i class="fas fa-paper-plane"></i>
+                    <button type="submit" class="w-full bg-[#1a1a2e] hover:bg-black text-white py-4 font-medium transition-all flex items-center justify-center gap-2">
                         {% if lang == 'ru' %}Отправить{% elif lang == 'en' %}Send{% else %}Yuborish{% endif %}
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </button>
                 </form>
                 
                 <!-- Trust badges -->
                 <div class="flex flex-wrap items-center gap-6 mt-8 pt-6 border-t border-gray-100">
                     <div class="flex items-center gap-2 text-sm text-gray-500">
-                        <i class="fas fa-bolt text-[#F5C242]"></i>
+                        <i class="fas fa-bolt text-[#c9a96e]"></i>
                         <span>{% if lang == 'ru' %}Ответ за 15 мин{% elif lang == 'en' %}15 min response{% else %}15 daqiqada javob{% endif %}</span>
-                        </div>
+                    </div>
                     <div class="flex items-center gap-2 text-sm text-gray-500">
-                        <i class="fas fa-lock text-[#232339]"></i>
+                        <i class="fas fa-lock text-[#1a1a2e]"></i>
                         <span>{% if lang == 'ru' %}Данные защищены{% elif lang == 'en' %}Data protected{% else %}Ma'lumotlar himoyada{% endif %}</span>
                     </div>
                 </div>
@@ -172,56 +159,30 @@
             <!-- Right - Info -->
             <div class="space-y-6">
                 <!-- Office Info -->
-                <div class="bg-[#F5F5F5] rounded-2xl p-6 lg:p-8">
-                    <h3 class="text-lg font-bold text-[#232339] mb-6 flex items-center gap-3">
-                        <i class="fas fa-building text-[#232339]"></i>
+                <div class="bg-[#FAF9F6] p-8">
+                    <h3 class="text-lg font-bold text-[#1a1a2e] mb-6 flex items-center gap-3">
+                        <i class="fas fa-building text-[#c9a96e]"></i>
                         {% if lang == 'ru' %}Главный Офис{% elif lang == 'en' %}Head Office{% else %}Bosh Ofis{% endif %}
                     </h3>
                     
-                    <div class="space-y-4">
+                    <div class="space-y-5">
                         <div class="flex items-start gap-4">
-                            <i class="fas fa-map-marker-alt text-[#232339] mt-1"></i>
-                        <div>
-                                <p class="font-medium text-[#232339]">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
+                            <i class="fas fa-map-marker-alt text-[#1a1a2e] mt-1"></i>
+                            <div>
+                                <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
                                 <p class="text-gray-600 text-sm">
-                                    {% if lang == 'ru' %}
-                                    Ташкент, Юнусабадский район, ул. Амира Темура 15
-                                    {% elif lang == 'en' %}
-                                    Tashkent, Yunusobod district, Amir Temur str. 15
-                                    {% else %}
-                                    Toshkent, Yunusobod tumani, Amir Temur ko'chasi 15
-                                    {% endif %}
+                                    {% if lang == 'ru' %}Ташкент, Юнусабадский район, ул. Амира Темура 15{% elif lang == 'en' %}Tashkent, Yunusobod district, Amir Temur str. 15{% else %}Toshkent, Yunusobod tumani, Amir Temur ko'chasi 15{% endif %}
                                 </p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-4">
-                            <i class="fas fa-clock text-[#232339] mt-1"></i>
-                        <div>
-                                <p class="font-medium text-[#232339]">{% if lang == 'ru' %}Время работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</p>
+                            <i class="fas fa-clock text-[#1a1a2e] mt-1"></i>
+                            <div>
+                                <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Время работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</p>
                                 <p class="text-gray-600 text-sm">
                                     {% if lang == 'ru' %}Пн-Пт: 09:00 - 19:00{% elif lang == 'en' %}Mon-Fri: 09:00 - 19:00{% else %}Du-Ju: 09:00 - 19:00{% endif %}<br>
-                                    {% if lang == 'ru' %}Сб: 10:00 - 17:00{% elif lang == 'en' %}Sat: 10:00 - 17:00{% else %}Sha: 10:00 - 17:00{% endif %}<br>
-                                    {% if lang == 'ru' %}Вс: 10:00 - 15:00{% elif lang == 'en' %}Sun: 10:00 - 15:00{% else %}Yak: 10:00 - 15:00{% endif %}
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <i class="fas fa-subway text-[#232339] mt-1"></i>
-                            <div>
-                                <p class="font-medium text-[#232339]">{% if lang == 'ru' %}Как добраться{% elif lang == 'en' %}How to get{% else %}Qanday yetib borish{% endif %}</p>
-                                <p class="text-gray-600 text-sm">
-                                    {% if lang == 'ru' %}
-                                    Метро: станция Буюк Ипак Йули<br>
-                                    Автобус: 35, 67, 94
-                                    {% elif lang == 'en' %}
-                                    Metro: Buyuk Ipak Yuli station<br>
-                                    Bus: 35, 67, 94
-                                    {% else %}
-                                    Metro: Buyuk Ipak Yo'li bekati<br>
-                                    Avtobus: 35, 67, 94
-                                    {% endif %}
+                                    {% if lang == 'ru' %}Сб-Вс: 10:00 - 17:00{% elif lang == 'en' %}Sat-Sun: 10:00 - 17:00{% else %}Sha-Yak: 10:00 - 17:00{% endif %}
                                 </p>
                             </div>
                         </div>
@@ -229,47 +190,30 @@
                 </div>
                 
                 <!-- Showroom Info -->
-                <div class="bg-[#F5F5F5] rounded-2xl p-6 lg:p-8">
-                    <h3 class="text-lg font-bold text-[#232339] mb-6 flex items-center gap-3">
-                        <i class="fas fa-store text-[#F5C242]"></i>
+                <div class="bg-[#FAF9F6] p-8">
+                    <h3 class="text-lg font-bold text-[#1a1a2e] mb-6 flex items-center gap-3">
+                        <i class="fas fa-store text-[#c9a96e]"></i>
                         {% if lang == 'ru' %}Шоурум{% elif lang == 'en' %}Showroom{% else %}Ko'rgazma Zali{% endif %}
                     </h3>
                     
-                    <div class="space-y-4">
+                    <div class="space-y-5">
                         <div class="flex items-start gap-4">
-                            <i class="fas fa-map-marker-alt text-[#232339] mt-1"></i>
-                        <div>
-                                <p class="font-medium text-[#232339]">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
+                            <i class="fas fa-map-marker-alt text-[#1a1a2e] mt-1"></i>
+                            <div>
+                                <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
                                 <p class="text-gray-600 text-sm">
-                                    {% if lang == 'ru' %}
-                                    Ташкент, Чиланзарский район, ул. Бунёдкор 42
-                                    {% elif lang == 'en' %}
-                                    Tashkent, Chilanzar district, Bunyodkor str. 42
-                                    {% else %}
-                                    Toshkent, Chilonzor tumani, Bunyodkor ko'chasi 42
-                                    {% endif %}
+                                    {% if lang == 'ru' %}Ташкент, Чиланзарский район, ул. Бунёдкор 42{% elif lang == 'en' %}Tashkent, Chilanzar district, Bunyodkor str. 42{% else %}Toshkent, Chilonzor tumani, Bunyodkor ko'chasi 42{% endif %}
                                 </p>
                             </div>
                         </div>
                         
                         <div class="flex items-start gap-4">
-                            <i class="fas fa-couch text-[#232339] mt-1"></i>
+                            <i class="fas fa-couch text-[#1a1a2e] mt-1"></i>
                             <div>
-                                <p class="font-medium text-[#232339]">{% if lang == 'ru' %}В наличии{% elif lang == 'en' %}Available{% else %}Mavjud{% endif %}</p>
+                                <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}В наличии{% elif lang == 'en' %}Available{% else %}Mavjud{% endif %}</p>
                                 <p class="text-gray-600 text-sm">
-                                    {% if lang == 'ru' %}
-                                    200+ образцов мебели<br>
-                                    Каталоги материалов и цветов<br>
-                                    Бесплатная консультация
-                                    {% elif lang == 'en' %}
-                                    200+ furniture samples<br>
-                                    Material and color catalogs<br>
-                                    Free consultation
-                                    {% else %}
-                                    200+ mebel namunalari<br>
-                                    Material va rang kataloglari<br>
-                                    Bepul maslahat
-                                    {% endif %}
+                                    {% if lang == 'ru' %}200+ образцов мебели{% elif lang == 'en' %}200+ furniture samples{% else %}200+ mebel namunalari{% endif %}<br>
+                                    {% if lang == 'ru' %}Бесплатная консультация{% elif lang == 'en' %}Free consultation{% else %}Bepul maslahat{% endif %}
                                 </p>
                             </div>
                         </div>
@@ -277,14 +221,10 @@
                 </div>
                 
                 <!-- Map -->
-                <div class="rounded-2xl overflow-hidden h-64">
+                <div class="overflow-hidden h-64">
                     <iframe 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.1234567890!2d69.2401234!3d41.2994567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE3JzU4LjAiTiA2OcKwMTQnMjQuNCJF!5e0!3m2!1suz!2s!4v1234567890"
-                        width="100%" 
-                        height="100%" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy">
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
                     </iframe>
                 </div>
             </div>
@@ -292,201 +232,51 @@
     </div>
 </section>
 
-<!-- Production Section -->
-<section class="py-16 lg:py-20 bg-[#232339]">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="text-white">
-                <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Производственный Комплекс{% elif lang == 'en' %}Production Complex{% else %}Ishlab Chiqarish Kompleksi{% endif %}
-                </h2>
-                
-                <p class="text-white/70 mb-6">
-                    {% if lang == 'ru' %}
-                    Посетите наш современный производственный комплекс площадью 5000 м²
-                    {% elif lang == 'en' %}
-                    Visit our modern 5000 m² production complex
-                    {% else %}
-                    5000 m² zamonaviy ishlab chiqarish kompleksimizga tashrif buyuring
-                    {% endif %}
-                </p>
-                
-                <div class="space-y-3 mb-8">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-map-marker-alt text-[#F5C242]"></i>
-                        <span>
-                            {% if lang == 'ru' %}Ташкентская обл., Кибрайский р-н{% elif lang == 'en' %}Tashkent region, Kibray district{% else %}Toshkent viloyati, Qibray tumani{% endif %}
-                        </span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-phone text-[#F5C242]"></i>
-                        <span>+998 90 123 45 69</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-clock text-[#F5C242]"></i>
-                        <span>{% if lang == 'ru' %}Пн-Сб: 08:00 - 18:00{% elif lang == 'en' %}Mon-Sat: 08:00 - 18:00{% else %}Du-Sha: 08:00 - 18:00{% endif %}</span>
-                    </div>
-                </div>
-                
-                <a href="tel:+998901234569" class="inline-flex items-center gap-2 bg-[#F5C242] text-[#232339] font-semibold px-6 py-3 rounded-xl transition hover:bg-[#F5C242]/90">
-                    <i class="fas fa-phone"></i>
-                    {% if lang == 'ru' %}Позвонить{% elif lang == 'en' %}Call Now{% else %}Qo'ng'iroq qilish{% endif %}
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white/10 rounded-xl p-6 text-center">
-                    <p class="text-3xl font-bold text-white mb-1">5000m²</p>
-                    <p class="text-white/50 text-sm">{% if lang == 'ru' %}Площадь{% elif lang == 'en' %}Area{% else %}Maydon{% endif %}</p>
-                </div>
-                <div class="bg-white/10 rounded-xl p-6 text-center">
-                    <p class="text-3xl font-bold text-white mb-1">20+</p>
-                    <p class="text-white/50 text-sm">{% if lang == 'ru' %}Станков{% elif lang == 'en' %}Machines{% else %}Dastgoh{% endif %}</p>
-                </div>
-                <div class="bg-white/10 rounded-xl p-6 text-center">
-                    <p class="text-3xl font-bold text-white mb-1">50+</p>
-                    <p class="text-white/50 text-sm">{% if lang == 'ru' %}Мастеров{% elif lang == 'en' %}Masters{% else %}Usta{% endif %}</p>
-                </div>
-                <div class="bg-white/10 rounded-xl p-6 text-center">
-                    <p class="text-3xl font-bold text-white mb-1">24/7</p>
-                    <p class="text-white/50 text-sm">{% if lang == 'ru' %}Охрана{% elif lang == 'en' %}Security{% else %}Qo'riqlash{% endif %}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Social Media -->
-<section class="py-16 lg:py-20 bg-white">
-    <div class="container mx-auto px-4">
+<section class="py-20 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] font-display">
                 {% if lang == 'ru' %}Мы в Соцсетях{% elif lang == 'en' %}Social Media{% else %}Ijtimoiy Tarmoqlarda{% endif %}
             </h2>
             <p class="text-gray-600 mt-4">
-                {% if lang == 'ru' %}Следите за нами и будьте в курсе новинок и скидок{% elif lang == 'en' %}Follow us and stay updated on new products and discounts{% else %}Bizni kuzatib boring va yangiliklar, chegirmalardan xabardor bo'ling{% endif %}
+                {% if lang == 'ru' %}Следите за нами и будьте в курсе новинок{% elif lang == 'en' %}Follow us and stay updated{% else %}Bizni kuzatib boring va yangiliklar, chegirmalardan xabardor bo'ling{% endif %}
             </p>
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 max-w-4xl mx-auto">
-            <a href="https://instagram.com/furniglass" class="bg-[#F5F5F5] rounded-2xl p-6 text-center hover:shadow-lg transition group">
-                <div class="w-14 h-14 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+            <a href="https://instagram.com/furniglass" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+                <div class="w-14 h-14 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
                     <i class="fab fa-instagram text-white text-2xl"></i>
                 </div>
-                <p class="font-semibold text-[#232339]">Instagram</p>
+                <p class="font-semibold text-[#1a1a2e]">Instagram</p>
                 <p class="text-gray-500 text-sm">15K+</p>
             </a>
             
-            <a href="https://t.me/furniglass_channel" class="bg-[#F5F5F5] rounded-2xl p-6 text-center hover:shadow-lg transition group">
-                <div class="w-14 h-14 bg-[#0088cc] rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+            <a href="https://t.me/furniglass_channel" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+                <div class="w-14 h-14 bg-[#0088cc] flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
                     <i class="fab fa-telegram-plane text-white text-2xl"></i>
                 </div>
-                <p class="font-semibold text-[#232339]">Telegram</p>
+                <p class="font-semibold text-[#1a1a2e]">Telegram</p>
                 <p class="text-gray-500 text-sm">10K+</p>
             </a>
             
-            <a href="https://facebook.com/furniglass" class="bg-[#F5F5F5] rounded-2xl p-6 text-center hover:shadow-lg transition group">
-                <div class="w-14 h-14 bg-[#1877F2] rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+            <a href="https://facebook.com/furniglass" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+                <div class="w-14 h-14 bg-[#1877F2] flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
                     <i class="fab fa-facebook-f text-white text-2xl"></i>
                 </div>
-                <p class="font-semibold text-[#232339]">Facebook</p>
+                <p class="font-semibold text-[#1a1a2e]">Facebook</p>
                 <p class="text-gray-500 text-sm">8K+</p>
             </a>
             
-            <a href="https://youtube.com/@furniglass" class="bg-[#F5F5F5] rounded-2xl p-6 text-center hover:shadow-lg transition group">
-                <div class="w-14 h-14 bg-[#FF0000] rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
+            <a href="https://youtube.com/@furniglass" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+                <div class="w-14 h-14 bg-[#FF0000] flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition">
                     <i class="fab fa-youtube text-white text-2xl"></i>
                 </div>
-                <p class="font-semibold text-[#232339]">YouTube</p>
+                <p class="font-semibold text-[#1a1a2e]">YouTube</p>
                 <p class="text-gray-500 text-sm">5K+</p>
             </a>
         </div>
     </div>
-</section>
-
-<!-- FAQ Section -->
-<section class="py-16 lg:py-20 bg-[#F5F5F5]">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-[#232339]" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Частые Вопросы{% elif lang == 'en' %}FAQ{% else %}Ko'p Beriladigan Savollar{% endif %}
-                </h2>
-            </div>
-            
-            <div class="space-y-4">
-                <details class="bg-white rounded-2xl p-5 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-medium text-[#232339]">
-                        {% if lang == 'ru' %}Как сделать заказ?{% elif lang == 'en' %}How to place an order?{% else %}Qanday buyurtma beraman?{% endif %}
-                        <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
-                    </summary>
-                    <p class="mt-4 text-gray-600 text-sm leading-relaxed">
-                        {% if lang == 'ru' %}
-                        Позвоните нам, напишите в Telegram или WhatsApp, или заполните форму на сайте. Мы свяжемся с вами в течение 15 минут.
-                        {% elif lang == 'en' %}
-                        Call us, write to Telegram or WhatsApp, or fill out the form on the website. We will contact you within 15 minutes.
-                        {% else %}
-                        Bizga qo'ng'iroq qiling, Telegram yoki WhatsApp orqali yozing, yoki saytdagi formani to'ldiring. 15 daqiqa ichida siz bilan bog'lanamiz.
-                        {% endif %}
-                    </p>
-                </details>
-                
-                <details class="bg-white rounded-2xl p-5 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-medium text-[#232339]">
-                        {% if lang == 'ru' %}Бесплатная консультация?{% elif lang == 'en' %}Free consultation?{% else %}Bepul maslahat bormi?{% endif %}
-                        <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
-                    </summary>
-                    <p class="mt-4 text-gray-600 text-sm leading-relaxed">
-                        {% if lang == 'ru' %}
-                        Да! Мы предоставляем бесплатную консультацию, замер и 3D дизайн для всех клиентов.
-                        {% elif lang == 'en' %}
-                        Yes! We provide free consultation, measurement and 3D design for all customers.
-                        {% else %}
-                        Ha! Biz barcha mijozlarga bepul maslahat, o'lchov va 3D dizayn xizmatini taklif etamiz.
-                        {% endif %}
-                    </p>
-                </details>
-                
-                <details class="bg-white rounded-2xl p-5 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-medium text-[#232339]">
-                        {% if lang == 'ru' %}Сколько времени занимает доставка?{% elif lang == 'en' %}How long is delivery?{% else %}Yetkazish qancha vaqt oladi?{% endif %}
-                        <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
-                    </summary>
-                    <p class="mt-4 text-gray-600 text-sm leading-relaxed">
-                        {% if lang == 'ru' %}
-                        Готовые изделия — 3-5 дней, изделия на заказ — 7-21 день. Доставка по Ташкенту бесплатная!
-                        {% elif lang == 'en' %}
-                        Ready products — 3-5 days, custom products — 7-21 days. Delivery in Tashkent is free!
-                        {% else %}
-                        Tayyor mahsulotlar — 3-5 kun, buyurtma asosida — 7-21 kun. Toshkent bo'ylab bepul yetkazamiz!
-                        {% endif %}
-                    </p>
-                </details>
-                
-                <details class="bg-white rounded-2xl p-5 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-medium text-[#232339]">
-                        {% if lang == 'ru' %}Есть рассрочка?{% elif lang == 'en' %}Installment available?{% else %}Bo'lib to'lash bormi?{% endif %}
-                        <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
-                    </summary>
-                    <p class="mt-4 text-gray-600 text-sm leading-relaxed">
-                        {% if lang == 'ru' %}
-                        Да! Рассрочка на 3, 6 и 12 месяцев. Оплата через Payme, Click, Uzum. Первоначальный взнос от 30%.
-                        {% elif lang == 'en' %}
-                        Yes! Installments for 3, 6 and 12 months. Payment via Payme, Click, Uzum. Down payment from 30%.
-                        {% else %}
-                        Ha! 3, 6 va 12 oylik bo'lib to'lash mavjud. Payme, Click, Uzum orqali to'lash mumkin. Boshlang'ich to'lov 30% dan.
-                        {% endif %}
-                    </p>
-                </details>
-            </div>
-            
-            <div class="text-center mt-8">
-                <a href="/faq" class="inline-flex items-center gap-2 text-[#232339] font-medium hover:underline">
-                    {% if lang == 'ru' %}Все вопросы{% elif lang == 'en' %}All questions{% else %}Barcha savollar{% endif %}
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-        </div>
-    </div>
-</div>
 </section>
 {% endblock %}

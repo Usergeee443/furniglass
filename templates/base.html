@@ -7,36 +7,58 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
         
-        body { 
-            font-family: 'Inter', sans-serif; 
+        :root {
+            --color-primary: #1a1a2e;
+            --color-accent: #c9a96e;
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Inter', sans-serif;
         }
         
-        .glass-header {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        body { 
+            font-family: var(--font-body);
+            font-weight: 400;
+        }
+        
+        h1, h2, h3, .font-display {
+            font-family: var(--font-display);
+        }
+        
+        /* Header styles */
+        .site-header {
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .site-header.scrolled {
+            box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+        }
+        
+        .header-hidden {
+            transform: translateY(-100%);
         }
         
         .nav-link {
-            position: relative;
-            transition: color 0.3s ease;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-body);
+            font-size: 13px;
             font-weight: 500;
-            letter-spacing: -0.01em;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #1a1a2e;
+            position: relative;
+            padding: 8px 0;
+            transition: color 0.2s ease;
         }
         
         .nav-link::after {
             content: '';
             position: absolute;
-            bottom: -4px;
+            bottom: 0;
             left: 0;
             width: 0;
-            height: 2px;
-            background: #232339;
+            height: 1px;
+            background: var(--color-accent);
             transition: width 0.3s ease;
         }
         
@@ -45,335 +67,289 @@
             width: 100%;
         }
         
+        .nav-link:hover {
+            color: var(--color-accent);
+        }
+        
+        /* Mobile nav */
+        .mobile-nav-link {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 500;
+            color: #1a1a2e;
+            transition: color 0.2s ease;
+        }
+        
+        .mobile-nav-link:hover {
+            color: var(--color-accent);
+        }
+        
+        /* Bottom nav active states */
         .bottom-nav-item.active {
-            color: #232339;
+            color: #1a1a2e;
         }
         
         .bottom-nav-item:not(.active) {
-            color: #6B7280;
+            color: #9ca3af;
         }
         
         .bottom-nav-item img {
             transition: all 0.3s ease;
-            filter: brightness(0) saturate(100%) invert(47%) sepia(6%) saturate(464%) hue-rotate(202deg) brightness(94%) contrast(88%);
+            filter: grayscale(100%) opacity(0.5);
         }
         
         .bottom-nav-item.active img {
-            filter: brightness(0) saturate(100%) invert(12%) sepia(11%) saturate(1358%) hue-rotate(208deg) brightness(95%) contrast(96%);
-        }
-        
-        .bottom-nav-item:not(.active) img {
-            filter: brightness(0) saturate(100%) invert(47%) sepia(6%) saturate(464%) hue-rotate(202deg) brightness(94%) contrast(88%);
-        }
-        
-        /* Header hide/show on scroll - improved */
-        .header-hidden {
-            transform: translateY(-100%);
-        }
-        
-        .header-visible {
-            transform: translateY(0);
-        }
-        
-        /* Premium icon styling - thicker strokes */
-        .header-icon {
-            width: 22px;
-            height: 22px;
-            stroke-width: 2;
-            stroke: currentColor;
-            transition: all 0.3s ease;
-        }
-        
-        .header-icon:hover {
-            stroke-width: 2.5;
-        }
-        
-        /* Premium typography for navigation */
-        .premium-nav {
-            font-weight: 500;
-            letter-spacing: -0.02em;
-            font-size: 15px;
+            filter: grayscale(0%) opacity(1);
         }
         
         /* Search Modal */
         .search-modal {
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
         }
         
-        .search-result-item {
-            transition: all 0.2s ease;
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .search-result-item:hover {
-            background: #F5F5F7;
-            transform: translateX(4px);
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
         }
         
-        .search-loading {
-            animation: spin 1s linear infinite;
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out;
         }
         
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .animate-slide-in {
+            animation: slideIn 0.4s ease-out;
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-gray-50 pt-16 md:pt-20 pb-20 md:pb-0">
-    <!-- Desktop Header - Glass Effect -->
-    <header id="main-header" class="glass-header fixed top-0 left-0 right-0 z-50 shadow-sm transition-transform duration-300 ease-in-out">
+<body class="bg-white pt-[70px] md:pt-[80px] pb-16 md:pb-0">
+    <!-- Header -->
+    <header id="main-header" class="site-header fixed top-0 left-0 right-0 z-50 border-b border-gray-100 transition-transform duration-300">
         <div class="container mx-auto px-4 lg:px-8">
-            <div class="flex items-center justify-between h-16 md:h-20">
-                <!-- Logo - Chap -->
+            <div class="flex items-center justify-between h-[70px] md:h-[80px]">
+                <!-- Left: Logo -->
                 <a href="/" class="flex-shrink-0">
-                    <img src="/uploads/designs/logo.png" alt="Furni Glass" class="h-8 md:h-10">
+                    <img src="/uploads/designs/logo.png" alt="Furni Glass" class="h-8 md:h-9">
                 </a>
                 
-                <!-- Navigation - O'rta (Desktop only) -->
-                <nav class="hidden lg:flex items-center space-x-4 xl:space-x-5">
-                    <a href="/" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'index' %}active text-[#232339]{% endif %}">{{ T.nav.home[lang] }}</a>
-                    <a href="/about" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'about' %}active text-[#232339]{% endif %}">{{ T.nav.about[lang] }}</a>
-                    <a href="/products" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'products' %}active text-[#232339]{% endif %}">{{ T.nav.products[lang] }}</a>
-                    <a href="/services" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'services' %}active text-[#232339]{% endif %}">{{ T.nav.services[lang] }}</a>
-                    <a href="/portfolio" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'portfolio' %}active text-[#232339]{% endif %}">{{ T.nav.portfolio[lang] }}</a>
-                    <a href="/why-us" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'why_us' %}active text-[#232339]{% endif %}">{{ T.nav.why_us[lang] }}</a>
-                    <a href="/faq" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'faq' %}active text-[#232339]{% endif %}">{{ T.nav.faq[lang] }}</a>
-                    <a href="/contact" class="nav-link premium-nav text-gray-700 hover:text-[#232339] {% if request.endpoint == 'contact' %}active text-[#232339]{% endif %}">{{ T.nav.contact[lang] }}</a>
+                <!-- Center: Main Navigation (Desktop) -->
+                <nav class="hidden lg:flex items-center gap-8">
+                    <a href="/products" class="nav-link {% if request.endpoint == 'products' %}active{% endif %}">
+                        {{ T.nav.products[lang] }}
+                    </a>
+                    <a href="/collections" class="nav-link {% if request.endpoint == 'collections' %}active{% endif %}">
+                        {% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}
+                    </a>
+                    <a href="/portfolio" class="nav-link {% if request.endpoint == 'portfolio' %}active{% endif %}">
+                        Portfolio
+                    </a>
+                    <a href="/interior-design" class="nav-link {% if request.endpoint == 'interior_design' %}active{% endif %}">
+                        {% if lang == 'ru' %}Дизайн{% elif lang == 'en' %}Design{% else %}Dizayn{% endif %}
+                    </a>
+                    <a href="/contact" class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}">
+                        {{ T.nav.contact[lang] }}
+                    </a>
                 </nav>
                 
-                <!-- Icons - O'ng -->
-                <div class="flex items-center space-x-4 md:space-x-5">
-                    <!-- Qidiruv -->
-                    <button class="text-gray-600 hover:text-[#232339] transition p-2" id="search-btn" title="Qidiruv">
-                        <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Right: Actions -->
+                <div class="flex items-center gap-3 md:gap-5">
+                    <!-- Search Button -->
+                    <button class="p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition" id="search-btn">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="7"/>
+                            <path d="m21 21-4.35-4.35" stroke-linecap="round"/>
                         </svg>
                     </button>
-                    <!-- Til (Desktop) -->
+                    
+                    <!-- Language (Desktop) -->
                     <div class="hidden md:block relative" id="lang-dropdown">
-                        <button class="flex items-center gap-1 text-gray-600 hover:text-[#232339] transition p-2" id="lang-btn">
-                            <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M2 12H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <button class="flex items-center gap-1.5 p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition text-xs font-medium uppercase tracking-wide" id="lang-btn">
+                            {{ lang }}
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span class="text-sm font-medium uppercase">{{ lang }}</span>
                         </button>
-                        <!-- Language Dropdown -->
-                        <div id="lang-menu" class="hidden absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 py-2 min-w-[140px] z-50">
-                            <a href="/set-language/uz" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'uz' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
-                                <span class="text-lg">🇺🇿</span>
-                                <span class="font-medium">O'zbekcha</span>
-                                {% if lang == 'uz' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
-                            </a>
-                            <a href="/set-language/ru" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'ru' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
-                                <span class="text-lg">🇷🇺</span>
-                                <span class="font-medium">Русский</span>
-                                {% if lang == 'ru' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
-                            </a>
-                            <a href="/set-language/en" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'en' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
-                                <span class="text-lg">🇬🇧</span>
-                                <span class="font-medium">English</span>
-                                {% if lang == 'en' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
-                            </a>
+                        <div id="lang-menu" class="hidden absolute right-0 top-full mt-2 bg-white border border-gray-100 shadow-lg py-1 min-w-[120px] z-50">
+                            <a href="/set-language/uz" class="block px-4 py-2 text-sm hover:bg-gray-50 {% if lang == 'uz' %}text-[#c9a96e]{% else %}text-gray-700{% endif %}">O'zbekcha</a>
+                            <a href="/set-language/ru" class="block px-4 py-2 text-sm hover:bg-gray-50 {% if lang == 'ru' %}text-[#c9a96e]{% else %}text-gray-700{% endif %}">Русский</a>
+                            <a href="/set-language/en" class="block px-4 py-2 text-sm hover:bg-gray-50 {% if lang == 'en' %}text-[#c9a96e]{% else %}text-gray-700{% endif %}">English</a>
                         </div>
                     </div>
-                    <!-- Til (Mobile) -->
-                    <div class="md:hidden relative" id="mobile-lang-dropdown">
-                        <button class="flex items-center gap-1 text-gray-600 hover:text-[#232339] transition p-2" id="mobile-lang-btn-header">
-                            <img src="/static/uploads/icons/global.svg" alt="Til" class="w-5 h-5">
-                            <span class="text-sm font-medium uppercase">{{ lang }}</span>
-                        </button>
-                        <!-- Language Dropdown -->
-                        <div id="mobile-lang-menu-header" class="hidden absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 py-2 min-w-[140px] z-50">
-                            <a href="/set-language/uz" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'uz' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
-                                <span class="text-lg">🇺🇿</span>
-                                <span class="font-medium">O'zbekcha</span>
-                                {% if lang == 'uz' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
-                            </a>
-                            <a href="/set-language/ru" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'ru' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
-                                <span class="text-lg">🇷🇺</span>
-                                <span class="font-medium">Русский</span>
-                                {% if lang == 'ru' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
-                            </a>
-                            <a href="/set-language/en" class="flex items-center gap-3 px-4 py-2.5 hover:bg-[#FAF9F6] transition {% if lang == 'en' %}bg-[#FAF9F6] text-[#232339]{% else %}text-gray-700{% endif %}">
-                                <span class="text-lg">🇬🇧</span>
-                                <span class="font-medium">English</span>
-                                {% if lang == 'en' %}<i class="fas fa-check text-[#232339] ml-auto"></i>{% endif %}
-                            </a>
-                        </div>
-                    </div>
-                    <!-- Savatcha (Desktop only) -->
-                    <a href="/cart" class="hidden md:flex text-gray-600 hover:text-[#232339] transition p-2 relative" title="Savatcha">
-                        <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19C19.2652 16 19.5196 15.8946 19.7071 15.7071C19.8946 15.5196 20 15.2652 20 15V9H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <!-- Cart -->
+                    <a href="/cart" class="p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         {% if cart_count > 0 %}
-                        <span class="absolute -top-1 -right-1 bg-[#232339] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium cart-badge">{{ cart_count }}</span>
+                        <span class="absolute -top-0.5 -right-0.5 bg-[#c9a96e] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-medium cart-badge">{{ cart_count }}</span>
                         {% endif %}
                     </a>
+                    
+                    <!-- Menu Button (Desktop & Mobile) -->
+                    <button class="p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition" id="menu-btn">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- Full Screen Menu -->
+    <div class="fixed inset-0 bg-white z-[60] hidden" id="full-menu">
+        <div class="h-full flex flex-col">
+            <!-- Menu Header -->
+            <div class="flex items-center justify-between px-4 lg:px-8 h-[70px] md:h-[80px] border-b border-gray-100">
+                <a href="/" class="flex-shrink-0">
+                    <img src="/uploads/designs/logo.png" alt="Furni Glass" class="h-8 md:h-9">
+                </a>
+                <button class="p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition" id="close-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Menu Content -->
+            <div class="flex-1 overflow-y-auto">
+                <div class="container mx-auto px-4 lg:px-8 py-8 lg:py-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16">
+                        <!-- Main Navigation -->
+                        <div class="lg:col-span-2">
+                            <nav class="space-y-4 lg:space-y-6">
+                                <a href="/" class="mobile-nav-link block">{{ T.nav.home[lang] }}</a>
+                                <a href="/products" class="mobile-nav-link block">{{ T.nav.products[lang] }}</a>
+                                <a href="/collections" class="mobile-nav-link block">{% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}</a>
+                                <a href="/portfolio" class="mobile-nav-link block">Portfolio</a>
+                                <a href="/interior-design" class="mobile-nav-link block">{% if lang == 'ru' %}Дизайн интерьера{% elif lang == 'en' %}Interior Design{% else %}Interer Dizayn{% endif %}</a>
+                                <a href="/about" class="mobile-nav-link block">{{ T.nav.about[lang] }}</a>
+                                <a href="/contact" class="mobile-nav-link block">{{ T.nav.contact[lang] }}</a>
+                            </nav>
+                        </div>
+                        
+                        <!-- Secondary Links -->
+                        <div class="border-t lg:border-t-0 lg:border-l border-gray-100 pt-8 lg:pt-0 lg:pl-16">
+                            <p class="text-xs font-medium uppercase tracking-wider text-gray-400 mb-6">{% if lang == 'ru' %}Другие страницы{% elif lang == 'en' %}Other Pages{% else %}Boshqa sahifalar{% endif %}</p>
+                            <nav class="space-y-4">
+                                <a href="/services" class="block text-gray-600 hover:text-[#1a1a2e] transition">{{ T.nav.services[lang] }}</a>
+                                <a href="/why-us" class="block text-gray-600 hover:text-[#1a1a2e] transition">{{ T.nav.why_us[lang] }}</a>
+                                <a href="/faq" class="block text-gray-600 hover:text-[#1a1a2e] transition">FAQ</a>
+                                <a href="/team" class="block text-gray-600 hover:text-[#1a1a2e] transition">{{ T.nav.team[lang] }}</a>
+                                <a href="/gallery" class="block text-gray-600 hover:text-[#1a1a2e] transition">{{ T.nav.gallery[lang] }}</a>
+                                <a href="/order" class="block text-gray-600 hover:text-[#1a1a2e] transition">{{ T.nav.order[lang] }}</a>
+                            </nav>
+                            
+                            <!-- Language Selector -->
+                            <div class="mt-8 pt-8 border-t border-gray-100 lg:hidden">
+                                <p class="text-xs font-medium uppercase tracking-wider text-gray-400 mb-4">{{ T.nav.language[lang] }}</p>
+                                <div class="flex gap-3">
+                                    <a href="/set-language/uz" class="px-4 py-2 text-sm border {% if lang == 'uz' %}border-[#1a1a2e] bg-[#1a1a2e] text-white{% else %}border-gray-200 text-gray-600 hover:border-gray-400{% endif %} transition">UZ</a>
+                                    <a href="/set-language/ru" class="px-4 py-2 text-sm border {% if lang == 'ru' %}border-[#1a1a2e] bg-[#1a1a2e] text-white{% else %}border-gray-200 text-gray-600 hover:border-gray-400{% endif %} transition">RU</a>
+                                    <a href="/set-language/en" class="px-4 py-2 text-sm border {% if lang == 'en' %}border-[#1a1a2e] bg-[#1a1a2e] text-white{% else %}border-gray-200 text-gray-600 hover:border-gray-400{% endif %} transition">EN</a>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Info -->
+                            <div class="mt-8 pt-8 border-t border-gray-100">
+                                <p class="text-xs font-medium uppercase tracking-wider text-gray-400 mb-4">{{ T.nav.contact[lang] }}</p>
+                                <a href="tel:+998901234567" class="block text-[#1a1a2e] font-medium mb-2">+998 90 123 45 67</a>
+                                <a href="mailto:info@furniglass.uz" class="block text-gray-600 text-sm">info@furniglass.uz</a>
+                                
+                                <div class="flex gap-3 mt-6">
+                                    <a href="#" class="w-10 h-10 border border-gray-200 flex items-center justify-center text-gray-600 hover:border-[#1a1a2e] hover:text-[#1a1a2e] transition">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="#" class="w-10 h-10 border border-gray-200 flex items-center justify-center text-gray-600 hover:border-[#1a1a2e] hover:text-[#1a1a2e] transition">
+                                        <i class="fab fa-telegram-plane"></i>
+                                    </a>
+                                    <a href="#" class="w-10 h-10 border border-gray-200 flex items-center justify-center text-gray-600 hover:border-[#1a1a2e] hover:text-[#1a1a2e] transition">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Mobile Bottom Navigation -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg">
-        <div class="flex items-center justify-around h-16 px-2">
-            <!-- Asosiy -->
-            <a href="/" class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 {% if request.endpoint == 'index' %}active{% endif %}">
-                <img src="/static/uploads/icons/home.svg" alt="Asosiy" class="w-6 h-6 mb-1">
-                <span class="text-xs font-medium">{{ T.nav.home[lang] }}</span>
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50">
+        <div class="flex items-center justify-around h-14">
+            <a href="/" class="bottom-nav-item flex flex-col items-center justify-center py-1.5 {% if request.endpoint == 'index' %}active{% endif %}">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-[10px]">{{ T.nav.home[lang] }}</span>
             </a>
-            <!-- Mahsulotlar -->
-            <a href="/products" class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 {% if request.endpoint == 'products' %}active{% endif %}">
-                <img src="/static/uploads/icons/shop.svg" alt="Mahsulotlar" class="w-6 h-6 mb-1">
-                <span class="text-xs font-medium">{{ T.nav.products[lang] }}</span>
+            <a href="/products" class="bottom-nav-item flex flex-col items-center justify-center py-1.5 {% if request.endpoint == 'products' %}active{% endif %}">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-[10px]">{{ T.nav.products[lang] }}</span>
             </a>
-            <!-- Savatcha -->
-            <a href="/cart" class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 relative {% if request.endpoint == 'cart' %}active{% endif %}">
+            <a href="/cart" class="bottom-nav-item flex flex-col items-center justify-center py-1.5 relative {% if request.endpoint == 'cart' %}active{% endif %}">
                 <div class="relative">
-                    <img src="/static/uploads/icons/shopping-cart.svg" alt="Savatcha" class="w-6 h-6 mb-1">
+                    <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     {% if cart_count > 0 %}
-                    <span class="absolute -top-2 -right-2 bg-[#232339] text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium cart-badge">{{ cart_count }}</span>
+                    <span class="absolute -top-1.5 -right-1.5 bg-[#c9a96e] text-white text-[9px] w-3.5 h-3.5 flex items-center justify-center rounded-full cart-badge">{{ cart_count }}</span>
                     {% endif %}
                 </div>
-                <span class="text-xs font-medium">{{ T.nav.cart[lang] }}</span>
+                <span class="text-[10px]">{{ T.nav.cart[lang] }}</span>
             </a>
-            <!-- Biz haqimizda -->
-            <a href="/about" class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 {% if request.endpoint == 'about' %}active{% endif %}">
-                <img src="/static/uploads/icons/bookmark.svg" alt="Biz haqimizda" class="w-6 h-6 mb-1">
-                <span class="text-xs font-medium">{{ T.nav.about[lang][:10] }}</span>
+            <a href="/portfolio" class="bottom-nav-item flex flex-col items-center justify-center py-1.5 {% if request.endpoint == 'portfolio' %}active{% endif %}">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-[10px]">Portfolio</span>
             </a>
-            <!-- Ko'proq -->
-            <button class="bottom-nav-item flex flex-col items-center justify-center py-2 px-3 {% if request.endpoint in ['services', 'portfolio', 'faq', 'contact', 'why_us', 'order', 'team', 'gallery'] %}active{% endif %}" id="more-menu-btn">
-                <img src="/static/uploads/icons/more-square.svg" alt="Ko'proq" class="w-6 h-6 mb-1">
-                <span class="text-xs font-medium">{{ T.nav.more[lang] }}</span>
-            </button>
+            <a href="/contact" class="bottom-nav-item flex flex-col items-center justify-center py-1.5 {% if request.endpoint == 'contact' %}active{% endif %}">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-[10px]">{{ T.nav.contact[lang] }}</span>
+            </a>
         </div>
     </nav>
 
-    <!-- Mobile More Menu -->
-    <div class="md:hidden fixed inset-0 bg-black/50 z-40 hidden" id="more-menu-overlay">
-        <div class="absolute bottom-16 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-4" id="more-menu">
-            <div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
-            <div class="grid grid-cols-3 gap-4">
-                <a href="/services" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
-                    <i class="fas fa-concierge-bell text-2xl text-[#232339] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.services[lang] }}</span>
-                </a>
-                <a href="/portfolio" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
-                    <i class="fas fa-images text-2xl text-[#232339] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.portfolio[lang] }}</span>
-                </a>
-                <a href="/gallery" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
-                    <i class="fas fa-camera text-2xl text-[#232339] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.gallery[lang] }}</span>
-                </a>
-                <a href="/team" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
-                    <i class="fas fa-users text-2xl text-[#232339] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.team[lang] }}</span>
-                </a>
-                <a href="/why-us" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
-                    <i class="fas fa-star text-2xl text-[#F5C242] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.why_us[lang][:12] }}</span>
-                </a>
-                <a href="/contact" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
-                    <i class="fas fa-phone text-2xl text-[#232339] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.contact[lang] }}</span>
-                </a>
-                <a href="/faq" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
-                    <i class="fas fa-question-circle text-2xl text-[#232339] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.faq[lang] }}</span>
-                </a>
-                <a href="/order" class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition">
-                    <i class="fas fa-paper-plane text-2xl text-[#232339] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.order[lang] }}</span>
-                </a>
-                <button class="flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 transition" id="mobile-lang-btn">
-                    <i class="fas fa-globe text-2xl text-[#232339] mb-2"></i>
-                    <span class="text-sm text-gray-700">{{ T.nav.language[lang] }}</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Mobile Language Modal -->
-    <div class="md:hidden fixed inset-0 bg-black/50 z-50 hidden" id="mobile-lang-modal">
-        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl p-6">
-            <div class="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4"></div>
-            <h3 class="text-lg font-bold text-center mb-4">{{ T.nav.language[lang] }}</h3>
-            <div class="space-y-2">
-                <a href="/set-language/uz" class="flex items-center gap-4 p-4 rounded-xl {% if lang == 'uz' %}bg-[#232339] text-white{% else %}bg-[#FAF9F6] text-gray-700{% endif %} transition">
-                    <span class="text-2xl">🇺🇿</span>
-                    <span class="font-medium">O'zbekcha</span>
-                    {% if lang == 'uz' %}<i class="fas fa-check ml-auto"></i>{% endif %}
-                </a>
-                <a href="/set-language/ru" class="flex items-center gap-4 p-4 rounded-xl {% if lang == 'ru' %}bg-[#232339] text-white{% else %}bg-[#FAF9F6] text-gray-700{% endif %} transition">
-                    <span class="text-2xl">🇷🇺</span>
-                    <span class="font-medium">Русский</span>
-                    {% if lang == 'ru' %}<i class="fas fa-check ml-auto"></i>{% endif %}
-                </a>
-                <a href="/set-language/en" class="flex items-center gap-4 p-4 rounded-xl {% if lang == 'en' %}bg-[#232339] text-white{% else %}bg-[#FAF9F6] text-gray-700{% endif %} transition">
-                    <span class="text-2xl">🇬🇧</span>
-                    <span class="font-medium">English</span>
-                    {% if lang == 'en' %}<i class="fas fa-check ml-auto"></i>{% endif %}
-                </a>
-            </div>
-        </div>
-    </div>
-
     <!-- Search Modal -->
-    <div id="search-modal" class="fixed inset-0 z-50 hidden search-modal">
-        <div class="absolute inset-0 bg-black/40" id="search-overlay"></div>
-        <div class="absolute top-0 left-0 right-0 bg-white shadow-2xl">
-            <div class="container mx-auto px-4 py-6">
-                <!-- Search Input -->
-                <div class="relative mb-6">
-                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
+    <div id="search-modal" class="fixed inset-0 z-[70] hidden search-modal">
+        <div class="absolute inset-0 bg-black/30" id="search-overlay"></div>
+        <div class="absolute top-0 left-0 right-0 bg-white shadow-xl">
+            <div class="container mx-auto px-4 lg:px-8 py-6">
+                <div class="relative">
                     <input type="text" 
                            id="search-input" 
-                           placeholder="{% if lang == 'ru' %}Поиск продуктов, категорий...{% elif lang == 'en' %}Search products, categories...{% else %}Mahsulot, kategoriya yoki boshqa narsani qidiring...{% endif %}" 
-                           class="w-full pl-12 pr-12 py-4 text-lg border-0 border-b-2 border-gray-200 focus:border-[#232339] outline-none bg-transparent"
+                           placeholder="{% if lang == 'ru' %}Что вы ищете?{% elif lang == 'en' %}What are you looking for?{% else %}Nima qidiryapsiz?{% endif %}" 
+                           class="w-full py-4 text-xl font-light border-b-2 border-gray-200 focus:border-[#1a1a2e] outline-none bg-transparent pr-12"
+                           style="font-family: var(--font-display);"
                            autocomplete="off">
-                    <button id="close-search" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-2">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <button id="close-search" class="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
                 
-                <!-- Search Results -->
-                <div id="search-results" class="max-h-[60vh] overflow-y-auto">
-                    <div id="search-loading" class="hidden text-center py-12">
-                        <div class="inline-block w-8 h-8 border-4 border-[#232339] border-t-transparent rounded-full search-loading"></div>
-                        <p class="mt-4 text-gray-500">{% if lang == 'ru' %}Поиск...{% elif lang == 'en' %}Searching...{% else %}Qidirilmoqda...{% endif %}</p>
+                <div id="search-results" class="mt-6 max-h-[60vh] overflow-y-auto">
+                    <div id="search-loading" class="hidden text-center py-8">
+                        <div class="inline-block w-6 h-6 border-2 border-[#1a1a2e] border-t-transparent rounded-full animate-spin"></div>
                     </div>
-                    
-                    <div id="search-empty" class="hidden text-center py-12">
-                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <p class="text-gray-500">{% if lang == 'ru' %}Ничего не найдено{% elif lang == 'en' %}Nothing found{% else %}Hech narsa topilmadi{% endif %}</p>
-                        <p class="text-sm text-gray-400 mt-2">{% if lang == 'ru' %}Попробуйте другой запрос{% elif lang == 'en' %}Try another search{% else %}Boshqa so'z bilan qidiring{% endif %}</p>
+                    <div id="search-empty" class="hidden text-center py-8 text-gray-500">
+                        {% if lang == 'ru' %}Ничего не найдено{% elif lang == 'en' %}Nothing found{% else %}Hech narsa topilmadi{% endif %}
                     </div>
-                    
-                    <div id="search-content" class="space-y-6">
-                        <!-- Results will be inserted here -->
-                    </div>
+                    <div id="search-content"></div>
                 </div>
             </div>
         </div>
@@ -384,7 +360,7 @@
         {% if messages %}
             <div class="container mx-auto px-4 mt-4">
                 {% for category, message in messages %}
-                    <div class="p-4 rounded-lg mb-4 {% if category == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">
+                    <div class="p-4 mb-4 {% if category == 'error' %}bg-red-50 text-red-800 border-l-4 border-red-500{% else %}bg-green-50 text-green-800 border-l-4 border-green-500{% endif %}">
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -396,138 +372,152 @@
     {% block content %}{% endblock %}
 
     <!-- Footer -->
-    <footer class="bg-[#232339] text-white mt-16 mb-16 md:mb-0">
-        <div class="container mx-auto px-6 lg:px-16 py-10">
-            <!-- 1-qator: Logo -->
-            <div class="mb-8">
-                <img src="/uploads/designs/Logo-white.png" alt="Furni Glass" class="h-10 md:h-12">
-            </div>
-            
-            <!-- 2-qator: Tafsif | Obuna | Rasm bir tekisda -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-                <!-- Tafsif -->
+    <footer class="bg-[#1a1a2e] text-white mt-0 mb-14 md:mb-0">
+        <div class="container mx-auto px-4 lg:px-8">
+            <!-- Main Footer -->
+            <div class="py-16 lg:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+                <!-- Brand -->
                 <div>
-                    <p class="text-white/70 text-sm leading-relaxed">
+                    <img src="/uploads/designs/Logo-white.png" alt="Furni Glass" class="h-8 mb-6">
+                    <p class="text-white/50 text-sm leading-relaxed mb-6">
                         {{ T.footer.description[lang] }}
                     </p>
-                </div>
-                
-                <!-- Obuna bo'ling -->
-                <div class="md:flex md:justify-center">
-                    <div>
-                    <h4 class="text-lg font-semibold mb-4 text-white">{{ T.common.subscribe[lang] }}</h4>
                     <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 bg-white/70 hover:bg-white rounded-full flex items-center justify-center transition">
-                            <i class="fab fa-facebook-f text-[#232339]"></i>
+                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#c9a96e] hover:text-[#c9a96e] transition">
+                            <i class="fab fa-instagram text-sm"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-white/70 hover:bg-white rounded-full flex items-center justify-center transition">
-                            <i class="fab fa-instagram text-[#232339]"></i>
+                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#c9a96e] hover:text-[#c9a96e] transition">
+                            <i class="fab fa-telegram-plane text-sm"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-white/70 hover:bg-white rounded-full flex items-center justify-center transition">
-                            <i class="fab fa-telegram-plane text-[#232339]"></i>
+                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#c9a96e] hover:text-[#c9a96e] transition">
+                            <i class="fab fa-facebook-f text-sm"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-white/70 hover:bg-white rounded-full flex items-center justify-center transition">
-                            <i class="fab fa-youtube text-[#232339]"></i>
-                        </a>
-                        </div>
                     </div>
                 </div>
                 
-                <!-- Rasm -->
-                <div class="flex justify-center md:justify-end items-start">
-                    <img src="/uploads/designs/Frame 55.png" alt="Furni Glass Furniture" class="h-40 md:h-48 object-contain md:-mt-20">
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-xs font-medium uppercase tracking-wider mb-6">{{ T.footer.quick_links[lang] }}</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/products" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{{ T.nav.products[lang] }}</a></li>
+                        <li><a href="/collections" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}</a></li>
+                        <li><a href="/portfolio" class="text-white/50 hover:text-[#c9a96e] text-sm transition">Portfolio</a></li>
+                        <li><a href="/about" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{{ T.nav.about[lang] }}</a></li>
+                        <li><a href="/faq" class="text-white/50 hover:text-[#c9a96e] text-sm transition">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Services -->
+                <div>
+                    <h4 class="text-xs font-medium uppercase tracking-wider mb-6">{{ T.footer.our_services[lang] }}</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/interior-design" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}Дизайн интерьера{% elif lang == 'en' %}Interior Design{% else %}Interer dizayn{% endif %}</a></li>
+                        <li><a href="/services" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</a></li>
+                        <li><a href="/order" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Maxsus buyurtma{% endif %}</a></li>
+                        <li><a href="/services" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib berish{% endif %}</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-xs font-medium uppercase tracking-wider mb-6">{{ T.footer.contact_info[lang] }}</h4>
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="tel:+998901234567" class="flex items-center gap-3 text-white/50 hover:text-[#c9a96e] text-sm transition">
+                                <i class="fas fa-phone text-xs"></i>
+                                +998 90 123 45 67
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:info@furniglass.uz" class="flex items-center gap-3 text-white/50 hover:text-[#c9a96e] text-sm transition">
+                                <i class="fas fa-envelope text-xs"></i>
+                                info@furniglass.uz
+                            </a>
+                        </li>
+                        <li class="flex items-start gap-3 text-white/50 text-sm">
+                            <i class="fas fa-map-marker-alt text-xs mt-1"></i>
+                            <span>Toshkent, Yunusobod tumani</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
             
             <!-- Bottom Bar -->
-            <div class="flex flex-row justify-between items-center mt-10 pt-0 text-sm">
-                <p class="text-white/70">Copyright © 2025 Furni Glass. {{ T.footer.copyright[lang] }}</p>
-                <div class="flex gap-4 md:gap-8">
-                    <a href="#" class="text-white/70 hover:text-white transition text-xs md:text-sm">{{ T.footer.terms[lang] }}</a>
-                    <a href="#" class="text-white/70 hover:text-white transition text-xs md:text-sm">{{ T.footer.privacy[lang] }}</a>
+            <div class="border-t border-white/10 py-6">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-white/30 text-sm">© 2025 Furni Glass. {{ T.footer.copyright[lang] }}</p>
+                    <div class="flex gap-6">
+                        <a href="#" class="text-white/30 hover:text-white/60 text-sm transition">{{ T.footer.terms[lang] }}</a>
+                        <a href="#" class="text-white/30 hover:text-white/60 text-sm transition">{{ T.footer.privacy[lang] }}</a>
+                    </div>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Header hide/show on scroll - improved with longer scroll thresholds
+        // Header scroll effect
         const header = document.getElementById('main-header');
         let lastScrollY = window.scrollY;
-        let scrollDeltaDown = 0; // Pastga scroll qilish uchun delta
-        let scrollDeltaUp = 0; // Yuqoriga scroll qilish uchun delta
-        let lastScrollDirection = null; // 'down' yoki 'up'
-        let ticking = false;
-        const SCROLL_THRESHOLD_DOWN = 250; // Pastga scroll qilish uchun minimum px (uzunroq)
-        const SCROLL_THRESHOLD_UP = 300; // Yuqoriga scroll qilish uchun minimum px (uzunroq)
+        let scrollDelta = 0;
+        const THRESHOLD = 100;
         
-        function updateHeader() {
+        window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
-            const scrollDifference = Math.abs(currentScrollY - lastScrollY);
-            const isScrollingDown = currentScrollY > lastScrollY;
-            const isScrollingUp = currentScrollY < lastScrollY;
             
-            // Scroll direction o'zgarganda delta larni qayta tiklash
-            if (lastScrollDirection !== null && 
-                ((isScrollingDown && lastScrollDirection === 'up') || 
-                 (isScrollingUp && lastScrollDirection === 'down'))) {
-                scrollDeltaDown = 0;
-                scrollDeltaUp = 0;
+            if (currentScrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
             
-            if (isScrollingDown && currentScrollY > 100) {
-                // Pastga scroll qilmoqda
-                scrollDeltaDown += scrollDifference;
-                scrollDeltaUp = 0; // Yuqoriga scroll delta ni tozalash
-                lastScrollDirection = 'down';
-                
-                if (scrollDeltaDown >= SCROLL_THRESHOLD_DOWN) {
-                    // Scrolling down - hide header
+            if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                scrollDelta += currentScrollY - lastScrollY;
+                if (scrollDelta > THRESHOLD) {
                     header.classList.add('header-hidden');
-                    header.classList.remove('header-visible');
                 }
-            } else if (isScrollingUp) {
-                // Yuqoriga scroll qilmoqda
-                scrollDeltaUp += scrollDifference;
-                scrollDeltaDown = 0; // Pastga scroll delta ni tozalash
-                lastScrollDirection = 'up';
-                
-                if (scrollDeltaUp >= SCROLL_THRESHOLD_UP || currentScrollY <= 50) {
-                    // Scrolling up - show header
-                    header.classList.remove('header-hidden');
-                    header.classList.add('header-visible');
-                }
-            } else if (currentScrollY <= 50) {
-                // Sahifa tepasida - header ko'rsatish
+            } else {
+                scrollDelta = 0;
                 header.classList.remove('header-hidden');
-                header.classList.add('header-visible');
-                scrollDeltaDown = 0;
-                scrollDeltaUp = 0;
             }
             
             lastScrollY = currentScrollY;
-            ticking = false;
-        }
-        
-        window.addEventListener('scroll', function() {
-            if (!ticking) {
-                window.requestAnimationFrame(updateHeader);
-                ticking = true;
-            }
         });
 
-        // Mobile More Menu toggle
-        const moreMenuBtn = document.getElementById('more-menu-btn');
-        const moreMenuOverlay = document.getElementById('more-menu-overlay');
+        // Full menu
+        const menuBtn = document.getElementById('menu-btn');
+        const fullMenu = document.getElementById('full-menu');
+        const closeMenu = document.getElementById('close-menu');
         
-        moreMenuBtn?.addEventListener('click', function() {
-            moreMenuOverlay.classList.remove('hidden');
+        menuBtn?.addEventListener('click', () => {
+            fullMenu.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         });
         
-        moreMenuOverlay?.addEventListener('click', function(e) {
-            if (e.target === moreMenuOverlay) {
-                moreMenuOverlay.classList.add('hidden');
-            }
+        closeMenu?.addEventListener('click', () => {
+            fullMenu.classList.add('hidden');
+            document.body.style.overflow = '';
+        });
+        
+        // Close menu when clicking on links
+        fullMenu?.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                fullMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Language dropdown
+        const langBtn = document.getElementById('lang-btn');
+        const langMenu = document.getElementById('lang-menu');
+        
+        langBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langMenu.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', () => {
+            langMenu?.classList.add('hidden');
         });
 
         // Search functionality
@@ -536,46 +526,34 @@
         const closeSearch = document.getElementById('close-search');
         const searchOverlay = document.getElementById('search-overlay');
         const searchInput = document.getElementById('search-input');
-        const searchResults = document.getElementById('search-results');
         const searchContent = document.getElementById('search-content');
         const searchLoading = document.getElementById('search-loading');
         const searchEmpty = document.getElementById('search-empty');
         
         let searchTimeout = null;
         
-        // Open search modal
-        searchBtn?.addEventListener('click', function() {
+        searchBtn?.addEventListener('click', () => {
             searchModal.classList.remove('hidden');
             setTimeout(() => searchInput.focus(), 100);
         });
         
-        // Close search modal
-        closeSearch?.addEventListener('click', closeSearchModal);
-        searchOverlay?.addEventListener('click', closeSearchModal);
-        
-        function closeSearchModal() {
+        const closeSearchModal = () => {
             searchModal.classList.add('hidden');
             searchInput.value = '';
             searchContent.innerHTML = '';
             searchLoading.classList.add('hidden');
             searchEmpty.classList.add('hidden');
-        }
+        };
         
-        // ESC key to close
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !searchModal.classList.contains('hidden')) {
-                closeSearchModal();
-            }
+        closeSearch?.addEventListener('click', closeSearchModal);
+        searchOverlay?.addEventListener('click', closeSearchModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSearchModal();
         });
         
-        // Search on input
         searchInput?.addEventListener('input', function() {
             const query = this.value.trim();
-            
-            // Clear previous timeout
-            if (searchTimeout) {
-                clearTimeout(searchTimeout);
-            }
+            if (searchTimeout) clearTimeout(searchTimeout);
             
             if (query.length < 2) {
                 searchContent.innerHTML = '';
@@ -584,12 +562,10 @@
                 return;
             }
             
-            // Show loading
             searchLoading.classList.remove('hidden');
             searchEmpty.classList.add('hidden');
             searchContent.innerHTML = '';
             
-            // Debounce search
             searchTimeout = setTimeout(async () => {
                 try {
                     const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
@@ -597,139 +573,30 @@
                     
                     searchLoading.classList.add('hidden');
                     
-                    if (data.products.length === 0 && data.categories.length === 0 && data.portfolios.length === 0) {
+                    if (!data.products.length && !data.categories.length) {
                         searchEmpty.classList.remove('hidden');
                         return;
                     }
                     
-                    searchEmpty.classList.add('hidden');
-                    
                     let html = '';
-                    
-                    // Products
-                    if (data.products.length > 0) {
-                        html += '<div class="mb-6"><h3 class="text-sm font-semibold text-gray-500 uppercase mb-3">Mahsulotlar</h3><div class="space-y-2">';
-                        data.products.forEach(product => {
-                            html += `
-                                <a href="${product.url}" class="search-result-item flex items-center gap-4 p-3 rounded-xl bg-white border border-gray-100">
-                                    <div class="w-16 h-16 bg-[#FAFAFA] rounded-lg overflow-hidden flex-shrink-0">
-                                        ${product.image ? 
-                                            `<img src="/uploads/${product.image}" alt="${product.name}" class="w-full h-full object-contain">` :
-                                            `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-image text-gray-300"></i></div>`
-                                        }
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="font-medium text-[#232339] truncate">${product.name}</p>
-                                        ${product.category ? `<p class="text-xs text-gray-400">${product.category}</p>` : ''}
-                                        <p class="text-sm font-semibold text-[#232339] mt-1">${new Intl.NumberFormat('uz-UZ').format(product.price)} so'm</p>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-300"></i>
-                                </a>
-                            `;
+                    if (data.products.length) {
+                        html += '<div class="mb-6"><p class="text-xs uppercase tracking-wider text-gray-400 mb-3">{% if lang == "ru" %}Продукты{% elif lang == "en" %}Products{% else %}Mahsulotlar{% endif %}</p><div class="space-y-2">';
+                        data.products.forEach(p => {
+                            html += `<a href="${p.url}" class="flex items-center gap-4 p-3 hover:bg-gray-50 transition">
+                                <div class="w-14 h-14 bg-gray-100 flex-shrink-0">${p.image ? `<img src="/uploads/${p.image}" class="w-full h-full object-contain">` : ''}</div>
+                                <div class="flex-1"><p class="font-medium text-[#1a1a2e]">${p.name}</p><p class="text-sm text-gray-500">${new Intl.NumberFormat('uz-UZ').format(p.price)} so'm</p></div>
+                            </a>`;
                         });
                         html += '</div></div>';
                     }
-                    
-                    // Categories
-                    if (data.categories.length > 0) {
-                        html += '<div class="mb-6"><h3 class="text-sm font-semibold text-gray-500 uppercase mb-3">Kategoriyalar</h3><div class="space-y-2">';
-                        data.categories.forEach(category => {
-                            html += `
-                                <a href="${category.url}" class="search-result-item flex items-center gap-4 p-3 rounded-xl bg-white border border-gray-100">
-                                    <div class="w-16 h-16 bg-[#FAFAFA] rounded-lg overflow-hidden flex-shrink-0">
-                                        ${category.image ? 
-                                            `<img src="/uploads/${category.image}" alt="${category.name}" class="w-full h-full object-cover">` :
-                                            `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-folder text-gray-300"></i></div>`
-                                        }
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium text-[#232339]">${category.name}</p>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-300"></i>
-                                </a>
-                            `;
-                        });
-                        html += '</div></div>';
-                    }
-                    
-                    // Portfolios
-                    if (data.portfolios.length > 0) {
-                        html += '<div class="mb-6"><h3 class="text-sm font-semibold text-gray-500 uppercase mb-3">Portfolio</h3><div class="space-y-2">';
-                        data.portfolios.forEach(portfolio => {
-                            html += `
-                                <a href="${portfolio.url}" class="search-result-item flex items-center gap-4 p-3 rounded-xl bg-white border border-gray-100">
-                                    <div class="w-16 h-16 bg-[#FAFAFA] rounded-lg overflow-hidden flex-shrink-0">
-                                        ${portfolio.image ? 
-                                            `<img src="/uploads/${portfolio.image}" alt="${portfolio.title}" class="w-full h-full object-cover">` :
-                                            `<div class="w-full h-full flex items-center justify-center"><i class="fas fa-images text-gray-300"></i></div>`
-                                        }
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="font-medium text-[#232339]">${portfolio.title}</p>
-                                    </div>
-                                    <i class="fas fa-chevron-right text-gray-300"></i>
-                                </a>
-                            `;
-                        });
-                        html += '</div></div>';
-                    }
-                    
                     searchContent.innerHTML = html;
-                    
-                } catch (error) {
-                    console.error('Search error:', error);
+                } catch (e) {
                     searchLoading.classList.add('hidden');
                     searchEmpty.classList.remove('hidden');
                 }
-            }, 300); // 300ms debounce
-        });
-
-        // Desktop Language Dropdown
-        const langBtn = document.getElementById('lang-btn');
-        const langMenu = document.getElementById('lang-menu');
-        
-        langBtn?.addEventListener('click', function(e) {
-            e.stopPropagation();
-            langMenu.classList.toggle('hidden');
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (langMenu && !langMenu.contains(e.target) && e.target !== langBtn) {
-                langMenu.classList.add('hidden');
-            }
-        });
-
-        // Mobile Language Dropdown (Header)
-        const mobileLangBtnHeader = document.getElementById('mobile-lang-btn-header');
-        const mobileLangMenuHeader = document.getElementById('mobile-lang-menu-header');
-        
-        mobileLangBtnHeader?.addEventListener('click', function(e) {
-            e.stopPropagation();
-            mobileLangMenuHeader.classList.toggle('hidden');
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (mobileLangMenuHeader && !mobileLangMenuHeader.contains(e.target) && e.target !== mobileLangBtnHeader) {
-                mobileLangMenuHeader.classList.add('hidden');
-            }
-        });
-
-        // Mobile Language Modal
-        const mobileLangBtn = document.getElementById('mobile-lang-btn');
-        const mobileLangModal = document.getElementById('mobile-lang-modal');
-        
-        mobileLangBtn?.addEventListener('click', function() {
-            moreMenuOverlay.classList.add('hidden');
-            mobileLangModal.classList.remove('hidden');
-        });
-        
-        mobileLangModal?.addEventListener('click', function(e) {
-            if (e.target === mobileLangModal) {
-                mobileLangModal.classList.add('hidden');
-            }
+            }, 300);
         });
     </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
-

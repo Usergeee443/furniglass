@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Furni Glass - {% if lang == 'ru' %}Комнаты{% elif lang == 'en' %}Rooms{% else %}Xonalar{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-[#FAF9F6] py-16 lg:py-24">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-6" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Комнаты{% elif lang == 'en' %}Rooms{% else %}Xonalar{% endif %}
+            </h1>
+        </div>
+    </div>
+</section>
+
+<!-- Room Types Filter -->
+<section class="py-8 bg-white border-b">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="flex flex-wrap items-center justify-center gap-2">
+            <a href="/rooms" class="px-5 py-2  text-sm font-medium transition-all {% if room_type == 'all' %}bg-[#232339] text-white{% else %}bg-[#F5F5F5] text-gray-700 hover:bg-gray-200{% endif %}">
+                {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
+            </a>
+            {% for key, names in room_types.items() %}
+            <a href="/rooms?type={{ key }}" class="px-5 py-2  text-sm font-medium transition-all {% if room_type == key %}bg-[#232339] text-white{% else %}bg-[#F5F5F5] text-gray-700 hover:bg-gray-200{% endif %}">
+                {{ names[lang] }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Portfolios Grid -->
+<section class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {% for portfolio in portfolios %}
+            <a href="/portfolio" class="group">
+                <div class="bg-white  overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+                    {% if portfolio.after_image %}
+                    <div class="aspect-[4/3] relative overflow-hidden">
+                        <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.get_title(lang) }}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    {% endif %}
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-[#232339] mb-2">{{ portfolio.get_title(lang) }}</h3>
+                        <p class="text-gray-600 text-sm line-clamp-2">{{ portfolio.get_description(lang)[:100] }}...</p>
+                    </div>
+                </div>
+            </a>
+            {% else %}
+            <div class="col-span-full text-center py-12">
+                <p class="text-gray-500">{% if lang == 'ru' %}Проекты скоро появятся{% elif lang == 'en' %}Projects coming soon{% else %}Loyihalar tez orada{% endif %}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+

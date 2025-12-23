@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Furni Glass - {% if lang == 'ru' %}Дизайн Услуги{% elif lang == 'en' %}Interior Design Service{% else %}Interyer Dizayn Xizmati{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-[#FAF9F6] py-16 lg:py-24">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] mb-6" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Интерьер Дизайн Услуги{% elif lang == 'en' %}Interior Design Service{% else %}Interyer Dizayn Xizmati{% endif %}
+            </h1>
+            <p class="text-gray-600 text-lg md:text-xl leading-relaxed">
+                {% if lang == 'ru' %}Мы помогли тысячам довольных клиентов. Наш опыт в дизайне комнат, цвете, материалах и текстурах поможет вам преобразить ваш дом.{% elif lang == 'en' %}We have helped thousands of happy customers. Our expertise in room design, color, material and texture helps you transform your home.{% else %}Biz minglab mamnun mijozlarga yordam berdik. Xona dizayni, rang, material va tekstura bo'yicha bilimimiz uyingizni o'zgartirishga yordam beradi.{% endif %}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Form Section -->
+<section class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white  shadow-lg p-8 lg:p-12">
+                <h2 class="text-2xl md:text-3xl font-bold text-[#232339] mb-6">
+                    {% if lang == 'ru' %}Заполните форму{% elif lang == 'en' %}Fill out the form{% else %}Formani to'ldiring{% endif %}
+                </h2>
+                
+                <form method="POST" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your Name{% else %}Ismingiz{% endif %} *
+                        </label>
+                        <input type="text" name="name" required 
+                               class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} *
+                        </label>
+                        <input type="tel" name="phone" required 
+                               class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition"
+                               placeholder="+998 __ ___ __ __">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Email{% elif lang == 'en' %}Email{% else %}Email{% endif %}
+                        </label>
+                        <input type="email" name="email" 
+                               class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Тип комнаты{% elif lang == 'en' %}Room Type{% else %}Xona turi{% endif %}
+                        </label>
+                        <select name="room_type" 
+                                class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                            <option value="">{% if lang == 'ru' %}Выберите{% elif lang == 'en' %}Select{% else %}Tanlang{% endif %}</option>
+                            <option value="living">{% if lang == 'ru' %}Гостиная{% elif lang == 'en' %}Living Room{% else %}Zal{% endif %}</option>
+                            <option value="dining">{% if lang == 'ru' %}Столовая{% elif lang == 'en' %}Dining Room{% else %}Oshxona{% endif %}</option>
+                            <option value="bedroom">{% if lang == 'ru' %}Спальня{% elif lang == 'en' %}Bedroom{% else %}Yotoqxona{% endif %}</option>
+                            <option value="office">{% if lang == 'ru' %}Офис{% elif lang == 'en' %}Home Office{% else %}Ofis{% endif %}</option>
+                            <option value="outdoor">{% if lang == 'ru' %}Наружное пространство{% elif lang == 'en' %}Outdoor{% else %}Tashqi maydon{% endif %}</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Бюджет{% elif lang == 'en' %}Budget{% else %}Byudjet{% endif %}
+                        </label>
+                        <select name="budget" 
+                                class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                            <option value="">{% if lang == 'ru' %}Выберите{% elif lang == 'en' %}Select{% else %}Tanlang{% endif %}</option>
+                            <option value="low">{% if lang == 'ru' %}До 5 000 000 сум{% elif lang == 'en' %}Up to $500{% else %}5 000 000 so'mgacha{% endif %}</option>
+                            <option value="medium">{% if lang == 'ru' %}5 000 000 - 15 000 000 сум{% elif lang == 'en' %}$500 - $1,500{% else %}5 000 000 - 15 000 000 so'm{% endif %}</option>
+                            <option value="high">{% if lang == 'ru' %}15 000 000+ сум{% elif lang == 'en' %}$1,500+{% else %}15 000 000+ so'm{% endif %}</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">
+                            {% if lang == 'ru' %}Сообщение{% elif lang == 'en' %}Message{% else %}Xabar{% endif %}
+                        </label>
+                        <textarea name="message" rows="4" 
+                                  class="w-full bg-[#F5F5F5] border-0  px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition resize-none"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-[#232339] hover:bg-black text-white py-4  font-semibold transition-all">
+                        {% if lang == 'ru' %}Отправить{% elif lang == 'en' %}Submit{% else %}Yuborish{% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

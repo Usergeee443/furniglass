@@ -4,243 +4,223 @@
 
 {% block extra_css %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-    .hero-title {
-        font-family: 'Playfair Display', serif;
-    }
-    .feature-card {
-        transition: all 0.4s ease;
-    }
-    .feature-card:hover {
-        transform: translateY(-8px);
-    }
-    .feature-card:hover .feature-icon {
-        transform: scale(1.1);
-    }
-    .feature-icon {
-        transition: all 0.4s ease;
-    }
-    .process-line {
-        position: absolute;
-        top: 40px;
-        left: 50%;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, #232339 0%, #e5e7eb 100%);
-    }
-    @media (max-width: 768px) {
-        .process-line {
-            display: none;
-        }
-    }
+    .feature-card { transition: all 0.4s ease; }
+    .feature-card:hover { transform: translateY(-8px); border-color: #1a1a2e; }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-[#FAF9F6] py-20 lg:py-28">
-    <div class="container mx-auto px-4">
+<section class="relative bg-white py-20 lg:py-28">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 bg-[#232339]/10 text-[#232339] px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <i class="fas fa-star"></i>
-                {{ T.nav.why_us[lang] }}
+            <!-- Breadcrumb -->
+            <div class="flex items-center justify-center gap-2 text-sm text-gray-400 mb-8">
+                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
+                <span>/</span>
+                <span class="text-[#1a1a2e]">{{ T.nav.why_us[lang] }}</span>
             </div>
             
-            <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] leading-tight mb-6">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] leading-tight mb-6 font-display">
                 {% if lang == 'ru' %}Качество и Доверие<br>На Первом Месте{% elif lang == 'en' %}Quality and Trust<br>Come First{% else %}Sifat va Ishonch<br>Birinchi O'rinda{% endif %}
             </h1>
             
             <p class="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-                10 yildan ortiq tajriba, minglab mamnun mijozlar va yuqori sifatli mahsulotlar - 
-                biz sizning ishonchingizni oqlashga tayyor.
+                {% if lang == 'ru' %}
+                10 лет опыта, тысячи довольных клиентов и высококачественная продукция - мы готовы оправдать ваше доверие.
+                {% elif lang == 'en' %}
+                10 years of experience, thousands of satisfied customers and high-quality products - we're ready to earn your trust.
+                {% else %}
+                10 yildan ortiq tajriba, minglab mamnun mijozlar va yuqori sifatli mahsulotlar - biz sizning ishonchingizni oqlashga tayyor.
+                {% endif %}
             </p>
         </div>
     </div>
 </section>
 
 <!-- Stats Section -->
-<section class="bg-[#232339] py-16 lg:py-20">
-    <div class="container mx-auto px-4">
+<section class="bg-[#1a1a2e] py-16 lg:py-20">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
             <div class="text-center">
-                <p class="text-4xl md:text-5xl font-bold text-white mb-2">10+</p>
-                <p class="text-white/70">Yillik tajriba</p>
+                <p class="text-4xl md:text-5xl font-bold text-white mb-2 font-display">15+</p>
+                <p class="text-white/50">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years experience{% else %}Yillik tajriba{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl md:text-5xl font-bold text-white mb-2">500+</p>
-                <p class="text-white/70">Bajarilgan loyihalar</p>
+                <p class="text-4xl md:text-5xl font-bold text-white mb-2 font-display">2500+</p>
+                <p class="text-white/50">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Bajarilgan loyihalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl md:text-5xl font-bold text-white mb-2">1000+</p>
-                <p class="text-white/70">Mamnun mijozlar</p>
+                <p class="text-4xl md:text-5xl font-bold text-white mb-2 font-display">5000+</p>
+                <p class="text-white/50">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Customers{% else %}Mamnun mijozlar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl md:text-5xl font-bold text-white mb-2">100%</p>
-                <p class="text-white/70">Sifat kafolati</p>
+                <p class="text-4xl md:text-5xl font-bold text-white mb-2 font-display">100%</p>
+                <p class="text-white/50">{% if lang == 'ru' %}Гарантия{% elif lang == 'en' %}Guarantee{% else %}Sifat kafolati{% endif %}</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Features Section -->
-<section class="py-20 lg:py-28 bg-white">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-4">
-                Bizni tanlashingiz uchun sabablar
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4 font-display">
+                {% if lang == 'ru' %}Причины выбрать нас{% elif lang == 'en' %}Reasons to choose us{% else %}Bizni tanlashingiz uchun sabablar{% endif %}
             </h2>
             <p class="text-gray-600 text-lg">
-                Biz nafaqat mebel ishlab chiqaramiz - biz sizning orzularingizni amalga oshiramiz
+                {% if lang == 'ru' %}Мы не просто производим мебель - мы воплощаем ваши мечты{% elif lang == 'en' %}We don't just make furniture - we bring your dreams to life{% else %}Biz nafaqat mebel ishlab chiqaramiz - biz sizning orzularingizni amalga oshiramiz{% endif %}
             </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             <!-- Feature 1 -->
-            <div class="feature-card bg-[#FAF9F6] rounded-3xl p-8">
-                <div class="feature-icon w-16 h-16 bg-[#232339] rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fas fa-gem text-white text-2xl"></i>
+            <div class="feature-card bg-white p-8 border border-gray-100">
+                <div class="w-14 h-14 bg-[#1a1a2e] flex items-center justify-center mb-6">
+                    <i class="fas fa-gem text-white text-xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-[#232339] mb-3">Premium Materiallar</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-3 font-display">{% if lang == 'ru' %}Премиум Материалы{% elif lang == 'en' %}Premium Materials{% else %}Premium Materiallar{% endif %}</h3>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    Biz faqat eng yuqori sifatli materiallardan foydalanamiz. Import qilingan yog'och, shisha va furnituralardan foydalanib, uzoq umr ko'radigan mahsulotlar yaratamiz.
+                    {% if lang == 'ru' %}Мы используем только высококачественные материалы. Импортная древесина, стекло и фурнитура для долговечной продукции.{% elif lang == 'en' %}We use only the highest quality materials. Imported wood, glass and hardware for long-lasting products.{% else %}Biz faqat eng yuqori sifatli materiallardan foydalanamiz. Import qilingan yog'och, shisha va furnituralardan foydalanib, uzoq umr ko'radigan mahsulotlar yaratamiz.{% endif %}
                 </p>
                 <ul class="space-y-2 text-sm text-gray-500">
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Import qilingan yog'och
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Импортная древесина{% elif lang == 'en' %}Imported wood{% else %}Import qilingan yog'och{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Premium sifatli shisha
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Премиум стекло{% elif lang == 'en' %}Premium glass{% else %}Premium sifatli shisha{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Ekologik toza bo'yoqlar
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Эко краски{% elif lang == 'en' %}Eco paints{% else %}Ekologik toza bo'yoqlar{% endif %}
                     </li>
                 </ul>
             </div>
             
             <!-- Feature 2 -->
-            <div class="feature-card bg-[#FAF9F6] rounded-3xl p-8">
-                <div class="feature-icon w-16 h-16 bg-[#232339] rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fas fa-industry text-white text-2xl"></i>
+            <div class="feature-card bg-white p-8 border border-gray-100">
+                <div class="w-14 h-14 bg-[#c9a96e] flex items-center justify-center mb-6">
+                    <i class="fas fa-industry text-white text-xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-[#232339] mb-3">O'z Ishlab Chiqarish</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-3 font-display">{% if lang == 'ru' %}Своё Производство{% elif lang == 'en' %}Own Production{% else %}O'z Ishlab Chiqarish{% endif %}</h3>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    Zamonaviy jihozlar bilan ta'minlangan o'z ishlab chiqarish tsehimiz mavjud. Bu bizga sifatni to'liq nazorat qilish va arzon narxlar taklif qilish imkonini beradi.
+                    {% if lang == 'ru' %}Современное оборудование на нашем производстве. Полный контроль качества и выгодные цены.{% elif lang == 'en' %}Modern equipment at our production facility. Full quality control and competitive prices.{% else %}Zamonaviy jihozlar bilan ta'minlangan o'z ishlab chiqarish tsehimiz mavjud. Bu bizga sifatni to'liq nazorat qilish va arzon narxlar taklif qilish imkonini beradi.{% endif %}
                 </p>
                 <ul class="space-y-2 text-sm text-gray-500">
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        1000+ m² ishlab chiqarish maydoni
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        5000+ m² {% if lang == 'ru' %}площадь{% elif lang == 'en' %}area{% else %}ishlab chiqarish maydoni{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Zamonaviy CNC dastgohlari
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}CNC станки{% elif lang == 'en' %}CNC machines{% else %}Zamonaviy CNC dastgohlari{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Tajribali mutaxassislar
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        50+ {% if lang == 'ru' %}специалистов{% elif lang == 'en' %}specialists{% else %}Tajribali mutaxassislar{% endif %}
                     </li>
                 </ul>
             </div>
             
             <!-- Feature 3 -->
-            <div class="feature-card bg-[#FAF9F6] rounded-3xl p-8">
-                <div class="feature-icon w-16 h-16 bg-[#232339] rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fas fa-ruler-combined text-white text-2xl"></i>
+            <div class="feature-card bg-white p-8 border border-gray-100">
+                <div class="w-14 h-14 bg-[#1a1a2e] flex items-center justify-center mb-6">
+                    <i class="fas fa-ruler-combined text-white text-xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-[#232339] mb-3">Individual O'lcham</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-3 font-display">{% if lang == 'ru' %}Индивидуальный Размер{% elif lang == 'en' %}Custom Size{% else %}Individual O'lcham{% endif %}</h3>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    Har bir mijozning ehtiyojlari turlicha. Biz istagan o'lcham va dizayn bo'yicha mebel tayyorlab beramiz. Sizning uyingizga mukammal mos keladigan mahsulotlar.
+                    {% if lang == 'ru' %}Каждый клиент уникален. Мы изготавливаем мебель любого размера и дизайна под ваш интерьер.{% elif lang == 'en' %}Every customer is unique. We make furniture of any size and design for your interior.{% else %}Har bir mijozning ehtiyojlari turlicha. Biz istagan o'lcham va dizayn bo'yicha mebel tayyorlab beramiz.{% endif %}
                 </p>
                 <ul class="space-y-2 text-sm text-gray-500">
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Bepul o'lchov xizmati
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Бесплатный замер{% elif lang == 'en' %}Free measurement{% else %}Bepul o'lchov xizmati{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        3D dizayn loyihasi
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}3D проект{% elif lang == 'en' %}3D project{% else %}3D dizayn loyihasi{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Millimetrgacha aniqlik
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Точность до мм{% elif lang == 'en' %}mm precision{% else %}Millimetrgacha aniqlik{% endif %}
                     </li>
                 </ul>
             </div>
             
             <!-- Feature 4 -->
-            <div class="feature-card bg-[#FAF9F6] rounded-3xl p-8">
-                <div class="feature-icon w-16 h-16 bg-[#232339] rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+            <div class="feature-card bg-white p-8 border border-gray-100">
+                <div class="w-14 h-14 bg-[#c9a96e] flex items-center justify-center mb-6">
+                    <i class="fas fa-shield-alt text-white text-xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-[#232339] mb-3">Kafolat va Xizmat</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-3 font-display">{% if lang == 'ru' %}Гарантия{% elif lang == 'en' %}Warranty{% else %}Kafolat va Xizmat{% endif %}</h3>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    Barcha mahsulotlarimizga 1-3 yil kafolat beramiz. Kafolat davrida yuzaga kelgan har qanday muammoni bepul hal qilamiz. Sizning qoniqishingiz - bizning ustuvorligimiz.
+                    {% if lang == 'ru' %}1-3 года гарантии на всю продукцию. Любые проблемы решаем бесплатно. Ваше удовлетворение - наш приоритет.{% elif lang == 'en' %}1-3 year warranty on all products. We solve any problems for free. Your satisfaction is our priority.{% else %}Barcha mahsulotlarimizga 1-3 yil kafolat beramiz. Kafolat davrida yuzaga kelgan har qanday muammoni bepul hal qilamiz.{% endif %}
                 </p>
                 <ul class="space-y-2 text-sm text-gray-500">
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        1-3 yil kafolat
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        1-3 {% if lang == 'ru' %}года гарантии{% elif lang == 'en' %}year warranty{% else %}yil kafolat{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Bepul ta'mirlash
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Бесплатный ремонт{% elif lang == 'en' %}Free repair{% else %}Bepul ta'mirlash{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        24/7 qo'llab-quvvatlash
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}24/7 поддержка{% elif lang == 'en' %}24/7 support{% else %}24/7 qo'llab-quvvatlash{% endif %}
                     </li>
                 </ul>
             </div>
             
             <!-- Feature 5 -->
-            <div class="feature-card bg-[#FAF9F6] rounded-3xl p-8">
-                <div class="feature-icon w-16 h-16 bg-[#232339] rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fas fa-truck text-white text-2xl"></i>
+            <div class="feature-card bg-white p-8 border border-gray-100">
+                <div class="w-14 h-14 bg-[#1a1a2e] flex items-center justify-center mb-6">
+                    <i class="fas fa-truck text-white text-xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-[#232339] mb-3">Yetkazib Berish</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-3 font-display">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib Berish{% endif %}</h3>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    O'z yetkazib berish xizmatimiz orqali mahsulotlarni xavfsiz va tezkor yetkazamiz. Toshkent bo'ylab bepul yetkazib berish. O'rnatish xizmati ham mavjud.
+                    {% if lang == 'ru' %}Собственная служба доставки для быстрой и безопасной доставки. Бесплатно по Ташкенту. Установка включена.{% elif lang == 'en' %}Own delivery service for fast and safe delivery. Free in Tashkent. Installation included.{% else %}O'z yetkazib berish xizmatimiz orqali mahsulotlarni xavfsiz va tezkor yetkazamiz. Toshkent bo'ylab bepul yetkazib berish.{% endif %}
                 </p>
                 <ul class="space-y-2 text-sm text-gray-500">
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Toshkentda bepul yetkazish
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Бесплатно в Ташкенте{% elif lang == 'en' %}Free in Tashkent{% else %}Toshkentda bepul yetkazish{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Viloyatlarga yetkazish
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Доставка в регионы{% elif lang == 'en' %}Regional delivery{% else %}Viloyatlarga yetkazish{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        O'rnatish xizmati
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish xizmati{% endif %}
                     </li>
                 </ul>
             </div>
             
             <!-- Feature 6 -->
-            <div class="feature-card bg-[#FAF9F6] rounded-3xl p-8">
-                <div class="feature-icon w-16 h-16 bg-[#232339] rounded-2xl flex items-center justify-center mb-6">
-                    <i class="fas fa-palette text-white text-2xl"></i>
+            <div class="feature-card bg-white p-8 border border-gray-100">
+                <div class="w-14 h-14 bg-[#c9a96e] flex items-center justify-center mb-6">
+                    <i class="fas fa-palette text-white text-xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-[#232339] mb-3">Rang Tanlash</h3>
+                <h3 class="text-xl font-bold text-[#1a1a2e] mb-3 font-display">{% if lang == 'ru' %}Выбор Цвета{% elif lang == 'en' %}Color Choice{% else %}Rang Tanlash{% endif %}</h3>
                 <p class="text-gray-600 leading-relaxed mb-4">
-                    Keng rang palitrasi sizning interieringizga mos keladi. 100+ dan ortiq rang variantlari orasidan tanlang yoki o'zingizning rangingizni buyurtma qiling.
+                    {% if lang == 'ru' %}Широкая цветовая палитра для вашего интерьера. 100+ вариантов или закажите свой уникальный цвет.{% elif lang == 'en' %}Wide color palette for your interior. 100+ options or order your unique color.{% else %}Keng rang palitrasi sizning interieringizga mos keladi. 100+ dan ortiq rang variantlari orasidan tanlang.{% endif %}
                 </p>
                 <ul class="space-y-2 text-sm text-gray-500">
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        100+ rang varianti
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        100+ {% if lang == 'ru' %}вариантов{% elif lang == 'en' %}options{% else %}rang varianti{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Rang namunalari
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Образцы{% elif lang == 'en' %}Samples{% else %}Rang namunalari{% endif %}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="fas fa-check text-[#232339]"></i>
-                        Professional maslahat
+                        <i class="fas fa-check text-[#c9a96e]"></i>
+                        {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Professional maslahat{% endif %}
                     </li>
                 </ul>
             </div>
@@ -249,144 +229,128 @@
 </section>
 
 <!-- Process Section -->
-<section class="py-20 lg:py-28 bg-[#FAF9F6]">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-4">
-                Biz bilan ishlash jarayoni
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4 font-display">
+                {% if lang == 'ru' %}Процесс работы с нами{% elif lang == 'en' %}Process of working with us{% else %}Biz bilan ishlash jarayoni{% endif %}
             </h2>
             <p class="text-gray-600 text-lg">
-                Oddiy va qulay jarayon orqali orzuingizdagi mebelga ega bo'ling
+                {% if lang == 'ru' %}Простой и удобный процесс для получения мебели вашей мечты{% elif lang == 'en' %}Simple and convenient process to get your dream furniture{% else %}Oddiy va qulay jarayon orqali orzuingizdagi mebelga ega bo'ling{% endif %}
             </p>
         </div>
         
-        <div class="relative">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Step 1 -->
-                <div class="text-center relative">
-                    <div class="w-20 h-20 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold relative z-10">
-                        1
-                    </div>
-                    <h4 class="text-lg font-bold text-[#232339] mb-2">Murojaat</h4>
-                    <p class="text-gray-600 text-sm">
-                        Bizga qo'ng'iroq qiling yoki saytimiz orqali buyurtma bering. Mutaxassislarimiz sizni qabul qiladi.
-                    </p>
-                </div>
-                
-                <!-- Step 2 -->
-                <div class="text-center relative">
-                    <div class="w-20 h-20 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold relative z-10">
-                        2
-                    </div>
-                    <h4 class="text-lg font-bold text-[#232339] mb-2">Maslahat va O'lchov</h4>
-                    <p class="text-gray-600 text-sm">
-                        Bepul maslahat va o'lchov xizmati. Uyingizga kelib, aniq o'lchamlarni olamiz.
-                    </p>
-                </div>
-                
-                <!-- Step 3 -->
-                <div class="text-center relative">
-                    <div class="w-20 h-20 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold relative z-10">
-                        3
-                    </div>
-                    <h4 class="text-lg font-bold text-[#232339] mb-2">Ishlab Chiqarish</h4>
-                    <p class="text-gray-600 text-sm">
-                        Professional ustalarimiz sizning buyurtmangizni 7-14 kun ichida tayyorlaydi.
-                    </p>
-                </div>
-                
-                <!-- Step 4 -->
-                <div class="text-center relative">
-                    <div class="w-20 h-20 bg-[#232339] text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold relative z-10">
-                        4
-                    </div>
-                    <h4 class="text-lg font-bold text-[#232339] mb-2">Yetkazish va O'rnatish</h4>
-                    <p class="text-gray-600 text-sm">
-                        Tayyor mahsulotni uyingizga yetkazamiz va professional tarzda o'rnatamiz.
-                    </p>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+            <!-- Step 1 -->
+            <div class="text-center">
+                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 text-2xl font-bold font-display">1</div>
+                <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Заявка{% elif lang == 'en' %}Request{% else %}Murojaat{% endif %}</h4>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Позвоните нам или оставьте заявку на сайте{% elif lang == 'en' %}Call us or leave a request on the website{% else %}Bizga qo'ng'iroq qiling yoki saytimiz orqali buyurtma bering{% endif %}
+                </p>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="text-center">
+                <div class="w-20 h-20 bg-[#c9a96e] text-white flex items-center justify-center mx-auto mb-6 text-2xl font-bold font-display">2</div>
+                <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat va O'lchov{% endif %}</h4>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Бесплатная консультация и замер на дому{% elif lang == 'en' %}Free consultation and home measurement{% else %}Bepul maslahat va o'lchov xizmati. Uyingizga kelib, aniq o'lchamlarni olamiz{% endif %}
+                </p>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="text-center">
+                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 text-2xl font-bold font-display">3</div>
+                <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab Chiqarish{% endif %}</h4>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Изготовление вашего заказа за 7-21 дней{% elif lang == 'en' %}Manufacturing your order in 7-21 days{% else %}Professional ustalarimiz sizning buyurtmangizni 7-21 kun ichida tayyorlaydi{% endif %}
+                </p>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="text-center">
+                <div class="w-20 h-20 bg-[#c9a96e] text-white flex items-center justify-center mx-auto mb-6 text-2xl font-bold font-display">4</div>
+                <h4 class="text-lg font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish va O'rnatish{% endif %}</h4>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Доставка и профессиональная установка{% elif lang == 'en' %}Delivery and professional installation{% else %}Tayyor mahsulotni uyingizga yetkazamiz va professional tarzda o'rnatamiz{% endif %}
+                </p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Testimonials -->
-<section class="py-20 lg:py-28 bg-white">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-4">
-                Mijozlarimiz fikrlari
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4 font-display">
+                {% if lang == 'ru' %}Отзывы клиентов{% elif lang == 'en' %}Customer Reviews{% else %}Mijozlarimiz fikrlari{% endif %}
             </h2>
             <p class="text-gray-600 text-lg">
-                Mamnun mijozlarimizning haqiqiy fikrlari
+                {% if lang == 'ru' %}Реальные отзывы наших довольных клиентов{% elif lang == 'en' %}Real reviews from our satisfied customers{% else %}Mamnun mijozlarimizning haqiqiy fikrlari{% endif %}
             </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             <!-- Testimonial 1 -->
-            <div class="bg-[#FAF9F6] rounded-3xl p-8">
+            <div class="bg-white p-8 border border-gray-100">
                 <div class="flex items-center gap-1 mb-4">
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
                 </div>
                 <p class="text-gray-600 leading-relaxed mb-6">
-                    "Juda ajoyib ish! Shkafimni aniq o'lchamda yasab berishdi. Sifati zo'r, kafolat bor, yetkazib berish ham bepul bo'ldi. Hammaga tavsiya qilaman!"
+                    {% if lang == 'ru' %}"Отличная работа! Шкаф сделали точно по размерам. Качество отличное, гарантия есть, доставка бесплатная. Рекомендую всем!"{% elif lang == 'en' %}"Great work! The cabinet was made exactly to size. Excellent quality, warranty included, free delivery. Recommend to everyone!"{% else %}"Juda ajoyib ish! Shkafimni aniq o'lchamda yasab berishdi. Sifati zo'r, kafolat bor, yetkazib berish ham bepul bo'ldi. Hammaga tavsiya qilaman!"{% endif %}
                 </p>
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-[#232339] rounded-full flex items-center justify-center text-white font-bold">
-                        A
-                    </div>
+                    <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center text-white font-bold">A</div>
                     <div>
-                        <p class="font-semibold text-[#232339]">Aziza Karimova</p>
+                        <p class="font-semibold text-[#1a1a2e]">Aziza Karimova</p>
                         <p class="text-sm text-gray-500">Toshkent</p>
                     </div>
                 </div>
             </div>
             
             <!-- Testimonial 2 -->
-            <div class="bg-[#FAF9F6] rounded-3xl p-8">
+            <div class="bg-white p-8 border border-gray-100">
                 <div class="flex items-center gap-1 mb-4">
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
                 </div>
                 <p class="text-gray-600 leading-relaxed mb-6">
-                    "Oshxona mebelini buyurtma qildim. 3D dizaynni ko'rsatishdi, hamma narsa aniq bo'ldi. O'rnatishgacha hammasi professional darajada bajarildi."
+                    {% if lang == 'ru' %}"Заказал кухонную мебель. Показали 3D дизайн, всё было понятно. От установки до конца всё профессионально выполнено."{% elif lang == 'en' %}"Ordered kitchen furniture. They showed the 3D design, everything was clear. Everything was professionally done from installation to finish."{% else %}"Oshxona mebelini buyurtma qildim. 3D dizaynni ko'rsatishdi, hamma narsa aniq bo'ldi. O'rnatishgacha hammasi professional darajada bajarildi."{% endif %}
                 </p>
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-[#232339] rounded-full flex items-center justify-center text-white font-bold">
-                        S
-                    </div>
+                    <div class="w-12 h-12 bg-[#c9a96e] flex items-center justify-center text-white font-bold">S</div>
                     <div>
-                        <p class="font-semibold text-[#232339]">Sardor Aliyev</p>
+                        <p class="font-semibold text-[#1a1a2e]">Sardor Aliyev</p>
                         <p class="text-sm text-gray-500">Samarqand</p>
                     </div>
                 </div>
             </div>
             
             <!-- Testimonial 3 -->
-            <div class="bg-[#FAF9F6] rounded-3xl p-8">
+            <div class="bg-white p-8 border border-gray-100">
                 <div class="flex items-center gap-1 mb-4">
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
-                    <i class="fas fa-star text-[#F5C242]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
+                    <i class="fas fa-star text-[#c9a96e]"></i>
                 </div>
                 <p class="text-gray-600 leading-relaxed mb-6">
-                    "Ofis uchun stol va javonlar buyurtma qildim. Narxi ham ma'qul, sifati ham zo'r. Endi barcha do'stlarimga tavsiya qilyapman. Rahmat!"
+                    {% if lang == 'ru' %}"Заказала стол и полки для офиса. Цена приемлемая, качество отличное. Теперь рекомендую всем друзьям. Спасибо!"{% elif lang == 'en' %}"Ordered a desk and shelves for the office. Reasonable price, excellent quality. Now I recommend to all my friends. Thanks!"{% else %}"Ofis uchun stol va javonlar buyurtma qildim. Narxi ham ma'qul, sifati ham zo'r. Endi barcha do'stlarimga tavsiya qilyapman. Rahmat!"{% endif %}
                 </p>
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-[#232339] rounded-full flex items-center justify-center text-white font-bold">
-                        M
-                    </div>
+                    <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center text-white font-bold">M</div>
                     <div>
-                        <p class="font-semibold text-[#232339]">Malika Rahimova</p>
+                        <p class="font-semibold text-[#1a1a2e]">Malika Rahimova</p>
                         <p class="text-sm text-gray-500">Buxoro</p>
                     </div>
                 </div>
@@ -395,87 +359,22 @@
     </div>
 </section>
 
-<!-- FAQ Section -->
-<section class="py-20 lg:py-28 bg-[#FAF9F6]">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-4">
-                    Ko'p beriladigan savollar
-                </h2>
-            </div>
-            
-            <div class="space-y-4">
-                <details class="bg-white rounded-2xl p-6 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339]">
-                        Buyurtma berish qanday amalga oshiriladi?
-                        <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                        <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
-                    </summary>
-                    <p class="mt-4 text-gray-600 leading-relaxed">
-                        Saytimiz orqali yoki telefonimizga qo'ng'iroq qilib buyurtma berishingiz mumkin. 
-                        Mutaxassisimiz siz bilan bog'lanib, barcha tafsilotlarni aniqlashtiradi. 
-                        Keyin bepul o'lchov va maslahat uchun uyingizga kelamiz.
-                    </p>
-                </details>
-                
-                <details class="bg-white rounded-2xl p-6 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339]">
-                        Yetkazib berish qancha vaqt oladi?
-                        <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                        <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
-                    </summary>
-                    <p class="mt-4 text-gray-600 leading-relaxed">
-                        Tayyor mahsulotlar 3-7 ish kunida, buyurtma asosida tayyorlanadigan mahsulotlar 
-                        7-14 ish kunida yetkaziladi. Murakkab loyihalar uchun muddat kelishiladi.
-                    </p>
-                </details>
-                
-                <details class="bg-white rounded-2xl p-6 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339]">
-                        Kafolat muddati qancha?
-                        <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                        <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
-                    </summary>
-                    <p class="mt-4 text-gray-600 leading-relaxed">
-                        Barcha mahsulotlarimizga 1-3 yil kafolat beramiz. Kafolat davrida ishlab 
-                        chiqarish nuqsonlari aniqlansa, bepul ta'mirlaymiz yoki almashtiramiz.
-                    </p>
-                </details>
-                
-                <details class="bg-white rounded-2xl p-6 group">
-                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-[#232339]">
-                        To'lov qanday amalga oshiriladi?
-                        <i class="fas fa-plus text-[#232339] group-open:hidden"></i>
-                        <i class="fas fa-minus text-[#232339] hidden group-open:block"></i>
-                    </summary>
-                    <p class="mt-4 text-gray-600 leading-relaxed">
-                        Naqd pul, plastik karta (Payme, Click, Uzum) yoki bank o'tkazmasi orqali to'lashingiz mumkin. 
-                        Bundan tashqari, bo'lib to'lash imkoniyati ham mavjud.
-                    </p>
-                </details>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- CTA Section -->
-<section class="py-20 lg:py-28 bg-[#232339]">
-    <div class="container mx-auto px-4">
+<section class="py-20 lg:py-28 bg-[#1a1a2e]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="hero-title text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-                Orzuingizdagi mebelni birga yaratamiz
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 font-display">
+                {% if lang == 'ru' %}Создадим мебель вашей мечты вместе{% elif lang == 'en' %}Let's create your dream furniture together{% else %}Orzuingizdagi mebelni birga yaratamiz{% endif %}
             </h2>
-            <p class="text-white/80 text-lg mb-10 max-w-xl mx-auto">
-                Bepul maslahat va o'lchov xizmati. Hoziroq bog'laning va loyihangizni boshlang.
+            <p class="text-white/60 text-lg mb-10 max-w-xl mx-auto">
+                {% if lang == 'ru' %}Бесплатная консультация и замер. Свяжитесь сейчас и начните свой проект.{% elif lang == 'en' %}Free consultation and measurement. Contact now and start your project.{% else %}Bepul maslahat va o'lchov xizmati. Hoziroq bog'laning va loyihangizni boshlang.{% endif %}
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-white text-[#232339] px-8 py-4 rounded-full font-medium transition hover:shadow-xl hover:shadow-black/20">
-                    <i class="fas fa-paper-plane"></i>
-                    Buyurtma berish
+                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#c9a96e] hover:bg-[#b8956b] text-white px-8 py-4 font-medium transition">
+                    {% if lang == 'ru' %}Заказать{% elif lang == 'en' %}Order{% else %}Buyurtma berish{% endif %}
                 </a>
-                <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-medium transition hover:bg-white hover:text-[#232339]">
+                <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-2 border border-white/30 text-white px-8 py-4 font-medium transition hover:bg-white hover:text-[#1a1a2e]">
                     <i class="fas fa-phone"></i>
                     +998 90 123 45 67
                 </a>

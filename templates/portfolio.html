@@ -4,25 +4,12 @@
 
 {% block extra_css %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-    
-    .hero-title {
-        font-family: 'Playfair Display', serif;
-    }
-    
-    .gradient-text {
-        background: linear-gradient(135deg, #232339 0%, #000000 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
     .portfolio-card {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .portfolio-card:hover {
-        transform: translateY(-12px);
+        transform: translateY(-8px);
     }
     
     .portfolio-card:hover .portfolio-overlay {
@@ -43,185 +30,62 @@
         transition: all 0.4s ease;
     }
     
-    .filter-btn {
-        transition: all 0.3s ease;
-    }
-    
     .filter-btn.active {
-        background: #232339;
+        background: #1a1a2e;
         color: white;
-    }
-    
-    .masonry-grid {
-        column-count: 3;
-        column-gap: 24px;
-    }
-    
-    @media (max-width: 1024px) {
-        .masonry-grid {
-            column-count: 2;
-        }
-    }
-    
-    @media (max-width: 640px) {
-        .masonry-grid {
-            column-count: 1;
-        }
-    }
-    
-    .masonry-item {
-        break-inside: avoid;
-        margin-bottom: 24px;
-    }
-    
-    .lightbox {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 100;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .lightbox.active {
-        display: flex;
-    }
-    
-    /* Process Wave Connection */
-    .process-container {
-        position: relative;
-        min-height: 500px;
-        padding-bottom: 4rem;
-    }
-    
-    .process-wave {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        pointer-events: none;
-    }
-    
-    .process-wave svg {
-        width: 100%;
-        height: 100%;
-        overflow: visible;
-    }
-    
-    .process-step {
-        position: relative;
-        z-index: 2;
-    }
-    
-    .process-card {
-        position: relative;
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        transition: all 0.3s ease;
-    }
-    
-    .process-card:hover {
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        transform: translateY(-4px);
-    }
-    
-    .process-number {
-        position: absolute;
-        bottom: -1.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 3rem;
-        height: 3rem;
-        background: #3B82F6;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-        box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
-        z-index: 3;
-    }
-    
-    @media (max-width: 1024px) {
-        .process-wave {
-            display: none;
-        }
-        
-        .process-container {
-            min-height: auto;
-            padding-bottom: 2rem;
-        }
-        
-        .process-number {
-            position: relative;
-            bottom: auto;
-            left: auto;
-            transform: none;
-            margin: 1.5rem auto 0;
-        }
+        border-color: #1a1a2e;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-br from-[#FAF9F6] via-[#F5F3EF] to-[#EDE9E3] py-20 lg:py-28 overflow-hidden">
-    <div class="absolute inset-0 opacity-5">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-[#232339] rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-80 h-80 bg-[#000000] rounded-full blur-3xl"></div>
-    </div>
-    
-    <div class="container mx-auto px-4 relative">
+<section class="relative bg-white py-20 lg:py-28">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
             <!-- Breadcrumb -->
-            <div class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-8">
-                <a href="/" class="hover:text-[#232339] transition">Bosh sahifa</a>
-                <i class="fas fa-chevron-right text-xs"></i>
-                <span class="text-[#232339]">Portfolio</span>
+            <div class="flex items-center justify-center gap-2 text-sm text-gray-400 mb-8">
+                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
+                <span>/</span>
+                <span class="text-[#1a1a2e]">Portfolio</span>
             </div>
             
-            <div class="inline-flex items-center gap-2 bg-[#232339]/10 text-[#232339] px-5 py-2.5 rounded-full text-sm font-medium mb-8">
-                <i class="fas fa-images"></i>
-                Bizning ishlarimiz
-            </div>
-            
-            <h1 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-[#232339] leading-tight mb-8">
-                Bajarilgan<br>
-                <span class="gradient-text">Loyihalarimiz</span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] leading-tight mb-6 font-display">
+                {% if lang == 'ru' %}Наши Проекты{% elif lang == 'en' %}Our Projects{% else %}Bajarilgan Loyihalarimiz{% endif %}
             </h1>
             
             <p class="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-                15 yil davomida biz minglab uy va ofislarni zamonaviy mebel bilan bezadik. 
-                Mana ba'zi loyihalarimiz - har biri mijozlarimizning orzularini aks ettiradi.
+                {% if lang == 'ru' %}
+                15 лет мы украшаем тысячи домов и офисов современной мебелью. Вот некоторые из наших проектов.
+                {% elif lang == 'en' %}
+                For 15 years we have been decorating thousands of homes and offices with modern furniture. Here are some of our projects.
+                {% else %}
+                15 yil davomida biz minglab uy va ofislarni zamonaviy mebel bilan bezadik. Mana ba'zi loyihalarimiz.
+                {% endif %}
             </p>
         </div>
     </div>
 </section>
 
 <!-- Stats -->
-<section class="py-12 bg-[#232339]">
-    <div class="container mx-auto px-4">
+<section class="py-12 bg-[#1a1a2e]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <p class="text-4xl font-bold text-white mb-1">2500+</p>
-                <p class="text-white/70">Bajarilgan loyihalar</p>
+                <p class="text-4xl font-bold text-white mb-1 font-display">2500+</p>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-bold text-white mb-1">500+</p>
-                <p class="text-white/70">Oshxonalar</p>
+                <p class="text-4xl font-bold text-white mb-1 font-display">500+</p>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Кухни{% elif lang == 'en' %}Kitchens{% else %}Oshxonalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-bold text-white mb-1">800+</p>
-                <p class="text-white/70">Yotoqxonalar</p>
+                <p class="text-4xl font-bold text-white mb-1 font-display">800+</p>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Спальни{% elif lang == 'en' %}Bedrooms{% else %}Yotoqxonalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-bold text-white mb-1">300+</p>
-                <p class="text-white/70">Ofislar</p>
+                <p class="text-4xl font-bold text-white mb-1 font-display">300+</p>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Офисы{% elif lang == 'en' %}Offices{% else %}Ofislar{% endif %}</p>
             </div>
         </div>
     </div>
@@ -229,87 +93,84 @@
 
 <!-- Filter & Portfolio Grid -->
 <section class="py-20 lg:py-28 bg-[#FAF9F6]">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 lg:px-8">
         <!-- Filters -->
         <div class="flex flex-wrap justify-center gap-3 mb-14">
-            <a href="/portfolio" class="filter-btn px-6 py-3 rounded-full text-sm font-medium border border-gray-200 bg-white hover:bg-[#232339] hover:text-white hover:border-[#232339] {% if not request.args.get('room_type') %}active{% endif %}">
-                Barchasi
+            <a href="/portfolio" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if not request.args.get('room_type') %}active{% endif %}">
+                {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
             </a>
-            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-6 py-3 rounded-full text-sm font-medium border border-gray-200 bg-white hover:bg-[#232339] hover:text-white hover:border-[#232339] {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
-                <i class="fas fa-utensils mr-2"></i>Oshxona
+            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
+                {% if lang == 'ru' %}Кухня{% elif lang == 'en' %}Kitchen{% else %}Oshxona{% endif %}
             </a>
-            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-6 py-3 rounded-full text-sm font-medium border border-gray-200 bg-white hover:bg-[#232339] hover:text-white hover:border-[#232339] {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
-                <i class="fas fa-bed mr-2"></i>Yotoqxona
+            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
+                {% if lang == 'ru' %}Спальня{% elif lang == 'en' %}Bedroom{% else %}Yotoqxona{% endif %}
             </a>
-            <a href="/portfolio?room_type=Zal" class="filter-btn px-6 py-3 rounded-full text-sm font-medium border border-gray-200 bg-white hover:bg-[#232339] hover:text-white hover:border-[#232339] {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
-                <i class="fas fa-couch mr-2"></i>Zal
+            <a href="/portfolio?room_type=Zal" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
+                {% if lang == 'ru' %}Гостиная{% elif lang == 'en' %}Living Room{% else %}Zal{% endif %}
             </a>
-            <a href="/portfolio?room_type=Bolalar" class="filter-btn px-6 py-3 rounded-full text-sm font-medium border border-gray-200 bg-white hover:bg-[#232339] hover:text-white hover:border-[#232339] {% if request.args.get('room_type') == 'Bolalar' %}active{% endif %}">
-                <i class="fas fa-child mr-2"></i>Bolalar xonasi
+            <a href="/portfolio?room_type=Bolalar" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Bolalar' %}active{% endif %}">
+                {% if lang == 'ru' %}Детская{% elif lang == 'en' %}Kids Room{% else %}Bolalar xonasi{% endif %}
             </a>
-            <a href="/portfolio?room_type=Ofis" class="filter-btn px-6 py-3 rounded-full text-sm font-medium border border-gray-200 bg-white hover:bg-[#232339] hover:text-white hover:border-[#232339] {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
-                <i class="fas fa-briefcase mr-2"></i>Ofis
+            <a href="/portfolio?room_type=Ofis" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
+                {% if lang == 'ru' %}Офис{% elif lang == 'en' %}Office{% else %}Ofis{% endif %}
             </a>
-            <a href="/portfolio?room_type=Koridor" class="filter-btn px-6 py-3 rounded-full text-sm font-medium border border-gray-200 bg-white hover:bg-[#232339] hover:text-white hover:border-[#232339] {% if request.args.get('room_type') == 'Koridor' %}active{% endif %}">
-                <i class="fas fa-door-open mr-2"></i>Koridor
-            </a>
-    </div>
-    
+        </div>
+        
         <!-- Portfolio Grid -->
-    {% if portfolios %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for portfolio in portfolios %}
-            <div class="portfolio-card bg-white rounded-3xl overflow-hidden shadow-xl">
+        {% if portfolios %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for portfolio in portfolios %}
+            <div class="portfolio-card bg-white overflow-hidden border border-gray-100">
                 <!-- Main Image -->
                 <div class="relative aspect-[4/3] overflow-hidden">
-                {% if portfolio.after_image %}
+                    {% if portfolio.after_image %}
                     <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.title_uz }}" class="w-full h-full object-cover">
-                {% else %}
-                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <i class="fas fa-image text-6xl text-gray-400"></i>
+                    {% else %}
+                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-image text-5xl text-gray-300"></i>
                     </div>
-                {% endif %}
+                    {% endif %}
                     
                     <!-- Overlay -->
                     <div class="portfolio-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end p-6">
                         <div class="portfolio-content text-white">
                             {% if portfolio.room_type_uz %}
-                            <span class="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium mb-3">
+                            <span class="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 text-xs font-medium mb-3">
                                 {{ portfolio.room_type_uz }}
                             </span>
                             {% endif %}
-                            <h3 class="text-xl font-bold mb-2">{{ portfolio.title_uz }}</h3>
+                            <h3 class="text-xl font-bold">{{ portfolio.title_uz }}</h3>
                         </div>
                     </div>
                     
                     <!-- Room Type Badge -->
-                {% if portfolio.room_type_uz %}
-                    <div class="absolute top-4 right-4 bg-[#232339] text-white px-3 py-1.5 rounded-full text-xs font-medium">
-                    {{ portfolio.room_type_uz }}
+                    {% if portfolio.room_type_uz %}
+                    <div class="absolute top-4 right-4 bg-[#1a1a2e] text-white px-3 py-1.5 text-xs font-medium">
+                        {{ portfolio.room_type_uz }}
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
-            </div>
                 
                 <!-- Content -->
-            <div class="p-6">
-                    <h3 class="text-lg font-bold text-[#232339] mb-3">{{ portfolio.title_uz }}</h3>
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-[#1a1a2e] mb-3 font-display">{{ portfolio.title_uz }}</h3>
                     
-                {% if portfolio.description_uz %}
+                    {% if portfolio.description_uz %}
                     <p class="text-gray-500 text-sm mb-4 line-clamp-2">{{ portfolio.description_uz }}</p>
-                {% endif %}
-                
+                    {% endif %}
+                    
                     <!-- Before/After if available -->
-                {% if portfolio.before_image and portfolio.after_image %}
+                    {% if portfolio.before_image and portfolio.after_image %}
                     <div class="border-t border-gray-100 pt-4 mt-4">
-                        <p class="text-xs font-medium text-gray-400 mb-3">Oldin va Keyin</p>
+                        <p class="text-xs font-medium text-gray-400 mb-3">{% if lang == 'ru' %}До и После{% elif lang == 'en' %}Before & After{% else %}Oldin va Keyin{% endif %}</p>
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="relative rounded-xl overflow-hidden">
+                            <div class="relative overflow-hidden">
                                 <img src="/uploads/{{ portfolio.before_image }}" alt="Oldin" class="w-full aspect-square object-cover">
-                                <span class="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">Oldin</span>
+                                <span class="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1">{% if lang == 'ru' %}До{% elif lang == 'en' %}Before{% else %}Oldin{% endif %}</span>
                             </div>
-                            <div class="relative rounded-xl overflow-hidden">
+                            <div class="relative overflow-hidden">
                                 <img src="/uploads/{{ portfolio.after_image }}" alt="Keyin" class="w-full aspect-square object-cover">
-                                <span class="absolute bottom-2 left-2 bg-[#232339] text-white text-xs px-2 py-1 rounded">Keyin</span>
+                                <span class="absolute bottom-2 left-2 bg-[#1a1a2e] text-white text-xs px-2 py-1">{% if lang == 'ru' %}После{% elif lang == 'en' %}After{% else %}Keyin{% endif %}</span>
                             </div>
                         </div>
                     </div>
@@ -320,15 +181,18 @@
         </div>
         {% else %}
         <!-- Empty State -->
-        <div class="bg-white rounded-3xl p-16 text-center max-w-lg mx-auto shadow-xl">
-            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-images text-gray-400 text-4xl"></i>
+        <div class="bg-white p-16 text-center max-w-lg mx-auto border border-gray-100">
+            <div class="w-24 h-24 bg-gray-100 flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-images text-gray-300 text-4xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-[#232339] mb-4">Loyihalar topilmadi</h3>
-            <p class="text-gray-500 mb-8">Ushbu kategoriyada hozircha loyihalar mavjud emas. Boshqa kategoriyani tanlang.</p>
-            <a href="/portfolio" class="inline-flex items-center gap-2 bg-[#232339] hover:bg-[#000000] text-white px-6 py-3 rounded-full font-medium transition">
-                Barcha loyihalar
-                <i class="fas fa-arrow-right"></i>
+            <h3 class="text-2xl font-bold text-[#1a1a2e] mb-4 font-display">
+                {% if lang == 'ru' %}Проекты не найдены{% elif lang == 'en' %}No projects found{% else %}Loyihalar topilmadi{% endif %}
+            </h3>
+            <p class="text-gray-500 mb-8">
+                {% if lang == 'ru' %}В этой категории пока нет проектов. Выберите другую категорию.{% elif lang == 'en' %}No projects in this category yet. Select another category.{% else %}Ushbu kategoriyada hozircha loyihalar mavjud emas. Boshqa kategoriyani tanlang.{% endif %}
+            </p>
+            <a href="/portfolio" class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-black text-white px-6 py-3 font-medium transition">
+                {% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All projects{% else %}Barcha loyihalar{% endif %}
             </a>
         </div>
         {% endif %}
@@ -337,36 +201,35 @@
 
 <!-- Featured Projects -->
 <section class="py-20 lg:py-28 bg-white">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center mb-16">
-            <div class="inline-flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <i class="fas fa-star"></i>
-                Eng yaxshi loyihalar
-            </div>
-            <h2 class="hero-title text-3xl md:text-4xl lg:text-5xl font-bold text-[#232339] mb-6">
-                Biz Faxrlanadigan Loyihalar
+            <span class="inline-block bg-[#c9a96e]/10 text-[#c9a96e] px-4 py-2 text-sm font-medium mb-6">
+                {% if lang == 'ru' %}Лучшие проекты{% elif lang == 'en' %}Best Projects{% else %}Eng yaxshi loyihalar{% endif %}
+            </span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] mb-6 font-display">
+                {% if lang == 'ru' %}Проекты, Которыми Мы Гордимся{% elif lang == 'en' %}Projects We're Proud Of{% else %}Biz Faxrlanadigan Loyihalar{% endif %}
             </h2>
             <p class="text-gray-600 text-lg">
-                Eng murakkab va chiroyli loyihalarimizdan namunalar
+                {% if lang == 'ru' %}Примеры наших самых сложных и красивых проектов{% elif lang == 'en' %}Examples of our most complex and beautiful projects{% else %}Eng murakkab va chiroyli loyihalarimizdan namunalar{% endif %}
             </p>
         </div>
         
         <!-- Featured Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Large Feature -->
-            <div class="portfolio-card relative rounded-3xl overflow-hidden shadow-2xl h-[500px]">
+            <div class="portfolio-card relative overflow-hidden h-[500px]">
                 <img src="/uploads/designs/3.jpg" alt="Premium oshxona" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-8">
                     <div class="text-white">
-                        <span class="inline-block bg-amber-500 px-3 py-1 rounded-full text-xs font-bold mb-4">
-                            <i class="fas fa-crown mr-1"></i> Premium
+                        <span class="inline-block bg-[#c9a96e] px-3 py-1 text-xs font-bold mb-4">
+                            Premium
                         </span>
-                        <h3 class="text-2xl font-bold mb-2">Zamonaviy Oshxona Loyihasi</h3>
-                        <p class="text-white/70 mb-4">Mirzo Ulug'bek tumani, 45 m² oshxona</p>
+                        <h3 class="text-2xl font-bold mb-2 font-display">{% if lang == 'ru' %}Современная Кухня{% elif lang == 'en' %}Modern Kitchen{% else %}Zamonaviy Oshxona Loyihasi{% endif %}</h3>
+                        <p class="text-white/70 mb-4">Mirzo Ulug'bek, 45 m²</p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="bg-white/20 px-3 py-1 rounded-full text-xs">MDF fasad</span>
-                            <span class="bg-white/20 px-3 py-1 rounded-full text-xs">Blum furnitura</span>
-                            <span class="bg-white/20 px-3 py-1 rounded-full text-xs">LED yoritish</span>
+                            <span class="bg-white/20 px-3 py-1 text-xs">MDF fasad</span>
+                            <span class="bg-white/20 px-3 py-1 text-xs">Blum</span>
+                            <span class="bg-white/20 px-3 py-1 text-xs">LED</span>
                         </div>
                     </div>
                 </div>
@@ -374,28 +237,28 @@
             
             <!-- Two Smaller Features -->
             <div class="space-y-8">
-                <div class="portfolio-card relative rounded-3xl overflow-hidden shadow-2xl h-[236px]">
+                <div class="portfolio-card relative overflow-hidden h-[236px]">
                     <img src="/uploads/designs/3.jpg" alt="Klassik yotoqxona" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6">
                         <div class="text-white">
-                            <span class="inline-block bg-#232339 px-3 py-1 rounded-full text-xs font-bold mb-3">
-                                Klassik
+                            <span class="inline-block bg-[#1a1a2e] px-3 py-1 text-xs font-bold mb-3">
+                                {% if lang == 'ru' %}Классика{% elif lang == 'en' %}Classic{% else %}Klassik{% endif %}
                             </span>
-                            <h3 class="text-xl font-bold mb-1">Klassik Yotoqxona</h3>
+                            <h3 class="text-xl font-bold mb-1 font-display">{% if lang == 'ru' %}Классическая Спальня{% elif lang == 'en' %}Classic Bedroom{% else %}Klassik Yotoqxona{% endif %}</h3>
                             <p class="text-white/70 text-sm">Yunusobod, 30 m²</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="portfolio-card relative rounded-3xl overflow-hidden shadow-2xl h-[236px]">
+                <div class="portfolio-card relative overflow-hidden h-[236px]">
                     <img src="/uploads/designs/3.jpg" alt="Zamonaviy ofis" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6">
                         <div class="text-white">
-                            <span class="inline-block bg-blue-500 px-3 py-1 rounded-full text-xs font-bold mb-3">
-                                Korporativ
+                            <span class="inline-block bg-[#1a1a2e] px-3 py-1 text-xs font-bold mb-3">
+                                {% if lang == 'ru' %}Корпоративный{% elif lang == 'en' %}Corporate{% else %}Korporativ{% endif %}
                             </span>
-                            <h3 class="text-xl font-bold mb-1">IT Kompaniya Ofisi</h3>
-                            <p class="text-white/70 text-sm">Minor massivi, 150 m²</p>
+                            <h3 class="text-xl font-bold mb-1 font-display">{% if lang == 'ru' %}IT Офис{% elif lang == 'en' %}IT Office{% else %}IT Kompaniya Ofisi{% endif %}</h3>
+                            <p class="text-white/70 text-sm">Minor, 150 m²</p>
                         </div>
                     </div>
                 </div>
@@ -404,166 +267,81 @@
     </div>
 </section>
 
-<!-- Our Process -->
-<section class="py-20 lg:py-28 bg-white">
-    <div class="container mx-auto px-4">
+<!-- Process Section -->
+<section class="py-20 lg:py-28 bg-[#FAF9F6]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="hero-title text-3xl md:text-4xl font-bold text-[#232339] mb-6">
-                {% if lang == 'ru' %}Процесс Проекта{% elif lang == 'en' %}Project Process{% else %}Loyiha Jarayoni{% endif %}
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-6 font-display">
+                {% if lang == 'ru' %}Процесс Работы{% elif lang == 'en' %}Our Process{% else %}Loyiha Jarayoni{% endif %}
             </h2>
             <p class="text-gray-600 text-lg">
-                {% if lang == 'ru' %}
-                От идеи до готового проекта — посмотрите, как мы работаем
-                {% elif lang == 'en' %}
-                From idea to finished project — see how we work
-                {% else %}
-                Fikrdan tayyor loyihagacha - qanday ishlashimizni ko'ring
-                {% endif %}
+                {% if lang == 'ru' %}От идеи до готового проекта{% elif lang == 'en' %}From idea to finished project{% else %}Fikrdan tayyor loyihagacha{% endif %}
             </p>
         </div>
         
-        <!-- Process Steps with Wave Connection -->
-        <div class="max-w-6xl mx-auto relative process-container">
-            <!-- Wave SVG Path -->
-            <div class="process-wave hidden lg:block">
-                <svg viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid meet" style="overflow: visible;">
-                    <!-- Wave path connecting the three cards -->
-                    <path d="M 100 150 Q 300 250 500 150 T 900 150" 
-                          stroke="#3B82F6" 
-                          stroke-width="4" 
-                          fill="none" 
-                          stroke-dasharray="10,6" 
-                          vector-effect="non-scaling-stroke"
-                          style="stroke-linecap: round; stroke-linejoin: round;"/>
-                </svg>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <!-- Step 1 -->
+            <div class="text-center">
+                <div class="w-20 h-20 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-6">
+                    <span class="text-white text-2xl font-bold font-display">1</span>
+                </div>
+                <h4 class="text-lg font-bold text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
+                </h4>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Бесплатная консультация и помощь в выборе{% elif lang == 'en' %}Free consultation and assistance{% else %}Bepul maslahat va yo'nalish tanlashda yordam{% endif %}
+                </p>
             </div>
             
-            <!-- Process Cards -->
-            <div class="relative grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16 process-step">
-                <!-- Step 1: Konsultatsiya -->
-                <div class="relative">
-                    <div class="process-card p-6">
-                        <!-- Icon -->
-                        <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
-                            <i class="fas fa-comments text-blue-600 text-xl"></i>
-                        </div>
-                        
-                        <!-- Title -->
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
-                        </h4>
-                        
-                        <!-- Description -->
-                        <p class="text-gray-600 text-sm leading-relaxed">
-                            {% if lang == 'ru' %}
-                            Бесплатная консультация, помощь в выборе направления и дизайна
-                            {% elif lang == 'en' %}
-                            Free consultation, assistance in choosing direction and design
-                            {% else %}
-                            Bepul maslahat, yo'nalish va dizayn tanlashda yordam
-                            {% endif %}
-                        </p>
-                    </div>
-                    
-                    <!-- Number Circle -->
-                    <div class="process-number">
-                        1
-                    </div>
+            <!-- Step 2 -->
+            <div class="text-center">
+                <div class="w-20 h-20 bg-[#c9a96e] flex items-center justify-center mx-auto mb-6">
+                    <span class="text-white text-2xl font-bold font-display">2</span>
                 </div>
-                
-                <!-- Step 2: O'lchov va Dizayn -->
-                <div class="relative lg:mt-32">
-                    <div class="process-card p-6">
-                        <!-- Icon -->
-                        <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
-                            <i class="fas fa-file-alt text-blue-600 text-xl"></i>
-                        </div>
-                        
-                        <!-- Title -->
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}Замер и Проект{% elif lang == 'en' %}Measurement & Design{% else %}O'lchov va Dizayn{% endif %}
-                        </h4>
-                        
-                        <!-- Description -->
-                        <p class="text-gray-600 text-sm leading-relaxed">
-                            {% if lang == 'ru' %}
-                            Помощь в подготовке всех документов и правильном оформлении проекта
-                            {% elif lang == 'en' %}
-                            Assistance in preparing all documents and proper project design
-                            {% else %}
-                            Barcha hujjatlarni tayyorlash va to'g'ri rasmiylashtirishda yordam
-                            {% endif %}
-                        </p>
-                    </div>
-                    
-                    <!-- Number Circle -->
-                    <div class="process-number">
-                        2
-                    </div>
+                <h4 class="text-lg font-bold text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}Замер и Дизайн{% elif lang == 'en' %}Measurement & Design{% else %}O'lchov va Dizayn{% endif %}
+                </h4>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Бесплатный замер и 3D проектирование{% elif lang == 'en' %}Free measurement and 3D design{% else %}Bepul o'lchov va 3D loyiha tayyorlash{% endif %}
+                </p>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="text-center">
+                <div class="w-20 h-20 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-6">
+                    <span class="text-white text-2xl font-bold font-display">3</span>
                 </div>
-                
-                <!-- Step 3: Ishlab Chiqarish va Yetkazish -->
-                <div class="relative">
-                    <div class="process-card p-6">
-                        <!-- Icon -->
-                        <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
-                            <i class="fas fa-check-circle text-blue-600 text-xl"></i>
-                        </div>
-                        
-                        <!-- Title -->
-                        <h4 class="text-lg font-bold text-[#232339] mb-2">
-                            {% if lang == 'ru' %}Производство и Доставка{% elif lang == 'en' %}Production & Delivery{% else %}Ishlab Chiqarish va Yetkazish{% endif %}
-                        </h4>
-                        
-                        <!-- Description -->
-                        <p class="text-gray-600 text-sm leading-relaxed">
-                            {% if lang == 'ru' %}
-                            Получение готового заказа, установка и подготовка к использованию
-                            {% elif lang == 'en' %}
-                            Receiving the finished order, installation and preparation for use
-                            {% else %}
-                            Tayyor buyurtmani olish, o'rnatish va foydalanishga tayyorgarlik
-                            {% endif %}
-                        </p>
-                    </div>
-                    
-                    <!-- Number Circle -->
-                    <div class="process-number">
-                        3
-                    </div>
-                </div>
+                <h4 class="text-lg font-bold text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab Chiqarish{% endif %}
+                </h4>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Изготовление, доставка и установка{% elif lang == 'en' %}Manufacturing, delivery and installation{% else %}Tayyorlash, yetkazish va o'rnatish{% endif %}
+                </p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA Section -->
-<section class="py-20 lg:py-28 bg-gradient-to-br from-[#232339] to-[#000000] relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-80 h-80 bg-white rounded-full blur-3xl"></div>
-    </div>
-    
-    <div class="container mx-auto px-4 relative">
+<section class="py-20 lg:py-28 bg-[#1a1a2e]">
+    <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="hero-title text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-                Sizning Loyihangiz Keyingi Bo'lsin
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 font-display">
+                {% if lang == 'ru' %}Ваш проект - следующий{% elif lang == 'en' %}Your Project is Next{% else %}Sizning Loyihangiz Keyingi Bo'lsin{% endif %}
             </h2>
-            <p class="text-white/80 text-lg mb-10 max-w-xl mx-auto">
-                Orzuingizdagi mebelni birga yaratamiz. Bepul maslahat va 3D dizayn uchun hoziroq bog'laning.
+            <p class="text-white/60 text-lg mb-10 max-w-xl mx-auto">
+                {% if lang == 'ru' %}Создадим мебель вашей мечты вместе. Свяжитесь для бесплатной консультации.{% elif lang == 'en' %}Let's create your dream furniture together. Contact us for free consultation.{% else %}Orzuingizdagi mebelni birga yaratamiz. Bepul maslahat uchun bog'laning.{% endif %}
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-white text-[#232339] px-8 py-4 rounded-full font-medium transition hover:shadow-xl hover:shadow-black/20 hover:scale-105">
-                    <i class="fas fa-paper-plane"></i>
-                    Loyiha Boshlash
+                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#c9a96e] hover:bg-[#b8956b] text-white px-8 py-4 font-medium transition">
+                    {% if lang == 'ru' %}Начать проект{% elif lang == 'en' %}Start Project{% else %}Loyiha Boshlash{% endif %}
                 </a>
-                <a href="/contact" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-4 rounded-full font-medium transition hover:bg-white hover:text-[#232339]">
-                    <i class="fas fa-phone"></i>
-                    Bog'lanish
+                <a href="/contact" class="inline-flex items-center justify-center gap-2 border border-white/30 text-white px-8 py-4 font-medium transition hover:bg-white hover:text-[#1a1a2e]">
+                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
                 </a>
             </div>
         </div>
-</div>
+    </div>
 </section>
 {% endblock %}
