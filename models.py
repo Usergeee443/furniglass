@@ -47,6 +47,7 @@ class Product(db.Model):
     warranty = db.Column(db.String(50))
     warranty_uz = db.Column(db.String(50))
     images = db.Column(db.Text)  # JSON string of image paths
+    colors = db.Column(db.Text)  # JSON string of color options: [{"name": "Qora", "hex": "#1a1a2e"}, ...]
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def get_name(self, lang='uz'):
@@ -260,5 +261,23 @@ class DesignConsultation(db.Model):
     message = db.Column(db.Text)
     status = db.Column(db.String(50), default='Yangi')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class UserActivity(db.Model):
+    """User activity tracking - sahifalar va mahsulotlar ko'rish"""
+    id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(100))  # Session ID
+    ip_address = db.Column(db.String(50))
+    user_agent = db.Column(db.String(500))
+    activity_type = db.Column(db.String(50))  # 'page_view', 'product_view'
+    page_url = db.Column(db.String(500))  # Sahifa URL
+    page_name = db.Column(db.String(200))  # Sahifa nomi (masalan: "Mahsulotlar", "Portfolio")
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=True)  # Agar mahsulot ko'rilgan bo'lsa
+    product_name = db.Column(db.String(200))  # Mahsulot nomi
+    referrer = db.Column(db.String(500))  # Qayerdan kelgan
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationship
+    product = db.relationship('Product', backref='views', lazy=True)
 
 

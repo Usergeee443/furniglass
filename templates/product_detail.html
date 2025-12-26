@@ -156,16 +156,55 @@
                     </div>
                 </div>
                 
-                <!-- Color Options Placeholder -->
-                <div class="mb-6 pb-6 border-b border-gray-100">
-                    <h3 class="font-medium text-[#1a1a2e] mb-4">{% if lang == 'ru' %}Цвета{% elif lang == 'en' %}Colors{% else %}Ranglar{% endif %}</h3>
-                    <div class="flex items-center gap-2">
-                        <button class="w-8 h-8 rounded-full bg-[#1a1a2e] border-2 border-[#1a1a2e] ring-2 ring-offset-2 ring-[#1a1a2e]"></button>
-                        <button class="w-8 h-8 rounded-full bg-[#8B7355] border-2 border-gray-200 hover:border-[#8B7355]"></button>
-                        <button class="w-8 h-8 rounded-full bg-[#C4C4C4] border-2 border-gray-200 hover:border-[#C4C4C4]"></button>
-                        <span class="text-sm text-gray-400 ml-2">+ more options</span>
+                <!-- Color Options -->
+                {% if product.colors %}
+                    {% set colors = product.colors|from_json %}
+                    {% if colors %}
+                    <div class="mb-6 pb-6 border-b border-gray-100">
+                        <h3 class="font-medium text-[#1a1a2e] mb-4">{% if lang == 'ru' %}Цвета{% elif lang == 'en' %}Colors{% else %}Ranglar{% endif %}</h3>
+                        <div class="flex items-center flex-wrap gap-3">
+                            {% for color in colors %}
+                            <label class="cursor-pointer">
+                                <input type="radio" name="color" value="{{ color.name }}" class="hidden color-radio" {% if loop.first %}checked{% endif %}>
+                                <div class="color-option w-10 h-10 rounded-full border-2 border-gray-200 hover:border-[#1a1a2e] transition-all {% if loop.first %}border-[#1a1a2e] ring-2 ring-offset-2 ring-[#1a1a2e]{% endif %}" 
+                                     style="background-color: {{ color.hex }};"
+                                     onclick="selectColor(this, '{{ color.name }}', '{{ color.hex }}')"
+                                     title="{{ color.name }}">
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        <p class="text-sm text-gray-500 mt-3">
+                            <span id="selected-color-name">{% if colors %}{{ colors[0].name }}{% endif %}</span>
+                        </p>
                     </div>
-                </div>
+                    {% endif %}
+                {% else %}
+                    <!-- Default colors if product has no colors defined -->
+                    <div class="mb-6 pb-6 border-b border-gray-100">
+                        <h3 class="font-medium text-[#1a1a2e] mb-4">{% if lang == 'ru' %}Цвета{% elif lang == 'en' %}Colors{% else %}Ranglar{% endif %}</h3>
+                        <div class="flex items-center gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="color" value="Qora" class="hidden color-radio" checked>
+                                <div class="color-option w-8 h-8 rounded-full bg-[#1a1a2e] border-2 border-[#1a1a2e] ring-2 ring-offset-2 ring-[#1a1a2e]" 
+                                     onclick="selectColor(this, 'Qora', '#1a1a2e')"></div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="color" value="Jigarrang" class="hidden color-radio">
+                                <div class="color-option w-8 h-8 rounded-full bg-[#8B7355] border-2 border-gray-200 hover:border-[#8B7355]" 
+                                     onclick="selectColor(this, 'Jigarrang', '#8B7355')"></div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="color" value="Kulrang" class="hidden color-radio">
+                                <div class="color-option w-8 h-8 rounded-full bg-[#C4C4C4] border-2 border-gray-200 hover:border-[#C4C4C4]" 
+                                     onclick="selectColor(this, 'Kulrang', '#C4C4C4')"></div>
+                            </label>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-3">
+                            <span id="selected-color-name">Qora</span>
+                        </p>
+                    </div>
+                {% endif %}
                 
                 <!-- Quantity & Add to Cart -->
                 <form id="add-to-cart-form" action="/cart/add/{{ product.id }}" method="POST" class="mb-8">
@@ -278,6 +317,30 @@
     function increaseQty() {
         const input = document.getElementById('quantity');
         input.value = parseInt(input.value) + 1;
+    }
+    
+    function selectColor(element, colorName, colorHex) {
+        // Remove active state from all color options
+        document.querySelectorAll('.color-option').forEach(opt => {
+            opt.classList.remove('border-[#1a1a2e]', 'ring-2', 'ring-offset-2', 'ring-[#1a1a2e]');
+            opt.classList.add('border-gray-200');
+        });
+        
+        // Add active state to selected color
+        element.classList.add('border-[#1a1a2e]', 'ring-2', 'ring-offset-2', 'ring-[#1a1a2e]');
+        element.classList.remove('border-gray-200');
+        
+        // Update radio button
+        const radio = element.parentElement.querySelector('.color-radio');
+        if (radio) {
+            radio.checked = true;
+        }
+        
+        // Update selected color name display
+        const nameDisplay = document.getElementById('selected-color-name');
+        if (nameDisplay) {
+            nameDisplay.textContent = colorName;
+        }
     }
     
     // AJAX form submit

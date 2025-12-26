@@ -1,0 +1,261 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Foydalanuvchi Faolligi - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+    .stat-card {
+        transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex-1 overflow-y-auto">
+    <div class="p-6 lg:p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-[#232339] mb-2">Foydalanuvchi Faolligi</h1>
+            <p class="text-gray-500 text-sm">Saytda foydalanuvchilar statistika (refreshlar hisobga olinmagan)</p>
+        </div>
+        
+        <!-- Main Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="stat-card bg-white p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm mb-1">Tashrif buyuruvchilar</p>
+                        <p class="text-3xl font-bold text-[#232339]">{{ stats.unique_visitors }}</p>
+                        <p class="text-xs text-gray-400 mt-1">Unikal ID bo'yicha</p>
+                    </div>
+                    <div class="w-14 h-14 bg-amber-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-users text-amber-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card bg-white p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm mb-1">Sahifaga tashriflar</p>
+                        <p class="text-3xl font-bold text-[#232339]">{{ stats.unique_page_visits }}</p>
+                        <p class="text-xs text-gray-400 mt-1">Unikal ID bo'yicha</p>
+                    </div>
+                    <div class="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-file text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card bg-white p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm mb-1">Mahsulot ko'rishlar</p>
+                        <p class="text-3xl font-bold text-[#232339]">{{ stats.unique_product_views }}</p>
+                        <p class="text-xs text-gray-400 mt-1">Unikal ID bo'yicha</p>
+                    </div>
+                    <div class="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-box text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Period Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-[#232339]">Bugun</h3>
+                    <i class="fas fa-calendar-day text-gray-400"></i>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Tashrif buyuruvchilar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.today_unique_visitors }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Sahifaga tashriflar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.today_unique_page_visits }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Mahsulot ko'rishlar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.today_unique_product_views }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-[#232339]">Hafta (7 kun)</h3>
+                    <i class="fas fa-calendar-week text-gray-400"></i>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Tashrif buyuruvchilar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.week_unique_visitors }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Sahifaga tashriflar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.week_unique_page_visits }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Mahsulot ko'rishlar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.week_unique_product_views }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-[#232339]">Oy (30 kun)</h3>
+                    <i class="fas fa-calendar-alt text-gray-400"></i>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Tashrif buyuruvchilar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.month_unique_visitors }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Sahifaga tashriflar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.month_unique_page_visits }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600 text-sm">Mahsulot ko'rishlar:</span>
+                        <span class="font-bold text-[#232339]">{{ stats.month_unique_product_views }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Daily Visitors Chart -->
+            <div class="bg-white p-6 rounded-lg border border-gray-100">
+                <h3 class="text-lg font-bold text-[#232339] mb-4">Oxirgi 7 kunlik tashrif buyuruvchilar</h3>
+                <div class="relative" style="height: 300px;">
+                    <canvas id="dailyChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Hourly Visitors Chart -->
+            <div class="bg-white p-6 rounded-lg border border-gray-100">
+                <h3 class="text-lg font-bold text-[#232339] mb-4">Bugungi soatlik tashrif buyuruvchilar</h3>
+                <div class="relative" style="height: 300px;">
+                    <canvas id="hourlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Pages & Products -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Top Pages -->
+            <div class="bg-white p-6 rounded-lg border border-gray-100">
+                <h3 class="text-lg font-bold text-[#232339] mb-4">Eng ko'p ko'rilgan sahifalar</h3>
+                <div class="space-y-3">
+                    {% for page, count in stats.top_pages %}
+                    <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                        <span class="text-gray-700 text-sm">{{ page }}</span>
+                        <span class="text-[#232339] font-semibold">{{ count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-400 text-sm">Ma'lumot yo'q</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Top Products -->
+            <div class="bg-white p-6 rounded-lg border border-gray-100">
+                <h3 class="text-lg font-bold text-[#232339] mb-4">Eng ko'p ko'rilgan mahsulotlar</h3>
+                <div class="space-y-3">
+                    {% for product, count in stats.top_products %}
+                    <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                        <span class="text-gray-700 text-sm">{{ product }}</span>
+                        <span class="text-[#232339] font-semibold">{{ count }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-400 text-sm">Ma'lumot yo'q</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Daily Chart
+const dailyCtx = document.getElementById('dailyChart');
+if (dailyCtx) {
+    const dailyData = {{ stats.daily_stats | tojson }};
+    
+    new Chart(dailyCtx, {
+        type: 'line',
+        data: {
+            labels: dailyData.map(d => d.date_display),
+            datasets: [{
+                label: 'Tashrif buyuruvchilar',
+                data: dailyData.map(d => d.unique_visitors),
+                borderColor: '#1a1a2e',
+                backgroundColor: 'rgba(26, 26, 46, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Hourly Chart
+const hourlyCtx = document.getElementById('hourlyChart');
+if (hourlyCtx) {
+    const hourlyData = {{ stats.hourly_stats | tojson }};
+    
+    new Chart(hourlyCtx, {
+        type: 'bar',
+        data: {
+            labels: hourlyData.map(h => h.hour + ':00'),
+            datasets: [{
+                label: 'Tashrif buyuruvchilar',
+                data: hourlyData.map(h => h.unique_visitors),
+                backgroundColor: '#1a1a2e',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

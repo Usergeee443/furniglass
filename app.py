@@ -6,7 +6,7 @@ from sqlalchemy import or_
 from sqlalchemy.exc import OperationalError
 from config import Config
 from db import db
-from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, Collection, Store, SampleRequest, Article, DesignConsultation
+from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity
 from translations import TRANSLATIONS, get_translation, t
 import os
 import json
@@ -152,6 +152,119 @@ def get_exchange_rate() -> float:
         db.session.add(rate)
         db.session.commit()
     return rate.value
+
+# ============ USER ACTIVITY TRACKING ============
+
+@app.before_request
+def track_user_activity():
+    """Track user activity - sahifalar va mahsulotlar ko'rish (refreshlarni filtrlash)"""
+    # Admin panel va static fayllarni kuzatmaymiz
+    if request.path.startswith('/admin') or request.path.startswith('/static') or request.path.startswith('/uploads'):
+        return
+    
+    # API endpointlarni ham kuzatmaymiz
+    if request.path.startswith('/api') or request.path.startswith('/search'):
+        return
+    
+    # Refreshlarni filtrlash - bir xil sahifaga 30 soniya ichida qayta kirishni sanamaslik
+    try:
+        from datetime import datetime, timedelta
+        
+        # Session ID olish yoki yaratish
+        if 'session_id' not in session:
+            import uuid
+            session['session_id'] = str(uuid.uuid4())
+            session['last_page'] = None
+            session['last_page_time'] = None
+        
+        session_id = session.get('session_id')
+        current_page = request.path
+        current_time = datetime.utcnow()
+        
+        # Refreshlarni tekshirish - bir xil sahifaga qayta kirishni hisobga olmaslik
+        last_page = session.get('last_page')
+        last_page_time = session.get('last_page_time')
+        
+        # Agar bir xil sahifaga qayta kirilgan bo'lsa (refresh), kuzatmaymiz
+        if last_page == current_page and last_page_time:
+            time_diff = (current_time - last_page_time).total_seconds()
+            # 60 soniya ichida refresh bo'lsa, hisobga olmaymiz
+            if time_diff < 60:
+                return
+        
+        # Yangi sahifa yoki vaqt o'tgan - kuzatamiz
+        session['last_page'] = current_page
+        session['last_page_time'] = current_time
+        
+        ip_address = request.remote_addr
+        user_agent = request.headers.get('User-Agent', '')[:500]
+        page_url = request.url
+        referrer = request.headers.get('Referer', '')
+        
+        # Sahifa nomini aniqlash
+        page_name = 'Bosh sahifa'
+        activity_type = 'page_view'
+        product_id = None
+        product_name = None
+        
+        if request.path == '/':
+            page_name = 'Bosh sahifa'
+        elif request.path.startswith('/products'):
+            page_name = 'Mahsulotlar'
+        elif request.path.startswith('/product/'):
+            # Mahsulot ko'rish
+            try:
+                product_id_str = request.path.split('/product/')[1].split('/')[0]
+                product_id = int(product_id_str)
+                product = Product.query.get(product_id)
+                if product:
+                    activity_type = 'product_view'
+                    product_name = product.name_uz or product.name
+                    page_name = f'Mahsulot: {product_name}'
+            except:
+                pass
+        elif request.path.startswith('/portfolio'):
+            page_name = 'Portfolio'
+        elif request.path.startswith('/collections'):
+            page_name = 'Kolleksiyalar'
+        elif request.path.startswith('/about'):
+            page_name = 'Biz haqimizda'
+        elif request.path.startswith('/contact'):
+            page_name = 'Kontakt'
+        elif request.path.startswith('/faq'):
+            page_name = 'FAQ'
+        elif request.path.startswith('/services'):
+            page_name = 'Xizmatlar'
+        elif request.path.startswith('/why-us'):
+            page_name = 'Nima uchun biz'
+        elif request.path.startswith('/interior-design'):
+            page_name = 'Interer dizayn'
+        elif request.path.startswith('/order'):
+            page_name = 'Buyurtma'
+        elif request.path.startswith('/cart'):
+            page_name = 'Savatcha'
+        
+        # Activity yozish
+        activity = UserActivity(
+            session_id=session_id,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            activity_type=activity_type,
+            page_url=page_url,
+            page_name=page_name,
+            product_id=product_id,
+            product_name=product_name,
+            referrer=referrer[:500]
+        )
+        db.session.add(activity)
+        db.session.commit()
+    except Exception as e:
+        # Xatolarni log qilish, lekin sayt ishlashini to'xtatmaslik
+        print(f"Activity tracking error: {e}")
+        try:
+            db.session.rollback()
+        except:
+            pass
 
 # ============ FRONTEND ROUTES ============
 
@@ -578,12 +691,13 @@ def cart():
 def cart_add(product_id):
     product = Product.query.get_or_404(product_id)
     quantity = int(request.form.get('quantity', 1))
+    selected_color = request.form.get('color', '')  # Rang tanlash
     
     cart = get_cart()
     
-    # Check if product already in cart
+    # Check if product with same color already in cart
     for item in cart:
-        if item['product_id'] == product_id:
+        if item['product_id'] == product_id and item.get('color') == selected_color:
             item['quantity'] += quantity
             session.modified = True
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -594,7 +708,8 @@ def cart_add(product_id):
     # Add new item
     cart.append({
         'product_id': product_id,
-        'quantity': quantity
+        'quantity': quantity,
+        'color': selected_color
     })
     session['cart'] = cart
     session.modified = True
@@ -805,27 +920,55 @@ def admin_product_add():
         size = request.form.get('size')
         category_id = int(request.form.get('category_id'))
         is_bestseller = request.form.get('is_bestseller') == 'on'
+        colors = request.form.get('colors', '').strip()
+        
+        # Validate colors JSON
+        colors_json = None
+        if colors:
+            try:
+                colors_data = json.loads(colors)
+                if isinstance(colors_data, list):
+                    colors_json = colors
+            except:
+                flash('Ranglar formati noto\'g\'ri! JSON formatida kiriting.', 'error')
         
         images = []
+        # Debug: barcha fayllarni ko'rish
+        print(f"DEBUG: request.files keys: {list(request.files.keys())}")
+        print(f"DEBUG: 'images' in request.files: {'images' in request.files}")
+        
         if 'images' in request.files:
             files = request.files.getlist('images')
+            print(f"DEBUG: files list length: {len(files)}")
+            print(f"DEBUG: files: {[f.filename for f in files if f.filename]}")
+            
             # 5 tagacha rasm cheklash
             files = files[:5]
             
-            # Asosiy rasm indexini olish (agar belgilangan bo'lsa)
-            main_image_index = int(request.form.get('main_image_index', 0))
+            # Asosiy rasm indexini olish (yangi rasmlar uchun)
+            new_main_image_index = request.form.get('new_main_image_index')
+            if new_main_image_index:
+                main_image_index = int(new_main_image_index)
+            else:
+                main_image_index = 0
             
             for idx, file in enumerate(files):
                 if file and file.filename and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    filepath = os.path.join('products', filename)
+                    # Unique filename yaratish
+                    import uuid
+                    unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
+                    filepath = os.path.join('products', unique_filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
                     images.append(filepath)
+                    print(f"DEBUG: Saved image {idx+1}: {filepath}")
             
             # Asosiy rasmni birinchi o'ringa qo'yish
             if images and main_image_index > 0 and main_image_index < len(images):
                 main_image = images.pop(main_image_index)
                 images.insert(0, main_image)
+        
+        print(f"DEBUG: Total images saved: {len(images)}")
         
         product = Product(
             name=name_uz,  # Default name
@@ -846,7 +989,8 @@ def admin_product_add():
             is_bestseller=is_bestseller,
             warranty=warranty_uz,
             warranty_uz=warranty_uz,
-            images=json.dumps(images)
+            images=json.dumps(images),
+            colors=colors_json
         )
         db.session.add(product)
         db.session.commit()
@@ -884,6 +1028,18 @@ def admin_product_edit(product_id):
         product.category_id = int(request.form.get('category_id'))
         product.is_bestseller = request.form.get('is_bestseller') == 'on'
         
+        # Colors
+        colors = request.form.get('colors', '').strip()
+        colors_json = None
+        if colors:
+            try:
+                colors_data = json.loads(colors)
+                if isinstance(colors_data, list):
+                    colors_json = colors
+            except:
+                flash('Ranglar formati noto\'g\'ri! JSON formatida kiriting.', 'error')
+        product.colors = colors_json
+        
         images = json.loads(product.images) if product.images else []
         
         # Mavjud rasmlar uchun asosiy rasm indexini olish
@@ -910,7 +1066,10 @@ def admin_product_edit(product_id):
                 for idx, file in enumerate(files):
                     if file and file.filename and allowed_file(file.filename):
                         filename = secure_filename(file.filename)
-                        filepath = os.path.join('products', filename)
+                        # Unique filename yaratish
+                        import uuid
+                        unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
+                        filepath = os.path.join('products', unique_filename)
                         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
                         new_images.append(filepath)
                 
@@ -1147,6 +1306,185 @@ def admin_portfolio_edit(portfolio_id):
 @login_required
 def admin_portfolio_delete(portfolio_id):
     portfolio = Portfolio.query.get_or_404(portfolio_id)
+    if portfolio.after_image:
+        try:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], portfolio.after_image))
+        except:
+            pass
+    if portfolio.before_image:
+        try:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], portfolio.before_image))
+        except:
+            pass
+    db.session.delete(portfolio)
+    db.session.commit()
+    flash('Portfolio o\'chirildi!', 'success')
+    return redirect(url_for('admin_portfolios'))
+
+
+@app.route('/admin/user-activity')
+@login_required
+def admin_user_activity():
+    """User activity tracking sahifasi - faqat statistika"""
+    from sqlalchemy import func
+    from datetime import datetime, timedelta
+    
+    # Unique visitors (session_id bo'yicha) - asosiy statistika
+    unique_visitors = db.session.query(func.count(func.distinct(UserActivity.session_id))).scalar()
+    
+    # Sahifaga tashriflar (unique session_id bo'yicha)
+    unique_page_visits = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter_by(activity_type='page_view').scalar()
+    
+    # Mahsulot ko'rishlar (unique session_id bo'yicha)
+    unique_product_views = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter_by(activity_type='product_view').scalar()
+    
+    # Bugungi statistika
+    today = datetime.utcnow().date()
+    today_start = datetime.combine(today, datetime.min.time())
+    
+    today_unique_visitors = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(UserActivity.created_at >= today_start).scalar()
+    
+    today_unique_page_visits = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(
+        UserActivity.created_at >= today_start,
+        UserActivity.activity_type == 'page_view'
+    ).scalar()
+    
+    today_unique_product_views = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(
+        UserActivity.created_at >= today_start,
+        UserActivity.activity_type == 'product_view'
+    ).scalar()
+    
+    # Haftalik statistika (7 kun)
+    week_ago = datetime.utcnow() - timedelta(days=7)
+    week_unique_visitors = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(UserActivity.created_at >= week_ago).scalar()
+    
+    week_unique_page_visits = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(
+        UserActivity.created_at >= week_ago,
+        UserActivity.activity_type == 'page_view'
+    ).scalar()
+    
+    week_unique_product_views = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(
+        UserActivity.created_at >= week_ago,
+        UserActivity.activity_type == 'product_view'
+    ).scalar()
+    
+    # Oylik statistika (30 kun)
+    month_ago = datetime.utcnow() - timedelta(days=30)
+    month_unique_visitors = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(UserActivity.created_at >= month_ago).scalar()
+    
+    month_unique_page_visits = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(
+        UserActivity.created_at >= month_ago,
+        UserActivity.activity_type == 'page_view'
+    ).scalar()
+    
+    month_unique_product_views = db.session.query(
+        func.count(func.distinct(UserActivity.session_id))
+    ).filter(
+        UserActivity.created_at >= month_ago,
+        UserActivity.activity_type == 'product_view'
+    ).scalar()
+    
+    # Eng ko'p ko'rilgan sahifalar (unique session_id bo'yicha)
+    top_pages = db.session.query(
+        UserActivity.page_name,
+        func.count(func.distinct(UserActivity.session_id)).label('count')
+    ).filter_by(activity_type='page_view').group_by(UserActivity.page_name).order_by(func.count(func.distinct(UserActivity.session_id)).desc()).limit(15).all()
+    
+    # Eng ko'p ko'rilgan mahsulotlar (unique session_id bo'yicha) - faqat mavjud mahsulotlar
+    top_products = db.session.query(
+        UserActivity.product_name,
+        func.count(func.distinct(UserActivity.session_id)).label('count')
+    ).join(Product, UserActivity.product_id == Product.id).filter(
+        UserActivity.activity_type == 'product_view',
+        UserActivity.product_name.isnot(None),
+        UserActivity.product_id.isnot(None)
+    ).group_by(
+        UserActivity.product_name
+    ).order_by(
+        func.count(func.distinct(UserActivity.session_id)).desc()
+    ).limit(10).all()
+    
+    # Oxirgi 7 kunlik kunlik statistika (grafiklar uchun - unique session_id)
+    daily_stats = []
+    for i in range(6, -1, -1):
+        date = (datetime.utcnow() - timedelta(days=i)).date()
+        date_start = datetime.combine(date, datetime.min.time())
+        date_end = datetime.combine(date, datetime.max.time())
+        
+        day_unique_visitors = db.session.query(
+            func.count(func.distinct(UserActivity.session_id))
+        ).filter(
+            UserActivity.created_at >= date_start,
+            UserActivity.created_at <= date_end
+        ).scalar()
+        
+        daily_stats.append({
+            'date': date.strftime('%Y-%m-%d'),
+            'date_display': date.strftime('%d.%m'),
+            'unique_visitors': day_unique_visitors
+        })
+    
+    # Soatlik statistika (bugungi kun uchun - unique session_id)
+    hourly_stats = []
+    for hour in range(24):
+        hour_start = today_start + timedelta(hours=hour)
+        hour_end = hour_start + timedelta(hours=1)
+        
+        hour_unique_visitors = db.session.query(
+            func.count(func.distinct(UserActivity.session_id))
+        ).filter(
+            UserActivity.created_at >= hour_start,
+            UserActivity.created_at < hour_end
+        ).scalar()
+        
+        hourly_stats.append({
+            'hour': hour,
+            'unique_visitors': hour_unique_visitors
+        })
+    
+    stats = {
+        'unique_visitors': unique_visitors,
+        'unique_page_visits': unique_page_visits,
+        'unique_product_views': unique_product_views,
+        'today_unique_visitors': today_unique_visitors,
+        'today_unique_page_visits': today_unique_page_visits,
+        'today_unique_product_views': today_unique_product_views,
+        'week_unique_visitors': week_unique_visitors,
+        'week_unique_page_visits': week_unique_page_visits,
+        'week_unique_product_views': week_unique_product_views,
+        'month_unique_visitors': month_unique_visitors,
+        'month_unique_page_visits': month_unique_page_visits,
+        'month_unique_product_views': month_unique_product_views,
+        'top_pages': top_pages,
+        'top_products': top_products,
+        'daily_stats': daily_stats,
+        'hourly_stats': hourly_stats
+    }
+    
+    return render_template('admin/user_activity.html', stats=stats)
+@login_required
+def admin_portfolio_delete(portfolio_id):
+    portfolio = Portfolio.query.get_or_404(portfolio_id)
     db.session.delete(portfolio)
     db.session.commit()
     flash('Portfolio o\'chirildi!', 'success')
@@ -1194,6 +1532,21 @@ if __name__ == '__main__':
                 db.session.execute(text('ALTER TABLE product ADD COLUMN description_en TEXT'))
                 print("Added description_en column to product table")
             
+            # Check and add colors column to Product table
+            if 'colors' not in product_columns:
+                db.session.execute(text('ALTER TABLE product ADD COLUMN colors TEXT'))
+                db.session.commit()
+                print("Added colors column to product table")
+            
+            # Check and create user_activity table
+            try:
+                activity_columns = [col['name'] for col in inspector.get_columns('user_activity')]
+                print("user_activity table exists")
+            except Exception as e:
+                # Table doesn't exist, create it
+                db.create_all()
+                print(f"Created user_activity table")
+            
             if 'material_ru' not in product_columns:
                 db.session.execute(text('ALTER TABLE product ADD COLUMN material_ru VARCHAR(100)'))
                 print("Added material_ru column to product table")
@@ -1224,34 +1577,27 @@ if __name__ == '__main__':
             except Exception as e:
                 print(f"Portfolio migration note: {e}")
             
-            db.session.commit()
-        except Exception as e:
-            print(f"Migration note: {e}")
-            db.session.rollback()
-        
-            # Create all tables including new models
-            db.create_all()
-            
-            # Create new tables for BoConcept features
+            # Commit all migration changes
             try:
-                from sqlalchemy import inspect
-                inspector = inspect(db.engine)
-                existing_tables = inspector.get_table_names()
-                
-                if 'collection' not in existing_tables:
-                    print("Creating collection table...")
-                if 'store' not in existing_tables:
-                    print("Creating store table...")
-                if 'sample_request' not in existing_tables:
-                    print("Creating sample_request table...")
-                if 'article' not in existing_tables:
-                    print("Creating article table...")
-                if 'design_consultation' not in existing_tables:
-                    print("Creating design_consultation table...")
+                db.session.commit()
             except Exception as e:
-                print(f"Migration check error: {e}")
-            
-            db.create_all()  # Ensure all tables are created
+                print(f"Migration commit error: {e}")
+                try:
+                    db.session.rollback()
+                except:
+                    pass
+        except Exception as e:
+            print(f"Migration error: {e}")
+            try:
+                db.session.rollback()
+            except:
+                pass
+        
+        # Create all tables including new models (UserActivity, etc.)
+        try:
+            db.create_all()
+        except Exception as e:
+            print(f"Create all tables error: {e}")
         
         # Create default admin user if not exists
         if not Admin.query.first():

@@ -91,6 +91,11 @@
                     <span class="text-sm">Portfolio</span>
                 </a>
                 
+                <a href="/admin/user-activity" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint == 'admin_user_activity' %}active{% endif %}">
+                    <i class="fas fa-chart-line w-5 text-center"></i>
+                    <span class="text-sm">Foydalanuvchi faolligi</span>
+                </a>
+                
                 <p class="text-xs text-gray-400 uppercase tracking-wider px-3 mb-3 mt-6">Sozlamalar</p>
                 
                 <a href="/admin/settings/currency" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint == 'admin_currency_settings' %}active{% endif %}">

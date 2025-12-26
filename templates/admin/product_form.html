@@ -159,6 +159,21 @@
                         class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
                         placeholder="Masalan: 2 yil">
                 </div>
+                
+                <!-- Colors -->
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">
+                        Ranglar
+                    </label>
+                    <div id="colors-container" class="space-y-3 mb-3">
+                        <!-- Colors will be added here dynamically -->
+                    </div>
+                    <button type="button" onclick="addColorField()" class="text-sm text-[#232339] hover:text-[#c9a96e] font-medium flex items-center gap-2 transition">
+                        <i class="fas fa-plus-circle"></i>
+                        Rang qo'shish
+                    </button>
+                    <textarea name="colors" id="colors-input" class="hidden">{{ product.colors if product and product.colors else '[]' }}</textarea>
+                </div>
             </div>
             
             <!-- Right Column -->
@@ -202,7 +217,7 @@
                         <span class="text-xs text-gray-500">(5 tagacha, birinchi rasm asosiy bo'ladi)</span>
                     </label>
                     <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-[#232339] transition cursor-pointer bg-white" onclick="document.getElementById('images-input').click()">
-                        <input type="file" name="images" id="images-input" multiple accept="image/*" class="hidden" onchange="handleImageUpload(this)" max="5">
+                        <input type="file" name="images" id="images-input" multiple accept="image/*" class="hidden" onchange="handleImageUpload(this)">
                         <div id="upload-placeholder">
                             <div class="w-12 h-12 bg-[#F5F5F5] rounded-xl flex items-center justify-center mx-auto mb-3">
                                 <i class="fas fa-cloud-upload-alt text-[#232339] text-xl"></i>
@@ -257,6 +272,92 @@
 <script>
 let selectedImages = [];
 let mainImageIndex = 0;
+let colorFields = [];
+
+// Colors management
+function initColors() {
+    const colorsInput = document.getElementById('colors-input');
+    const container = document.getElementById('colors-container');
+    
+    try {
+        const colors = JSON.parse(colorsInput.value || '[]');
+        colors.forEach((color, index) => {
+            addColorField(color.name, color.hex, index);
+        });
+    } catch (e) {
+        console.error('Error parsing colors:', e);
+    }
+    
+    // Agar ranglar bo'lmasa, bitta bo'sh maydon qo'shish
+    if (colorFields.length === 0) {
+        addColorField();
+    }
+}
+
+function addColorField(name = '', hex = '#1a1a2e', index = null) {
+    const container = document.getElementById('colors-container');
+    const fieldIndex = index !== null ? index : colorFields.length;
+    
+    const colorField = document.createElement('div');
+    colorField.className = 'flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200';
+    colorField.dataset.index = fieldIndex;
+    
+    colorField.innerHTML = `
+        <input type="color" value="${hex}" onchange="updateColor(${fieldIndex})" 
+               class="w-12 h-12 rounded-lg border border-gray-300 cursor-pointer">
+        <input type="text" placeholder="Rang nomi (masalan: Qora)" value="${name}" 
+               onchange="updateColor(${fieldIndex})" 
+               class="flex-1 bg-[#F5F5F5] border-0 rounded-lg px-3 py-2 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none">
+        <button type="button" onclick="removeColorField(${fieldIndex})" 
+                class="text-red-500 hover:text-red-700 transition">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+    
+    container.appendChild(colorField);
+    colorFields.push({name: name, hex: hex});
+    updateColorsJSON();
+}
+
+function updateColor(index) {
+    const field = document.querySelector(`[data-index="${index}"]`);
+    if (!field) return;
+    
+    const nameInput = field.querySelector('input[type="text"]');
+    const colorInput = field.querySelector('input[type="color"]');
+    
+    colorFields[index] = {
+        name: nameInput.value,
+        hex: colorInput.value
+    };
+    updateColorsJSON();
+}
+
+function removeColorField(index) {
+    const field = document.querySelector(`[data-index="${index}"]`);
+    if (field) {
+        field.remove();
+        colorFields.splice(index, 1);
+        
+        // Re-index all fields
+        const fields = document.querySelectorAll('#colors-container > div');
+        fields.forEach((f, i) => {
+            f.dataset.index = i;
+            const inputs = f.querySelectorAll('input');
+            inputs[0].setAttribute('onchange', `updateColor(${i})`);
+            inputs[1].setAttribute('onchange', `updateColor(${i})`);
+            inputs[2].setAttribute('onclick', `removeColorField(${i})`);
+        });
+        
+        updateColorsJSON();
+    }
+}
+
+function updateColorsJSON() {
+    const colorsInput = document.getElementById('colors-input');
+    const colors = colorFields.filter(c => c.name.trim() !== '');
+    colorsInput.value = JSON.stringify(colors);
+}
 
 function showLoading() {
     document.getElementById('loading-overlay').classList.add('active');
@@ -266,6 +367,8 @@ function showLoading() {
 function handleImageUpload(input) {
     const files = Array.from(input.files);
     
+    console.log('Tanlangan rasmlar soni:', files.length);
+    
     // 5 tagacha cheklash
     if (files.length > 5) {
         alert('Maksimal 5 ta rasm yuklash mumkin!');
@@ -273,38 +376,41 @@ function handleImageUpload(input) {
         return;
     }
     
+    if (files.length === 0) {
+        return;
+    }
+    
     selectedImages = files;
     const container = document.getElementById('images-preview');
     const placeholder = document.getElementById('upload-placeholder');
     
-    if (files.length > 0) {
-        container.innerHTML = '';
-        container.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-        
-        files.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const div = document.createElement('div');
-                div.className = `image-item aspect-square rounded-lg overflow-hidden border-2 ${index === 0 ? 'border-[#F5C242]' : 'border-gray-200'} relative group`;
-                div.innerHTML = `
-                    <img src="${e.target.result}" class="w-full h-full object-cover">
-                    ${index === 0 ? '<div class="main-image-badge">ASOSIY</div>' : ''}
-                    <div class="set-main-btn" onclick="setAsMain(${index}, 'new')">
-                        <span class="bg-[#F5C242] text-[#232339] px-3 py-1.5 rounded-lg text-xs font-bold">Asosiy qilish</span>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
-            reader.readAsDataURL(file);
-        });
-        
-        mainImageIndex = 0;
-        document.getElementById('new-main-image-index').value = 0;
-    } else {
-        container.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-    }
+    container.innerHTML = '';
+    container.classList.remove('hidden');
+    placeholder.classList.add('hidden');
+    
+    files.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = `image-item aspect-square rounded-lg overflow-hidden border-2 ${index === 0 ? 'border-[#F5C242]' : 'border-gray-200'} relative group`;
+            div.innerHTML = `
+                <img src="${e.target.result}" class="w-full h-full object-cover">
+                ${index === 0 ? '<div class="main-image-badge">ASOSIY</div>' : ''}
+                <div class="set-main-btn" onclick="setAsMain(${index}, 'new')">
+                    <span class="bg-[#F5C242] text-[#232339] px-3 py-1.5 rounded-lg text-xs font-bold">Asosiy qilish</span>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+        reader.readAsDataURL(file);
+    });
+    
+    mainImageIndex = 0;
+    document.getElementById('new-main-image-index').value = 0;
+    
+    // Debug: input elementini tekshirish
+    console.log('Input files:', input.files);
+    console.log('Input files length:', input.files.length);
 }
 
 function setAsMain(index, type) {
@@ -366,7 +472,28 @@ function setAsMain(index, type) {
 
 // Form submit qilganda loading ko'rsatish
 document.getElementById('product-form')?.addEventListener('submit', function(e) {
+    updateColorsJSON(); // Submit oldidan ranglarni yangilash
+    
+    // Debug: form submit oldidan rasmlarni tekshirish
+    const imagesInput = document.getElementById('images-input');
+    console.log('Form submit - Rasmlar soni:', imagesInput.files.length);
+    console.log('Form submit - Rasmlar:', Array.from(imagesInput.files).map(f => f.name));
+    
+    // Agar rasmlar bo'lmasa, ogohlantirish
+    if (imagesInput.files.length === 0 && !document.getElementById('existing-images')) {
+        const confirmSubmit = confirm('Hech qanday rasm tanlanmagan. Davom etasizmi?');
+        if (!confirmSubmit) {
+            e.preventDefault();
+            return false;
+        }
+    }
+    
     showLoading();
+});
+
+// Sayt yuklanganda ranglarni yuklash
+document.addEventListener('DOMContentLoaded', function() {
+    initColors();
 });
 </script>
 {% endblock %}
