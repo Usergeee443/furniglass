@@ -131,10 +131,23 @@
         .animate-slide-in {
             animation: slideIn 0.4s ease-out;
         }
+        
+        /* Loading Screen */
+        .loading-screen {
+            transition: opacity 0.8s ease-out;
+        }
+        
+        .loading-screen.hidden {
+            display: none;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-white pt-[70px] md:pt-[80px] pb-16 md:pb-0">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center loading-screen">
+        <img src="/uploads/designs/Frame 3.png" alt="Loading" class="w-32 h-32 md:w-40 md:h-40 object-contain">
+    </div>
     <!-- Header -->
     <header id="main-header" class="site-header fixed top-0 left-0 right-0 z-50 border-b border-gray-100 transition-transform duration-300">
         <div class="container mx-auto px-4 lg:px-8">
@@ -470,6 +483,28 @@
     </footer>
 
     <script>
+        // Loading Screen - faqat birinchi marta kirganda
+        (function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const hasVisited = sessionStorage.getItem('hasVisited');
+            
+            if (hasVisited) {
+                // Agar oldin kirgan bo'lsa, loading screen'ni ko'rsatma
+                loadingScreen.classList.add('hidden');
+            } else {
+                // Birinchi marta kirgan bo'lsa
+                sessionStorage.setItem('hasVisited', 'true');
+                
+                // 2.5 soniyadan keyin fade out
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                    }, 800); // fade out animation vaqti
+                }, 900);
+            }
+        })();
+        
         // Header scroll effect
         const header = document.getElementById('main-header');
         let lastScrollY = window.scrollY;
