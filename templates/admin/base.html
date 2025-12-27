@@ -91,6 +91,11 @@
                     <span class="text-sm">Portfolio</span>
                 </a>
                 
+                <a href="/admin/stores" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_stores', 'admin_store_add', 'admin_store_edit'] %}active{% endif %}">
+                    <i class="fas fa-map-marker-alt w-5 text-center"></i>
+                    <span class="text-sm">Filiallar</span>
+                </a>
+                
                 <a href="/admin/user-activity" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint == 'admin_user_activity' %}active{% endif %}">
                     <i class="fas fa-chart-line w-5 text-center"></i>
                     <span class="text-sm">Foydalanuvchi faolligi</span>

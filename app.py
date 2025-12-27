@@ -551,11 +551,6 @@ def interior_design():
     
     return render_template('interior_design.html')
 
-@app.route('/stores')
-def stores():
-    """Store locator page"""
-    stores = Store.query.order_by(Store.created_at.desc()).all()
-    return render_template('stores.html', stores=stores)
 
 @app.route('/samples', methods=['GET', 'POST'])
 def samples():
@@ -1322,6 +1317,117 @@ def admin_portfolio_delete(portfolio_id):
     return redirect(url_for('admin_portfolios'))
 
 
+@app.route('/stores')
+def stores():
+    """Stores page with map"""
+    lang = session.get('language', 'uz')
+    stores_list = Store.query.all()
+    return render_template('stores.html', stores=stores_list, lang=lang)
+
+@app.route('/api/stores')
+def api_stores():
+    """API endpoint for stores - returns JSON"""
+    lang = session.get('language', 'uz')
+    stores = Store.query.all()
+    
+    stores_data = []
+    for store in stores:
+        stores_data.append({
+            'id': store.id,
+            'name': store.get_name(lang),
+            'address': store.get_address(lang),
+            'phone': store.phone,
+            'email': store.email,
+            'latitude': store.latitude,
+            'longitude': store.longitude,
+            'working_hours': store.working_hours_uz if lang == 'uz' else (store.working_hours_ru if lang == 'ru' else store.working_hours_en)
+        })
+    
+    return jsonify(stores_data)
+
+@app.route('/admin/stores')
+@login_required
+def admin_stores():
+    """Admin panel - Stores list"""
+    stores = Store.query.order_by(Store.created_at.desc()).all()
+    return render_template('admin/stores.html', stores=stores)
+
+@app.route('/admin/store/add', methods=['GET', 'POST'])
+@login_required
+def admin_store_add():
+    """Admin panel - Add new store"""
+    if request.method == 'POST':
+        try:
+            store = Store(
+                name_uz=request.form.get('name_uz', '').strip(),
+                name_ru=request.form.get('name_ru', '').strip() or auto_translate(request.form.get('name_uz', '').strip(), 'ru'),
+                name_en=request.form.get('name_en', '').strip() or auto_translate(request.form.get('name_uz', '').strip(), 'en'),
+                address_uz=request.form.get('address_uz', '').strip(),
+                address_ru=request.form.get('address_ru', '').strip() or auto_translate(request.form.get('address_uz', '').strip(), 'ru'),
+                address_en=request.form.get('address_en', '').strip() or auto_translate(request.form.get('address_uz', '').strip(), 'en'),
+                phone=request.form.get('phone', '').strip(),
+                email=request.form.get('email', '').strip(),
+                latitude=float(request.form.get('latitude', 0)) if request.form.get('latitude') else None,
+                longitude=float(request.form.get('longitude', 0)) if request.form.get('longitude') else None,
+                working_hours_uz=request.form.get('working_hours_uz', '').strip(),
+                working_hours_ru=request.form.get('working_hours_ru', '').strip() or auto_translate(request.form.get('working_hours_uz', '').strip(), 'ru'),
+                working_hours_en=request.form.get('working_hours_en', '').strip() or auto_translate(request.form.get('working_hours_uz', '').strip(), 'en')
+            )
+            db.session.add(store)
+            db.session.commit()
+            flash('Filial muvaffaqiyatli qo\'shildi!', 'success')
+            return redirect(url_for('admin_stores'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Xatolik: {str(e)}', 'error')
+    
+    return render_template('admin/store_form.html', store=None)
+
+@app.route('/admin/store/<int:store_id>/edit', methods=['GET', 'POST'])
+@login_required
+def admin_store_edit(store_id):
+    """Admin panel - Edit store"""
+    store = Store.query.get_or_404(store_id)
+    
+    if request.method == 'POST':
+        try:
+            store.name_uz = request.form.get('name_uz', '').strip()
+            store.name_ru = request.form.get('name_ru', '').strip() or store.name_ru
+            store.name_en = request.form.get('name_en', '').strip() or store.name_en
+            store.address_uz = request.form.get('address_uz', '').strip()
+            store.address_ru = request.form.get('address_ru', '').strip() or store.address_ru
+            store.address_en = request.form.get('address_en', '').strip() or store.address_en
+            store.phone = request.form.get('phone', '').strip()
+            store.email = request.form.get('email', '').strip()
+            store.latitude = float(request.form.get('latitude', 0)) if request.form.get('latitude') else None
+            store.longitude = float(request.form.get('longitude', 0)) if request.form.get('longitude') else None
+            store.working_hours_uz = request.form.get('working_hours_uz', '').strip()
+            store.working_hours_ru = request.form.get('working_hours_ru', '').strip() or store.working_hours_ru
+            store.working_hours_en = request.form.get('working_hours_en', '').strip() or store.working_hours_en
+            
+            db.session.commit()
+            flash('Filial muvaffaqiyatli yangilandi!', 'success')
+            return redirect(url_for('admin_stores'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Xatolik: {str(e)}', 'error')
+    
+    return render_template('admin/store_form.html', store=store)
+
+@app.route('/admin/store/<int:store_id>/delete', methods=['POST'])
+@login_required
+def admin_store_delete(store_id):
+    """Admin panel - Delete store"""
+    store = Store.query.get_or_404(store_id)
+    try:
+        db.session.delete(store)
+        db.session.commit()
+        flash('Filial muvaffaqiyatli o\'chirildi!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Xatolik: {str(e)}', 'error')
+    return redirect(url_for('admin_stores'))
+
 @app.route('/admin/user-activity')
 @login_required
 def admin_user_activity():
@@ -1537,6 +1643,34 @@ if __name__ == '__main__':
                 db.session.execute(text('ALTER TABLE product ADD COLUMN colors TEXT'))
                 db.session.commit()
                 print("Added colors column to product table")
+            
+            # Check and create store table
+            try:
+                store_columns = [col['name'] for col in inspector.get_columns('store')]
+                print("store table exists")
+            except Exception as e:
+                # Create store table
+                db.session.execute(text('''
+                    CREATE TABLE store (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name_uz VARCHAR(200) NOT NULL,
+                        name_ru VARCHAR(200),
+                        name_en VARCHAR(200),
+                        address_uz TEXT NOT NULL,
+                        address_ru TEXT,
+                        address_en TEXT,
+                        phone VARCHAR(50),
+                        email VARCHAR(100),
+                        latitude FLOAT,
+                        longitude FLOAT,
+                        working_hours_uz VARCHAR(200),
+                        working_hours_ru VARCHAR(200),
+                        working_hours_en VARCHAR(200),
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    )
+                '''))
+                db.session.commit()
+                print("Created store table")
             
             # Check and create user_activity table
             try:

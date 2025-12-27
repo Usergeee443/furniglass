@@ -27,11 +27,17 @@
         
         /* Header styles */
         .site-header {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .site-header.scrolled {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
             box-shadow: 0 1px 0 rgba(0,0,0,0.06);
         }
         
@@ -159,6 +165,14 @@
                 
                 <!-- Right: Actions -->
                 <div class="flex items-center gap-3 md:gap-5">
+                    <!-- Location Button -->
+                    <a href="/stores" class="p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                        </svg>
+                    </a>
+                    
                     <!-- Search Button -->
                     <button class="p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition" id="search-btn">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
