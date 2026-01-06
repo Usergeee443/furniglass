@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}{{ main_category.get_name(lang) }} - Furni Glass{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-card {
+        transition: all 0.3s ease;
+    }
+    
+    .product-card:hover {
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+    
+    .category-card {
+        transition: all 0.3s ease;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative h-[50vh] md:h-[60vh] overflow-hidden bg-gray-900">
+    {% if main_category.image %}
+    <div class="absolute inset-0">
+        <img src="/uploads/{{ main_category.image }}" alt="{{ main_category.get_name(lang) }}" 
+             class="w-full h-full object-cover opacity-60">
+    </div>
+    {% endif %}
+    <div class="relative h-full flex items-center justify-center text-center px-4">
+        <div class="max-w-3xl">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-light text-white mb-4" style="font-family: 'Playfair Display', serif;">
+                {{ main_category.get_name(lang) }}
+            </h1>
+            {% if main_category.get_description(lang) %}
+            <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto">
+                {{ main_category.get_description(lang) }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section (Small) -->
+{% if categories %}
+<section class="py-8 lg:py-12 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="text-center mb-6 md:mb-8">
+            <h2 class="text-xl md:text-2xl lg:text-3xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Категории{% elif lang == 'en' %}Categories{% else %}Kategoriyalar{% endif %}
+            </h2>
+        </div>
+        
+        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+            {% for category in categories %}
+            <a href="#category-{{ category.id }}" class="category-card scroll-smooth">
+                <div class="relative aspect-square overflow-hidden bg-gray-100 rounded-lg">
+                    {% if category.image %}
+                    <img src="/uploads/{{ category.image }}" alt="{{ category.get_name(lang) }}" 
+                         class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                    {% else %}
+                    <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                        <i class="fas fa-couch text-2xl text-gray-300"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <h3 class="mt-2 text-xs md:text-sm font-medium text-[#1a1a2e] text-center line-clamp-2">{{ category.get_name(lang) }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Additional Information Section (Expanded) -->
+<section class="py-16 lg:py-24 bg-gray-50">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            {% if main_category.get_description(lang) %}
+            <div class="mb-12">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e] mb-6" style="font-family: 'Playfair Display', serif;">
+                    {% if lang == 'ru' %}О нас{% elif lang == 'en' %}About Us{% else %}Biz haqimizda{% endif %}
+                </h2>
+                <div class="text-gray-700 leading-relaxed text-base md:text-lg whitespace-pre-line">
+                    {{ main_category.get_description(lang) }}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Key Features (Expanded) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="w-14 h-14 bg-[#1a1a2e] rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-check-circle text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Качественные материалы{% elif lang == 'en' %}Quality Materials{% else %}Yuqori sifatli materiallar{% endif %}
+                    </h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        {% if lang == 'ru' %}Используем только лучшие материалы от проверенных поставщиков{% elif lang == 'en' %}We use only the best materials from trusted suppliers{% else %}Faqat ishonchli yetkazib beruvchilardan eng yaxshi materiallardan foydalanamiz{% endif %}
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="w-14 h-14 bg-[#1a1a2e] rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-tools text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Профессиональная сборка{% elif lang == 'en' %}Professional Assembly{% else %}Professional yig'ilish{% endif %}
+                    </h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        {% if lang == 'ru' %}Опытные мастера с многолетним опытом работы{% elif lang == 'en' %}Experienced craftsmen with years of experience{% else %}Ko'p yillik tajribaga ega mutaxassislar{% endif %}
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="w-14 h-14 bg-[#1a1a2e] rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-shipping-fast text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Быстрая доставка{% elif lang == 'en' %}Fast Delivery{% else %}Tezkor yetkazib berish{% endif %}
+                    </h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        {% if lang == 'ru' %}Доставляем в кратчайшие сроки по всему городу{% elif lang == 'en' %}We deliver in the shortest time throughout the city{% else %}Shahar bo'ylab eng qisqa muddatda yetkazib beramiz{% endif %}
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="w-14 h-14 bg-[#1a1a2e] rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-headset text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Поддержка клиентов{% elif lang == 'en' %}Customer Support{% else %}Mijozlar yordami{% endif %}
+                    </h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        {% if lang == 'ru' %}Круглосуточная поддержка и консультация{% elif lang == 'en' %}24/7 support and consultation{% else %}Kun bo'yi yordam va maslahat{% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
+                        {{ categories|length }}+
+                    </div>
+                    <p class="text-gray-600 text-sm md:text-base">
+                        {% if lang == 'ru' %}Категорий{% elif lang == 'en' %}Categories{% else %}Kategoriyalar{% endif %}
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
+                        {{ products|length }}+
+                    </div>
+                    <p class="text-gray-600 text-sm md:text-base">
+                        {% if lang == 'ru' %}Продуктов{% elif lang == 'en' %}Products{% else %}Mahsulotlar{% endif %}
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
+                        {{ reviews|length }}+
+                    </div>
+                    <p class="text-gray-600 text-sm md:text-base">
+                        {% if lang == 'ru' %}Отзывов{% elif lang == 'en' %}Reviews{% else %}Sharhlar{% endif %}
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
+                        100%
+                    </div>
+                    <p class="text-gray-600 text-sm md:text-base">
+                        {% if lang == 'ru' %}Качество{% elif lang == 'en' %}Quality{% else %}Sifat{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+{% if products %}
+<section class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
+        <!-- Products by Category -->
+        {% if categories and products_by_category %}
+            {% for category in categories %}
+                {% if products_by_category.get(category.id) %}
+                {% set category_products = products_by_category[category.id] %}
+                <div id="category-{{ category.id }}" class="mb-20 scroll-mt-8">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
+                            {{ category.get_name(lang) }}
+                        </h2>
+                        <a href="/products?category={{ category.id }}" class="text-sm text-[#1a1a2e] hover:text-[#c9a96e] font-medium flex items-center gap-2 transition">
+                            {% if lang == 'ru' %}Все{% elif lang == 'en' %}View all{% else %}Barchasi{% endif %}
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                        {% for product in category_products[:8] %}
+                        <a href="/product/{{ product.id }}" class="product-card block">
+                            <div class="bg-white rounded-lg overflow-hidden">
+                                <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                                    {% set product_images = product.images | from_json %}
+                                    {% if product_images %}
+                                    <img src="/uploads/{{ product_images[0] }}" alt="{{ product.get_name(lang) }}" 
+                                         class="w-full h-full object-cover">
+                                    {% else %}
+                                    <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                        <i class="fas fa-image text-4xl text-gray-300"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="p-4">
+                                    <h3 class="text-base font-medium text-[#1a1a2e] mb-1 line-clamp-2">{{ product.get_name(lang) }}</h3>
+                                    <p class="text-[#c9a96e] font-semibold text-lg">
+                                        {{ "{:,.0f}".format(product.price * rate) }} so'm
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+        <!-- All Products Section -->
+        <div class="mb-20">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
+                    {% if lang == 'ru' %}Все продукты{% elif lang == 'en' %}All Products{% else %}Barcha mahsulotlar{% endif %}
+                </h2>
+                <a href="/products?main_category={{ main_category.id }}" class="text-sm text-[#1a1a2e] hover:text-[#c9a96e] font-medium flex items-center gap-2 transition">
+                    {% if lang == 'ru' %}Все{% elif lang == 'en' %}View all{% else %}Barchasi{% endif %}
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+            
+            {% if products %}
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                {% for product in products[:16] %}
+                <a href="/product/{{ product.id }}" class="product-card block">
+                    <div class="bg-white rounded-lg overflow-hidden">
+                        <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                            {% set product_images = product.images | from_json %}
+                            {% if product_images %}
+                            <img src="/uploads/{{ product_images[0] }}" alt="{{ product.get_name(lang) }}" 
+                                 class="w-full h-full object-cover">
+                            {% else %}
+                            <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                <i class="fas fa-image text-4xl text-gray-300"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-base font-medium text-[#1a1a2e] mb-1 line-clamp-2">{{ product.get_name(lang) }}</h3>
+                            <p class="text-[#c9a96e] font-semibold text-lg">
+                                {{ "{:,.0f}".format(product.price * rate) }} so'm
+                            </p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            
+            {% if products|length > 16 %}
+            <div class="text-center mt-12">
+                <a href="/products?main_category={{ main_category.id }}" 
+                   class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-[#c9a96e] text-white px-8 py-4 text-sm font-medium transition-all">
+                    {% if lang == 'ru' %}Все продукты{% elif lang == 'en' %}View all products{% else %}Barcha mahsulotlarni ko'rish{% endif %}
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="text-center py-12">
+                <p class="text-gray-500 text-lg">
+                    {% if lang == 'ru' %}Пока нет продуктов{% elif lang == 'en' %}No products yet{% else %}Hozircha mahsulotlar yo'q{% endif %}
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<!-- Reviews Section -->
+<section class="py-16 lg:py-24 bg-gray-50">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="text-center mb-12 md:mb-16">
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Отзывы клиентов{% elif lang == 'en' %}Client Reviews{% else %}Mijozlar fikrlari{% endif %}
+            </h2>
+        </div>
+        
+        {% if reviews %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {% for review in reviews[:6] %}
+            <div class="bg-white p-6 md:p-8 rounded-lg shadow-sm">
+                <div class="flex items-center gap-1 mb-4">
+                    {% for i in range(5) %}
+                    <svg class="w-4 h-4 {% if i < review.rating %}text-[#c9a96e]{% else %}text-gray-300{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    {% endfor %}
+                </div>
+                <p class="text-gray-700 mb-4 leading-relaxed">{{ review.get_text(lang) }}</p>
+                <p class="text-[#1a1a2e] font-medium">{{ review.name }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <p class="text-gray-500 text-lg">
+                {% if lang == 'ru' %}Пока нет отзывов{% elif lang == 'en' %}No reviews yet{% else %}Hozircha fikrlar yo'q{% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
+
+

@@ -8,6 +8,41 @@ class Admin(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
+class MainCategory(db.Model):
+    """Asosiy kategoriyalar: Cafe&Restaurant, Xonadon, Clinika"""
+    id = db.Column(db.Integer, primary_key=True)
+    name_uz = db.Column(db.String(200), nullable=False)
+    name_ru = db.Column(db.String(200))
+    name_en = db.Column(db.String(200))
+    slug = db.Column(db.String(100), unique=True, nullable=False)
+    description_uz = db.Column(db.Text)
+    description_ru = db.Column(db.Text)
+    description_en = db.Column(db.Text)
+    image = db.Column(db.String(200))
+    icon = db.Column(db.String(100))  # Icon nomi yoki path
+    order = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    categories = db.relationship('Category', backref='main_category', lazy=True)
+    reviews = db.relationship('Review', backref='main_category', lazy=True)
+    
+    def get_name(self, lang='uz'):
+        """Get main category name in specified language"""
+        if lang == 'ru' and self.name_ru:
+            return self.name_ru
+        elif lang == 'en' and self.name_en:
+            return self.name_en
+        return self.name_uz
+    
+    def get_description(self, lang='uz'):
+        """Get main category description in specified language"""
+        if lang == 'ru' and self.description_ru:
+            return self.description_ru
+        elif lang == 'en' and self.description_en:
+            return self.description_en
+        return self.description_uz or ''
+
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -16,6 +51,7 @@ class Category(db.Model):
     name_en = db.Column(db.String(100))  # Avtomatik tarjima
     slug = db.Column(db.String(100), unique=True, nullable=False)
     image = db.Column(db.String(200))
+    main_category_id = db.Column(db.Integer, db.ForeignKey('main_category.id'), nullable=True)
     products = db.relationship('Product', backref='category', lazy=True)
     
     def get_name(self, lang='uz'):
@@ -92,8 +128,19 @@ class Review(db.Model):
     name = db.Column(db.String(100), nullable=False)
     text = db.Column(db.Text, nullable=False)
     text_uz = db.Column(db.Text, nullable=False)
+    text_ru = db.Column(db.Text)
+    text_en = db.Column(db.Text)
     rating = db.Column(db.Integer, default=5)
+    main_category_id = db.Column(db.Integer, db.ForeignKey('main_category.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_text(self, lang='uz'):
+        """Get review text in specified language"""
+        if lang == 'ru' and self.text_ru:
+            return self.text_ru
+        elif lang == 'en' and self.text_en:
+            return self.text_en
+        return self.text_uz or self.text
 
 class Portfolio(db.Model):
     id = db.Column(db.Integer, primary_key=True)

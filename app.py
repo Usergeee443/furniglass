@@ -6,7 +6,7 @@ from sqlalchemy import or_
 from sqlalchemy.exc import OperationalError
 from config import Config
 from db import db
-from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity
+from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity, MainCategory
 from translations import TRANSLATIONS, get_translation, t
 import os
 import json
@@ -114,6 +114,7 @@ def ensure_upload_dirs():
     os.makedirs(upload_folder, exist_ok=True)
     os.makedirs(os.path.join(upload_folder, 'products'), exist_ok=True)
     os.makedirs(os.path.join(upload_folder, 'categories'), exist_ok=True)
+    os.makedirs(os.path.join(upload_folder, 'main_categories'), exist_ok=True)
     os.makedirs(os.path.join(upload_folder, 'portfolio'), exist_ok=True)
     os.makedirs(os.path.join(upload_folder, 'designs'), exist_ok=True)
     os.makedirs(os.path.join(upload_folder, 'icons'), exist_ok=True)
@@ -270,13 +271,14 @@ def track_user_activity():
 
 @app.route('/')
 def index():
+    main_categories = MainCategory.query.order_by(MainCategory.order).all()
     categories = Category.query.limit(8).all()
     bestsellers = Product.query.filter_by(is_bestseller=True).limit(8).all()
     reviews = Review.query.order_by(Review.created_at.desc()).limit(5).all()
     portfolios = Portfolio.query.order_by(Portfolio.created_at.desc()).limit(3).all()
     collections = Collection.query.limit(3).all()
     articles = Article.query.filter_by(featured=True).limit(2).all()
-    return render_template('index.html', categories=categories, bestsellers=bestsellers, 
+    return render_template('index.html', main_categories=main_categories, categories=categories, bestsellers=bestsellers, 
                          reviews=reviews, portfolios=portfolios, collections=collections, articles=articles)
 
 @app.route('/search')
@@ -395,6 +397,39 @@ def products():
                          materials=[m[0] for m in materials if m[0]], 
                          sizes=[s[0] for s in sizes if s[0]],
                          search_query=search_query)
+
+@app.route('/main-category/<slug>')
+def main_category_detail(slug):
+    """Asosiy kategoriya sahifasi - kategoriyalar, mahsulotlar, sharhlar"""
+    main_category = MainCategory.query.filter_by(slug=slug).first_or_404()
+    lang = get_locale()
+    
+    # O'sha asosiy kategoriyaga tegishli kategoriyalar
+    categories = Category.query.filter_by(main_category_id=main_category.id).all()
+    
+    # O'sha asosiy kategoriyaga tegishli mahsulotlar (kategoriyalar orqali)
+    category_ids = [c.id for c in categories]
+    products = Product.query.filter(Product.category_id.in_(category_ids)).all() if category_ids else []
+    
+    # Kategoriyalar bo'yicha mahsulotlarni guruhlash
+    products_by_category = {}
+    for category in categories:
+        category_products = [p for p in products if p.category_id == category.id]
+        if category_products:
+            products_by_category[category.id] = category_products
+    
+    # O'sha asosiy kategoriyaga tegishli sharhlar
+    reviews = Review.query.filter_by(main_category_id=main_category.id).order_by(Review.created_at.desc()).all()
+    
+    rate = get_exchange_rate()
+    
+    return render_template('main_category.html', 
+                         main_category=main_category,
+                         categories=categories,
+                         products=products,
+                         products_by_category=products_by_category,
+                         reviews=reviews,
+                         rate=rate)
 
 @app.route('/product/<int:product_id>')
 def product_detail(product_id):
@@ -1097,11 +1132,126 @@ def admin_product_delete(product_id):
     flash('Mahsulot o\'chirildi!', 'success')
     return redirect(url_for('admin_products'))
 
+@app.route('/admin/main-categories')
+@login_required
+def admin_main_categories():
+    main_categories = MainCategory.query.order_by(MainCategory.order).all()
+    return render_template('admin/main_categories.html', main_categories=main_categories)
+
+@app.route('/admin/main-category/add', methods=['GET', 'POST'])
+@login_required
+def admin_main_category_add():
+    if request.method == 'POST':
+        name_uz = request.form.get('name_uz')
+        
+        # Auto-translate to Russian and English
+        name_ru = auto_translate(name_uz, 'ru')
+        name_en = auto_translate(name_uz, 'en')
+        
+        slug = request.form.get('slug') or name_uz.lower().replace(' ', '-').replace('&', 'and')
+        description_uz = request.form.get('description_uz', '')
+        description_ru = auto_translate(description_uz, 'ru') if description_uz else ''
+        description_en = auto_translate(description_uz, 'en') if description_uz else ''
+        order = request.form.get('order', type=int) or 0
+        
+        image = None
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join('main_categories', filename)
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'main_categories'), exist_ok=True)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                image = filepath
+        
+        main_category = MainCategory(
+            name_uz=name_uz,
+            name_ru=name_ru,
+            name_en=name_en,
+            slug=slug,
+            description_uz=description_uz,
+            description_ru=description_ru,
+            description_en=description_en,
+            image=image,
+            order=order
+        )
+        db.session.add(main_category)
+        db.session.commit()
+        flash('Asosiy kategoriya qo\'shildi!', 'success')
+        return redirect(url_for('admin_main_categories'))
+    
+    return render_template('admin/main_category_form.html')
+
+@app.route('/admin/main-category/<int:main_category_id>/edit', methods=['GET', 'POST'])
+@login_required
+def admin_main_category_edit(main_category_id):
+    main_category = MainCategory.query.get_or_404(main_category_id)
+    
+    if request.method == 'POST':
+        main_category.name_uz = request.form.get('name_uz')
+        
+        # Auto-translate if fields are empty
+        if not request.form.get('name_ru'):
+            main_category.name_ru = auto_translate(main_category.name_uz, 'ru')
+        else:
+            main_category.name_ru = request.form.get('name_ru')
+            
+        if not request.form.get('name_en'):
+            main_category.name_en = auto_translate(main_category.name_uz, 'en')
+        else:
+            main_category.name_en = request.form.get('name_en')
+        
+        main_category.slug = request.form.get('slug') or main_category.name_uz.lower().replace(' ', '-').replace('&', 'and')
+        main_category.description_uz = request.form.get('description_uz', '')
+        
+        if not request.form.get('description_ru'):
+            main_category.description_ru = auto_translate(main_category.description_uz, 'ru') if main_category.description_uz else ''
+        else:
+            main_category.description_ru = request.form.get('description_ru')
+            
+        if not request.form.get('description_en'):
+            main_category.description_en = auto_translate(main_category.description_uz, 'en') if main_category.description_uz else ''
+        else:
+            main_category.description_en = request.form.get('description_en')
+        
+        main_category.order = request.form.get('order', type=int) or 0
+        
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join('main_categories', filename)
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'main_categories'), exist_ok=True)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                main_category.image = filepath
+        
+        db.session.commit()
+        flash('Asosiy kategoriya yangilandi!', 'success')
+        return redirect(url_for('admin_main_categories'))
+    
+    return render_template('admin/main_category_form.html', main_category=main_category)
+
+@app.route('/admin/main-category/<int:main_category_id>/delete', methods=['POST'])
+@login_required
+def admin_main_category_delete(main_category_id):
+    main_category = MainCategory.query.get_or_404(main_category_id)
+    
+    # Check if main category has categories
+    if main_category.categories:
+        flash('Bu asosiy kategoriyada kategoriyalar bor. Avval kategoriyalarni o\'chiring yoki boshqa asosiy kategoriyaga ko\'chiring!', 'error')
+        return redirect(url_for('admin_main_categories'))
+    
+    db.session.delete(main_category)
+    db.session.commit()
+    flash('Asosiy kategoriya o\'chirildi!', 'success')
+    return redirect(url_for('admin_main_categories'))
+
 @app.route('/admin/categories')
 @login_required
 def admin_categories():
     categories = Category.query.all()
-    return render_template('admin/categories.html', categories=categories)
+    main_categories = MainCategory.query.all()
+    return render_template('admin/categories.html', categories=categories, main_categories=main_categories)
 
 @app.route('/admin/category/add', methods=['GET', 'POST'])
 @login_required
@@ -1114,6 +1264,12 @@ def admin_category_add():
         name_en = auto_translate(name_uz, 'en')
         
         slug = request.form.get('slug') or name_uz.lower().replace(' ', '-')
+        # Slug takrorlanmasligini ta'minlash
+        base_slug = slug
+        counter = 1
+        while Category.query.filter_by(slug=slug).first():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
         
         image = None
         if 'image' in request.files:
@@ -1125,13 +1281,22 @@ def admin_category_add():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
                 image = filepath
         
-        category = Category(name=name_uz, name_uz=name_uz, name_ru=name_ru, name_en=name_en, slug=slug, image=image)
-        db.session.add(category)
-        db.session.commit()
-        flash('Kategoriya qo\'shildi!', 'success')
-        return redirect(url_for('admin_categories'))
+        main_category_id = request.form.get('main_category_id', type=int) or None
+        
+        try:
+            category = Category(name=name_uz, name_uz=name_uz, name_ru=name_ru, name_en=name_en, slug=slug, image=image, main_category_id=main_category_id)
+            db.session.add(category)
+            db.session.commit()
+            flash('Kategoriya qo\'shildi!', 'success')
+            return redirect(url_for('admin_categories'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Xatolik: {str(e)}', 'error')
+            main_categories = MainCategory.query.all()
+            return render_template('admin/category_form.html', main_categories=main_categories)
     
-    return render_template('admin/category_form.html')
+    main_categories = MainCategory.query.all()
+    return render_template('admin/category_form.html', main_categories=main_categories)
 
 @app.route('/admin/category/<int:category_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -1153,7 +1318,16 @@ def admin_category_edit(category_id):
         else:
             category.name_en = request.form.get('name_en')
         
-        category.slug = request.form.get('slug') or category.name_uz.lower().replace(' ', '-')
+        new_slug = request.form.get('slug') or category.name_uz.lower().replace(' ', '-')
+        # Slug takrorlanmasligini ta'minlash (faqat boshqa kategoriyalar bilan)
+        if new_slug != category.slug:
+            base_slug = new_slug
+            counter = 1
+            while Category.query.filter(Category.slug == new_slug, Category.id != category.id).first():
+                new_slug = f"{base_slug}-{counter}"
+                counter += 1
+        category.slug = new_slug
+        category.main_category_id = request.form.get('main_category_id', type=int) or None
         
         if 'image' in request.files:
             file = request.files['image']
@@ -1164,11 +1338,18 @@ def admin_category_edit(category_id):
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
                 category.image = filepath
         
-        db.session.commit()
-        flash('Kategoriya yangilandi!', 'success')
-        return redirect(url_for('admin_categories'))
+        try:
+            db.session.commit()
+            flash('Kategoriya yangilandi!', 'success')
+            return redirect(url_for('admin_categories'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Xatolik: {str(e)}', 'error')
+            main_categories = MainCategory.query.all()
+            return render_template('admin/category_form.html', category=category, main_categories=main_categories)
     
-    return render_template('admin/category_form.html', category=category)
+    main_categories = MainCategory.query.all()
+    return render_template('admin/category_form.html', category=category, main_categories=main_categories)
 
 @app.route('/admin/category/<int:category_id>/delete', methods=['POST'])
 @login_required
@@ -1711,6 +1892,39 @@ if __name__ == '__main__':
             except Exception as e:
                 print(f"Portfolio migration note: {e}")
             
+            # Check and create main_category table
+            try:
+                main_category_columns = [col['name'] for col in inspector.get_columns('main_category')]
+                print("main_category table exists")
+            except Exception as e:
+                # Table doesn't exist, create it
+                db.create_all()
+                print("Created main_category table")
+            
+            # Check and add main_category_id to category table
+            try:
+                category_columns = [col['name'] for col in inspector.get_columns('category')]
+                if 'main_category_id' not in category_columns:
+                    db.session.execute(text('ALTER TABLE category ADD COLUMN main_category_id INTEGER'))
+                    print("Added main_category_id column to category table")
+            except Exception as e:
+                print(f"Category migration note: {e}")
+            
+            # Check and add main_category_id and text translations to review table
+            try:
+                review_columns = [col['name'] for col in inspector.get_columns('review')]
+                if 'main_category_id' not in review_columns:
+                    db.session.execute(text('ALTER TABLE review ADD COLUMN main_category_id INTEGER'))
+                    print("Added main_category_id column to review table")
+                if 'text_ru' not in review_columns:
+                    db.session.execute(text('ALTER TABLE review ADD COLUMN text_ru TEXT'))
+                    print("Added text_ru column to review table")
+                if 'text_en' not in review_columns:
+                    db.session.execute(text('ALTER TABLE review ADD COLUMN text_en TEXT'))
+                    print("Added text_en column to review table")
+            except Exception as e:
+                print(f"Review migration note: {e}")
+            
             # Commit all migration changes
             try:
                 db.session.commit()
@@ -1749,6 +1963,45 @@ if __name__ == '__main__':
             db.session.add(rate)
             db.session.commit()
             print("Default exchange rate created: 1 USD = 12000 UZS")
+        
+        # Create default main categories if not exists
+        if not MainCategory.query.first():
+            main_categories = [
+                MainCategory(
+                    name_uz='Cafe & Restaurant',
+                    name_ru='Кафе и Ресторан',
+                    name_en='Cafe & Restaurant',
+                    slug='cafe-restaurant',
+                    description_uz='Cafe va Restaurantlar uchun maxsus mebellar',
+                    description_ru='Специальная мебель для кафе и ресторанов',
+                    description_en='Special furniture for cafes and restaurants',
+                    order=1
+                ),
+                MainCategory(
+                    name_uz='Xonadon',
+                    name_ru='Дом',
+                    name_en='Home',
+                    slug='home',
+                    description_uz='Uy va xonadonlar uchun mebellar',
+                    description_ru='Мебель для дома',
+                    description_en='Furniture for home',
+                    order=2
+                ),
+                MainCategory(
+                    name_uz='Clinika',
+                    name_ru='Клиника',
+                    name_en='Clinic',
+                    slug='clinic',
+                    description_uz='Tibbiy muassasalar uchun mebellar',
+                    description_ru='Мебель для медицинских учреждений',
+                    description_en='Furniture for medical facilities',
+                    order=3
+                )
+            ]
+            for mc in main_categories:
+                db.session.add(mc)
+            db.session.commit()
+            print("Created default main categories: Cafe & Restaurant, Xonadon, Clinika")
     
     # Production mode - Render.com will use gunicorn
     if os.environ.get('RENDER'):

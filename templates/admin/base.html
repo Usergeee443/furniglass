@@ -76,6 +76,11 @@
                     <span class="text-sm">Mahsulotlar</span>
                 </a>
                 
+                <a href="/admin/main-categories" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_main_categories', 'admin_main_category_add', 'admin_main_category_edit'] %}active{% endif %}">
+                    <i class="fas fa-building w-5 text-center"></i>
+                    <span class="text-sm">Asosiy kategoriyalar</span>
+                </a>
+                
                 <a href="/admin/categories" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_categories', 'admin_category_add', 'admin_category_edit'] %}active{% endif %}">
                     <i class="fas fa-folder w-5 text-center"></i>
                     <span class="text-sm">Kategoriyalar</span>

@@ -1,14 +1,14 @@
 {% extends "admin/base.html" %}
 
-{% block title %}{% if category %}Kategoriyani tahrirlash{% else %}Yangi kategoriya{% endif %} - Admin Panel{% endblock %}
-{% block page_title %}{% if category %}Kategoriyani tahrirlash{% else %}Yangi kategoriya{% endif %}{% endblock %}
-{% block page_subtitle %}{% if category %}{{ category.name_uz }}{% else %}Yangi kategoriya qo'shish{% endif %}{% endblock %}
+{% block title %}{% if main_category %}Asosiy kategoriyani tahrirlash{% else %}Yangi asosiy kategoriya{% endif %} - Admin Panel{% endblock %}
+{% block page_title %}{% if main_category %}Asosiy kategoriyani tahrirlash{% else %}Yangi asosiy kategoriya{% endif %}{% endblock %}
+{% block page_subtitle %}{% if main_category %}{{ main_category.name_uz }}{% else %}Yangi asosiy kategoriya qo'shish{% endif %}{% endblock %}
 
 {% block content %}
 <!-- Back Button -->
-<a href="/admin/categories" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#232339] mb-6 transition">
+<a href="/admin/main-categories" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#232339] mb-6 transition">
     <i class="fas fa-arrow-left"></i>
-    <span>Kategoriyalarga qaytish</span>
+    <span>Asosiy kategoriyalarga qaytish</span>
 </a>
 
 <div class="max-w-2xl">
@@ -18,10 +18,10 @@
                 <!-- Header -->
                 <div class="flex items-center gap-3 pb-6 border-b border-gray-100">
                     <div class="w-12 h-12 bg-[#232339] rounded-xl flex items-center justify-center">
-                        <i class="fas fa-folder text-white text-xl"></i>
+                        <i class="fas fa-building text-white text-xl"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-[#232339] text-lg">Kategoriya ma'lumotlari</h3>
+                        <h3 class="font-semibold text-[#232339] text-lg">Asosiy kategoriya ma'lumotlari</h3>
                         <p class="text-sm text-gray-500">Faqat o'zbekcha kiriting — ruscha va inglizchaga avtomatik tarjima qilinadi</p>
                     </div>
                 </div>
@@ -36,10 +36,10 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-[#232339] mb-2">Kategoriya nomi (O'zbekcha) *</label>
-                    <input type="text" name="name_uz" value="{{ category.name_uz if category else '' }}" required 
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Asosiy kategoriya nomi (O'zbekcha) *</label>
+                    <input type="text" name="name_uz" value="{{ main_category.name_uz if main_category else '' }}" required 
                         class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
-                        placeholder="Masalan: Shkaflar">
+                        placeholder="Masalan: Cafe & Restaurant">
                     <p class="text-xs text-gray-500 mt-2">
                         <i class="fas fa-info-circle mr-1"></i>
                         Ruscha va inglizchaga avtomatik tarjima qilinadi
@@ -47,35 +47,38 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-[#232339] mb-2">Asosiy kategoriya</label>
-                    <select name="main_category_id" 
-                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
-                        <option value="">Asosiy kategoriya tanlanmagan</option>
-                        {% if main_categories %}
-                        {% for main_cat in main_categories %}
-                        <option value="{{ main_cat.id }}" {% if category and category.main_category_id == main_cat.id %}selected{% endif %}>
-                            {{ main_cat.name_uz }}
-                        </option>
-                        {% endfor %}
-                        {% endif %}
-                    </select>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Tavsif (O'zbekcha)</label>
+                    <textarea name="description_uz" rows="3" 
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition resize-none" 
+                        placeholder="Asosiy kategoriya haqida qisqacha ma'lumot">{{ main_category.description_uz if main_category else '' }}</textarea>
                     <p class="text-xs text-gray-500 mt-2">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Bu kategoriya qaysi asosiy kategoriyaga tegishli (ixtiyoriy)
+                        Ruscha va inglizchaga avtomatik tarjima qilinadi
                     </p>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-medium text-[#232339] mb-2">Slug (URL uchun)</label>
                     <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">/products?category=</span>
-                        <input type="text" name="slug" value="{{ category.slug if category else '' }}" 
-                            class="w-full bg-[#F5F5F5] border-0 rounded-xl pl-40 pr-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
-                            placeholder="shkaflar">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">/main-category/</span>
+                        <input type="text" name="slug" value="{{ main_category.slug if main_category else '' }}" 
+                            class="w-full bg-[#F5F5F5] border-0 rounded-xl pl-36 pr-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                            placeholder="cafe-restaurant">
                     </div>
                     <p class="text-xs text-gray-500 mt-2">
                         <i class="fas fa-info-circle mr-1"></i>
                         Bo'sh qoldirilsa, nomdan avtomatik yaratiladi
+                    </p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Tartib raqami</label>
+                    <input type="number" name="order" value="{{ main_category.order if main_category else 0 }}" min="0" 
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                        placeholder="0">
+                    <p class="text-xs text-gray-500 mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Kichik raqamlar birinchi ko'rsatiladi
                     </p>
                 </div>
                 
@@ -97,11 +100,11 @@
                         </div>
                     </div>
                     
-                    {% if category and category.image %}
+                    {% if main_category and main_category.image %}
                     <div class="mt-4">
                         <p class="text-sm text-gray-500 mb-2">Mavjud rasm:</p>
                         <div class="w-32 h-32 rounded-xl overflow-hidden border border-gray-200">
-                            <img src="/uploads/{{ category.image }}" alt="{{ category.name_uz }}" class="w-full h-full object-cover">
+                            <img src="/uploads/{{ main_category.image }}" alt="{{ main_category.name_uz }}" class="w-full h-full object-cover">
                         </div>
                     </div>
                     {% endif %}
@@ -110,12 +113,12 @@
             
             <!-- Actions -->
             <div class="px-6 lg:px-8 py-5 bg-[#F5F5F5] border-t border-gray-200 flex flex-col sm:flex-row gap-3 sm:justify-end">
-                <a href="/admin/categories" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-white transition text-center">
+                <a href="/admin/main-categories" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-white transition text-center">
                     Bekor qilish
                 </a>
                 <button type="submit" class="px-8 py-3 rounded-xl bg-[#232339] hover:bg-black text-white font-medium transition flex items-center justify-center gap-2">
                     <i class="fas fa-save"></i> 
-                    {% if category %}Yangilash{% else %}Qo'shish{% endif %}
+                    {% if main_category %}Yangilash{% else %}Qo'shish{% endif %}
                 </button>
             </div>
         </form>
@@ -136,3 +139,5 @@ function previewImage(input) {
 }
 </script>
 {% endblock %}
+
+
