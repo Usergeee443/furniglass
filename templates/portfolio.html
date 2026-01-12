@@ -96,54 +96,114 @@
         height: 100%;
         object-fit: cover;
         filter: brightness(0.7);
+        transform: scale(1.1);
+        transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+    }
+
+    /* Parallax zoom effect when slide is active */
+    .gallery-slide.active .slide-image img {
+        transform: scale(1);
     }
 
     .slide-overlay {
         position: absolute;
         inset: 0;
         background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(26, 26, 46, 0.7) 100%);
+        transition: opacity 0.6s ease;
     }
 
     .slide-content {
         position: relative;
         z-index: 10;
-        max-width: 600px;
+        max-width: 650px;
         color: white;
-        padding: 40px;
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transform: translateX(100px);
+        padding: 50px;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        transform: translateX(120px) translateY(20px);
         opacity: 0;
-        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .gallery-slide.active .slide-content {
-        transform: translateX(0);
+        transform: translateX(0) translateY(0);
         opacity: 1;
     }
 
+    .slide-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #c9a96e 0%, #b8956b 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 25px rgba(201, 169, 110, 0.3);
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .gallery-slide.active .slide-icon {
+        animation: iconPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .slide-icon svg {
+        width: 35px;
+        height: 35px;
+        color: white;
+    }
+
     .slide-number {
-        font-size: 80px;
+        font-size: 90px;
         font-weight: 700;
         line-height: 1;
-        color: rgba(201, 169, 110, 0.3);
+        color: rgba(201, 169, 110, 0.25);
         margin-bottom: 20px;
         font-family: 'Playfair Display', serif;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
 
     .slide-title {
-        font-size: 36px;
+        font-size: 42px;
         font-weight: 700;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
         color: white;
         font-family: 'Playfair Display', serif;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+        line-height: 1.2;
     }
 
     .slide-description {
-        font-size: 16px;
+        font-size: 17px;
         line-height: 1.8;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 25px;
+    }
+
+    .slide-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .slide-feature-tag {
+        padding: 8px 16px;
+        background: rgba(201, 169, 110, 0.2);
+        border: 1px solid rgba(201, 169, 110, 0.4);
+        border-radius: 4px;
+        font-size: 13px;
+        color: #c9a96e;
+        font-weight: 500;
     }
 
     /* Progress Indicator */
@@ -154,54 +214,156 @@
         transform: translateX(-50%);
         z-index: 100;
         display: flex;
-        gap: 12px;
-        padding: 20px 30px;
-        background: rgba(26, 26, 46, 0.9);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        align-items: center;
+        gap: 16px;
+        padding: 16px 28px;
+        background: rgba(26, 26, 46, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(201, 169, 110, 0.3);
+        border-radius: 50px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .scroll-progress.visible {
         opacity: 1;
+        transform: translateX(-50%) translateY(0);
     }
 
     .progress-dot {
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.3);
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
+        position: relative;
+    }
+
+    .progress-dot:hover {
+        background: rgba(201, 169, 110, 0.6);
+        transform: scale(1.2);
     }
 
     .progress-dot.active {
         background: #c9a96e;
-        transform: scale(1.3);
+        transform: scale(1.4);
+        box-shadow: 0 0 15px rgba(201, 169, 110, 0.6);
+    }
+
+    .progress-dot.active::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border: 2px solid rgba(201, 169, 110, 0.4);
+        border-radius: 50%;
+        animation: progressRipple 1.5s ease-out infinite;
+    }
+
+    @keyframes progressRipple {
+        0% {
+            transform: scale(0.8);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1.8);
+            opacity: 0;
+        }
+    }
+
+    /* Keyboard Navigation Hint */
+    .keyboard-hint {
+        position: fixed;
+        bottom: 100px;
+        right: 40px;
+        z-index: 99;
+        padding: 12px 20px;
+        background: rgba(26, 26, 46, 0.9);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(201, 169, 110, 0.3);
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+
+    .keyboard-hint.visible {
+        opacity: 1;
+    }
+
+    .keyboard-hint kbd {
+        display: inline-block;
+        padding: 4px 8px;
+        background: rgba(201, 169, 110, 0.2);
+        border: 1px solid rgba(201, 169, 110, 0.3);
+        border-radius: 4px;
+        font-family: monospace;
+        color: #c9a96e;
+        margin: 0 4px;
     }
 
     /* Mobile Optimization */
     @media (max-width: 768px) {
         .slide-content {
             padding: 30px;
-            transform: translateX(50px);
+            transform: translateX(50px) translateY(10px);
+            border-radius: 6px;
+        }
+
+        .slide-icon {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 20px;
+        }
+
+        .slide-icon svg {
+            width: 28px;
+            height: 28px;
         }
 
         .slide-number {
-            font-size: 60px;
+            font-size: 65px;
         }
 
         .slide-title {
-            font-size: 28px;
+            font-size: 30px;
+            margin-bottom: 15px;
         }
 
         .slide-description {
-            font-size: 14px;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
         .gallery-slide {
             padding: 0 20px;
+        }
+
+        .scroll-progress {
+            bottom: 20px;
+            padding: 12px 20px;
+            gap: 12px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+        }
+
+        .keyboard-hint {
+            display: none;
+        }
+
+        .slide-features {
+            gap: 8px;
+        }
+
+        .slide-feature-tag {
+            padding: 6px 12px;
+            font-size: 11px;
         }
     }
 
@@ -478,13 +640,23 @@
                         <div class="slide-overlay"></div>
                     </div>
                     <div class="slide-content">
+                        <div class="slide-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                        </div>
                         <div class="slide-number">01</div>
                         <h3 class="slide-title">
                             {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
                         </h3>
                         <p class="slide-description">
-                            {% if lang == 'ru' %}Бесплатная консультация и помощь в выборе стиля, материалов и дизайна{% elif lang == 'en' %}Free consultation and assistance in choosing style, materials and design{% else %}Bepul maslahat va uslub, materiallar va dizayn tanlashda yordam{% endif %}
+                            {% if lang == 'ru' %}Бесплатная консультация и помощь в выборе стиля, материалов и дизайна для вашего интерьера{% elif lang == 'en' %}Free consultation and assistance in choosing style, materials and design for your interior{% else %}Bepul maslahat va interyer uchun uslub, materiallar va dizayn tanlashda yordam{% endif %}
                         </p>
+                        <div class="slide-features">
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}Бесплатно{% elif lang == 'en' %}Free{% else %}Bepul{% endif %}</span>
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}Онлайн/Офлайн{% elif lang == 'en' %}Online/Offline{% else %}Online/Offline{% endif %}</span>
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}30-60 мин{% elif lang == 'en' %}30-60 min{% else %}30-60 daq{% endif %}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -495,13 +667,23 @@
                         <div class="slide-overlay"></div>
                     </div>
                     <div class="slide-content">
+                        <div class="slide-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                            </svg>
+                        </div>
                         <div class="slide-number">02</div>
                         <h3 class="slide-title">
                             {% if lang == 'ru' %}Замер и Дизайн{% elif lang == 'en' %}Measurement & Design{% else %}O'lchov va Dizayn{% endif %}
                         </h3>
                         <p class="slide-description">
-                            {% if lang == 'ru' %}Профессиональный замер помещения и создание детального 3D проекта{% elif lang == 'en' %}Professional room measurement and detailed 3D project creation{% else %}Professional xonani o'lchash va batafsil 3D loyiha tayyorlash{% endif %}
+                            {% if lang == 'ru' %}Профессиональный замер помещения и создание детального 3D проекта с визуализацией{% elif lang == 'en' %}Professional room measurement and detailed 3D project creation with visualization{% else %}Professional xonani o'lchash va vizualizatsiya bilan batafsil 3D loyiha tayyorlash{% endif %}
                         </p>
+                        <div class="slide-features">
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}3D Визуализация{% elif lang == 'en' %}3D Visualization{% else %}3D Vizualizatsiya{% endif %}</span>
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}Точный замер{% elif lang == 'en' %}Precise Measurement{% else %}Aniq o'lchov{% endif %}</span>
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}2-3 дня{% elif lang == 'en' %}2-3 days{% else %}2-3 kun{% endif %}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -512,13 +694,23 @@
                         <div class="slide-overlay"></div>
                     </div>
                     <div class="slide-content">
+                        <div class="slide-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                            </svg>
+                        </div>
                         <div class="slide-number">03</div>
                         <h3 class="slide-title">
                             {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab Chiqarish{% endif %}
                         </h3>
                         <p class="slide-description">
-                            {% if lang == 'ru' %}Изготовление мебели на современном оборудовании из качественных материалов{% elif lang == 'en' %}Furniture manufacturing on modern equipment from quality materials{% else %}Zamonaviy uskunada sifatli materiallardan mebel tayyorlash{% endif %}
+                            {% if lang == 'ru' %}Изготовление мебели на современном оборудовании из качественных материалов с соблюдением всех стандартов{% elif lang == 'en' %}Furniture manufacturing on modern equipment from quality materials with all standards compliance{% else %}Zamonaviy uskunada sifatli materiallardan va barcha standartlarga rioya qilgan holda mebel tayyorlash{% endif %}
                         </p>
+                        <div class="slide-features">
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}ЧПУ станки{% elif lang == 'en' %}CNC Machines{% else %}CNC Mashinalar{% endif %}</span>
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}Контроль качества{% elif lang == 'en' %}Quality Control{% else %}Sifat nazorati{% endif %}</span>
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}7-14 дней{% elif lang == 'en' %}7-14 days{% else %}7-14 kun{% endif %}</span>
+                        </div>
                     </div>
                 </div>
 
@@ -529,13 +721,23 @@
                         <div class="slide-overlay"></div>
                     </div>
                     <div class="slide-content">
+                        <div class="slide-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
                         <div class="slide-number">04</div>
                         <h3 class="slide-title">
                             {% if lang == 'ru' %}Доставка и Монтаж{% elif lang == 'en' %}Delivery & Installation{% else %}Yetkazish va O'rnatish{% endif %}
                         </h3>
                         <p class="slide-description">
-                            {% if lang == 'ru' %}Бережная доставка и профессиональная установка мебели в вашем помещении{% elif lang == 'en' %}Careful delivery and professional furniture installation in your space{% else %}Ehtiyotkorlik bilan yetkazish va professional o'rnatish xizmati{% endif %}
+                            {% if lang == 'ru' %}Бережная доставка и профессиональная установка мебели в вашем помещении с гарантией{% elif lang == 'en' %}Careful delivery and professional furniture installation in your space with warranty{% else %}Ehtiyotkorlik bilan yetkazish va kafolat bilan professional o'rnatish xizmati{% endif %}
                         </p>
+                        <div class="slide-features">
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free Delivery{% else %}Bepul yetkazish{% endif %}</span>
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}Монтаж за 1 день{% elif lang == 'en' %}1 Day Setup{% else %}1 kunda o'rnatish{% endif %}</span>
+                            <span class="slide-feature-tag">{% if lang == 'ru' %}Гарантия 2 года{% elif lang == 'en' %}2 Year Warranty{% else %}2 yil kafolat{% endif %}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -595,6 +797,17 @@
     <div class="progress-dot" data-slide="3"></div>
     <div class="progress-dot" data-slide="4"></div>
 </div>
+
+<!-- Keyboard Navigation Hint -->
+<div class="keyboard-hint" id="keyboardHint">
+    {% if lang == 'ru' %}
+        Используйте <kbd>←</kbd> <kbd>→</kbd> для навигации
+    {% elif lang == 'en' %}
+        Use <kbd>←</kbd> <kbd>→</kbd> to navigate
+    {% else %}
+        Navigatsiya uchun <kbd>←</kbd> <kbd>→</kbd> ishlatishingiz mumkin
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -606,19 +819,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.gallery-slide');
     const progressIndicator = document.getElementById('scrollProgress');
     const progressDots = document.querySelectorAll('.progress-dot');
+    const keyboardHint = document.getElementById('keyboardHint');
 
     if (!gallerySection || !gallerySlides) return;
 
     let scrollHeight = 0;
     let slideCount = slides.length;
+    let currentSlideIndex = 0;
+    let isInGallery = false;
+
+    // Touch/Swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
 
     // Calculate total scroll height needed
     function calculateScrollHeight() {
-        // Each slide needs space to scroll through
         scrollHeight = slideCount * window.innerHeight;
         if (galleryWrapper) {
             galleryWrapper.style.height = scrollHeight + 'px';
         }
+    }
+
+    // Get current slide index
+    function getCurrentSlideIndex() {
+        const wrapperRect = galleryWrapper.getBoundingClientRect();
+        const wrapperTop = wrapperRect.top;
+        const windowHeight = window.innerHeight;
+
+        if (wrapperTop <= 0 && wrapperTop > -scrollHeight) {
+            const scrollProgress = Math.abs(wrapperTop) / (scrollHeight - windowHeight);
+            return Math.floor(scrollProgress * slideCount);
+        }
+        return -1;
+    }
+
+    // Navigate to specific slide
+    function navigateToSlide(slideIndex) {
+        if (slideIndex < 0 || slideIndex >= slideCount) return;
+
+        const scrollTarget = galleryWrapper.offsetTop + (slideIndex * window.innerHeight) + (window.innerHeight / 2);
+        window.scrollTo({
+            top: scrollTarget,
+            behavior: 'smooth'
+        });
     }
 
     // Update slide positions based on scroll
@@ -631,6 +876,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Check if gallery section is in view
         if (wrapperTop <= 0 && wrapperTop > -scrollHeight) {
+            isInGallery = true;
+
             // Calculate scroll progress (0 to 1)
             const scrollProgress = Math.abs(wrapperTop) / (scrollHeight - windowHeight);
 
@@ -642,7 +889,7 @@ document.addEventListener('DOMContentLoaded', function() {
             gallerySlides.style.transform = `translateX(-${translateX}px)`;
 
             // Update active slide
-            const currentSlideIndex = Math.floor(scrollProgress * slideCount);
+            currentSlideIndex = Math.floor(scrollProgress * slideCount);
             slides.forEach((slide, index) => {
                 if (index === currentSlideIndex) {
                     slide.classList.add('active');
@@ -660,24 +907,61 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Show progress indicator
+            // Show UI elements
             progressIndicator.classList.add('visible');
+            keyboardHint.classList.add('visible');
         } else {
-            // Hide progress indicator when outside gallery
+            isInGallery = false;
             progressIndicator.classList.remove('visible');
+            keyboardHint.classList.remove('visible');
         }
     }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (!isInGallery) return;
+
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            navigateToSlide(currentSlideIndex + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            navigateToSlide(currentSlideIndex - 1);
+        }
+    });
+
+    // Touch/Swipe handlers
+    galleryWrapper.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    galleryWrapper.addEventListener('touchend', function(e) {
+        if (!isInGallery) return;
+
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+
+        const swipeThreshold = 50;
+        const horizontalDiff = touchStartX - touchEndX;
+        const verticalDiff = Math.abs(touchStartY - touchEndY);
+
+        // Only trigger swipe if horizontal movement is dominant
+        if (Math.abs(horizontalDiff) > swipeThreshold && Math.abs(horizontalDiff) > verticalDiff) {
+            if (horizontalDiff > 0) {
+                // Swipe left - next slide
+                navigateToSlide(currentSlideIndex + 1);
+            } else {
+                // Swipe right - previous slide
+                navigateToSlide(currentSlideIndex - 1);
+            }
+        }
+    }, { passive: true });
 
     // Progress dot click handlers
     progressDots.forEach((dot, index) => {
         dot.addEventListener('click', function() {
-            const wrapperRect = galleryWrapper.getBoundingClientRect();
-            const scrollTarget = galleryWrapper.offsetTop + (index * window.innerHeight) + (window.innerHeight / 2);
-
-            window.scrollTo({
-                top: scrollTarget,
-                behavior: 'smooth'
-            });
+            navigateToSlide(index);
         });
     });
 
@@ -685,7 +969,7 @@ document.addEventListener('DOMContentLoaded', function() {
     calculateScrollHeight();
     updateSlidePositions();
 
-    // Update on scroll
+    // Update on scroll with smooth performance
     let ticking = false;
     window.addEventListener('scroll', function() {
         if (!ticking) {
@@ -711,6 +995,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (slides.length > 0) {
         slides[0].classList.add('active');
     }
+
+    // Auto-hide keyboard hint after 5 seconds
+    setTimeout(function() {
+        if (isInGallery) {
+            keyboardHint.style.transition = 'opacity 0.8s ease';
+            keyboardHint.style.opacity = '0';
+        }
+    }, 5000);
 });
 </script>
 {% endblock %}
