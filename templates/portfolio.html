@@ -7,33 +7,209 @@
     .portfolio-card {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .portfolio-card:hover {
         transform: translateY(-8px);
     }
-    
+
     .portfolio-card:hover .portfolio-overlay {
         opacity: 1;
     }
-    
+
     .portfolio-card:hover .portfolio-content {
         transform: translateY(0);
     }
-    
+
     .portfolio-overlay {
         opacity: 0;
         transition: all 0.4s ease;
     }
-    
+
     .portfolio-content {
         transform: translateY(20px);
         transition: all 0.4s ease;
     }
-    
+
     .filter-btn.active {
         background: #1a1a2e;
         color: white;
         border-color: #1a1a2e;
+    }
+
+    /* Horizontal Scroll Gallery Styles */
+    .scroll-gallery-section {
+        position: relative;
+        will-change: transform;
+    }
+
+    .scroll-gallery-container {
+        position: relative;
+    }
+
+    .gallery-panel {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .intro-panel, .outro-panel {
+        padding: 80px 0;
+    }
+
+    /* Gallery Slides Wrapper */
+    .gallery-slides-wrapper {
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .gallery-slides {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        will-change: transform;
+    }
+
+    .gallery-slide {
+        flex: 0 0 100vw;
+        height: 100vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 5vw;
+    }
+
+    .slide-image {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+    }
+
+    .slide-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7);
+    }
+
+    .slide-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(26, 26, 46, 0.7) 100%);
+    }
+
+    .slide-content {
+        position: relative;
+        z-index: 10;
+        max-width: 600px;
+        color: white;
+        padding: 40px;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transform: translateX(100px);
+        opacity: 0;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .gallery-slide.active .slide-content {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .slide-number {
+        font-size: 80px;
+        font-weight: 700;
+        line-height: 1;
+        color: rgba(201, 169, 110, 0.3);
+        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .slide-title {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: white;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .slide-description {
+        font-size: 16px;
+        line-height: 1.8;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Progress Indicator */
+    .scroll-progress {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        display: flex;
+        gap: 12px;
+        padding: 20px 30px;
+        background: rgba(26, 26, 46, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .scroll-progress.visible {
+        opacity: 1;
+    }
+
+    .progress-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .progress-dot.active {
+        background: #c9a96e;
+        transform: scale(1.3);
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+        .slide-content {
+            padding: 30px;
+            transform: translateX(50px);
+        }
+
+        .slide-number {
+            font-size: 60px;
+        }
+
+        .slide-title {
+            font-size: 28px;
+        }
+
+        .slide-description {
+            font-size: 14px;
+        }
+
+        .gallery-slide {
+            padding: 0 20px;
+        }
+    }
+
+    /* Smooth scroll for better performance */
+    @media (prefers-reduced-motion: no-preference) {
+        html {
+            scroll-behavior: smooth;
+        }
     }
 </style>
 {% endblock %}
@@ -267,56 +443,123 @@
     </div>
 </section>
 
-<!-- Process Section -->
-<section class="py-20 lg:py-28 bg-[#FAF9F6]">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-6 font-display">
-                {% if lang == 'ru' %}Процесс Работы{% elif lang == 'en' %}Our Process{% else %}Loyiha Jarayoni{% endif %}
-            </h2>
-            <p class="text-gray-600 text-lg">
-                {% if lang == 'ru' %}От идеи до готового проекта{% elif lang == 'en' %}From idea to finished project{% else %}Fikrdan tayyor loyihagacha{% endif %}
-            </p>
+<!-- Horizontal Scroll Gallery Section -->
+<section class="scroll-gallery-section bg-[#1a1a2e] overflow-hidden">
+    <div class="scroll-gallery-container">
+        <!-- Intro Panel -->
+        <div class="gallery-panel intro-panel">
+            <div class="container mx-auto px-4 lg:px-8 h-full flex items-center justify-center">
+                <div class="max-w-3xl text-center">
+                    <span class="inline-block bg-[#c9a96e]/20 text-[#c9a96e] px-6 py-3 text-sm font-medium mb-8 backdrop-blur-sm">
+                        {% if lang == 'ru' %}Процесс работы{% elif lang == 'en' %}Our Process{% else %}Ish jarayoni{% endif %}
+                    </span>
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 font-display leading-tight">
+                        {% if lang == 'ru' %}От идеи до готового проекта{% elif lang == 'en' %}From idea to finished project{% else %}Fikrdan tayyor loyihagacha{% endif %}
+                    </h2>
+                    <p class="text-white/70 text-lg md:text-xl">
+                        {% if lang == 'ru' %}Прокрутите вниз, чтобы увидеть наш процесс{% elif lang == 'en' %}Scroll down to see our process{% else %}Jarayonni ko'rish uchun pastga scroll qiling{% endif %}
+                    </p>
+                    <div class="mt-8 animate-bounce">
+                        <svg class="w-6 h-6 mx-auto text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <!-- Step 1 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-6">
-                    <span class="text-white text-2xl font-bold font-display">1</span>
+
+        <!-- Image Gallery Panels -->
+        <div class="gallery-slides-wrapper">
+            <div class="gallery-slides">
+                <!-- Slide 1 - Consultation -->
+                <div class="gallery-slide" data-slide="1">
+                    <div class="slide-image">
+                        <img src="/uploads/designs/3.jpg" alt="Konsultatsiya">
+                        <div class="slide-overlay"></div>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-number">01</div>
+                        <h3 class="slide-title">
+                            {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
+                        </h3>
+                        <p class="slide-description">
+                            {% if lang == 'ru' %}Бесплатная консультация и помощь в выборе стиля, материалов и дизайна{% elif lang == 'en' %}Free consultation and assistance in choosing style, materials and design{% else %}Bepul maslahat va uslub, materiallar va dizayn tanlashda yordam{% endif %}
+                        </p>
+                    </div>
                 </div>
-                <h4 class="text-lg font-bold text-[#1a1a2e] mb-3">
-                    {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
-                </h4>
-                <p class="text-gray-600 text-sm">
-                    {% if lang == 'ru' %}Бесплатная консультация и помощь в выборе{% elif lang == 'en' %}Free consultation and assistance{% else %}Bepul maslahat va yo'nalish tanlashda yordam{% endif %}
-                </p>
+
+                <!-- Slide 2 - Measurement -->
+                <div class="gallery-slide" data-slide="2">
+                    <div class="slide-image">
+                        <img src="/uploads/designs/3.jpg" alt="O'lchov">
+                        <div class="slide-overlay"></div>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-number">02</div>
+                        <h3 class="slide-title">
+                            {% if lang == 'ru' %}Замер и Дизайн{% elif lang == 'en' %}Measurement & Design{% else %}O'lchov va Dizayn{% endif %}
+                        </h3>
+                        <p class="slide-description">
+                            {% if lang == 'ru' %}Профессиональный замер помещения и создание детального 3D проекта{% elif lang == 'en' %}Professional room measurement and detailed 3D project creation{% else %}Professional xonani o'lchash va batafsil 3D loyiha tayyorlash{% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 3 - Production -->
+                <div class="gallery-slide" data-slide="3">
+                    <div class="slide-image">
+                        <img src="/uploads/designs/3.jpg" alt="Ishlab chiqarish">
+                        <div class="slide-overlay"></div>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-number">03</div>
+                        <h3 class="slide-title">
+                            {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab Chiqarish{% endif %}
+                        </h3>
+                        <p class="slide-description">
+                            {% if lang == 'ru' %}Изготовление мебели на современном оборудовании из качественных материалов{% elif lang == 'en' %}Furniture manufacturing on modern equipment from quality materials{% else %}Zamonaviy uskunada sifatli materiallardan mebel tayyorlash{% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 4 - Installation -->
+                <div class="gallery-slide" data-slide="4">
+                    <div class="slide-image">
+                        <img src="/uploads/designs/3.jpg" alt="O'rnatish">
+                        <div class="slide-overlay"></div>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-number">04</div>
+                        <h3 class="slide-title">
+                            {% if lang == 'ru' %}Доставка и Монтаж{% elif lang == 'en' %}Delivery & Installation{% else %}Yetkazish va O'rnatish{% endif %}
+                        </h3>
+                        <p class="slide-description">
+                            {% if lang == 'ru' %}Бережная доставка и профессиональная установка мебели в вашем помещении{% elif lang == 'en' %}Careful delivery and professional furniture installation in your space{% else %}Ehtiyotkorlik bilan yetkazish va professional o'rnatish xizmati{% endif %}
+                        </p>
+                    </div>
+                </div>
             </div>
-            
-            <!-- Step 2 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-[#c9a96e] flex items-center justify-center mx-auto mb-6">
-                    <span class="text-white text-2xl font-bold font-display">2</span>
+        </div>
+
+        <!-- Outro Panel -->
+        <div class="gallery-panel outro-panel">
+            <div class="container mx-auto px-4 lg:px-8 h-full flex items-center justify-center">
+                <div class="max-w-3xl text-center">
+                    <div class="w-24 h-24 bg-[#c9a96e] flex items-center justify-center mx-auto mb-8">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-6 font-display">
+                        {% if lang == 'ru' %}Готово к заказу?{% elif lang == 'en' %}Ready to order?{% else %}Buyurtma berishga tayyormisiz?{% endif %}
+                    </h3>
+                    <p class="text-white/70 text-lg mb-8">
+                        {% if lang == 'ru' %}Начнем воплощать вашу мечту в реальность{% elif lang == 'en' %}Let's turn your dream into reality{% else %}Orzuingizni haqiqatga aylantiramiz{% endif %}
+                    </p>
+                    <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#c9a96e] hover:bg-[#b8956b] text-white px-8 py-4 font-medium transition">
+                        {% if lang == 'ru' %}Начать проект{% elif lang == 'en' %}Start Project{% else %}Loyiha Boshlash{% endif %}
+                    </a>
                 </div>
-                <h4 class="text-lg font-bold text-[#1a1a2e] mb-3">
-                    {% if lang == 'ru' %}Замер и Дизайн{% elif lang == 'en' %}Measurement & Design{% else %}O'lchov va Dizayn{% endif %}
-                </h4>
-                <p class="text-gray-600 text-sm">
-                    {% if lang == 'ru' %}Бесплатный замер и 3D проектирование{% elif lang == 'en' %}Free measurement and 3D design{% else %}Bepul o'lchov va 3D loyiha tayyorlash{% endif %}
-                </p>
-            </div>
-            
-            <!-- Step 3 -->
-            <div class="text-center">
-                <div class="w-20 h-20 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-6">
-                    <span class="text-white text-2xl font-bold font-display">3</span>
-                </div>
-                <h4 class="text-lg font-bold text-[#1a1a2e] mb-3">
-                    {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab Chiqarish{% endif %}
-                </h4>
-                <p class="text-gray-600 text-sm">
-                    {% if lang == 'ru' %}Изготовление, доставка и установка{% elif lang == 'en' %}Manufacturing, delivery and installation{% else %}Tayyorlash, yetkazish va o'rnatish{% endif %}
-                </p>
             </div>
         </div>
     </div>
@@ -344,4 +587,130 @@
         </div>
     </div>
 </section>
+
+<!-- Progress Indicator -->
+<div class="scroll-progress" id="scrollProgress">
+    <div class="progress-dot" data-slide="1"></div>
+    <div class="progress-dot" data-slide="2"></div>
+    <div class="progress-dot" data-slide="3"></div>
+    <div class="progress-dot" data-slide="4"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const gallerySection = document.querySelector('.scroll-gallery-section');
+    const galleryWrapper = document.querySelector('.gallery-slides-wrapper');
+    const gallerySlides = document.querySelector('.gallery-slides');
+    const slides = document.querySelectorAll('.gallery-slide');
+    const progressIndicator = document.getElementById('scrollProgress');
+    const progressDots = document.querySelectorAll('.progress-dot');
+
+    if (!gallerySection || !gallerySlides) return;
+
+    let scrollHeight = 0;
+    let slideCount = slides.length;
+
+    // Calculate total scroll height needed
+    function calculateScrollHeight() {
+        // Each slide needs space to scroll through
+        scrollHeight = slideCount * window.innerHeight;
+        if (galleryWrapper) {
+            galleryWrapper.style.height = scrollHeight + 'px';
+        }
+    }
+
+    // Update slide positions based on scroll
+    function updateSlidePositions() {
+        if (!galleryWrapper) return;
+
+        const wrapperRect = galleryWrapper.getBoundingClientRect();
+        const wrapperTop = wrapperRect.top;
+        const windowHeight = window.innerHeight;
+
+        // Check if gallery section is in view
+        if (wrapperTop <= 0 && wrapperTop > -scrollHeight) {
+            // Calculate scroll progress (0 to 1)
+            const scrollProgress = Math.abs(wrapperTop) / (scrollHeight - windowHeight);
+
+            // Calculate horizontal translation
+            const maxTranslate = (slideCount - 1) * window.innerWidth;
+            const translateX = scrollProgress * maxTranslate;
+
+            // Apply transform
+            gallerySlides.style.transform = `translateX(-${translateX}px)`;
+
+            // Update active slide
+            const currentSlideIndex = Math.floor(scrollProgress * slideCount);
+            slides.forEach((slide, index) => {
+                if (index === currentSlideIndex) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            // Update progress indicator
+            progressDots.forEach((dot, index) => {
+                if (index === currentSlideIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            // Show progress indicator
+            progressIndicator.classList.add('visible');
+        } else {
+            // Hide progress indicator when outside gallery
+            progressIndicator.classList.remove('visible');
+        }
+    }
+
+    // Progress dot click handlers
+    progressDots.forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+            const wrapperRect = galleryWrapper.getBoundingClientRect();
+            const scrollTarget = galleryWrapper.offsetTop + (index * window.innerHeight) + (window.innerHeight / 2);
+
+            window.scrollTo({
+                top: scrollTarget,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Initialize
+    calculateScrollHeight();
+    updateSlidePositions();
+
+    // Update on scroll
+    let ticking = false;
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                updateSlidePositions();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Update on resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            calculateScrollHeight();
+            updateSlidePositions();
+        }, 250);
+    });
+
+    // Initial activation of first slide
+    if (slides.length > 0) {
+        slides[0].classList.add('active');
+    }
+});
+</script>
 {% endblock %}
