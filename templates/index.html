@@ -71,6 +71,182 @@
             scroll-snap-align: start;
         }
     }
+
+    /* Minimalist Horizontal Scroll Gallery */
+    .minimal-scroll-section {
+        position: relative;
+        background: #fafafa;
+    }
+
+    .minimal-gallery-wrapper {
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .minimal-gallery-track {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        display: flex;
+        will-change: transform;
+        transition: transform 0.1s linear;
+    }
+
+    .minimal-slide {
+        flex: 0 0 100vw;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+    }
+
+    .minimal-slide-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 8vw 10vw 8vw 8vw;
+        background: white;
+    }
+
+    .minimal-slide-number {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(80px, 12vw, 180px);
+        font-weight: 300;
+        line-height: 0.9;
+        color: #f0f0f0;
+        margin-bottom: 2rem;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .minimal-slide.active .minimal-slide-number {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .minimal-slide-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(28px, 4vw, 48px);
+        font-weight: 400;
+        color: #1a1a2e;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+    }
+
+    .minimal-slide.active .minimal-slide-title {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .minimal-slide-description {
+        font-size: clamp(14px, 1.2vw, 18px);
+        line-height: 1.8;
+        color: #666;
+        max-width: 500px;
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+    }
+
+    .minimal-slide.active .minimal-slide-description {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .minimal-slide-image {
+        position: relative;
+        overflow: hidden;
+        background: #e5e5e5;
+    }
+
+    .minimal-slide-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.05);
+        transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .minimal-slide.active .minimal-slide-image img {
+        transform: scale(1);
+    }
+
+    .minimal-progress {
+        position: fixed;
+        bottom: 4rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .minimal-progress.visible {
+        opacity: 1;
+    }
+
+    .minimal-progress-line {
+        width: 50px;
+        height: 2px;
+        background: #d0d0d0;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .minimal-progress-line:hover {
+        background: #b0b0b0;
+    }
+
+    .minimal-progress-line.active {
+        background: #1a1a2e;
+    }
+
+    .minimal-progress-line.active::after {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: 0;
+        right: 0;
+        bottom: -3px;
+        border: 1px solid #1a1a2e;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .minimal-slide {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .minimal-slide-content {
+            padding: 6vw;
+            order: 2;
+        }
+
+        .minimal-slide-image {
+            order: 1;
+        }
+
+        .minimal-slide-number {
+            font-size: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .minimal-progress {
+            bottom: 2rem;
+        }
+
+        .minimal-progress-line {
+            width: 40px;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -156,6 +332,85 @@
                         </div>
 </section>
 {% endif %}
+
+<!-- Minimalist Horizontal Scroll Gallery -->
+<section class="minimal-scroll-section">
+    <div class="minimal-gallery-wrapper" id="minimalGallery">
+        <div class="minimal-gallery-track" id="minimalTrack">
+            <!-- Slide 1 -->
+            <div class="minimal-slide" data-slide="0">
+                <div class="minimal-slide-content">
+                    <div class="minimal-slide-number">01</div>
+                    <h2 class="minimal-slide-title">
+                        {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
+                    </h2>
+                    <p class="minimal-slide-description">
+                        {% if lang == 'ru' %}Мы внимательно выслушаем ваши пожелания и поможем выбрать идеальное решение для вашего интерьера{% elif lang == 'en' %}We carefully listen to your wishes and help you choose the perfect solution for your interior{% else %}Sizning istaklaringizni diqqat bilan tinglaymiz va interyer uchun mukammal yechimni tanlashda yordam beramiz{% endif %}
+                    </p>
+                </div>
+                <div class="minimal-slide-image">
+                    <img src="/uploads/designs/3.jpg" alt="Consultation">
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="minimal-slide" data-slide="1">
+                <div class="minimal-slide-content">
+                    <div class="minimal-slide-number">02</div>
+                    <h2 class="minimal-slide-title">
+                        {% if lang == 'ru' %}Дизайн{% elif lang == 'en' %}Design{% else %}Dizayn{% endif %}
+                    </h2>
+                    <p class="minimal-slide-description">
+                        {% if lang == 'ru' %}Создаем детальный 3D проект, где вы увидите будущую мебель в своем пространстве{% elif lang == 'en' %}We create a detailed 3D project where you can see future furniture in your space{% else %}Batafsil 3D loyiha yaratamiz, unda kelajakdagi mebelni o'z makoningizda ko'rasiz{% endif %}
+                    </p>
+                </div>
+                <div class="minimal-slide-image">
+                    <img src="/uploads/designs/3.jpg" alt="Design">
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="minimal-slide" data-slide="2">
+                <div class="minimal-slide-content">
+                    <div class="minimal-slide-number">03</div>
+                    <h2 class="minimal-slide-title">
+                        {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
+                    </h2>
+                    <p class="minimal-slide-description">
+                        {% if lang == 'ru' %}Изготавливаем мебель на современном оборудовании из премиальных материалов европейского качества{% elif lang == 'en' %}We manufacture furniture on modern equipment from premium materials of European quality{% else %}Zamonaviy uskunada Yevropa sifatidagi premium materiallardan mebel tayyorlaymiz{% endif %}
+                    </p>
+                </div>
+                <div class="minimal-slide-image">
+                    <img src="/uploads/designs/3.jpg" alt="Production">
+                </div>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="minimal-slide" data-slide="3">
+                <div class="minimal-slide-content">
+                    <div class="minimal-slide-number">04</div>
+                    <h2 class="minimal-slide-title">
+                        {% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish{% endif %}
+                    </h2>
+                    <p class="minimal-slide-description">
+                        {% if lang == 'ru' %}Доставляем и профессионально устанавливаем мебель. Наслаждайтесь результатом уже в первый день{% elif lang == 'en' %}We deliver and professionally install furniture. Enjoy the result from day one{% else %}Mebelni yetkazamiz va professional tarzda o'rnatamiz. Birinchi kundan natijadan bahramand bo'ling{% endif %}
+                    </p>
+                </div>
+                <div class="minimal-slide-image">
+                    <img src="/uploads/designs/3.jpg" alt="Installation">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Progress Indicator -->
+<div class="minimal-progress" id="minimalProgress">
+    <div class="minimal-progress-line" data-slide="0"></div>
+    <div class="minimal-progress-line" data-slide="1"></div>
+    <div class="minimal-progress-line" data-slide="2"></div>
+    <div class="minimal-progress-line" data-slide="3"></div>
+</div>
 
 <!-- What are you looking for? - Categories Section -->
 <section class="py-16 lg:py-24 bg-white">
@@ -675,18 +930,133 @@ document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.getElementById('categories-carousel');
     const prevBtn = document.getElementById('cat-prev');
     const nextBtn = document.getElementById('cat-next');
-    
+
     if (carousel && prevBtn && nextBtn) {
         const scrollAmount = 300;
-        
+
         prevBtn.addEventListener('click', () => {
             carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
         });
-        
+
         nextBtn.addEventListener('click', () => {
             carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         });
     }
+
+    // Minimalist Horizontal Scroll Gallery
+    const gallery = document.getElementById('minimalGallery');
+    const track = document.getElementById('minimalTrack');
+    const slides = document.querySelectorAll('.minimal-slide');
+    const progress = document.getElementById('minimalProgress');
+    const progressLines = document.querySelectorAll('.minimal-progress-line');
+
+    if (!gallery || !track || !slides.length) return;
+
+    let scrollHeight = 0;
+    const slideCount = slides.length;
+    let currentSlide = 0;
+    let isInGallery = false;
+
+    // Calculate scroll height
+    function calculateScrollHeight() {
+        scrollHeight = slideCount * window.innerHeight;
+        gallery.style.height = scrollHeight + 'px';
+    }
+
+    // Update slides based on scroll
+    function updateSlides() {
+        const rect = gallery.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // Check if in gallery view
+        if (rect.top <= 0 && rect.top > -scrollHeight) {
+            isInGallery = true;
+
+            // Calculate progress
+            const scrollProgress = Math.abs(rect.top) / (scrollHeight - viewportHeight);
+            const translateX = scrollProgress * (slideCount - 1) * window.innerWidth;
+
+            // Apply transform
+            track.style.transform = `translateX(-${translateX}px)`;
+
+            // Update active slide
+            const newSlide = Math.floor(scrollProgress * slideCount);
+            if (newSlide !== currentSlide) {
+                currentSlide = newSlide;
+
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === currentSlide);
+                });
+
+                progressLines.forEach((line, i) => {
+                    line.classList.toggle('active', i === currentSlide);
+                });
+            }
+
+            // Show progress
+            progress.classList.add('visible');
+        } else {
+            isInGallery = false;
+            progress.classList.remove('visible');
+        }
+    }
+
+    // Progress line click
+    progressLines.forEach((line, index) => {
+        line.addEventListener('click', () => {
+            const scrollTarget = gallery.offsetTop + (index * window.innerHeight) + (window.innerHeight / 2);
+            window.scrollTo({
+                top: scrollTarget,
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (!isInGallery) return;
+
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (currentSlide < slideCount - 1) {
+                const scrollTarget = gallery.offsetTop + ((currentSlide + 1) * window.innerHeight) + (window.innerHeight / 2);
+                window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+            }
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (currentSlide > 0) {
+                const scrollTarget = gallery.offsetTop + ((currentSlide - 1) * window.innerHeight) + (window.innerHeight / 2);
+                window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+            }
+        }
+    });
+
+    // Initialize
+    calculateScrollHeight();
+    updateSlides();
+    slides[0].classList.add('active');
+
+    // Scroll handler
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                updateSlides();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Resize handler
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            calculateScrollHeight();
+            updateSlides();
+        }, 250);
+    });
 });
 </script>
 {% endblock %}
