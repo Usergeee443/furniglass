@@ -5,26 +5,26 @@
 {% block extra_css %}
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-    
+
     .line-clamp-1 {
         display: -webkit-box;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    
+
     .line-clamp-2 {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    
+
     /* Hero video/image overlay */
     .hero-overlay {
         background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%);
     }
-    
+
     /* Categories carousel */
     .categories-scroll {
         scroll-behavior: smooth;
@@ -32,36 +32,271 @@
         scrollbar-width: none;
         -ms-overflow-style: none;
     }
-    
+
     .categories-scroll::-webkit-scrollbar {
         display: none;
     }
-    
+
     /* Product card hover */
     .product-card {
-        transition: all 0.3s ease;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
-    
+
+    .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.6s;
+    }
+
+    .product-card:hover::before {
+        left: 100%;
+    }
+
     .product-card:hover {
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
-    
+
     .product-card:hover .product-image img {
-        transform: scale(1.05);
+        transform: scale(1.08);
     }
-    
+
+    .product-image {
+        position: relative;
+        overflow: hidden;
+    }
+
     .product-image img {
-        transition: transform 0.5s ease;
+        transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     /* Promo banner parallax effect */
     .promo-banner {
         background-attachment: fixed;
         background-position: center;
         background-size: cover;
     }
-    
-    
+
+    /* Advanced animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(60px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .animate-on-scroll.animated {
+        opacity: 1;
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .fade-in-left {
+        animation: fadeInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .fade-in-right {
+        animation: fadeInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .scale-in {
+        animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Stagger delay for children */
+    .stagger-children > * {
+        opacity: 0;
+        animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+    .stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+    .stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+    .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+    .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+    .stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+    .stagger-children > *:nth-child(7) { animation-delay: 0.7s; }
+    .stagger-children > *:nth-child(8) { animation-delay: 0.8s; }
+
+    /* Main category card effects */
+    .main-cat-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .main-cat-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(201, 169, 110, 0.1) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+
+    .main-cat-card:hover::after {
+        opacity: 1;
+    }
+
+    .main-cat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 80px rgba(0,0,0,0.15);
+    }
+
+    /* Testimonial card */
+    .testimonial-card {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
+
+    /* Process step */
+    .process-step {
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .process-step:hover {
+        transform: scale(1.05);
+    }
+
+    .process-step::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, #c9a96e 0%, transparent 100%);
+        transform: translateY(-50%);
+    }
+
+    .process-step:last-child::before {
+        display: none;
+    }
+
+    /* Brand logo hover */
+    .brand-logo {
+        filter: grayscale(100%) opacity(0.5);
+        transition: all 0.4s ease;
+    }
+
+    .brand-logo:hover {
+        filter: grayscale(0%) opacity(1);
+        transform: scale(1.1);
+    }
+
+    /* Video section overlay */
+    .video-overlay {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(201, 169, 110, 0.2) 100%);
+        transition: all 0.5s;
+    }
+
+    .video-section:hover .video-overlay {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(201, 169, 110, 0.3) 100%);
+    }
+
+    /* Material card */
+    .material-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .material-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        bottom: -50%;
+        left: -50%;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+        transform: rotate(45deg) translateX(-100%);
+        transition: transform 0.6s;
+    }
+
+    .material-card:hover::before {
+        transform: rotate(45deg) translateX(100%);
+    }
+
+    /* Counter animation */
+    .counter {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Parallax */
+    .parallax-bg {
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+    }
+
     /* Smooth scroll snap for mobile */
     @media (max-width: 768px) {
         .categories-scroll {
@@ -70,6 +305,72 @@
         .category-item {
             scroll-snap-align: start;
         }
+    }
+
+    /* Hover effects for categories */
+    .category-item {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .category-item:hover {
+        transform: translateY(-8px);
+    }
+
+    /* Collection card effects */
+    .collection-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .collection-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+        opacity: 0.6;
+        transition: opacity 0.5s;
+    }
+
+    .collection-card:hover::before {
+        opacity: 0.9;
+    }
+
+    .collection-card img {
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .collection-card:hover img {
+        transform: scale(1.15);
+    }
+
+    /* CTA Button effects */
+    .cta-button {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cta-button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        transform: translate(-50%, -50%);
+        transition: width 0.5s, height 0.5s;
+    }
+
+    .cta-button:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 </style>
 {% endblock %}
@@ -95,7 +396,7 @@
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-light text-white mb-6 md:mb-8" style="font-family: 'Playfair Display', serif;">
                 {% if lang == 'ru' %}Праздничный<br>интерьер{% elif lang == 'en' %}Festive<br>interiors{% else %}Bayramona<br>interyer{% endif %}
             </h1>
-            <a href="/products" class="inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-[#1a1a2e] px-8 py-4 text-sm font-medium transition-all">
+            <a href="/products" class="cta-button inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-[#1a1a2e] px-8 py-4 text-sm font-medium relative z-10">
                 {% if lang == 'ru' %}Открыть больше{% elif lang == 'en' %}Discover more{% else %}Ko'proq ko'rish{% endif %}
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -118,23 +419,23 @@
             </p>
                         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 stagger-children">
             {% for main_cat in main_categories %}
-            <a href="/main-category/{{ main_cat.slug }}" class="group">
-                <div class="bg-white overflow-hidden transition-all duration-300 h-full">
+            <a href="/main-category/{{ main_cat.slug }}" class="group main-cat-card">
+                <div class="bg-white overflow-hidden h-full">
                     <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                         {% if main_cat.image %}
-                        <img src="/uploads/{{ main_cat.image }}" alt="{{ main_cat.get_name(lang) }}" 
-                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <img src="/uploads/{{ main_cat.image }}" alt="{{ main_cat.get_name(lang) }}"
+                             class="w-full h-full object-cover group-hover:scale-115 transition-transform duration-700">
                     {% else %}
                         <div class="w-full h-full flex items-center justify-center">
                             <i class="fas fa-building text-6xl md:text-7xl text-gray-300 group-hover:text-[#c9a96e] transition-colors"></i>
                         </div>
                         {% endif %}
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     </div>
                     <div class="p-6 md:p-8">
-                        <h3 class="text-xl md:text-2xl font-medium text-[#1a1a2e] mb-2 group-hover:text-[#c9a96e] transition-colors" style="font-family: 'Playfair Display', serif;">
+                        <h3 class="text-xl md:text-2xl font-medium text-[#1a1a2e] mb-2 group-hover:text-[#c9a96e] transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
                             {{ main_cat.get_name(lang) }}
                         </h3>
                         {% if main_cat.get_description(lang) %}
@@ -142,7 +443,7 @@
                             {{ main_cat.get_description(lang) }}
                         </p>
                     {% endif %}
-                        <span class="inline-flex items-center gap-2 text-[#c9a96e] font-medium text-sm md:text-base group-hover:gap-3 transition-all">
+                        <span class="inline-flex items-center gap-2 text-[#c9a96e] font-medium text-sm md:text-base group-hover:gap-4 transition-all">
                             {% if lang == 'ru' %}Подробнее{% elif lang == 'en' %}Learn more{% else %}Batafsil{% endif %}
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -156,6 +457,219 @@
                         </div>
 </section>
 {% endif %}
+
+<!-- Trusted Brands Section -->
+<section class="py-12 lg:py-16 bg-white border-y border-gray-100">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="text-center mb-10 animate-on-scroll">
+            <p class="text-sm text-gray-400 uppercase tracking-wider mb-2">
+                {% if lang == 'ru' %}Нам доверяют{% elif lang == 'en' %}Trusted by{% else %}Bizga ishonishadi{% endif %}
+            </p>
+            <h3 class="text-xl md:text-2xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Ведущие компании Узбекистана{% elif lang == 'en' %}Leading companies of Uzbekistan{% else %}O'zbekistonning yetakchi kompaniyalari{% endif %}
+            </h3>
+        </div>
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-8 md:gap-12 items-center">
+            <div class="flex items-center justify-center brand-logo">
+                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="flex items-center justify-center brand-logo">
+                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="flex items-center justify-center brand-logo">
+                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="flex items-center justify-center brand-logo">
+                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="flex items-center justify-center brand-logo">
+                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="flex items-center justify-center brand-logo">
+                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Video Showcase Section -->
+<section class="relative py-20 md:py-32 overflow-hidden bg-[#1a1a2e] video-section">
+    <div class="absolute inset-0 video-overlay"></div>
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 left-10 w-64 h-64 bg-[#c9a96e] rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-[#c9a96e] rounded-full blur-3xl"></div>
+    </div>
+    <div class="container mx-auto px-4 lg:px-8 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-[#c9a96e] text-sm uppercase tracking-wider mb-4 animate-on-scroll">
+                {% if lang == 'ru' %}Наш процесс{% elif lang == 'en' %}Our process{% else %}Bizning jarayonimiz{% endif %}
+            </p>
+            <h2 class="text-3xl md:text-5xl lg:text-6xl font-light text-white mb-6 animate-on-scroll" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}От идеи до реальности{% elif lang == 'en' %}From idea to reality{% else %}G'oyadan haqiqatga{% endif %}
+            </h2>
+            <p class="text-white/70 text-lg leading-relaxed mb-10 animate-on-scroll">
+                {% if lang == 'ru' %}Мы превращаем ваше видение в реальность с точностью и страстью. Каждая деталь тщательно продумана.{% elif lang == 'en' %}We turn your vision into reality with precision and passion. Every detail is carefully thought out.{% else %}Biz sizning tasavvuringizni aniqlik va ehtirosim bilan haqiqatga aylantiramiz. Har bir detal diqqat bilan o'ylangan.{% endif %}
+            </p>
+            <div class="aspect-video bg-black/30 border border-white/10 flex items-center justify-center group cursor-pointer hover:border-[#c9a96e] transition-all duration-500 animate-on-scroll">
+                <div class="w-20 h-20 border-2 border-white/80 group-hover:border-[#c9a96e] flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+                    <svg class="w-8 h-8 text-white group-hover:text-[#c9a96e] ml-1 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How We Work - Process Section -->
+<section class="py-16 lg:py-24 bg-gray-50">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="text-center mb-12 md:mb-16 animate-on-scroll">
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlаymiz{% endif %}
+            </h2>
+            <p class="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+                {% if lang == 'ru' %}Простой и прозрачный процесс от консультации до установки{% elif lang == 'en' %}Simple and transparent process from consultation to installation{% else %}Maslahatdan o'rnatishgacha oddiy va shaffof jarayon{% endif %}
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 max-w-6xl mx-auto">
+            <div class="process-step text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 relative">
+                    <span class="text-2xl font-light" style="font-family: 'Playfair Display', serif;">01</span>
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#c9a96e]"></div>
+                </div>
+                <h3 class="text-lg font-medium text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}
+                </h3>
+                <p class="text-sm text-gray-600">
+                    {% if lang == 'ru' %}Бесплатная консультация и обсуждение проекта{% elif lang == 'en' %}Free consultation and project discussion{% else %}Bepul maslahat va loyihani muhokama qilish{% endif %}
+                </p>
+            </div>
+
+            <div class="process-step text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 relative">
+                    <span class="text-2xl font-light" style="font-family: 'Playfair Display', serif;">02</span>
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#c9a96e]"></div>
+                </div>
+                <h3 class="text-lg font-medium text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}
+                </h3>
+                <p class="text-sm text-gray-600">
+                    {% if lang == 'ru' %}Создаем 3D визуализацию вашей мебели{% elif lang == 'en' %}Create 3D visualization of your furniture{% else %}Mebelingizning 3D vizualizatsiyasini yaratamiz{% endif %}
+                </p>
+            </div>
+
+            <div class="process-step text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 relative">
+                    <span class="text-2xl font-light" style="font-family: 'Playfair Display', serif;">03</span>
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#c9a96e]"></div>
+                </div>
+                <h3 class="text-lg font-medium text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
+                </h3>
+                <p class="text-sm text-gray-600">
+                    {% if lang == 'ru' %}Изготовление с использованием лучших материалов{% elif lang == 'en' %}Manufacturing using the best materials{% else %}Eng yaxshi materiallar yordamida ishlab chiqarish{% endif %}
+                </p>
+            </div>
+
+            <div class="process-step text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 relative">
+                    <span class="text-2xl font-light" style="font-family: 'Playfair Display', serif;">04</span>
+                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#c9a96e]"></div>
+                </div>
+                <h3 class="text-lg font-medium text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}
+                </h3>
+                <p class="text-sm text-gray-600">
+                    {% if lang == 'ru' %}Доставка и профессиональная установка{% elif lang == 'en' %}Delivery and professional installation{% else %}Yetkazish va professional o'rnatish{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Materials & Quality Section -->
+<section class="py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div class="order-2 lg:order-1 animate-on-scroll">
+                <p class="text-[#c9a96e] text-sm uppercase tracking-wider mb-4">
+                    {% if lang == 'ru' %}Качество превыше всего{% elif lang == 'en' %}Quality above all{% else %}Sifat hamma narsadan ustun{% endif %}
+                </p>
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-6" style="font-family: 'Playfair Display', serif;">
+                    {% if lang == 'ru' %}Премиум материалы для долговечности{% elif lang == 'en' %}Premium materials for durability{% else %}Chidamlilik uchun premium materiallar{% endif %}
+                </h2>
+                <p class="text-gray-600 text-lg leading-relaxed mb-8">
+                    {% if lang == 'ru' %}Мы используем только лучшие материалы от проверенных поставщиков. Каждое изделие проходит строгий контроль качества.{% elif lang == 'en' %}We use only the best materials from trusted suppliers. Each product undergoes strict quality control.{% else %}Biz faqat ishonchli yetkazib beruvchilarning eng yaxshi materiallaridan foydalanamiz. Har bir mahsulot qat'iy sifat nazoratidan o'tadi.{% endif %}
+                </p>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="material-card p-6 bg-gray-50 border border-gray-100">
+                        <div class="w-12 h-12 bg-[#1a1a2e] text-[#c9a96e] flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-medium text-[#1a1a2e] mb-2">
+                            {% if lang == 'ru' %}Натуральное дерево{% elif lang == 'en' %}Natural wood{% else %}Tabiiy yog'och{% endif %}
+                        </h4>
+                        <p class="text-sm text-gray-600">
+                            {% if lang == 'ru' %}Высококачественная древесина{% elif lang == 'en' %}High-quality timber{% else %}Yuqori sifatli yog'och{% endif %}
+                        </p>
+                    </div>
+
+                    <div class="material-card p-6 bg-gray-50 border border-gray-100">
+                        <div class="w-12 h-12 bg-[#1a1a2e] text-[#c9a96e] flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-medium text-[#1a1a2e] mb-2">
+                            {% if lang == 'ru' %}Премиум ткани{% elif lang == 'en' %}Premium fabrics{% else %}Premium matolar{% endif %}
+                        </h4>
+                        <p class="text-sm text-gray-600">
+                            {% if lang == 'ru' %}Европейские ткани{% elif lang == 'en' %}European fabrics{% else %}Evropa matolar{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-1 lg:order-2 grid grid-cols-2 gap-4 animate-on-scroll">
+                <div class="aspect-[3/4] bg-gray-100 overflow-hidden">
+                    <img src="/uploads/designs/3.jpg" alt="Quality materials" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                </div>
+                <div class="aspect-[3/4] bg-gray-100 overflow-hidden mt-8">
+                    <img src="/uploads/designs/2.jpg" alt="Craftsmanship" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- What are you looking for? - Categories Section -->
 <section class="py-16 lg:py-24 bg-white">
@@ -218,7 +732,7 @@
             <h2 class="text-2xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
                 {% if lang == 'ru' %}Кресла в ткани<br>Lucca{% elif lang == 'en' %}Living chairs in<br>Lucca fabric{% else %}Lucca matodan<br>tikilgan kreslolar{% endif %}
             </h2>
-            <a href="/collections" class="inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-[#1a1a2e] px-8 py-4 text-sm font-medium transition-all">
+            <a href="/collections" class="cta-button inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-[#1a1a2e] px-8 py-4 text-sm font-medium relative z-10">
                 {% if lang == 'ru' %}Исследовать{% elif lang == 'en' %}Explore more{% else %}Ko'proq o'rganish{% endif %}
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -239,7 +753,7 @@
             <h2 class="text-3xl md:text-5xl lg:text-6xl font-light text-white mb-8" style="font-family: 'Playfair Display', serif;">
                 {% if lang == 'ru' %}Кресла в ткани<br>Lucca{% elif lang == 'en' %}Living chairs in<br>Lucca fabric{% else %}Lucca matodan<br>tikilgan kreslolar{% endif %}
             </h2>
-            <a href="/collections" class="inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-[#1a1a2e] px-8 py-4 text-sm font-medium transition-all">
+            <a href="/collections" class="cta-button inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-[#1a1a2e] px-8 py-4 text-sm font-medium relative z-10">
                 {% if lang == 'ru' %}Исследовать{% elif lang == 'en' %}Explore more{% else %}Ko'proq o'rganish{% endif %}
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -421,7 +935,7 @@
                 <p class="text-gray-600 text-lg leading-relaxed mb-8">
                     {% if lang == 'ru' %}Мы помогли тысячам довольных клиентов. Наш опыт в дизайне комнат, цвете, материалах и текстурах поможет вам создать дом вашей мечты.{% elif lang == 'en' %}We have helped thousands of happy customers. Our expertise in room design, color, material and texture helps you transform your home.{% else %}Biz minglab mamnun mijozlarga yordam berdik. Xona dizayni, rang, material va tekstura bo'yicha tajribamiz sizning orzuingizdagi uyni yaratishga yordam beradi.{% endif %}
                 </p>
-                <a href="/interior-design" class="inline-flex items-center gap-3 bg-[#1a1a2e] hover:bg-black text-white px-8 py-4 text-sm font-medium transition-all">
+                <a href="/interior-design" class="cta-button inline-flex items-center gap-3 bg-[#1a1a2e] hover:bg-black text-white px-8 py-4 text-sm font-medium relative z-10">
                     {% if lang == 'ru' %}Связаться с нами{% elif lang == 'en' %}Get in touch{% else %}Bog'lanish{% endif %}
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -449,9 +963,9 @@
             </p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            <a href="/collections?type=sofa" class="group relative aspect-[4/5] overflow-hidden bg-gray-200">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 stagger-children">
+            <a href="/collections?type=sofa" class="collection-card group relative aspect-[4/5] bg-gray-200 animate-on-scroll">
+                <img src="/uploads/designs/3.jpg" alt="Sofas collection" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                     <h3 class="text-xl md:text-2xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">
                         {% if lang == 'ru' %}Диваны{% elif lang == 'en' %}Sofas{% else %}Divanlar{% endif %}
@@ -464,8 +978,8 @@
                     </span>
                 </div>
             </a>
-            <a href="/collections?type=table" class="group relative aspect-[4/5] overflow-hidden bg-gray-200">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+            <a href="/collections?type=table" class="collection-card group relative aspect-[4/5] bg-gray-200 animate-on-scroll">
+                <img src="/uploads/designs/2.jpg" alt="Tables collection" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                     <h3 class="text-xl md:text-2xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">
                         {% if lang == 'ru' %}Столы{% elif lang == 'en' %}Tables{% else %}Stollar{% endif %}
@@ -478,8 +992,8 @@
                     </span>
                 </div>
             </a>
-            <a href="/collections?type=chair" class="group relative aspect-[4/5] overflow-hidden bg-gray-200">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+            <a href="/collections?type=chair" class="collection-card group relative aspect-[4/5] bg-gray-200 animate-on-scroll">
+                <img src="/uploads/designs/3.jpg" alt="Chairs collection" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                     <h3 class="text-xl md:text-2xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">
                         {% if lang == 'ru' %}Стулья{% elif lang == 'en' %}Chairs{% else %}Stullar{% endif %}
@@ -575,24 +1089,142 @@
 </section>
 {% endif %}
 
+<!-- Testimonials Section -->
+<section class="py-16 lg:py-24 bg-gray-50">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="text-center mb-12 md:mb-16 animate-on-scroll">
+            <p class="text-[#c9a96e] text-sm uppercase tracking-wider mb-2">
+                {% if lang == 'ru' %}Отзывы клиентов{% elif lang == 'en' %}Client reviews{% else %}Mijozlar fikrlari{% endif %}
+            </p>
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Что говорят наши клиенты{% elif lang == 'en' %}What our clients say{% else %}Mijozlarimiz nima deyishadi{% endif %}
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 stagger-children">
+            <div class="testimonial-card bg-white p-8 border border-gray-100">
+                <div class="flex items-center gap-1 text-[#c9a96e] mb-6">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                </div>
+                <p class="text-gray-700 leading-relaxed mb-6 text-sm md:text-base">
+                    {% if lang == 'ru' %}"Превосходное качество и профессиональный подход. Мебель выглядит потрясающе в нашем кафе!"{% elif lang == 'en' %}"Excellent quality and professional approach. The furniture looks amazing in our cafe!"{% else %}"Ajoyib sifat va professional yondashuv. Mebel bizning kafemizda ajoyib ko'rinadi!"{% endif %}
+                </p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gray-200 flex items-center justify-center text-[#1a1a2e] font-medium">
+                        AK
+                    </div>
+                    <div>
+                        <p class="font-medium text-[#1a1a2e]">Alisher Karimov</p>
+                        <p class="text-sm text-gray-500">
+                            {% if lang == 'ru' %}Владелец кафе{% elif lang == 'en' %}Cafe Owner{% else %}Kafe egasi{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card bg-white p-8 border border-gray-100">
+                <div class="flex items-center gap-1 text-[#c9a96e] mb-6">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                </div>
+                <p class="text-gray-700 leading-relaxed mb-6 text-sm md:text-base">
+                    {% if lang == 'ru' %}"Отличный сервис от начала до конца. Команда профессиональная и внимательная к деталям."{% elif lang == 'en' %}"Great service from start to finish. The team is professional and attentive to details."{% else %}"Boshidan oxirigacha ajoyib xizmat. Jamoa professional va tafsilotlarga e'tiborli."{% endif %}
+                </p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gray-200 flex items-center justify-center text-[#1a1a2e] font-medium">
+                        DN
+                    </div>
+                    <div>
+                        <p class="font-medium text-[#1a1a2e]">Dilnoza Nazarova</p>
+                        <p class="text-sm text-gray-500">
+                            {% if lang == 'ru' %}Директор клиники{% elif lang == 'en' %}Clinic Director{% else %}Klinika direktori{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card bg-white p-8 border border-gray-100">
+                <div class="flex items-center gap-1 text-[#c9a96e] mb-6">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                </div>
+                <p class="text-gray-700 leading-relaxed mb-6 text-sm md:text-base">
+                    {% if lang == 'ru' %}"Прекрасная работа! Мебель идеально вписалась в наш дом. Рекомендую всем!"{% elif lang == 'en' %}"Beautiful work! The furniture fits perfectly in our home. Highly recommend!"{% else %}"Ajoyib ish! Mebel uyimizga juda mos keldi. Hammaga tavsiya qilaman!"{% endif %}
+                </p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gray-200 flex items-center justify-center text-[#1a1a2e] font-medium">
+                        SO
+                    </div>
+                    <div>
+                        <p class="font-medium text-[#1a1a2e]">Sardor Otaboyev</p>
+                        <p class="text-sm text-gray-500">
+                            {% if lang == 'ru' %}Частный клиент{% elif lang == 'en' %}Private Client{% else %}Xususiy mijoz{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Stats Section -->
 <section class="py-16 lg:py-20 bg-[#f8f8f8]">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
-            <div class="text-center">
-                <p class="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">25+</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 stagger-children">
+            <div class="text-center animate-on-scroll">
+                <p class="counter text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;" data-target="25+">25+</p>
                 <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years experience{% else %}Yillik tajriba{% endif %}</p>
-        </div>
-            <div class="text-center">
-                <p class="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">5K+</p>
+            </div>
+            <div class="text-center animate-on-scroll">
+                <p class="counter text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;" data-target="5K+">5K+</p>
                 <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Happy clients{% else %}Mamnun mijozlar{% endif %}</p>
-                </div>
-            <div class="text-center">
-                <p class="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">2.5K</p>
+            </div>
+            <div class="text-center animate-on-scroll">
+                <p class="counter text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;" data-target="2.5K">2.5K</p>
                 <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects done{% else %}Bajarilgan loyihalar{% endif %}</p>
-                    </div>
-            <div class="text-center">
-                <p class="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">100%</p>
+            </div>
+            <div class="text-center animate-on-scroll">
+                <p class="counter text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;" data-target="100%">100%</p>
                 <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Качество{% elif lang == 'en' %}Quality{% else %}Sifat kafolati{% endif %}</p>
             </div>
         </div>
@@ -675,18 +1307,136 @@ document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.getElementById('categories-carousel');
     const prevBtn = document.getElementById('cat-prev');
     const nextBtn = document.getElementById('cat-next');
-    
+
     if (carousel && prevBtn && nextBtn) {
         const scrollAmount = 300;
-        
+
         prevBtn.addEventListener('click', () => {
             carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
         });
-        
+
         nextBtn.addEventListener('click', () => {
             carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         });
     }
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+
+                // Trigger stagger animation for children
+                if (entry.target.classList.contains('stagger-children')) {
+                    const children = entry.target.children;
+                    Array.from(children).forEach((child, index) => {
+                        child.style.animationDelay = `${index * 0.1}s`;
+                    });
+                }
+
+                // Unobserve after animation
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe all animate-on-scroll elements
+    const animateElements = document.querySelectorAll('.animate-on-scroll');
+    animateElements.forEach(el => observer.observe(el));
+
+    // Counter animation for stats
+    const counters = document.querySelectorAll('.counter');
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseFloat(counter.textContent);
+                const duration = 2000; // 2 seconds
+                const increment = target / (duration / 16); // 60 FPS
+                let current = 0;
+
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current) + (counter.textContent.includes('+') ? '+' : '') + (counter.textContent.includes('%') ? '%' : '') + (counter.textContent.includes('K') ? 'K' : '');
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = counter.getAttribute('data-target') || counter.textContent;
+                    }
+                };
+
+                // Store original value
+                if (!counter.hasAttribute('data-target')) {
+                    counter.setAttribute('data-target', counter.textContent);
+                }
+
+                updateCounter();
+                counterObserver.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => counterObserver.observe(counter));
+
+    // Parallax effect for hero section
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.parallax-bg');
+
+                parallaxElements.forEach(el => {
+                    const speed = el.dataset.speed || 0.5;
+                    el.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Smooth reveal for images
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.classList.add('fade-in');
+                }
+                imageObserver.unobserve(img);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    // Observe all lazy load images
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+
+    // Add smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href !== '#' && href !== '') {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
 });
 </script>
 {% endblock %}
