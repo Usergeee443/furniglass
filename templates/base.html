@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Furni Glass - Premium Mebel{% endblock %}</title>
+    <title>{% block title %}Furniglass - Premium Mebel{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.cdnfonts.com/css/sf-pro-display');
         
         :root {
             --color-primary: #1a1a2e;
             --color-accent: #c9a96e;
-            --font-display: 'Cormorant Garamond', serif;
-            --font-body: 'Inter', sans-serif;
+            --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-body: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
         
         body { 
             font-family: var(--font-body);
             font-weight: 400;
+            letter-spacing: -0.01em;
         }
         
-        h1, h2, h3, .font-display {
+        h1, h2, h3, h4, h5, h6, .font-display {
             font-family: var(--font-display);
+            letter-spacing: -0.02em;
+        }
+        
+        p, span, div, a, li, td, th, label, input, textarea, select, button {
+            letter-spacing: -0.01em;
         }
         
         /* Header styles */
@@ -49,7 +55,7 @@
             font-family: var(--font-body);
             font-size: 13px;
             font-weight: 500;
-            letter-spacing: 0.02em;
+            letter-spacing: -0.01em;
             text-transform: uppercase;
             color: #1a1a2e;
             position: relative;
@@ -154,7 +160,7 @@
             <div class="flex items-center justify-between h-[70px] md:h-[80px]">
                 <!-- Left: Logo -->
                 <a href="/" class="flex-shrink-0">
-                    <img src="/uploads/designs/logo.png" alt="Furni Glass" class="h-8 md:h-9">
+                    <img src="/uploads/designs/logo.png" alt="Furniglass" class="h-8 md:h-9">
                 </a>
                 
                 <!-- Center: Main Navigation (Desktop) -->
@@ -236,7 +242,7 @@
             <!-- Menu Header -->
             <div class="flex items-center justify-between px-4 lg:px-8 h-[70px] md:h-[80px] border-b border-gray-100">
                 <a href="/" class="flex-shrink-0">
-                    <img src="/uploads/designs/logo.png" alt="Furni Glass" class="h-8 md:h-9">
+                    <img src="/uploads/designs/logo.png" alt="Furniglass" class="h-8 md:h-9">
                 </a>
                 <button class="p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition" id="close-menu">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -405,7 +411,7 @@
             <div class="py-16 lg:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
                 <!-- Brand -->
                 <div>
-                    <img src="/uploads/designs/Logo-white.png" alt="Furni Glass" class="h-8 mb-6">
+                    <img src="/uploads/designs/Logo-white.png" alt="Furniglass" class="h-8 mb-6">
                     <p class="text-white/50 text-sm leading-relaxed mb-6">
                         {{ T.footer.description[lang] }}
                     </p>
@@ -450,20 +456,24 @@
                     <h4 class="text-xs font-medium uppercase tracking-wider mb-6">{{ T.footer.contact_info[lang] }}</h4>
                     <ul class="space-y-4">
                         <li>
-                            <a href="tel:+998901234567" class="flex items-center gap-3 text-white/50 hover:text-[#c9a96e] text-sm transition">
+                            <a href="tel:+998712000262" class="flex items-center gap-3 text-white/50 hover:text-[#c9a96e] text-sm transition">
                                 <i class="fas fa-phone text-xs"></i>
-                                +998 90 123 45 67
+                                71 200 02 62
                             </a>
                         </li>
                         <li>
-                            <a href="mailto:info@furniglass.uz" class="flex items-center gap-3 text-white/50 hover:text-[#c9a96e] text-sm transition">
+                            <a href="mailto:furniglass77@gmail.com" class="flex items-center gap-3 text-white/50 hover:text-[#c9a96e] text-sm transition">
                                 <i class="fas fa-envelope text-xs"></i>
-                                info@furniglass.uz
+                                furniglass77@gmail.com
                             </a>
                         </li>
                         <li class="flex items-start gap-3 text-white/50 text-sm">
                             <i class="fas fa-map-marker-alt text-xs mt-1"></i>
-                            <span>Toshkent, Yunusobod tumani</span>
+                            <span>{% if lang == 'ru' %}Ташкент, Олмазорский район, массив Бешкурган, дом 2{% elif lang == 'en' %}Tashkent, Almazar district, Beshkurgan area, house 2{% else %}Toshkent shaxar Olmazor tumani beshqo'rg'on mavzesi 2-uy{% endif %}</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-white/50 text-sm">
+                            <i class="fas fa-clock text-xs mt-1"></i>
+                            <span>{% if lang == 'ru' %}9:00 - 18:00{% elif lang == 'en' %}9:00 AM - 6:00 PM{% else %}9:00 dan 18:00 gacha{% endif %}</span>
                         </li>
                     </ul>
                 </div>
@@ -472,7 +482,7 @@
             <!-- Bottom Bar -->
             <div class="border-t border-white/10 py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p class="text-white/30 text-sm">© 2025 Furni Glass. {{ T.footer.copyright[lang] }}</p>
+                    <p class="text-white/30 text-sm">© 2025 Furniglass. {{ T.footer.copyright[lang] }}</p>
                     <div class="flex gap-6">
                         <a href="#" class="text-white/30 hover:text-white/60 text-sm transition">{{ T.footer.terms[lang] }}</a>
                         <a href="#" class="text-white/30 hover:text-white/60 text-sm transition">{{ T.footer.privacy[lang] }}</a>

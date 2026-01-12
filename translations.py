@@ -74,9 +74,9 @@ TRANSLATIONS = {
             'en': "Uzbekistan's Largest Furniture Manufacturer"
         },
         'about_text_1': {
-            'uz': 'Furni Glass - 2009-yildan buyon O\'zbekiston bozorida faoliyat yuritayotgan yetakchi mebel ishlab chiqaruvchi kompaniya.',
-            'ru': 'Furni Glass - ведущая мебельная компания, работающая на рынке Узбекистана с 2009 года.',
-            'en': 'Furni Glass is a leading furniture company operating in the Uzbekistan market since 2009.'
+            'uz': 'Furniglass - 2009-yildan buyon O\'zbekiston bozorida faoliyat yuritayotgan yetakchi mebel ishlab chiqaruvchi kompaniya.',
+            'ru': 'Furniglass - ведущая мебельная компания, работающая на рынке Узбекистана с 2009 года.',
+            'en': 'Furniglass is a leading furniture company operating in the Uzbekistan market since 2009.'
         },
         'premium_materials': {'uz': 'Premium Materiallar', 'ru': 'Премиум материалы', 'en': 'Premium Materials'},
         '3d_design': {'uz': '3D Dizayn', 'ru': '3D Дизайн', 'en': '3D Design'},

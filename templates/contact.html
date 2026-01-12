@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ T.nav.contact[lang] }} - Furni Glass{% endblock %}
+{% block title %}{{ T.nav.contact[lang] }} - Furniglass{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -42,40 +42,42 @@
     <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
             <!-- Phone -->
-            <a href="tel:+998901234567" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+            <a href="tel:+998712000262" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
                 <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-4 group-hover:bg-[#c9a96e] transition">
                     <i class="fas fa-phone-alt text-white"></i>
                 </div>
                 <h3 class="font-semibold text-[#1a1a2e] mb-1">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</h3>
-                <p class="text-gray-500 text-sm">+998 90 123 45 67</p>
-            </a>
-            
-            <!-- Telegram -->
-            <a href="https://t.me/furniglass" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
-                <div class="w-12 h-12 bg-[#0088cc] flex items-center justify-center mx-auto mb-4">
-                    <i class="fab fa-telegram-plane text-white"></i>
-                </div>
-                <h3 class="font-semibold text-[#1a1a2e] mb-1">Telegram</h3>
-                <p class="text-gray-500 text-sm">@furniglass</p>
-            </a>
-            
-            <!-- WhatsApp -->
-            <a href="https://wa.me/998901234567" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
-                <div class="w-12 h-12 bg-[#25D366] flex items-center justify-center mx-auto mb-4">
-                    <i class="fab fa-whatsapp text-white"></i>
-                </div>
-                <h3 class="font-semibold text-[#1a1a2e] mb-1">WhatsApp</h3>
-                <p class="text-gray-500 text-sm">+998 90 123 45 67</p>
+                <p class="text-gray-500 text-sm">71 200 02 62</p>
             </a>
             
             <!-- Email -->
-            <a href="mailto:info@furniglass.uz" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
+            <a href="mailto:furniglass77@gmail.com" class="bg-white p-6 text-center border border-gray-100 hover:border-[#1a1a2e] transition group">
                 <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-4 group-hover:bg-[#c9a96e] transition">
                     <i class="fas fa-envelope text-white"></i>
                 </div>
                 <h3 class="font-semibold text-[#1a1a2e] mb-1">Email</h3>
-                <p class="text-gray-500 text-sm">info@furniglass.uz</p>
+                <p class="text-gray-500 text-sm">furniglass77@gmail.com</p>
             </a>
+            
+            <!-- Address -->
+            <div class="bg-white p-6 text-center border border-gray-100">
+                <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-map-marker-alt text-white"></i>
+                </div>
+                <h3 class="font-semibold text-[#1a1a2e] mb-1">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</h3>
+                <p class="text-gray-500 text-sm">
+                    {% if lang == 'ru' %}Ташкент, Олмазорский район, массив Бешкурган, дом 2{% elif lang == 'en' %}Tashkent, Almazar district, Beshkurgan area, house 2{% else %}Toshkent shaxar Olmazor tumani beshqo'rg'on mavzesi 2-uy{% endif %}
+                </p>
+            </div>
+            
+            <!-- Working Hours -->
+            <div class="bg-white p-6 text-center border border-gray-100">
+                <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-white"></i>
+                </div>
+                <h3 class="font-semibold text-[#1a1a2e] mb-1">{% if lang == 'ru' %}Время работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</h3>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}9:00 - 18:00{% elif lang == 'en' %}9:00 AM - 6:00 PM{% else %}9:00 dan 18:00 gacha{% endif %}</p>
+            </div>
         </div>
     </div>
 </section>
@@ -171,8 +173,24 @@
                             <div>
                                 <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
                                 <p class="text-gray-600 text-sm">
-                                    {% if lang == 'ru' %}Ташкент, Юнусабадский район, ул. Амира Темура 15{% elif lang == 'en' %}Tashkent, Yunusobod district, Amir Temur str. 15{% else %}Toshkent, Yunusobod tumani, Amir Temur ko'chasi 15{% endif %}
+                                    {% if lang == 'ru' %}Ташкент, Олмазорский район, массив Бешкурган, дом 2{% elif lang == 'en' %}Tashkent, Almazar district, Beshkurgan area, house 2{% else %}Toshkent shaxar Olmazor tumani beshqo'rg'on mavzesi 2-uy{% endif %}
                                 </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4">
+                            <i class="fas fa-phone text-[#1a1a2e] mt-1"></i>
+                            <div>
+                                <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</p>
+                                <a href="tel:+998712000262" class="text-gray-600 text-sm hover:text-[#c9a96e] transition">71 200 02 62</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4">
+                            <i class="fas fa-envelope text-[#1a1a2e] mt-1"></i>
+                            <div>
+                                <p class="font-medium text-[#1a1a2e]">Email</p>
+                                <a href="mailto:furniglass77@gmail.com" class="text-gray-600 text-sm hover:text-[#c9a96e] transition">furniglass77@gmail.com</a>
                             </div>
                         </div>
                         
@@ -181,44 +199,13 @@
                             <div>
                                 <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Время работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</p>
                                 <p class="text-gray-600 text-sm">
-                                    {% if lang == 'ru' %}Пн-Пт: 09:00 - 19:00{% elif lang == 'en' %}Mon-Fri: 09:00 - 19:00{% else %}Du-Ju: 09:00 - 19:00{% endif %}<br>
-                                    {% if lang == 'ru' %}Сб-Вс: 10:00 - 17:00{% elif lang == 'en' %}Sat-Sun: 10:00 - 17:00{% else %}Sha-Yak: 10:00 - 17:00{% endif %}
+                                    {% if lang == 'ru' %}9:00 - 18:00{% elif lang == 'en' %}9:00 AM - 6:00 PM{% else %}9:00 dan 18:00 gacha{% endif %}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Showroom Info -->
-                <div class="bg-[#FAF9F6] p-8">
-                    <h3 class="text-lg font-bold text-[#1a1a2e] mb-6 flex items-center gap-3">
-                        <i class="fas fa-store text-[#c9a96e]"></i>
-                        {% if lang == 'ru' %}Шоурум{% elif lang == 'en' %}Showroom{% else %}Ko'rgazma Zali{% endif %}
-                    </h3>
-                    
-                    <div class="space-y-5">
-                        <div class="flex items-start gap-4">
-                            <i class="fas fa-map-marker-alt text-[#1a1a2e] mt-1"></i>
-                            <div>
-                                <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
-                                <p class="text-gray-600 text-sm">
-                                    {% if lang == 'ru' %}Ташкент, Чиланзарский район, ул. Бунёдкор 42{% elif lang == 'en' %}Tashkent, Chilanzar district, Bunyodkor str. 42{% else %}Toshkent, Chilonzor tumani, Bunyodkor ko'chasi 42{% endif %}
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <i class="fas fa-couch text-[#1a1a2e] mt-1"></i>
-                            <div>
-                                <p class="font-medium text-[#1a1a2e]">{% if lang == 'ru' %}В наличии{% elif lang == 'en' %}Available{% else %}Mavjud{% endif %}</p>
-                                <p class="text-gray-600 text-sm">
-                                    {% if lang == 'ru' %}200+ образцов мебели{% elif lang == 'en' %}200+ furniture samples{% else %}200+ mebel namunalari{% endif %}<br>
-                                    {% if lang == 'ru' %}Бесплатная консультация{% elif lang == 'en' %}Free consultation{% else %}Bepul maslahat{% endif %}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 
                 <!-- Map -->
                 <div class="overflow-hidden h-64">

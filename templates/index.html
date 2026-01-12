@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Furni Glass - {% if lang == 'ru' %}Ведущий Производитель Мебели в Узбекистане{% elif lang == 'en' %}Uzbekistan's Leading Furniture Manufacturer{% else %}O'zbekistonning Yetakchi Mebel Ishlab Chiqaruvchisi{% endif %}{% endblock %}
+{% block title %}Furniglass - {% if lang == 'ru' %}Ведущий Производитель Мебели в Узбекистане{% elif lang == 'en' %}Uzbekistan's Leading Furniture Manufacturer{% else %}O'zbekistonning Yetakchi Mebel Ishlab Chiqaruvchisi{% endif %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -80,7 +80,7 @@
     <!-- Background Image -->
     <div class="absolute inset-0 px-4 md:px-8 lg:px-8 pt-20 md:pt-24 lg:pt-[6.5rem]">
         <div class="w-full h-full relative">
-            <img src="/uploads/designs/3.jpg" alt="Furni Glass Premium Furniture" 
+            <img src="/uploads/designs/3.jpg" alt="Furniglass Premium Furniture" 
                  class="w-full h-full object-cover">
             <div class="hero-overlay absolute inset-0"></div>
         </div>
@@ -121,7 +121,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {% for main_cat in main_categories %}
             <a href="/main-category/{{ main_cat.slug }}" class="group">
-                <div class="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full">
+                <div class="bg-white overflow-hidden transition-all duration-300 h-full">
                     <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                         {% if main_cat.image %}
                         <img src="/uploads/{{ main_cat.image }}" alt="{{ main_cat.get_name(lang) }}" 

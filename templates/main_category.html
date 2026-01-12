@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ main_category.get_name(lang) }} - Furni Glass{% endblock %}
+{% block title %}{{ main_category.get_name(lang) }} - Furniglass{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -142,159 +142,215 @@
             </div>
             
             <!-- Statistics -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-16">
                 <div class="text-center">
                     <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                        {{ categories|length }}+
+                        2500+
                     </div>
                     <p class="text-gray-600 text-sm md:text-base">
-                        {% if lang == 'ru' %}Категорий{% elif lang == 'en' %}Categories{% else %}Kategoriyalar{% endif %}
+                        {% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}
                     </p>
                 </div>
                 <div class="text-center">
                     <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                        {{ products|length }}+
+                        5000+
                     </div>
                     <p class="text-gray-600 text-sm md:text-base">
-                        {% if lang == 'ru' %}Продуктов{% elif lang == 'en' %}Products{% else %}Mahsulotlar{% endif %}
+                        {% if lang == 'ru' %}Довольных клиентов{% elif lang == 'en' %}Satisfied Customers{% else %}Mamnun mijozlar{% endif %}
                     </p>
                 </div>
                 <div class="text-center">
                     <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                        {{ reviews|length }}+
+                        25
                     </div>
                     <p class="text-gray-600 text-sm md:text-base">
-                        {% if lang == 'ru' %}Отзывов{% elif lang == 'en' %}Reviews{% else %}Sharhlar{% endif %}
+                        {% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years Experience{% else %}Yillik tajriba{% endif %}
                     </p>
                 </div>
                 <div class="text-center">
                     <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                        100%
+                        25
                     </div>
                     <p class="text-gray-600 text-sm md:text-base">
-                        {% if lang == 'ru' %}Качество{% elif lang == 'en' %}Quality{% else %}Sifat{% endif %}
+                        {% if lang == 'ru' %}Лет гарантии{% elif lang == 'en' %}Years Warranty{% else %}Yillik kafolat{% endif %}
                     </p>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="bg-white p-8 md:p-10 rounded-lg shadow-sm">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e] mb-8" style="font-family: 'Playfair Display', serif;">
+                    {% if lang == 'ru' %}Контактная информация{% elif lang == 'en' %}Contact Information{% else %}Kontakt ma'lumotlari{% endif %}
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-phone-alt text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-[#1a1a2e] mb-1">
+                                {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}
+                            </h3>
+                            <a href="tel:+998712000262" class="text-gray-700 hover:text-[#c9a96e] transition">
+                                71 200 02 62
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-envelope text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-[#1a1a2e] mb-1">
+                                Email
+                            </h3>
+                            <a href="mailto:furniglass77@gmail.com" class="text-gray-700 hover:text-[#c9a96e] transition">
+                                furniglass77@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-map-marker-alt text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-[#1a1a2e] mb-1">
+                                {% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}
+                            </h3>
+                            <p class="text-gray-700">
+                                {% if lang == 'ru' %}Ташкент, Олмазорский район, массив Бешкурган, дом 2{% elif lang == 'en' %}Tashkent, Almazar district, Beshkurgan area, house 2{% else %}Toshkent shaxar Olmazor tumani beshqo'rg'on mavzesi 2-uy{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-clock text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-[#1a1a2e] mb-1">
+                                {% if lang == 'ru' %}Время работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}
+                            </h3>
+                            <p class="text-gray-700">
+                                {% if lang == 'ru' %}9:00 - 18:00{% elif lang == 'en' %}9:00 AM - 6:00 PM{% else %}9:00 dan 18:00 gacha{% endif %}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Products Section -->
-{% if products %}
-<section class="py-16 lg:py-24 bg-white">
+<!-- Products Section with Search & Filters -->
+<section class="py-16 lg:py-24 bg-white" id="products-section">
     <div class="container mx-auto px-4 lg:px-8">
-        <!-- Products by Category -->
-        {% if categories and products_by_category %}
-            {% for category in categories %}
-                {% if products_by_category.get(category.id) %}
-                {% set category_products = products_by_category[category.id] %}
-                <div id="category-{{ category.id }}" class="mb-20 scroll-mt-8">
-                    <div class="flex items-center justify-between mb-8">
-                        <h2 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                            {{ category.get_name(lang) }}
-                        </h2>
-                        <a href="/products?category={{ category.id }}" class="text-sm text-[#1a1a2e] hover:text-[#c9a96e] font-medium flex items-center gap-2 transition">
-                            {% if lang == 'ru' %}Все{% elif lang == 'en' %}View all{% else %}Barchasi{% endif %}
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </a>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                        {% for product in category_products[:8] %}
-                        <a href="/product/{{ product.id }}" class="product-card block">
-                            <div class="bg-white rounded-lg overflow-hidden">
-                                <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
-                                    {% set product_images = product.images | from_json %}
-                                    {% if product_images %}
-                                    <img src="/uploads/{{ product_images[0] }}" alt="{{ product.get_name(lang) }}" 
-                                         class="w-full h-full object-cover">
-                                    {% else %}
-                                    <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                                        <i class="fas fa-image text-4xl text-gray-300"></i>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div class="p-4">
-                                    <h3 class="text-base font-medium text-[#1a1a2e] mb-1 line-clamp-2">{{ product.get_name(lang) }}</h3>
-                                    <p class="text-[#c9a96e] font-semibold text-lg">
-                                        {{ "{:,.0f}".format(product.price * rate) }} so'm
-                                    </p>
-                                </div>
-                            </div>
-                        </a>
-                        {% endfor %}
-                    </div>
+        <!-- Search and Filters -->
+        <div class="mb-12">
+            <!-- Search Bar -->
+            <div class="mb-6">
+                <div class="relative max-w-2xl mx-auto">
+                    <input type="text" 
+                           id="product-search" 
+                           placeholder='{% if lang == "ru" %}Поиск продуктов...{% elif lang == "en" %}Search products...{% else %}Mahsulotlarni qidirish...{% endif %}'
+                           class="w-full px-6 py-4 pr-12 border-b-2 border-gray-300 focus:border-[#1a1a2e] outline-none text-lg bg-transparent transition">
+                    <svg class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
                 </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-        
-        <!-- All Products Section -->
-        <div class="mb-20">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Все продукты{% elif lang == 'en' %}All Products{% else %}Barcha mahsulotlar{% endif %}
-                </h2>
-                <a href="/products?main_category={{ main_category.id }}" class="text-sm text-[#1a1a2e] hover:text-[#c9a96e] font-medium flex items-center gap-2 transition">
-                    {% if lang == 'ru' %}Все{% elif lang == 'en' %}View all{% else %}Barchasi{% endif %}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
             </div>
             
-            {% if products %}
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                {% for product in products[:16] %}
-                <a href="/product/{{ product.id }}" class="product-card block">
-                    <div class="bg-white rounded-lg overflow-hidden">
-                        <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
-                            {% set product_images = product.images | from_json %}
-                            {% if product_images %}
-                            <img src="/uploads/{{ product_images[0] }}" alt="{{ product.get_name(lang) }}" 
-                                 class="w-full h-full object-cover">
-                            {% else %}
-                            <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                                <i class="fas fa-image text-4xl text-gray-300"></i>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-base font-medium text-[#1a1a2e] mb-1 line-clamp-2">{{ product.get_name(lang) }}</h3>
-                            <p class="text-[#c9a96e] font-semibold text-lg">
-                                {{ "{:,.0f}".format(product.price * rate) }} so'm
-                            </p>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
+            <!-- Filters -->
+            <div class="flex flex-wrap items-center gap-4 justify-center mb-8">
+                <!-- Category Filter -->
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700">
+                        {% if lang == 'ru' %}Категория:{% elif lang == 'en' %}Category:{% else %}Kategoriya:{% endif %}
+                    </label>
+                    <select id="category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1a1a2e] text-sm">
+                        <option value="">{% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.get_name(lang) }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Price Filter -->
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700">
+                        {% if lang == 'ru' %}Цена:{% elif lang == 'en' %}Price:{% else %}Narx:{% endif %}
+                    </label>
+                    <input type="number" 
+                           id="min-price" 
+                           placeholder='{% if lang == "ru" %}От{% elif lang == "en" %}From{% else %}Dan{% endif %}'
+                           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1a1a2e] text-sm w-24">
+                    <span class="text-gray-500">-</span>
+                    <input type="number" 
+                           id="max-price" 
+                           placeholder='{% if lang == "ru" %}До{% elif lang == "en" %}To{% else %}Gacha{% endif %}'
+                           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1a1a2e] text-sm w-24">
+                </div>
+                
+                <!-- Sort -->
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700">
+                        {% if lang == 'ru' %}Сортировать:{% elif lang == 'en' %}Sort:{% else %}Saralash:{% endif %}
+                    </label>
+                    <select id="sort-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1a1a2e] text-sm">
+                        <option value="default">{% if lang == 'ru' %}По умолчанию{% elif lang == 'en' %}Default{% else %}Standart{% endif %}</option>
+                        <option value="price_asc">{% if lang == 'ru' %}Цена: по возрастанию{% elif lang == 'en' %}Price: Low to High{% else %}Narx: Pastdan yuqoriga{% endif %}</option>
+                        <option value="price_desc">{% if lang == 'ru' %}Цена: по убыванию{% elif lang == 'en' %}Price: High to Low{% else %}Narx: Yuqoridan pastga{% endif %}</option>
+                        <option value="name_asc">{% if lang == 'ru' %}Название: А-Я{% elif lang == 'en' %}Name: A-Z{% else %}Nomi: A-Z{% endif %}</option>
+                    </select>
+                </div>
+                
+                <!-- Clear Filters -->
+                <button id="clear-filters" class="px-4 py-2 text-sm text-gray-600 hover:text-[#1a1a2e] transition">
+                    {% if lang == 'ru' %}Сбросить{% elif lang == 'en' %}Clear{% else %}Tozalash{% endif %}
+                </button>
             </div>
             
-            {% if products|length > 16 %}
-            <div class="text-center mt-12">
-                <a href="/products?main_category={{ main_category.id }}" 
-                   class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-[#c9a96e] text-white px-8 py-4 text-sm font-medium transition-all">
-                    {% if lang == 'ru' %}Все продукты{% elif lang == 'en' %}View all products{% else %}Barcha mahsulotlarni ko'rish{% endif %}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
-            </div>
-            {% endif %}
-            {% else %}
-            <div class="text-center py-12">
-                <p class="text-gray-500 text-lg">
-                    {% if lang == 'ru' %}Пока нет продуктов{% elif lang == 'en' %}No products yet{% else %}Hozircha mahsulotlar yo'q{% endif %}
+            <!-- Results Count -->
+            <div class="text-center mb-6">
+                <p id="results-count" class="text-gray-600 text-sm">
+                    <span id="products-count">0</span> {% if lang == 'ru' %}продуктов{% elif lang == 'en' %}products{% else %}mahsulot{% endif %}
                 </p>
             </div>
-            {% endif %}
+        </div>
+        
+        <!-- Products Grid -->
+        <div id="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <!-- Products will be loaded here via JavaScript -->
+        </div>
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-12">
+            <p class="text-gray-500 text-lg">
+                {% if lang == 'ru' %}Продукты не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulotlar topilmadi{% endif %}
+            </p>
+        </div>
+        
+        <!-- Loading State -->
+        <div id="loading-state" class="hidden text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#1a1a2e]"></div>
         </div>
     </div>
 </section>
-{% endif %}
+
+<!-- Product Detail Modal -->
+<div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden overflow-y-auto">
+    <div class="min-h-screen px-4 py-8">
+        <div class="bg-white rounded-lg max-w-6xl mx-auto my-8 relative">
+            <button id="close-modal" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-lg hover:bg-gray-100 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <div id="modal-content" class="p-6 md:p-8">
+                <!-- Product details will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Reviews Section -->
@@ -334,4 +390,261 @@
 
 {% endblock %}
 
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mainCategorySlug = '{{ main_category.slug }}';
+    const lang = '{{ lang }}';
+    const rate = {{ rate }};
+    
+    // Elements
+    const searchInput = document.getElementById('product-search');
+    const categoryFilter = document.getElementById('category-filter');
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+    const sortFilter = document.getElementById('sort-filter');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    const productsContainer = document.getElementById('products-container');
+    const emptyState = document.getElementById('empty-state');
+    const loadingState = document.getElementById('loading-state');
+    const resultsCount = document.getElementById('products-count');
+    const productModal = document.getElementById('product-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const modalContent = document.getElementById('modal-content');
+    
+    let debounceTimer;
+    let currentProducts = [];
+    
+    // Load products on page load
+    loadProducts();
+    
+    // Event listeners
+    searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(loadProducts, 300);
+    });
+    
+    categoryFilter.addEventListener('change', loadProducts);
+    minPriceInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(loadProducts, 500);
+    });
+    maxPriceInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(loadProducts, 500);
+    });
+    sortFilter.addEventListener('change', loadProducts);
+    clearFiltersBtn.addEventListener('click', clearFilters);
+    closeModalBtn.addEventListener('click', closeModal);
+    productModal.addEventListener('click', function(e) {
+        if (e.target === productModal) {
+            closeModal();
+        }
+    });
+    
+    // Load products function
+    function loadProducts() {
+        loadingState.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        productsContainer.innerHTML = '';
+        
+        const params = new URLSearchParams();
+        if (searchInput.value.trim()) {
+            params.append('search', searchInput.value.trim());
+        }
+        if (categoryFilter.value) {
+            params.append('category', categoryFilter.value);
+        }
+        if (minPriceInput.value) {
+            params.append('min_price', minPriceInput.value);
+        }
+        if (maxPriceInput.value) {
+            params.append('max_price', maxPriceInput.value);
+        }
+        if (sortFilter.value !== 'default') {
+            params.append('sort', sortFilter.value);
+        }
+        
+        fetch(`/api/main-category-products/${mainCategorySlug}?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                currentProducts = data.products;
+                resultsCount.textContent = data.total;
+                loadingState.classList.add('hidden');
+                
+                if (data.products.length === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    renderProducts(data.products);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading products:', error);
+                loadingState.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            });
+    }
+    
+    // Render products
+    function renderProducts(products) {
+        productsContainer.innerHTML = '';
+        
+        products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card bg-white rounded-lg overflow-hidden cursor-pointer';
+            productCard.onclick = () => showProductDetail(product);
+            
+            const imageUrl = product.images && product.images.length > 0 
+                ? `/uploads/${product.images[0]}` 
+                : '';
+            
+            productCard.innerHTML = `
+                <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                    ${imageUrl ? 
+                        `<img src="${imageUrl}" alt="${product.name}" class="w-full h-full object-cover">` :
+                        `<div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                            <i class="fas fa-image text-4xl text-gray-300"></i>
+                        </div>`
+                    }
+                </div>
+                <div class="p-4">
+                    <h3 class="text-base font-medium text-[#1a1a2e] mb-1 line-clamp-2">${product.name}</h3>
+                    <p class="text-[#c9a96e] font-semibold text-lg">${product.price_formatted} so'm</p>
+                </div>
+            `;
+            
+            productsContainer.appendChild(productCard);
+        });
+    }
+    
+    // Show product detail modal
+    function showProductDetail(product) {
+        const imageUrl = product.images && product.images.length > 0 
+            ? `/uploads/${product.images[0]}` 
+            : '';
+        
+        let imagesHTML = '';
+        if (product.images && product.images.length > 0) {
+            imagesHTML = product.images.map((img, idx) => `
+                <div class="thumbnail cursor-pointer border-2 ${idx === 0 ? 'border-[#1a1a2e]' : 'border-transparent'}" 
+                     onclick="changeModalImage(this, '/uploads/${img}')">
+                    <div class="aspect-square p-2 bg-gray-100">
+                        <img src="/uploads/${img}" alt="${product.name}" class="w-full h-full object-contain">
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        modalContent.innerHTML = `
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Images -->
+                <div>
+                    <div class="bg-gray-100 overflow-hidden mb-4">
+                        <div class="aspect-square p-8 flex items-center justify-center">
+                            <img id="modal-main-image" src="${imageUrl || ''}" alt="${product.name}" 
+                                 class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                    ${imagesHTML ? `
+                    <div class="grid grid-cols-4 gap-3">
+                        ${imagesHTML}
+                    </div>
+                    ` : ''}
+                </div>
+                
+                <!-- Info -->
+                <div>
+                    <div class="mb-4">
+                        ${product.category_name ? `<span class="text-sm text-gray-500">${product.category_name}</span>` : ''}
+                        ${product.is_bestseller ? `<span class="bg-[#8B7355] text-white px-2 py-0.5 text-xs font-medium ml-2">Top</span>` : ''}
+                    </div>
+                    
+                    <h2 class="text-3xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
+                        ${product.name}
+                    </h2>
+                    
+                    <p class="text-3xl font-light text-[#c9a96e] mb-6">${product.price_formatted} so'm</p>
+                    
+                    ${product.description ? `
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">${lang === 'ru' ? 'Описание' : lang === 'en' ? 'Description' : 'Tavsif'}</h3>
+                        <p class="text-gray-700 leading-relaxed">${product.description}</p>
+                    </div>
+                    ` : ''}
+                    
+                    ${product.material ? `
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">${lang === 'ru' ? 'Материал' : lang === 'en' ? 'Material' : 'Material'}</h3>
+                        <p class="text-gray-700">${product.material}</p>
+                    </div>
+                    ` : ''}
+                    
+                    ${product.size ? `
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">${lang === 'ru' ? 'Размер' : lang === 'en' ? 'Size' : 'O\'lcham'}</h3>
+                        <p class="text-gray-700">${product.size}</p>
+                    </div>
+                    ` : ''}
+                    
+                    ${product.warranty ? `
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">${lang === 'ru' ? 'Гарантия' : lang === 'en' ? 'Warranty' : 'Kafolat'}</h3>
+                        <p class="text-gray-700">${product.warranty}</p>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="flex gap-4 mt-8">
+                        <a href="/product/${product.id}" 
+                           class="flex-1 bg-[#1a1a2e] hover:bg-[#c9a96e] text-white px-6 py-3 text-center font-medium transition">
+                            ${lang === 'ru' ? 'Подробнее' : lang === 'en' ? 'View Details' : 'Batafsil'}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        productModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Change modal image
+    window.changeModalImage = function(thumb, imageUrl) {
+        document.getElementById('modal-main-image').src = imageUrl;
+        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('border-[#1a1a2e]'));
+        thumb.classList.add('border-[#1a1a2e]');
+    };
+    
+    // Close modal
+    function closeModal() {
+        productModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+    
+    // Clear filters
+    function clearFilters() {
+        searchInput.value = '';
+        categoryFilter.value = '';
+        minPriceInput.value = '';
+        maxPriceInput.value = '';
+        sortFilter.value = 'default';
+        loadProducts();
+    }
+    
+    // ESC key to close modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !productModal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+});
+</script>
+<style>
+    .thumbnail {
+        transition: all 0.2s ease;
+    }
+    .thumbnail:hover {
+        border-color: #1a1a2e !important;
+    }
+</style>
+{% endblock %}
 

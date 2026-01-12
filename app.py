@@ -429,7 +429,8 @@ def main_category_detail(slug):
                          products=products,
                          products_by_category=products_by_category,
                          reviews=reviews,
-                         rate=rate)
+                         rate=rate,
+                         lang=lang)
 
 @app.route('/product/<int:product_id>')
 def product_detail(product_id):
@@ -1525,6 +1526,92 @@ def api_stores():
         })
     
     return jsonify(stores_data)
+
+@app.route('/api/main-category-products/<slug>')
+def api_main_category_products(slug):
+    """API endpoint for main category products with search and filters"""
+    main_category = MainCategory.query.filter_by(slug=slug).first_or_404()
+    lang = get_locale()
+    rate = get_exchange_rate()
+    
+    # Get query parameters
+    search = request.args.get('search', '').strip()
+    category_id = request.args.get('category', type=int)
+    min_price = request.args.get('min_price', type=float)
+    max_price = request.args.get('max_price', type=float)
+    sort_by = request.args.get('sort', 'default')  # default, price_asc, price_desc, name_asc
+    
+    # Get categories for this main category
+    categories = Category.query.filter_by(main_category_id=main_category.id).all()
+    category_ids = [c.id for c in categories]
+    
+    # Base query
+    query = Product.query.filter(Product.category_id.in_(category_ids)) if category_ids else Product.query.filter(False)
+    
+    # Apply filters
+    if category_id:
+        query = query.filter(Product.category_id == category_id)
+    
+    if search:
+        # Search in name fields
+        search_filter = db.or_(
+            Product.name_uz.ilike(f'%{search}%'),
+            Product.name_ru.ilike(f'%{search}%'),
+            Product.name_en.ilike(f'%{search}%'),
+            Product.name.ilike(f'%{search}%')
+        )
+        query = query.filter(search_filter)
+    
+    if min_price is not None:
+        query = query.filter(Product.price >= min_price / rate)
+    if max_price is not None:
+        query = query.filter(Product.price <= max_price / rate)
+    
+    # Apply sorting
+    if sort_by == 'price_asc':
+        query = query.order_by(Product.price.asc())
+    elif sort_by == 'price_desc':
+        query = query.order_by(Product.price.desc())
+    elif sort_by == 'name_asc':
+        query = query.order_by(Product.name_uz.asc())
+    else:
+        query = query.order_by(Product.created_at.desc())
+    
+    products = query.all()
+    
+    # Serialize products
+    products_data = []
+    for product in products:
+        images = json.loads(product.images) if product.images else []
+        products_data.append({
+            'id': product.id,
+            'name': product.get_name(lang),
+            'description': product.get_description(lang),
+            'price': product.price * rate,
+            'price_formatted': f"{product.price * rate:,.0f}",
+            'material': product.get_material(lang),
+            'size': product.size,
+            'images': images,
+            'category_id': product.category_id,
+            'category_name': product.category.get_name(lang) if product.category else '',
+            'is_bestseller': product.is_bestseller,
+            'warranty': product.warranty_uz if lang == 'uz' else (product.warranty_ru if lang == 'ru' else product.warranty_en) if product.warranty else None
+        })
+    
+    # Get categories data
+    categories_data = []
+    for cat in categories:
+        categories_data.append({
+            'id': cat.id,
+            'name': cat.get_name(lang),
+            'image': cat.image
+        })
+    
+    return jsonify({
+        'products': products_data,
+        'categories': categories_data,
+        'total': len(products_data)
+    })
 
 @app.route('/admin/stores')
 @login_required
