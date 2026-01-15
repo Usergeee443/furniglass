@@ -133,22 +133,22 @@
                 <div class="mb-6 pb-6 border-b border-gray-100">
                     <h3 class="font-medium text-[#1a1a2e] mb-4">{% if lang == 'ru' %}Характеристики{% elif lang == 'en' %}Specifications{% else %}Xususiyatlar{% endif %}</h3>
                     <div class="space-y-3">
-                        {% if product.size %}
+                    {% if product.size %}
                         <div class="flex items-center justify-between py-2">
                             <span class="text-gray-500">{% if lang == 'ru' %}Размер{% elif lang == 'en' %}Size{% else %}O'lcham{% endif %}</span>
                             <span class="font-medium text-[#1a1a2e]">{{ product.size }}</span>
-                        </div>
-                        {% endif %}
-                        
-                        {% if product.get_material(lang) %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.get_material(lang) %}
                         <div class="flex items-center justify-between py-2">
                             <span class="text-gray-500">Material</span>
                             <span class="font-medium text-[#1a1a2e]">{{ product.get_material(lang) }}</span>
-                        </div>
-                        {% endif %}
-                        
-                        {% if product.warranty_uz %}
-                        <div class="flex items-center justify-between py-2">
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.warranty_uz %}
+                    <div class="flex items-center justify-between py-2">
                             <span class="text-gray-500">{% if lang == 'ru' %}Гарантия{% elif lang == 'en' %}Warranty{% else %}Kafolat{% endif %}</span>
                             <span class="font-medium text-[#1a1a2e]">{{ product.warranty_uz }}</span>
                         </div>
@@ -203,7 +203,7 @@
                         <p class="text-sm text-gray-500 mt-3">
                             <span id="selected-color-name">Qora</span>
                         </p>
-                    </div>
+                </div>
                 {% endif %}
                 
                 <!-- Quantity & Add to Cart -->
@@ -272,8 +272,133 @@
     </div>
 </section>
 
-<!-- Help Section -->
+<!-- Additional Information Section -->
+<section class="py-12 lg:py-16 bg-white border-t border-gray-100">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Features -->
+                <div>
+                    <h3 class="text-xl font-medium text-[#1a1a2e] mb-6">{% if lang == 'ru' %}Преимущества{% elif lang == 'en' %}Features{% else %}Afzalliklar{% endif %}</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#c9a96e] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span class="text-gray-700">{% if lang == 'ru' %}Высокое качество материалов{% elif lang == 'en' %}High quality materials{% else %}Yuqori sifatli materiallar{% endif %}</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#c9a96e] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span class="text-gray-700">{% if lang == 'ru' %}Профессиональная сборка{% elif lang == 'en' %}Professional assembly{% else %}Professional yig'ilish{% endif %}</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#c9a96e] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span class="text-gray-700">{% if lang == 'ru' %}Долговечность и надежность{% elif lang == 'en' %}Durability and reliability{% else %}Uzoq muddatli va ishonchli{% endif %}</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#c9a96e] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span class="text-gray-700">{% if lang == 'ru' %}Гарантия качества{% elif lang == 'en' %}Quality guarantee{% else %}Sifat kafolati{% endif %}</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Care Instructions -->
+                <div>
+                    <h3 class="text-xl font-medium text-[#1a1a2e] mb-6">{% if lang == 'ru' %}Уход{% elif lang == 'en' %}Care{% else %}Parvarish{% endif %}</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#c9a96e] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span class="text-gray-700">{% if lang == 'ru' %}Регулярная влажная уборка{% elif lang == 'en' %}Regular wet cleaning{% else %}Muntazam nam tozalash{% endif %}</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#c9a96e] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span class="text-gray-700">{% if lang == 'ru' %}Избегать прямых солнечных лучей{% elif lang == 'en' %}Avoid direct sunlight{% else %}To'g'ridan-to'g'ri quyosh nuridan saqlash{% endif %}</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#c9a96e] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span class="text-gray-700">{% if lang == 'ru' %}Использовать мягкие моющие средства{% elif lang == 'en' %}Use mild detergents{% else %}Yumshoq yuvish vositalaridan foydalanish{% endif %}</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-[#c9a96e] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span class="text-gray-700">{% if lang == 'ru' %}Профессиональная чистка при необходимости{% elif lang == 'en' %}Professional cleaning when needed{% else %}Kerak bo'lganda professional tozalash{% endif %}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Products Section -->
+{% if related_products %}
 <section class="py-12 lg:py-16 bg-[#f8f8f8]">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="mb-10">
+            <h2 class="text-2xl md:text-3xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Похожие товары{% elif lang == 'en' %}Related Products{% else %}O'xshash mahsulotlar{% endif %}
+            </h2>
+            <p class="text-gray-500 text-sm">
+                {% if lang == 'ru' %}Вам также может понравиться{% elif lang == 'en' %}You may also like{% else %}Sizga ham yoqishi mumkin{% endif %}
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+            {% for related_product in related_products[:5] %}
+            <div class="product-card bg-white group">
+                <a href="/product/{{ related_product.id }}" class="block relative product-image overflow-hidden">
+                    <div class="aspect-[3/4] w-full">
+                        {% if related_product.images %}
+                            {% set images = related_product.images|from_json %}
+                            {% if images %}
+                                <img src="/uploads/{{ images[0] }}" alt="{{ related_product.get_name(lang) }}" 
+                                     class="w-full h-full object-cover">
+                            {% else %}
+                                <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                    <i class="fas fa-image text-4xl text-gray-300"></i>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                <i class="fas fa-image text-4xl text-gray-300"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
+                
+                <div class="pt-2 pb-2">
+                    <a href="/product/{{ related_product.id }}" class="block">
+                        <h3 class="text-xs md:text-sm font-medium text-[#1a1a2e] mb-1 line-clamp-1 group-hover:underline">
+                            {{ related_product.get_name(lang) }}
+                        </h3>
+                    </a>
+                    <div class="flex items-baseline gap-1.5 mb-1">
+                        <span class="text-[10px] text-gray-400 line-through">${{ "%.0f"|format(related_product.price * 1.2) }}</span>
+                        <span class="text-xs md:text-sm font-semibold text-[#1a1a2e]">From ${{ "%.0f"|format(related_product.price) }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Help Section -->
+<section class="py-12 lg:py-16 bg-white">
     <div class="container mx-auto px-4 lg:px-8">
         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
@@ -281,13 +406,13 @@
                 <p class="text-gray-500">{% if lang == 'ru' %}Свяжитесь с нами для консультации{% elif lang == 'en' %}Contact us for consultation{% else %}Maslahat uchun biz bilan bog'laning{% endif %}</p>
             </div>
             <div class="flex gap-4">
-                <a href="tel:+998901234567" class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-black text-white px-6 py-3 text-sm font-medium transition">
+                <a href="tel:+998712000262" class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-black text-white px-6 py-3 text-sm font-medium transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                    +998 90 123 45 67
+                    71 200 02 62
                 </a>
-                <a href="https://t.me/furniglass" class="inline-flex items-center gap-2 border border-gray-200 hover:border-[#1a1a2e] text-[#1a1a2e] px-6 py-3 text-sm font-medium transition">
-                    <i class="fab fa-telegram text-lg"></i>
-                    Telegram
+                <a href="mailto:furniglass77@gmail.com" class="inline-flex items-center gap-2 border border-gray-200 hover:border-[#1a1a2e] text-[#1a1a2e] px-6 py-3 text-sm font-medium transition">
+                    <i class="fas fa-envelope text-lg"></i>
+                    Email
                 </a>
             </div>
         </div>

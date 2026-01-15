@@ -272,8 +272,13 @@ def track_user_activity():
 @app.route('/')
 def index():
     main_categories = MainCategory.query.order_by(MainCategory.order).all()
-    categories = Category.query.limit(8).all()
-    bestsellers = Product.query.filter_by(is_bestseller=True).limit(8).all()
+    categories = Category.query.all()  # Barcha kategoriyalar
+    # Ko'proq mahsulotlar - avval bestsellerlar, keyin boshqalar
+    bestsellers = Product.query.filter_by(is_bestseller=True).limit(30).all()
+    if len(bestsellers) < 30:
+        remaining = 30 - len(bestsellers)
+        other_products = Product.query.filter(Product.is_bestseller != True).order_by(Product.created_at.desc()).limit(remaining).all()
+        bestsellers.extend(other_products)
     reviews = Review.query.order_by(Review.created_at.desc()).limit(5).all()
     portfolios = Portfolio.query.order_by(Portfolio.created_at.desc()).limit(3).all()
     collections = Collection.query.limit(3).all()
@@ -435,7 +440,22 @@ def main_category_detail(slug):
 @app.route('/product/<int:product_id>')
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
-    return render_template('product_detail.html', product=product)
+    rate = get_exchange_rate()
+    # Bog'liq mahsulotlar - bir xil kategoriyadagi boshqa mahsulotlar
+    related_products = []
+    if product.category:
+        related_products = Product.query.filter(
+            Product.category_id == product.category_id,
+            Product.id != product.id
+        ).limit(8).all()
+    # Agar bog'liq mahsulotlar yetarli bo'lmasa, boshqa mahsulotlar qo'shish
+    if len(related_products) < 8:
+        remaining = 8 - len(related_products)
+        other_products = Product.query.filter(
+            Product.id != product.id
+        ).order_by(Product.created_at.desc()).limit(remaining).all()
+        related_products.extend(other_products)
+    return render_template('product_detail.html', product=product, usd_rate=rate, related_products=related_products)
 
 @app.route('/portfolio')
 def portfolio():

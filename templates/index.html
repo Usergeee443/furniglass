@@ -1,878 +1,646 @@
 {% extends "base.html" %}
 
-{% block title %}Furniglass - {% if lang == 'ru' %}Ведущий Производитель Мебели в Узбекистане{% elif lang == 'en' %}Uzbekistan's Leading Furniture Manufacturer{% else %}O'zbekistonning Yetakchi Mebel Ishlab Chiqaruvchisi{% endif %}{% endblock %}
+{% block title %}Furniglass - {% if lang == 'ru' %}Премиум Мебель{% elif lang == 'en' %}Premium Furniture{% else %}Premium Mebel{% endif %}{% endblock %}
 
 {% block extra_css %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-
-    .line-clamp-1 {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+    
+    :root {
+        --accent: #c9a96e;
+        --dark: #0a0a0a;
+        --light: #fafafa;
     }
-
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    /* Hero video/image overlay */
-    .hero-overlay {
-        background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%);
-    }
-
-    /* Categories carousel */
-    .categories-scroll {
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .categories-scroll::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Product card hover */
-    .product-card {
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    .font-serif { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
+    
+    /* Smooth scrolling */
+    html { scroll-behavior: smooth; }
+    
+    /* Hero - Premium Minimalist */
+    .hero-section {
         position: relative;
+        height: 100vh;
+        min-height: 700px;
         overflow: hidden;
     }
-
-    .product-card::before {
-        content: '';
+    
+    .hero-bg-image {
         position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transition: left 0.6s;
-    }
-
-    .product-card:hover::before {
-        left: 100%;
-    }
-
-    .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-    }
-
-    .product-card:hover .product-image img {
-        transform: scale(1.08);
-    }
-
-    .product-image {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .product-image img {
-        transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Promo banner parallax effect */
-    .promo-banner {
-        background-attachment: fixed;
-        background-position: center;
+        inset: 0;
+        background-image: url('/uploads/designs/3.jpg');
         background-size: cover;
+        background-position: center;
     }
-
-    /* Advanced animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+    
+    @media (min-width: 768px) {
+        .hero-bg-image {
+            background-attachment: fixed;
         }
     }
-
-    @keyframes fadeInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    @keyframes fadeInRight {
-        from {
-            opacity: 0;
-            transform: translateX(40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    @keyframes scaleIn {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(60px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .animate-on-scroll {
-        opacity: 0;
-        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .animate-on-scroll.animated {
-        opacity: 1;
-    }
-
-    .fade-in-up {
-        animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    .fade-in-left {
-        animation: fadeInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    .fade-in-right {
-        animation: fadeInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    .scale-in {
-        animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    /* Stagger delay for children */
-    .stagger-children > * {
-        opacity: 0;
-        animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    .stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
-    .stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
-    .stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
-    .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
-    .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
-    .stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
-    .stagger-children > *:nth-child(7) { animation-delay: 0.7s; }
-    .stagger-children > *:nth-child(8) { animation-delay: 0.8s; }
-
-    /* Main category card effects */
-    .main-cat-card {
-        position: relative;
-        overflow: hidden;
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .main-cat-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(201, 169, 110, 0.1) 0%, transparent 100%);
-        opacity: 0;
-        transition: opacity 0.5s;
-    }
-
-    .main-cat-card:hover::after {
-        opacity: 1;
-    }
-
-    .main-cat-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 25px 80px rgba(0,0,0,0.15);
-    }
-
-    /* Testimonial card */
-    .testimonial-card {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .testimonial-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-    }
-
-    /* Process step */
-    .process-step {
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .process-step:hover {
-        transform: scale(1.05);
-    }
-
-    .process-step::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 100%;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, #c9a96e 0%, transparent 100%);
-        transform: translateY(-50%);
-    }
-
-    .process-step:last-child::before {
-        display: none;
-    }
-
-    /* Brand logo hover */
-    .brand-logo {
-        filter: grayscale(100%) opacity(0.5);
-        transition: all 0.4s ease;
-    }
-
-    .brand-logo:hover {
-        filter: grayscale(0%) opacity(1);
-        transform: scale(1.1);
-    }
-
-    /* Video section overlay */
-    .video-overlay {
-        background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(201, 169, 110, 0.2) 100%);
-        transition: all 0.5s;
-    }
-
-    .video-section:hover .video-overlay {
-        background: linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(201, 169, 110, 0.3) 100%);
-    }
-
-    /* Material card */
-    .material-card {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .material-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        bottom: -50%;
-        left: -50%;
-        background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
-        transform: rotate(45deg) translateX(-100%);
-        transition: transform 0.6s;
-    }
-
-    .material-card:hover::before {
-        transform: rotate(45deg) translateX(100%);
-    }
-
-    /* Counter animation */
-    .counter {
-        font-variant-numeric: tabular-nums;
-    }
-
-    /* Parallax */
-    .parallax-bg {
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: transform;
-    }
-
-    /* Smooth scroll snap for mobile */
-    @media (max-width: 768px) {
-        .categories-scroll {
-            scroll-snap-type: x mandatory;
-        }
-        .category-item {
-            scroll-snap-align: start;
-        }
-    }
-
-    /* Hover effects for categories */
-    .category-item {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .category-item:hover {
-        transform: translateY(-8px);
-    }
-
-    /* Collection card effects */
-    .collection-card {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .collection-card::before {
+    
+    .hero-bg-image::after {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
-        opacity: 0.6;
-        transition: opacity 0.5s;
+        background: linear-gradient(to right, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.6) 50%, rgba(10,10,10,0.4) 100%);
     }
-
-    .collection-card:hover::before {
-        opacity: 0.9;
+    
+    @media (max-width: 767px) {
+        .hero-bg-image::after {
+            background: linear-gradient(to bottom, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.85) 100%);
+        }
     }
-
-    .collection-card img {
-        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Text reveal animation */
+    @keyframes textReveal {
+        0% { opacity: 0; transform: translateY(40px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
-
-    .collection-card:hover img {
-        transform: scale(1.15);
+    
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
     }
-
-    /* CTA Button effects */
-    .cta-button {
+    
+    @keyframes lineExpand {
+        0% { width: 0; }
+        100% { width: 60px; }
+    }
+    
+    .animate-reveal {
+        animation: textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+    }
+    
+    .animate-fade {
+        animation: fadeIn 1.2s ease forwards;
+        opacity: 0;
+    }
+    
+    .animate-line {
+        animation: lineExpand 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: 0.8s;
+    }
+    
+    .animate-reveal-delay-1 { animation-delay: 0.15s; }
+    .animate-reveal-delay-2 { animation-delay: 0.3s; }
+    .animate-reveal-delay-3 { animation-delay: 0.45s; }
+    .animate-reveal-delay-4 { animation-delay: 0.6s; }
+    
+    /* Product card luxury */
+    .product-luxury {
         position: relative;
         overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #fff;
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .cta-button::before {
+    
+    .product-luxury::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, transparent 0%, rgba(201, 169, 110, 0.03) 100%);
+        opacity: 0;
+        transition: opacity 0.6s;
+    }
+    
+    .product-luxury:hover::before {
+        opacity: 1;
+    }
+    
+    .product-luxury:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 40px 80px -20px rgba(0,0,0,0.15);
+    }
+    
+    .product-luxury:hover .product-img {
+        transform: scale(1.08);
+    }
+    
+    .product-luxury:hover .product-overlay {
+        opacity: 1;
+    }
+    
+    .product-img {
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .product-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+    
+    /* Category card */
+    .category-luxury {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .category-luxury::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.3) 50%, transparent 100%);
+        transition: all 0.5s;
+    }
+    
+    .category-luxury:hover::after {
+        background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.5) 60%, rgba(10,10,10,0.2) 100%);
+    }
+    
+    .category-luxury:hover img {
+        transform: scale(1.1);
+    }
+    
+    .category-luxury:hover .category-content {
+        transform: translateY(-10px);
+    }
+    
+    .category-luxury img {
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .category-content {
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    /* Magnetic button */
+    .btn-magnetic {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .btn-magnetic::before {
         content: '';
         position: absolute;
         top: 50%;
         left: 50%;
         width: 0;
         height: 0;
+        background: var(--accent);
         border-radius: 50%;
-        background: rgba(255,255,255,0.1);
         transform: translate(-50%, -50%);
-        transition: width 0.5s, height 0.5s;
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .cta-button:hover::before {
-        width: 300px;
-        height: 300px;
+    
+    .btn-magnetic:hover::before {
+        width: 300%;
+        height: 300%;
     }
-
-    .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    
+    .btn-magnetic:hover {
+        color: var(--dark);
+        border-color: var(--accent);
     }
+    
+    .btn-magnetic span {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Section reveal */
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(60px);
+        transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .reveal-section.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Line clamp */
+    .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #b8965d; }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section - Minimalist -->
-<section class="relative h-screen -mt-[60px] md:-mt-[72px] overflow-hidden bg-[#1a1a2e]">
+<!-- Hero Section - Premium Minimalist with Background Image -->
+<section class="hero-section -mt-[70px] md:-mt-[80px]">
     <!-- Background Image -->
-    <div class="absolute inset-0 px-4 md:px-8 lg:px-8 pt-20 md:pt-24 lg:pt-[6.5rem]">
-        <div class="w-full h-full relative">
-            <img src="/uploads/designs/3.jpg" alt="Furniglass"
-                 class="w-full h-full object-cover opacity-30">
-        </div>
-    </div>
-
-    <!-- Content -->
-    <div class="relative h-full flex items-center justify-center px-4">
-        <div class="max-w-5xl text-center">
-            <h1 class="text-6xl md:text-8xl lg:text-9xl font-light text-white mb-12 tracking-tight" style="font-family: 'Playfair Display', serif;">
-                Furniglass
+    <div class="hero-bg-image"></div>
+    
+    <!-- Main Content -->
+    <div class="relative h-full flex items-center">
+        <div class="container mx-auto px-6 lg:px-16">
+            <div class="max-w-3xl">
+                <!-- Accent Line -->
+                <div class="animate-line h-[1px] bg-[#c9a96e] mb-8 w-0"></div>
+                
+                <!-- Subtitle -->
+                <p class="animate-reveal text-[#c9a96e] text-xs md:text-sm tracking-[0.4em] uppercase mb-6">
+                    {% if lang == 'ru' %}Премиум мебель{% elif lang == 'en' %}Premium Furniture{% else %}Premium Mebel{% endif %}
+                </p>
+                
+                <!-- Main Title -->
+                <h1 class="animate-reveal animate-reveal-delay-1 font-serif text-white text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-light leading-[1.1] mb-6">
+                    {% if lang == 'ru' %}Искусство<br>интерьера{% elif lang == 'en' %}The Art of<br>Interior{% else %}Interer<br>san'ati{% endif %}
             </h1>
-            <p class="text-white/60 text-lg md:text-xl mb-16 font-light tracking-wide uppercase">
-                {% if lang == 'ru' %}Мебель для бизнеса{% elif lang == 'en' %}Furniture for Business{% else %}Biznes uchun mebel{% endif %}
-            </p>
-            <a href="/products" class="inline-block border border-white/40 text-white hover:bg-white hover:text-[#1a1a2e] px-12 py-5 text-sm uppercase tracking-widest font-light transition-all duration-500">
-                {% if lang == 'ru' %}Каталог{% elif lang == 'en' %}Catalog{% else %}Katalog{% endif %}
-            </a>
+            
+                <!-- Tagline -->
+                <p class="animate-reveal animate-reveal-delay-2 text-white/60 text-base md:text-lg font-light max-w-xl mb-10 leading-relaxed">
+                    {% if lang == 'ru' %}Создаём уникальную мебель для кафе, ресторанов, клиник и домов с 1999 года{% elif lang == 'en' %}Creating unique furniture for cafes, restaurants, clinics and homes since 1999{% else %}1999 yildan beri kafe, restoran, klinika va uylar uchun noyob mebellar yaratamiz{% endif %}
+                </p>
+                
+                <!-- CTA Buttons -->
+                <div class="animate-reveal animate-reveal-delay-3 flex flex-wrap gap-4">
+                    <a href="/products" class="btn-magnetic bg-[#c9a96e] text-white px-8 py-4 text-sm tracking-[0.15em] uppercase">
+                        <span>{% if lang == 'ru' %}Каталог{% elif lang == 'en' %}Catalog{% else %}Katalog{% endif %}</span>
+                    </a>
+                    <a href="/contact" class="btn-magnetic border border-white/30 text-white px-8 py-4 text-sm tracking-[0.15em] uppercase hover:bg-white hover:text-[#0a0a0a]">
+                        <span>{% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}</span>
+                    </a>
+                </div>
+                
+                <!-- Stats Row -->
+                <div class="animate-reveal animate-reveal-delay-4 flex gap-12 mt-16 pt-8 border-t border-white/10">
+                    <div>
+                        <p class="font-serif text-3xl md:text-4xl text-white">25+</p>
+                        <p class="text-white/40 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil tajriba{% endif %}</p>
+                    </div>
+                    <div>
+                        <p class="font-serif text-3xl md:text-4xl text-white">5000+</p>
+                        <p class="text-white/40 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Clients{% else %}Mijozlar{% endif %}</p>
+                    </div>
+                    <div>
+                        <p class="font-serif text-3xl md:text-4xl text-white">2500+</p>
+                        <p class="text-white/40 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Main Categories Section - Minimalist -->
+<!-- Main Categories - Editorial Style -->
 {% if main_categories %}
-<section class="py-24 lg:py-32 bg-white">
+<section class="py-20 lg:py-32 bg-white reveal-section">
     <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-20">
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Специализации{% elif lang == 'en' %}Specializations{% else %}Ixtisoslar{% endif %}
+        <!-- Section Header -->
+        <div class="max-w-3xl mb-16 lg:mb-24">
+            <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Наши направления{% elif lang == 'en' %}Our Directions{% else %}Bizning yo'nalishlar{% endif %}</p>
+            <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl text-[#0a0a0a] font-light leading-tight">
+                {% if lang == 'ru' %}Мебель для каждого пространства{% elif lang == 'en' %}Furniture for every space{% else %}Har bir makon uchun mebel{% endif %}
             </h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
+                        </div>
+        
+        <!-- Categories Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
             {% for main_cat in main_categories %}
-            <a href="/main-category/{{ main_cat.slug }}" class="group relative aspect-square overflow-hidden">
+            <a href="/main-category/{{ main_cat.slug }}" class="category-luxury group relative aspect-[3/4] md:aspect-[2/3]">
                 {% if main_cat.image %}
                 <img src="/uploads/{{ main_cat.image }}" alt="{{ main_cat.get_name(lang) }}"
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                {% else %}
-                <div class="w-full h-full flex items-center justify-center bg-[#1a1a2e]">
-                    <i class="fas fa-building text-6xl text-white/20"></i>
-                </div>
-                {% endif %}
-                <div class="absolute inset-0 bg-[#1a1a2e]/60 group-hover:bg-[#1a1a2e]/40 transition-colors duration-500"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <h3 class="text-2xl md:text-3xl font-light text-white text-center px-6" style="font-family: 'Playfair Display', serif;">
+                     class="absolute inset-0 w-full h-full object-cover">
+                    {% else %}
+                <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a]"></div>
+                    {% endif %}
+                
+                <div class="category-content absolute inset-0 z-10 flex flex-col justify-end p-6 lg:p-10">
+                    <span class="text-[#c9a96e] text-xs tracking-[0.2em] uppercase mb-2">0{{ loop.index }}</span>
+                    <h3 class="font-serif text-2xl md:text-3xl lg:text-4xl text-white font-light mb-3">
                         {{ main_cat.get_name(lang) }}
                     </h3>
+                    <div class="flex items-center gap-2 text-white/60 text-sm group-hover:text-white transition-colors">
+                        <span>{% if lang == 'ru' %}Смотреть{% elif lang == 'en' %}Explore{% else %}Ko'rish{% endif %}</span>
+                        <svg class="w-4 h-4 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </div>
                 </div>
             </a>
             {% endfor %}
         </div>
-    </div>
+                        </div>
 </section>
 {% endif %}
 
-<!-- Simple Stats Section -->
-<section class="py-20 bg-[#1a1a2e]">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid grid-cols-3 gap-12 md:gap-20 max-w-4xl mx-auto text-center">
-            <div>
-                <div class="text-4xl md:text-5xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">500+</div>
-                <div class="text-white/50 text-sm uppercase tracking-wider">
-                    {% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}
-                </div>
-            </div>
-            <div>
-                <div class="text-4xl md:text-5xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">12</div>
-                <div class="text-white/50 text-sm uppercase tracking-wider">
-                    {% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil{% endif %}
-                </div>
-            </div>
-            <div>
-                <div class="text-4xl md:text-5xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">1500+</div>
-                <div class="text-white/50 text-sm uppercase tracking-wider">
-                    {% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Clients{% else %}Mijozlar{% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Image Gallery Section - From Idea to Reality -->
-<section class="py-24 lg:py-32 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}От идеи до реальности{% elif lang == 'en' %}From Idea to Reality{% else %}G'oyadan haqiqatga{% endif %}
-            </h2>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-1">
-            <div class="aspect-square overflow-hidden">
-                <img src="/uploads/designs/1.jpg" alt="Project 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
-            </div>
-            <div class="aspect-square overflow-hidden">
-                <img src="/uploads/designs/2.jpg" alt="Project 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
-            </div>
-            <div class="aspect-square overflow-hidden">
-                <img src="/uploads/designs/3.jpg" alt="Project 3" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
-            </div>
-            <div class="aspect-square overflow-hidden">
-                <img src="/uploads/designs/4.jpg" alt="Project 4" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Process Section - Minimal -->
-<section class="py-24 lg:py-32 bg-[#1a1a2e]">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-20">
-            <h2 class="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-4" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Процесс{% elif lang == 'en' %}Process{% else %}Jarayon{% endif %}
-            </h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 max-w-6xl mx-auto">
-            <div class="text-center">
-                <div class="text-5xl md:text-6xl font-light text-white/20 mb-4" style="font-family: 'Playfair Display', serif;">01</div>
-                <h3 class="text-xl font-light text-white mb-3">
-                    {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}
-                </h3>
-                <p class="text-white/50 text-sm">
-                    {% if lang == 'ru' %}Встреча и обсуждение{% elif lang == 'en' %}Meeting and discussion{% else %}Uchrashuv va muhokama{% endif %}
-                </p>
-            </div>
-
-            <div class="text-center">
-                <div class="text-5xl md:text-6xl font-light text-white/20 mb-4" style="font-family: 'Playfair Display', serif;">02</div>
-                <h3 class="text-xl font-light text-white mb-3">
-                    {% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}
-                </h3>
-                <p class="text-white/50 text-sm">
-                    {% if lang == 'ru' %}Визуализация проекта{% elif lang == 'en' %}Project visualization{% else %}Loyiha vizualizatsiyasi{% endif %}
-                </p>
-            </div>
-
-            <div class="text-center">
-                <div class="text-5xl md:text-6xl font-light text-white/20 mb-4" style="font-family: 'Playfair Display', serif;">03</div>
-                <h3 class="text-xl font-light text-white mb-3">
-                    {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
-                </h3>
-                <p class="text-white/50 text-sm">
-                    {% if lang == 'ru' %}Изготовление мебели{% elif lang == 'en' %}Furniture manufacturing{% else %}Mebel ishlab chiqarish{% endif %}
-                </p>
-            </div>
-
-            <div class="text-center">
-                <div class="text-5xl md:text-6xl font-light text-white/20 mb-4" style="font-family: 'Playfair Display', serif;">04</div>
-                <h3 class="text-xl font-light text-white mb-3">
-                    {% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish{% endif %}
-                </h3>
-                <p class="text-white/50 text-sm">
-                    {% if lang == 'ru' %}Доставка и монтаж{% elif lang == 'en' %}Delivery and setup{% else %}Yetkazish va o'rnatish{% endif %}
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Contact CTA Section - Minimal -->
-<section class="py-32 bg-white">
-    <div class="container mx-auto px-4 lg:px-8 text-center">
-        <h2 class="text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-12" style="font-family: 'Playfair Display', serif;">
-            {% if lang == 'ru' %}Начать проект{% elif lang == 'en' %}Start a Project{% else %}Loyihani boshlash{% endif %}
-        </h2>
-        <a href="/contact" class="inline-block border border-[#1a1a2e] text-[#1a1a2e] hover:bg-[#1a1a2e] hover:text-white px-12 py-5 text-sm uppercase tracking-widest font-light transition-all duration-500">
-            {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Aloqa{% endif %}
-        </a>
-    </div>
-</section>
-
-
-<!-- Best Selling Products - BoConcept Style Cards -->
+<!-- Featured Products - Luxury Grid -->
 {% if bestsellers %}
-<section class="py-16 lg:py-24 bg-white">
+<section class="py-20 lg:py-32 bg-[#fafafa] reveal-section">
     <div class="container mx-auto px-4 lg:px-8">
-        <div class="flex items-end justify-between mb-10 md:mb-14">
-            <div>
-                <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Популярные товары{% elif lang == 'en' %}Shop living chairs{% else %}Mashhur mahsulotlar{% endif %}
+        <!-- Section Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 lg:mb-20">
+            <div class="max-w-2xl">
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Коллекция{% elif lang == 'en' %}Collection{% else %}Kolleksiya{% endif %}</p>
+                <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl text-[#0a0a0a] font-light">
+                    {% if lang == 'ru' %}Избранные товары{% elif lang == 'en' %}Featured Products{% else %}Tanlangan mahsulotlar{% endif %}
             </h2>
                         </div>
-            <a href="/products" class="hidden md:flex items-center gap-2 text-[#1a1a2e] hover:underline text-sm font-medium">
-                {% if lang == 'ru' %}Смотреть все{% elif lang == 'en' %}See all{% else %}Barchasini ko'rish{% endif %}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            <a href="/products" class="group flex items-center gap-3 text-[#0a0a0a] hover:text-[#c9a96e] transition-colors">
+                <span class="text-sm tracking-wider">{% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}</span>
+                <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
             </a>
                     </div>
         
         <!-- Products Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-            {% for product in bestsellers[:8] %}
-            <div class="product-card bg-white group">
-                            <!-- Product Image -->
-                <a href="/product/{{ product.id }}" class="block relative product-image overflow-hidden">
-                    <div class="aspect-[3/4] w-full">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8">
+            {% for product in bestsellers[:12] %}
+            <article class="product-luxury group">
+                <a href="/product/{{ product.id }}" class="block">
+                    <!-- Image -->
+                    <div class="relative aspect-[3/4] overflow-hidden bg-[#f0f0f0] mb-4">
                                 {% if product.images %}
                                     {% set images = product.images|from_json %}
                                     {% if images %}
                                         <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
-                                     class="w-full h-full object-cover">
+                                 class="product-img w-full h-full object-cover">
                                     {% else %}
-                                        <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                                            <i class="fas fa-image text-4xl text-gray-300"></i>
+                                        <div class="w-full h-full flex items-center justify-center">
+                                <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                                        <i class="fas fa-image text-4xl text-gray-300"></i>
-                                    </div>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- Badge -->
-                    {% if product.is_bestseller %}
-                    <span class="absolute top-3 left-3 bg-[#8B7355] text-white text-[10px] md:text-xs px-2 py-1 font-medium">
-                        {% if lang == 'ru' %}Новинка{% elif lang == 'en' %}New{% else %}Yangi{% endif %}
-                    </span>
-                    {% endif %}
-                    
-                    <!-- Image navigation dots (if multiple images) -->
-                    {% if product.images %}
-                        {% set images = product.images|from_json %}
-                        {% if images|length > 1 %}
-                        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
-                            <button class="w-6 h-6 bg-white/80 hover:bg-white flex items-center justify-center text-gray-600">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                                </svg>
-                            </button>
-                            <button class="w-6 h-6 bg-white/80 hover:bg-white flex items-center justify-center text-gray-600">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                </svg>
-                            </button>
-                        </div>
-                        {% endif %}
-                                {% endif %}
-                            </a>
-                            
-                            <!-- Product Info -->
-                <div class="pt-2 pb-2">
-                                <a href="/product/{{ product.id }}" class="block">
-                        <h3 class="text-xs md:text-sm font-medium text-[#1a1a2e] mb-0.5 line-clamp-1 group-hover:underline">
-                                        {{ product.get_name(lang) }}
-                                    </h3>
-                                </a>
-                    <!-- Price - moved right after name -->
-                    <div class="flex items-baseline gap-1.5 mb-1.5">
-                        <span class="text-[10px] text-gray-400 line-through">${{ "%.0f"|format(product.price * 1.2) }}</span>
-                        <span class="text-xs md:text-sm font-semibold text-[#1a1a2e]">From ${{ "%.0f"|format(product.price) }}</span>
-                        </div>
-                    <p class="text-[10px] md:text-xs text-gray-500 mb-1.5">
-                        {{ product.category.get_name(lang) if product.category else ('Mebel' if lang == 'uz' else ('Мебель' if lang == 'ru' else 'Furniture')) }}
-                    </p>
-                    
-                    <!-- Color options (placeholder) -->
-                    <div class="flex items-center gap-1 mb-0">
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#4a4a4a] border border-gray-300"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] border border-gray-300"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#8B4513] border border-gray-300"></span>
-                        <span class="text-[10px] text-gray-400 ml-0.5">+ more</span>
-                    </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+                                    <div class="w-full h-full flex items-center justify-center">
+                            <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
                 </div>
+                        {% endif %}
+                        <div class="product-overlay"></div>
+                        
+                        <!-- Quick View -->
+                        <div class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="block w-full bg-white/95 backdrop-blur text-center py-3 text-xs tracking-wider uppercase text-[#0a0a0a]">
+                                {% if lang == 'ru' %}Подробнее{% elif lang == 'en' %}View Details{% else %}Batafsil{% endif %}
+                            </span>
+        </div>
+                        
+                        {% if product.is_bestseller %}
+                        <span class="absolute top-4 left-4 bg-[#c9a96e] text-white text-[10px] tracking-wider uppercase px-3 py-1">
+                            {% if lang == 'ru' %}Хит{% elif lang == 'en' %}Best{% else %}Top{% endif %}
+                        </span>
+                        {% endif %}
+    </div>
+                    
+                    <!-- Info -->
+                    <div class="px-1">
+                        <p class="text-[10px] text-gray-400 tracking-wider uppercase mb-1">
+                            {{ product.category.get_name(lang) if product.category else 'Mebel' }}
+                        </p>
+                        <h3 class="font-medium text-[#0a0a0a] text-sm mb-2 line-clamp-1 group-hover:text-[#c9a96e] transition-colors">
+                            {{ product.get_name(lang) }}
+                        </h3>
+                        <p class="font-serif text-lg text-[#0a0a0a]">${{ "%.0f"|format(product.price) }}</p>
+                </div>
+            </a>
+            </article>
+            {% endfor %}
+        </div>
         
-        <!-- Mobile View All Button -->
-        <div class="mt-8 text-center md:hidden">
-            <a href="/products" class="inline-flex items-center gap-2 text-[#1a1a2e] font-medium">
-                {% if lang == 'ru' %}Смотреть все{% elif lang == 'en' %}See all{% else %}Barchasini ko'rish{% endif %}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
+        <!-- View All Button (Mobile) -->
+        <div class="mt-12 text-center lg:hidden">
+            <a href="/products" class="btn-magnetic inline-block border-2 border-[#0a0a0a] text-[#0a0a0a] px-10 py-4 text-sm tracking-[0.2em] uppercase">
+                <span>{% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}</span>
             </a>
         </div>
     </div>
 </section>
 {% endif %}
 
-<!-- Services Strip -->
-<section class="py-8 md:py-12 bg-[#f8f8f8] border-y border-gray-100">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            <div class="flex items-center gap-3 md:justify-center">
-                <div class="w-10 h-10 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free delivery{% else %}Bepul yetkazish{% endif %}</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 md:justify-center">
-                <div class="w-10 h-10 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-[#1a1a2e]">{% if lang == 'ru' %}3 года гарантии{% elif lang == 'en' %}3 year warranty{% else %}3 yil kafolat{% endif %}</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 md:justify-center">
-                <div class="w-10 h-10 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-[#1a1a2e]">{% if lang == 'ru' %}14 дней возврат{% elif lang == 'en' %}14 days return{% else %}14 kun qaytarish{% endif %}</p>
-        </div>
-                    </div>
-            <div class="flex items-center gap-3 md:justify-center">
-                <div class="w-10 h-10 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    </div>
-                <div>
-                    <p class="text-sm font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Быстрая сборка{% elif lang == 'en' %}Quick assembly{% else %}Tez o'rnatish{% endif %}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Promotional Banner 2 - Interior Design Service -->
-<section class="py-16 lg:py-24 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div class="order-2 lg:order-1">
-                <p class="text-sm text-gray-500 uppercase tracking-wider mb-4">
-                    {% if lang == 'ru' %}Бесплатная услуга{% elif lang == 'en' %}Free service{% else %}Bepul xizmat{% endif %}
-                </p>
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-6" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Позвольте нам помочь вам{% elif lang == 'en' %}Let us help you{% else %}Sizga yordam beramiz{% endif %}
+<!-- All Categories Section -->
+{% if categories %}
+<section class="py-20 lg:py-28 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Section Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 lg:mb-16">
+            <div class="max-w-2xl">
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Категории{% elif lang == 'en' %}Categories{% else %}Kategoriyalar{% endif %}</p>
+                <h2 class="font-serif text-4xl md:text-5xl text-[#0a0a0a] font-light leading-tight">
+                    {% if lang == 'ru' %}Все категории мебели{% elif lang == 'en' %}All Furniture Categories{% else %}Barcha mebel kategoriyalari{% endif %}
                 </h2>
-                <p class="text-gray-600 text-lg leading-relaxed mb-8">
-                    {% if lang == 'ru' %}Мы помогли тысячам довольных клиентов. Наш опыт в дизайне комнат, цвете, материалах и текстурах поможет вам создать дом вашей мечты.{% elif lang == 'en' %}We have helped thousands of happy customers. Our expertise in room design, color, material and texture helps you transform your home.{% else %}Biz minglab mamnun mijozlarga yordam berdik. Xona dizayni, rang, material va tekstura bo'yicha tajribamiz sizning orzuingizdagi uyni yaratishga yordam beradi.{% endif %}
-                </p>
-                <a href="/interior-design" class="cta-button inline-flex items-center gap-3 bg-[#1a1a2e] hover:bg-black text-white px-8 py-4 text-sm font-medium relative z-10">
-                    {% if lang == 'ru' %}Связаться с нами{% elif lang == 'en' %}Get in touch{% else %}Bog'lanish{% endif %}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
-                        </div>
-            <div class="order-1 lg:order-2">
-                <div class="aspect-[4/3] bg-gray-100 overflow-hidden">
-                    <img src="/uploads/designs/logo.png" alt="Interior Design Service" class="w-full h-full object-contain p-12 bg-[#f5f5f5]">
-                    </div>
-                </div>
-        </div>
-    </div>
-</section>
-
-<!-- Collections Section -->
-<section class="py-16 lg:py-24 bg-[#f8f8f8]">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-10 md:mb-14">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}
-            </h2>
-            <p class="text-gray-500 mt-4 max-w-xl mx-auto">
-                {% if lang == 'ru' %}Бесконечные возможности, адаптированные под вас{% elif lang == 'en' %}Endless possibilities, tailored to you{% else %}Cheksiz imkoniyatlar, sizga moslashtirilgan{% endif %}
-            </p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 stagger-children">
-            <a href="/collections?type=sofa" class="collection-card group relative aspect-[4/5] bg-gray-200 animate-on-scroll">
-                <img src="/uploads/designs/3.jpg" alt="Sofas collection" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                    <h3 class="text-xl md:text-2xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">
-                        {% if lang == 'ru' %}Диваны{% elif lang == 'en' %}Sofas{% else %}Divanlar{% endif %}
-                    </h3>
-                    <span class="text-white/70 text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
-                        {% if lang == 'ru' %}Исследовать{% elif lang == 'en' %}Explore{% else %}Ko'rish{% endif %}
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                    </span>
-                </div>
-            </a>
-            <a href="/collections?type=table" class="collection-card group relative aspect-[4/5] bg-gray-200 animate-on-scroll">
-                <img src="/uploads/designs/2.jpg" alt="Tables collection" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                    <h3 class="text-xl md:text-2xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">
-                        {% if lang == 'ru' %}Столы{% elif lang == 'en' %}Tables{% else %}Stollar{% endif %}
-                    </h3>
-                    <span class="text-white/70 text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
-                        {% if lang == 'ru' %}Исследовать{% elif lang == 'en' %}Explore{% else %}Ko'rish{% endif %}
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                    </span>
-                </div>
-            </a>
-            <a href="/collections?type=chair" class="collection-card group relative aspect-[4/5] bg-gray-200 animate-on-scroll">
-                <img src="/uploads/designs/3.jpg" alt="Chairs collection" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                    <h3 class="text-xl md:text-2xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">
-                        {% if lang == 'ru' %}Стулья{% elif lang == 'en' %}Chairs{% else %}Stullar{% endif %}
-                    </h3>
-                    <span class="text-white/70 text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
-                        {% if lang == 'ru' %}Исследовать{% elif lang == 'en' %}Explore{% else %}Ko'rish{% endif %}
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
-                    </span>
-                </div>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Promotional Banner 3 - Custom Order -->
-<section class="relative py-20 md:py-32 bg-[#1a1a2e] overflow-hidden">
-    <!-- Decorative elements -->
-    <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-white/5 to-transparent"></div>
-    
-    <div class="container mx-auto px-4 lg:px-8 relative">
-        <div class="max-w-2xl">
-            <p class="text-white/50 text-sm uppercase tracking-wider mb-4">
-                {% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom order{% else %}Maxsus buyurtma{% endif %}
-            </p>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Нужна мебель по вашим размерам?{% elif lang == 'en' %}Need furniture to your exact specifications?{% else %}O'lchamingizga mos mebel kerakmi?{% endif %}
-                </h2>
-            <p class="text-white/60 text-lg leading-relaxed mb-8">
-                {% if lang == 'ru' %}Мы создадим мебель вашей мечты. Бесплатный 3D дизайн и консультация.{% elif lang == 'en' %}We'll create your dream furniture. Free 3D design and consultation.{% else %}Sizning orzuingizdagi mebelni yaratamiz. Bepul 3D dizayn va maslahat.{% endif %}
-                </p>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <a href="/order" class="inline-flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-[#1a1a2e] px-8 py-4 text-sm font-medium transition-all">
-                    {% if lang == 'ru' %}Заказать{% elif lang == 'en' %}Order now{% else %}Buyurtma berish{% endif %}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
-                <a href="tel:+998901234567" class="inline-flex items-center justify-center gap-3 border border-white/30 hover:border-white text-white px-8 py-4 text-sm font-medium transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                    </svg>
-                    +998 90 123 45 67
-                </a>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Portfolio Preview -->
-{% if portfolios %}
-<section class="py-16 lg:py-24 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="flex items-end justify-between mb-10 md:mb-14">
-            <div>
-                <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Наши работы{% elif lang == 'en' %}Our works{% else %}Bizning ishlarimiz{% endif %}
-            </h2>
-            </div>
-            <a href="/portfolio" class="hidden md:flex items-center gap-2 text-[#1a1a2e] hover:underline text-sm font-medium">
-                {% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All projects{% else %}Barcha loyihalar{% endif %}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            <a href="/products" class="group flex items-center gap-3 text-[#0a0a0a] hover:text-[#c9a96e] transition-colors">
+                <span class="text-sm tracking-wider">{% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}</span>
+                <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
             </a>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            {% for portfolio in portfolios[:3] %}
-            <a href="/portfolio" class="group relative aspect-[4/3] overflow-hidden bg-gray-100">
-                {% if portfolio.after_image %}
-                        <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.title_uz }}" 
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        <!-- Categories Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+            {% for category in categories[:12] %}
+            <a href="/products?category={{ category.id }}" class="category-luxury group relative aspect-[4/3]">
+                {% if category.image %}
+                <img src="/uploads/{{ category.image }}" alt="{{ category.get_name(lang) }}"
+                     class="absolute inset-0 w-full h-full object-cover">
+                {% else %}
+                <div class="absolute inset-0 bg-gradient-to-br from-[#2a2a3e] to-[#1a1a2e]"></div>
                 {% endif %}
-                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 class="text-white font-medium">{{ portfolio.title_uz }}</h3>
+                
+                <div class="category-content absolute inset-0 z-10 flex flex-col justify-end p-4 lg:p-6">
+                    <h3 class="font-medium text-lg lg:text-xl text-white mb-1">
+                        {{ category.get_name(lang) }}
+                    </h3>
+                    <p class="text-white/50 text-xs">{{ category.products|length }} {% if lang == 'ru' %}товаров{% elif lang == 'en' %}products{% else %}mahsulot{% endif %}</p>
                 </div>
             </a>
             {% endfor %}
         </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- About Section -->
+<section class="py-20 lg:py-28 bg-[#0a0a0a] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <!-- Image -->
+            <div class="relative">
+                <div class="aspect-[4/5] overflow-hidden">
+                    <img src="/uploads/designs/2.jpg" alt="Furniglass" class="w-full h-full object-cover">
+                </div>
+                <!-- Floating Stats -->
+                <div class="absolute -bottom-8 -right-4 lg:-right-8 bg-[#c9a96e] p-6 lg:p-8">
+                    <p class="font-serif text-4xl lg:text-5xl text-white">25+</p>
+                    <p class="text-white/80 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil tajriba{% endif %}</p>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div>
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}О компании{% elif lang == 'en' %}About Us{% else %}Biz haqimizda{% endif %}</p>
+                <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-white font-light leading-tight mb-6">
+                    {% if lang == 'ru' %}Мы создаём мебель вашей мечты{% elif lang == 'en' %}We create furniture of your dreams{% else %}Biz sizning orzuingizdagi mebellarni yaratamiz{% endif %}
+                </h2>
+                <p class="text-white/60 leading-relaxed mb-8">
+                    {% if lang == 'ru' %}
+                    С 1999 года мы производим премиальную мебель для кафе, ресторанов, клиник и частных домов. Каждое изделие создаётся с любовью к деталям и стремлением к совершенству.
+                    {% elif lang == 'en' %}
+                    Since 1999, we have been producing premium furniture for cafes, restaurants, clinics and private homes. Each piece is created with love for details and striving for perfection.
+                    {% else %}
+                    1999 yildan beri biz kafe, restoran, klinika va xususiy uylar uchun premium mebellar ishlab chiqaramiz. Har bir buyum tafsilotlarga muhabbat va mukammallikka intilish bilan yaratilgan.
+                    {% endif %}
+                </p>
+                
+                <!-- Features Grid -->
+                <div class="grid grid-cols-2 gap-6 mb-8">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-[#c9a96e]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                            <svg class="w-4 h-4 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{% if lang == 'ru' %}Премиум материалы{% elif lang == 'en' %}Premium materials{% else %}Premium materiallar{% endif %}</p>
+                            <p class="text-white/40 text-xs mt-1">{% if lang == 'ru' %}Только лучшее{% elif lang == 'en' %}Only the best{% else %}Faqat eng yaxshisi{% endif %}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-[#c9a96e]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                            <svg class="w-4 h-4 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{% if lang == 'ru' %}25 лет гарантии{% elif lang == 'en' %}25 years warranty{% else %}25 yil kafolat{% endif %}</p>
+                            <p class="text-white/40 text-xs mt-1">{% if lang == 'ru' %}Надёжность{% elif lang == 'en' %}Reliability{% else %}Ishonchlilik{% endif %}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-[#c9a96e]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                            <svg class="w-4 h-4 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free delivery{% else %}Bepul yetkazish{% endif %}</p>
+                            <p class="text-white/40 text-xs mt-1">{% if lang == 'ru' %}По всему городу{% elif lang == 'en' %}Citywide{% else %}Shahar bo'ylab{% endif %}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-[#c9a96e]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                            <svg class="w-4 h-4 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{% if lang == 'ru' %}Индивидуальный дизайн{% elif lang == 'en' %}Custom design{% else %}Individual dizayn{% endif %}</p>
+                            <p class="text-white/40 text-xs mt-1">{% if lang == 'ru' %}Под ваш заказ{% elif lang == 'en' %}Made to order{% else %}Buyurtmangizga{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="/about" class="inline-flex items-center gap-3 text-[#c9a96e] hover:text-white transition-colors group">
+                    <span class="text-sm tracking-wider">{% if lang == 'ru' %}Подробнее о нас{% elif lang == 'en' %}More about us{% else %}Biz haqimizda batafsil{% endif %}</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="py-20 lg:py-28 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Процесс{% elif lang == 'en' %}Process{% else %}Jarayon{% endif %}</p>
+            <h2 class="font-serif text-4xl md:text-5xl text-[#0a0a0a] font-light">
+                {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlaymiz{% endif %}
+            </h2>
+        </div>
         
-        <div class="mt-8 text-center md:hidden">
-            <a href="/portfolio" class="inline-flex items-center gap-2 text-[#1a1a2e] font-medium">
-                {% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All projects{% else %}Barcha loyihalar{% endif %}
+        <!-- Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center group">
+                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center group-hover:bg-[#c9a96e] group-hover:border-[#c9a96e] transition-all">
+                    <span class="font-serif text-2xl text-[#c9a96e] group-hover:text-white transition-colors">01</span>
+                </div>
+                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}</h3>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Обсуждаем ваши идеи и пожелания{% elif lang == 'en' %}Discuss your ideas and wishes{% else %}G'oyalaringiz va istaklaringizni muhokama qilamiz{% endif %}</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center group-hover:bg-[#c9a96e] group-hover:border-[#c9a96e] transition-all">
+                    <span class="font-serif text-2xl text-[#c9a96e] group-hover:text-white transition-colors">02</span>
+                </div>
+                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</h3>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Создаём визуализацию проекта{% elif lang == 'en' %}Create project visualization{% else %}Loyiha vizualizatsiyasini yaratamiz{% endif %}</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center group-hover:bg-[#c9a96e] group-hover:border-[#c9a96e] transition-all">
+                    <span class="font-serif text-2xl text-[#c9a96e] group-hover:text-white transition-colors">03</span>
+                </div>
+                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</h3>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Изготавливаем мебель вручную{% elif lang == 'en' %}Handcraft your furniture{% else %}Mebelingizni qo'lda yasaymiz{% endif %}</p>
+            </div>
+            <div class="text-center group">
+                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center group-hover:bg-[#c9a96e] group-hover:border-[#c9a96e] transition-all">
+                    <span class="font-serif text-2xl text-[#c9a96e] group-hover:text-white transition-colors">04</span>
+                </div>
+                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}</h3>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Доставляем и устанавливаем{% elif lang == 'en' %}Deliver and install{% else %}Yetkazamiz va o'rnatamiz{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- More Products Section -->
+{% if bestsellers %}
+<section class="py-20 lg:py-28 bg-[#fafafa] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Section Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+            <div class="max-w-2xl">
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Популярное{% elif lang == 'en' %}Popular{% else %}Ommabop{% endif %}</p>
+                <h2 class="font-serif text-4xl md:text-5xl text-[#0a0a0a] font-light">
+                    {% if lang == 'ru' %}Ещё больше товаров{% elif lang == 'en' %}More Products{% else %}Ko'proq mahsulotlar{% endif %}
+                </h2>
+            </div>
+        </div>
+        
+        <!-- Products Grid - Show more products -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
+            {% for product in bestsellers[12:22] %}
+            <article class="product-luxury group">
+                <a href="/product/{{ product.id }}" class="block">
+                    <div class="relative aspect-[3/4] overflow-hidden bg-[#f0f0f0] mb-3">
+                        {% if product.images %}
+                            {% set images = product.images|from_json %}
+                            {% if images %}
+                            <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
+                                 class="product-img w-full h-full object-cover">
+                            {% endif %}
+                        {% endif %}
+                        <div class="product-overlay"></div>
+                    </div>
+                    <div class="px-1">
+                        <h3 class="font-medium text-[#0a0a0a] text-sm mb-1 line-clamp-1 group-hover:text-[#c9a96e] transition-colors">
+                            {{ product.get_name(lang) }}
+                        </h3>
+                        <p class="font-serif text-base text-[#0a0a0a]">${{ "%.0f"|format(product.price) }}</p>
+                    </div>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+        
+        <!-- View All -->
+        <div class="mt-12 text-center">
+            <a href="/products" class="inline-flex items-center gap-3 border border-[#0a0a0a] text-[#0a0a0a] px-8 py-4 text-sm tracking-wider uppercase hover:bg-[#0a0a0a] hover:text-white transition-all">
+                {% if lang == 'ru' %}Смотреть все товары{% elif lang == 'en' %}View all products{% else %}Barcha mahsulotlarni ko'rish{% endif %}
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
             </a>
         </div>
@@ -880,213 +648,80 @@
 </section>
 {% endif %}
 
-<!-- Testimonials Section -->
-<section class="py-16 lg:py-24 bg-gray-50">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-12 md:mb-16 animate-on-scroll">
-            <p class="text-[#c9a96e] text-sm uppercase tracking-wider mb-2">
-                {% if lang == 'ru' %}Отзывы клиентов{% elif lang == 'en' %}Client reviews{% else %}Mijozlar fikrlari{% endif %}
-            </p>
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Что говорят наши клиенты{% elif lang == 'en' %}What our clients say{% else %}Mijozlarimiz nima deyishadi{% endif %}
-            </h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 stagger-children">
-            <div class="testimonial-card bg-white p-8 border border-gray-100">
-                <div class="flex items-center gap-1 text-[#c9a96e] mb-6">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                </div>
-                <p class="text-gray-700 leading-relaxed mb-6 text-sm md:text-base">
-                    {% if lang == 'ru' %}"Превосходное качество и профессиональный подход. Мебель выглядит потрясающе в нашем кафе!"{% elif lang == 'en' %}"Excellent quality and professional approach. The furniture looks amazing in our cafe!"{% else %}"Ajoyib sifat va professional yondashuv. Mebel bizning kafemizda ajoyib ko'rinadi!"{% endif %}
-                </p>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gray-200 flex items-center justify-center text-[#1a1a2e] font-medium">
-                        AK
-                    </div>
-                    <div>
-                        <p class="font-medium text-[#1a1a2e]">Alisher Karimov</p>
-                        <p class="text-sm text-gray-500">
-                            {% if lang == 'ru' %}Владелец кафе{% elif lang == 'en' %}Cafe Owner{% else %}Kafe egasi{% endif %}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="testimonial-card bg-white p-8 border border-gray-100">
-                <div class="flex items-center gap-1 text-[#c9a96e] mb-6">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                </div>
-                <p class="text-gray-700 leading-relaxed mb-6 text-sm md:text-base">
-                    {% if lang == 'ru' %}"Отличный сервис от начала до конца. Команда профессиональная и внимательная к деталям."{% elif lang == 'en' %}"Great service from start to finish. The team is professional and attentive to details."{% else %}"Boshidan oxirigacha ajoyib xizmat. Jamoa professional va tafsilotlarga e'tiborli."{% endif %}
-                </p>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gray-200 flex items-center justify-center text-[#1a1a2e] font-medium">
-                        DN
-                    </div>
-                    <div>
-                        <p class="font-medium text-[#1a1a2e]">Dilnoza Nazarova</p>
-                        <p class="text-sm text-gray-500">
-                            {% if lang == 'ru' %}Директор клиники{% elif lang == 'en' %}Clinic Director{% else %}Klinika direktori{% endif %}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="testimonial-card bg-white p-8 border border-gray-100">
-                <div class="flex items-center gap-1 text-[#c9a96e] mb-6">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                    </svg>
-                </div>
-                <p class="text-gray-700 leading-relaxed mb-6 text-sm md:text-base">
-                    {% if lang == 'ru' %}"Прекрасная работа! Мебель идеально вписалась в наш дом. Рекомендую всем!"{% elif lang == 'en' %}"Beautiful work! The furniture fits perfectly in our home. Highly recommend!"{% else %}"Ajoyib ish! Mebel uyimizga juda mos keldi. Hammaga tavsiya qilaman!"{% endif %}
-                </p>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gray-200 flex items-center justify-center text-[#1a1a2e] font-medium">
-                        SO
-                    </div>
-                    <div>
-                        <p class="font-medium text-[#1a1a2e]">Sardor Otaboyev</p>
-                        <p class="text-sm text-gray-500">
-                            {% if lang == 'ru' %}Частный клиент{% elif lang == 'en' %}Private Client{% else %}Xususiy mijoz{% endif %}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Stats Section -->
-<section class="py-16 lg:py-20 bg-[#f8f8f8]">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 stagger-children">
-            <div class="text-center animate-on-scroll">
-                <p class="counter text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;" data-target="25+">25+</p>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years experience{% else %}Yillik tajriba{% endif %}</p>
-            </div>
-            <div class="text-center animate-on-scroll">
-                <p class="counter text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;" data-target="5K+">5K+</p>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Happy clients{% else %}Mamnun mijozlar{% endif %}</p>
-            </div>
-            <div class="text-center animate-on-scroll">
-                <p class="counter text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;" data-target="2.5K">2.5K</p>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects done{% else %}Bajarilgan loyihalar{% endif %}</p>
-            </div>
-            <div class="text-center animate-on-scroll">
-                <p class="counter text-4xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;" data-target="100%">100%</p>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Качество{% elif lang == 'en' %}Quality{% else %}Sifat kafolati{% endif %}</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Contact CTA Section -->
-<section class="py-16 lg:py-24 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <!-- Left - Contact Info -->
+<!-- Testimonials -->
+<section class="py-20 lg:py-28 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div>
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-6" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Свяжитесь с нами{% elif lang == 'en' %}Get in touch{% else %}Biz bilan bog'laning{% endif %}
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-3">{% if lang == 'ru' %}Отзывы{% elif lang == 'en' %}Testimonials{% else %}Fikrlar{% endif %}</p>
+                <h2 class="font-serif text-3xl md:text-4xl text-[#0a0a0a] font-light">
+                    {% if lang == 'ru' %}Что говорят клиенты{% elif lang == 'en' %}What clients say{% else %}Mijozlar fikri{% endif %}
                 </h2>
-                <p class="text-gray-600 text-lg leading-relaxed mb-8">
-                    {% if lang == 'ru' %}Оставьте заявку и мы свяжемся с вами в течение 30 минут{% elif lang == 'en' %}Leave a request and we'll contact you within 30 minutes{% else %}So'rov qoldiring va 30 daqiqa ichida siz bilan bog'lanamiz{% endif %}
+            </div>
+        </div>
+
+        <!-- Testimonials Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-[#fafafa] p-8 border-l-2 border-[#c9a96e]">
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    {% if lang == 'ru' %}"Превосходное качество и внимание к деталям. Мебель стала украшением нашего ресторана."{% elif lang == 'en' %}"Excellent quality and attention to detail. The furniture has become a decoration of our restaurant."{% else %}"Ajoyib sifat va tafsilotlarga e'tibor. Mebel bizning restorantimizning bezagiga aylandi."{% endif %}
                 </p>
-                
-                <div class="space-y-6">
-                    <a href="tel:+998901234567" class="flex items-center gap-4 text-[#1a1a2e] hover:text-black transition group">
-                        <div class="w-12 h-12 border border-gray-200 group-hover:border-gray-400 flex items-center justify-center transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-400">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</p>
-                            <p class="font-medium">+998 90 123 45 67</p>
-                        </div>
-                    </a>
-                    <a href="https://t.me/furniglass" class="flex items-center gap-4 text-[#1a1a2e] hover:text-black transition group">
-                        <div class="w-12 h-12 border border-gray-200 group-hover:border-gray-400 flex items-center justify-center transition">
-                            <i class="fab fa-telegram-plane text-lg"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-400">Telegram</p>
-                            <p class="font-medium">@furniglass</p>
-                        </div>
-                    </a>
-                    <div class="flex items-center gap-4 text-[#1a1a2e]">
-                        <div class="w-12 h-12 border border-gray-200 flex items-center justify-center">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-400">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
-                            <p class="font-medium">Toshkent, Yunusobod tumani</p>
-                        </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-[#c9a96e] flex items-center justify-center text-white font-medium">AK</div>
+                    <div>
+                        <p class="font-medium text-[#0a0a0a]">Alisher Karimov</p>
+                        <p class="text-sm text-gray-400">{% if lang == 'ru' %}Ресторатор{% elif lang == 'en' %}Restaurateur{% else %}Restorator{% endif %}</p>
                     </div>
                 </div>
             </div>
             
-            <!-- Right - Form -->
-            <div class="bg-[#f8f8f8] p-8 lg:p-10">
-                <h3 class="text-xl font-medium text-[#1a1a2e] mb-6">
-                    {% if lang == 'ru' %}Оставить заявку{% elif lang == 'en' %}Send request{% else %}So'rov qoldirish{% endif %}
-                </h3>
-                <form action="/contact" method="POST" class="space-y-4">
-                    <input type="text" name="name" placeholder="{% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your name{% else %}Ismingiz{% endif %}" 
-                           class="w-full bg-white border border-gray-200 px-4 py-3.5 text-sm focus:border-[#1a1a2e] outline-none transition">
-                    <input type="tel" name="phone" placeholder="+998 __ ___ __ __" required 
-                           class="w-full bg-white border border-gray-200 px-4 py-3.5 text-sm focus:border-[#1a1a2e] outline-none transition">
-                    <textarea name="message" rows="4" placeholder="{% if lang == 'ru' %}Сообщение{% elif lang == 'en' %}Message{% else %}Xabar{% endif %}" 
-                              class="w-full bg-white border border-gray-200 px-4 py-3.5 text-sm focus:border-[#1a1a2e] outline-none transition resize-none"></textarea>
-                    <button type="submit" class="w-full bg-[#1a1a2e] hover:bg-black text-white py-4 text-sm font-medium transition-all">
-                        {% if lang == 'ru' %}Отправить{% elif lang == 'en' %}Send{% else %}Yuborish{% endif %}
-                    </button>
-                </form>
+            <div class="bg-[#fafafa] p-8 border-l-2 border-[#c9a96e]">
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    {% if lang == 'ru' %}"Профессиональный подход от начала до конца. Рекомендую всем, кто ценит качество."{% elif lang == 'en' %}"Professional approach from start to finish. I recommend to everyone who values quality."{% else %}"Boshidan oxirigacha professional yondashuv. Sifatni qadrlaydigan hammaga tavsiya qilaman."{% endif %}
+                </p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-[#c9a96e] flex items-center justify-center text-white font-medium">DN</div>
+                    <div>
+                        <p class="font-medium text-[#0a0a0a]">Dilnoza Nazarova</p>
+                        <p class="text-sm text-gray-400">{% if lang == 'ru' %}Дизайнер{% elif lang == 'en' %}Designer{% else %}Dizayner{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#fafafa] p-8 border-l-2 border-[#c9a96e]">
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    {% if lang == 'ru' %}"Мебель идеально вписалась в интерьер клиники. Пациенты довольны!"{% elif lang == 'en' %}"The furniture fits perfectly into the clinic interior. Patients are happy!"{% else %}"Mebel klinika interyeriga mukammal mos keldi. Bemorlar mamnun!"{% endif %}
+                </p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-[#c9a96e] flex items-center justify-center text-white font-medium">SO</div>
+                    <div>
+                        <p class="font-medium text-[#0a0a0a]">Sardor Otaboyev</p>
+                        <p class="text-sm text-gray-400">{% if lang == 'ru' %}Директор клиники{% elif lang == 'en' %}Clinic Director{% else %}Klinika direktori{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section - Minimal -->
+<section class="py-24 lg:py-32 bg-[#0a0a0a] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-white font-light leading-tight mb-6">
+                {% if lang == 'ru' %}Готовы к сотрудничеству?{% elif lang == 'en' %}Ready to collaborate?{% else %}Hamkorlikka tayyormisiz?{% endif %}
+                </h2>
+            <p class="text-white/50 text-base mb-10 max-w-xl mx-auto">
+                {% if lang == 'ru' %}Свяжитесь с нами для бесплатной консультации{% elif lang == 'en' %}Contact us for a free consultation{% else %}Bepul maslahat uchun biz bilan bog'laning{% endif %}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/contact" class="bg-[#c9a96e] text-white px-10 py-4 text-sm tracking-[0.15em] uppercase hover:bg-[#b8965d] transition-colors">
+                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact Us{% else %}Bog'lanish{% endif %}
+                </a>
+                <a href="tel:+998712000262" class="border border-white/20 text-white px-10 py-4 text-sm tracking-[0.15em] uppercase hover:bg-white/5 transition-colors">
+                    71 200 02 62
+                </a>
             </div>
         </div>
     </div>
@@ -1094,140 +729,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Categories carousel navigation
-    const carousel = document.getElementById('categories-carousel');
-    const prevBtn = document.getElementById('cat-prev');
-    const nextBtn = document.getElementById('cat-next');
-
-    if (carousel && prevBtn && nextBtn) {
-        const scrollAmount = 300;
-
-        prevBtn.addEventListener('click', () => {
-            carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    // Reveal sections on scroll
+    const revealSections = document.querySelectorAll('.reveal-section');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                revealObserver.unobserve(entry.target);
+            }
         });
-
-        nextBtn.addEventListener('click', () => {
-            carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        });
-    }
-
-    // Intersection Observer for scroll animations
-    const observerOptions = {
+    }, {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animated');
-
-                // Trigger stagger animation for children
-                if (entry.target.classList.contains('stagger-children')) {
-                    const children = entry.target.children;
-                    Array.from(children).forEach((child, index) => {
-                        child.style.animationDelay = `${index * 0.1}s`;
-                    });
-                }
-
-                // Unobserve after animation
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Observe all animate-on-scroll elements
-    const animateElements = document.querySelectorAll('.animate-on-scroll');
-    animateElements.forEach(el => observer.observe(el));
-
-    // Counter animation for stats
-    const counters = document.querySelectorAll('.counter');
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const counter = entry.target;
-                const target = parseFloat(counter.textContent);
-                const duration = 2000; // 2 seconds
-                const increment = target / (duration / 16); // 60 FPS
-                let current = 0;
-
-                const updateCounter = () => {
-                    current += increment;
-                    if (current < target) {
-                        counter.textContent = Math.floor(current) + (counter.textContent.includes('+') ? '+' : '') + (counter.textContent.includes('%') ? '%' : '') + (counter.textContent.includes('K') ? 'K' : '');
-                        requestAnimationFrame(updateCounter);
-                    } else {
-                        counter.textContent = counter.getAttribute('data-target') || counter.textContent;
-                    }
-                };
-
-                // Store original value
-                if (!counter.hasAttribute('data-target')) {
-                    counter.setAttribute('data-target', counter.textContent);
-                }
-
-                updateCounter();
-                counterObserver.unobserve(counter);
-            }
-        });
-    }, { threshold: 0.5 });
-
-    counters.forEach(counter => counterObserver.observe(counter));
-
-    // Parallax effect for hero section
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                const scrolled = window.pageYOffset;
-                const parallaxElements = document.querySelectorAll('.parallax-bg');
-
-                parallaxElements.forEach(el => {
-                    const speed = el.dataset.speed || 0.5;
-                    el.style.transform = `translateY(${scrolled * speed}px)`;
-                });
-
-                ticking = false;
-            });
-            ticking = true;
-        }
     });
-
-    // Smooth reveal for images
-    const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.classList.add('fade-in');
-                }
-                imageObserver.unobserve(img);
-            }
-        });
-    }, { threshold: 0.1 });
-
-    // Observe all lazy load images
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-    });
-
-    // Add smooth scroll behavior
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-            if (href !== '#' && href !== '') {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            }
-        });
-    });
+    
+    revealSections.forEach(section => revealObserver.observe(section));
 });
 </script>
 {% endblock %}
