@@ -376,77 +376,146 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section - Full Width Image with Text Overlay -->
-<section class="relative h-[89vh] md:h-[95vh] lg:h-[95vh] -mt-[60px] md:-mt-[72px] overflow-hidden">
-    <!-- Background Image -->
+<!-- Hero Section - Premium Professional Design -->
+<section class="relative h-[90vh] md:h-[95vh] lg:h-screen -mt-[60px] md:-mt-[72px] overflow-hidden">
+    <!-- Background Image with Navy Overlay -->
     <div class="absolute inset-0 px-4 md:px-8 lg:px-8 pt-20 md:pt-24 lg:pt-[6.5rem]">
         <div class="w-full h-full relative">
-            <img src="/uploads/designs/3.jpg" alt="Furniglass Premium Furniture" 
+            <img src="/uploads/designs/3.jpg" alt="Furniglass Premium Furniture"
                  class="w-full h-full object-cover">
-            <div class="hero-overlay absolute inset-0"></div>
+            <!-- Premium Navy Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a2e]/95 via-[#1a1a2e]/85 to-[#1a1a2e]/70"></div>
+            <!-- Accent gradient -->
+            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-[#c9a96e]/10"></div>
         </div>
     </div>
-    
+
     <!-- Content -->
-    <div class="relative h-full flex items-center justify-center text-center px-4">
-        <div class="max-w-3xl">
-            <p class="text-white/80 text-sm md:text-base uppercase tracking-[0.2em] mb-4 md:mb-6">
-                {% if lang == 'ru' %}Элегантные интерьеры, незабываемые моменты{% elif lang == 'en' %}Elegant settings, lasting memories{% else %}Elegant interyer, unutilmas lahzalar{% endif %}
-            </p>
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-light text-white mb-6 md:mb-8" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Праздничный<br>интерьер{% elif lang == 'en' %}Festive<br>interiors{% else %}Bayramona<br>interyer{% endif %}
-            </h1>
-            <a href="/products" class="cta-button inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-[#1a1a2e] px-8 py-4 text-sm font-medium relative z-10">
-                {% if lang == 'ru' %}Открыть больше{% elif lang == 'en' %}Discover more{% else %}Ko'proq ko'rish{% endif %}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-                </a>
+    <div class="relative h-full flex items-center px-4">
+        <div class="container mx-auto">
+            <div class="max-w-4xl">
+                <!-- Trust Badge -->
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 mb-6 md:mb-8">
+                    <svg class="w-4 h-4 text-[#c9a96e]" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <span class="text-white text-xs md:text-sm font-medium">
+                        {% if lang == 'ru' %}№1 производитель премиум мебели в Узбекистане{% elif lang == 'en' %}#1 Premium Furniture Manufacturer in Uzbekistan{% else %}O'zbekistondagi №1 premium mebel ishlab chiqaruvchisi{% endif %}
+                    </span>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white mb-6 md:mb-8 leading-tight" style="font-family: 'Playfair Display', serif;">
+                    {% if lang == 'ru' %}Эксклюзивная<br>мебель для<br><span class="text-[#c9a96e]">вашего бизнеса</span>{% elif lang == 'en' %}Exclusive<br>Furniture for<br><span class="text-[#c9a96e]">Your Business</span>{% else %}Sizning biznesingiz<br>uchun<br><span class="text-[#c9a96e]">eksklyuziv mebel</span>{% endif %}
+                </h1>
+
+                <p class="text-white/80 text-lg md:text-xl lg:text-2xl mb-8 md:mb-12 max-w-2xl leading-relaxed">
+                    {% if lang == 'ru' %}Превратите свой интерьер в произведение искусства. Индивидуальный дизайн, премиум материалы, безупречное качество.{% elif lang == 'en' %}Transform your interior into a work of art. Custom design, premium materials, impeccable quality.{% else %}Interyeringizni san'at asariga aylantiring. Individual dizayn, premium materiallar, benuqson sifat.{% endif %}
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 mb-12 md:mb-16">
+                    <a href="/products" class="cta-button inline-flex items-center justify-center gap-3 bg-[#c9a96e] hover:bg-[#b8976a] text-white px-8 md:px-10 py-4 md:py-5 text-sm md:text-base font-semibold relative z-10 transition-all duration-300 shadow-xl hover:shadow-2xl">
+                        {% if lang == 'ru' %}Смотреть каталог{% elif lang == 'en' %}View Catalog{% else %}Katalogni ko'rish{% endif %}
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
+                    <a href="/contact" class="cta-button inline-flex items-center justify-center gap-3 bg-white/10 backdrop-blur-sm border-2 border-white hover:bg-white hover:text-[#1a1a2e] text-white px-8 md:px-10 py-4 md:py-5 text-sm md:text-base font-semibold relative z-10 transition-all duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        {% if lang == 'ru' %}Бесплатная консультация{% elif lang == 'en' %}Free Consultation{% else %}Bepul maslahat{% endif %}
+                    </a>
+                </div>
+
+                <!-- Stats/Trust Indicators -->
+                <div class="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl">
+                    <div class="text-center md:text-left">
+                        <div class="text-2xl md:text-4xl font-bold text-[#c9a96e] mb-1 counter" data-target="1500">0</div>
+                        <div class="text-white/60 text-xs md:text-sm">
+                            {% if lang == 'ru' %}Довольных клиентов{% elif lang == 'en' %}Happy Clients{% else %}Mamnun mijozlar{% endif %}
+                        </div>
+                    </div>
+                    <div class="text-center md:text-left border-x border-white/20">
+                        <div class="text-2xl md:text-4xl font-bold text-[#c9a96e] mb-1 counter" data-target="12">0</div>
+                        <div class="text-white/60 text-xs md:text-sm">
+                            {% if lang == 'ru' %}Лет на рынке{% elif lang == 'en' %}Years in Business{% else %}Yillik tajriba{% endif %}
+                        </div>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <div class="text-2xl md:text-4xl font-bold text-[#c9a96e] mb-1">100%</div>
+                        <div class="text-white/60 text-xs md:text-sm">
+                            {% if lang == 'ru' %}Гарантия качества{% elif lang == 'en' %}Quality Guarantee{% else %}Sifat kafolati{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden md:block">
+        <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
     </div>
 </section>
 
-<!-- Main Categories Section -->
+<!-- Main Categories Section - Navy Theme -->
 {% if main_categories %}
-<section class="py-16 lg:py-24 bg-gray-50">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-12 md:mb-16">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Наши направления{% elif lang == 'en' %}Our Business Areas{% else %}Bizning yo'nalishlarimiz{% endif %}
+<section class="py-20 lg:py-28 bg-[#1a1a2e] relative overflow-hidden">
+    <!-- Decorative elements -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-[#c9a96e]/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-[#c9a96e]/5 rounded-full blur-3xl"></div>
+
+    <div class="container mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center mb-16 md:mb-20">
+            <div class="inline-block mb-4">
+                <span class="text-[#c9a96e] text-sm uppercase tracking-[0.3em] font-medium">
+                    {% if lang == 'ru' %}Наши специализации{% elif lang == 'en' %}Our Specializations{% else %}Bizning ixtisoslarimiz{% endif %}
+                </span>
+            </div>
+            <h2 class="text-3xl md:text-5xl lg:text-6xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Мебель для любого<br>типа бизнеса{% elif lang == 'en' %}Furniture for Every<br>Type of Business{% else %}Har qanday biznes<br>turi uchun mebel{% endif %}
             </h2>
-            <p class="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
-                {% if lang == 'ru' %}Выберите направление для просмотра специализированной мебели{% elif lang == 'en' %}Choose an area to view specialized furniture{% else %}Maxsus mebellarni ko'rish uchun yo'nalishni tanlang{% endif %}
+            <p class="text-white/70 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+                {% if lang == 'ru' %}Мы создаем уникальные интерьерные решения для ресторанов, отелей, офисов и жилых комплексов. Полный цикл от проектирования до монтажа.{% elif lang == 'en' %}We create unique interior solutions for restaurants, hotels, offices and residential complexes. Full cycle from design to installation.{% else %}Biz restoranlar, mehmonxonalar, ofislar va turar-joy majmualari uchun noyob ichki yechimlar yaratamiz. Loyihalashdan o'rnatishgacha to'liq tsikl.{% endif %}
             </p>
-                        </div>
-        
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 stagger-children">
             {% for main_cat in main_categories %}
-            <a href="/main-category/{{ main_cat.slug }}" class="group main-cat-card">
-                <div class="bg-white overflow-hidden h-full">
-                    <div class="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                        {% if main_cat.image %}
-                        <img src="/uploads/{{ main_cat.image }}" alt="{{ main_cat.get_name(lang) }}"
-                             class="w-full h-full object-cover group-hover:scale-115 transition-transform duration-700">
+            <a href="/main-category/{{ main_cat.slug }}" class="group main-cat-card bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#c9a96e]/50 transition-all duration-500 overflow-hidden">
+                <div class="relative aspect-[4/3] overflow-hidden">
+                    {% if main_cat.image %}
+                    <img src="/uploads/{{ main_cat.image }}" alt="{{ main_cat.get_name(lang) }}"
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                     {% else %}
-                        <div class="w-full h-full flex items-center justify-center">
-                            <i class="fas fa-building text-6xl md:text-7xl text-gray-300 group-hover:text-[#c9a96e] transition-colors"></i>
-                        </div>
-                        {% endif %}
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a2e] to-[#2a2a3e]">
+                        <i class="fas fa-building text-6xl md:text-7xl text-[#c9a96e]/30 group-hover:text-[#c9a96e]/60 transition-colors"></i>
                     </div>
-                    <div class="p-6 md:p-8">
-                        <h3 class="text-xl md:text-2xl font-medium text-[#1a1a2e] mb-2 group-hover:text-[#c9a96e] transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
-                            {{ main_cat.get_name(lang) }}
-                        </h3>
-                        {% if main_cat.get_description(lang) %}
-                        <p class="text-gray-600 text-sm md:text-base mb-4 line-clamp-2">
-                            {{ main_cat.get_description(lang) }}
-                        </p>
                     {% endif %}
-                        <span class="inline-flex items-center gap-2 text-[#c9a96e] font-medium text-sm md:text-base group-hover:gap-4 transition-all">
-                            {% if lang == 'ru' %}Подробнее{% elif lang == 'en' %}Learn more{% else %}Batafsil{% endif %}
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a2e] via-[#1a1a2e]/50 to-transparent"></div>
+
+                    <!-- Premium badge -->
+                    <div class="absolute top-4 right-4 bg-[#c9a96e] text-white text-xs font-semibold px-3 py-1.5 tracking-wider">
+                        PREMIUM
+                    </div>
+                </div>
+                <div class="p-6 md:p-8">
+                    <h3 class="text-xl md:text-2xl lg:text-3xl font-light text-white mb-3 group-hover:text-[#c9a96e] transition-colors duration-300" style="font-family: 'Playfair Display', serif;">
+                        {{ main_cat.get_name(lang) }}
+                    </h3>
+                    {% if main_cat.get_description(lang) %}
+                    <p class="text-white/60 text-sm md:text-base mb-5 line-clamp-2 leading-relaxed">
+                        {{ main_cat.get_description(lang) }}
+                    </p>
+                    {% endif %}
+                    <div class="flex items-center justify-between">
+                        <span class="inline-flex items-center gap-2 text-[#c9a96e] font-semibold text-sm md:text-base group-hover:gap-4 transition-all">
+                            {% if lang == 'ru' %}Смотреть проекты{% elif lang == 'en' %}View Projects{% else %}Loyihalarni ko'rish{% endif %}
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                             </svg>
                         </span>
                     </div>
@@ -454,62 +523,69 @@
             </a>
             {% endfor %}
         </div>
-                        </div>
+    </div>
 </section>
 {% endif %}
 
-<!-- Trusted Brands Section -->
-<section class="py-12 lg:py-16 bg-white border-y border-gray-100">
+<!-- Trusted Partners Section - Premium -->
+<section class="py-16 lg:py-20 bg-gradient-to-b from-white to-gray-50">
     <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-10 animate-on-scroll">
-            <p class="text-sm text-gray-400 uppercase tracking-wider mb-2">
-                {% if lang == 'ru' %}Нам доверяют{% elif lang == 'en' %}Trusted by{% else %}Bizga ishonishadi{% endif %}
-            </p>
-            <h3 class="text-xl md:text-2xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Ведущие компании Узбекистана{% elif lang == 'en' %}Leading companies of Uzbekistan{% else %}O'zbekistonning yetakchi kompaniyalari{% endif %}
+        <div class="text-center mb-12 md:mb-16 animate-on-scroll">
+            <span class="text-[#c9a96e] text-sm uppercase tracking-[0.3em] font-semibold mb-3 block">
+                {% if lang == 'ru' %}Нам доверяют лучшие{% elif lang == 'en' %}Trusted by the best{% else %}Eng yaxshilar bizga ishonadi{% endif %}
+            </span>
+            <h3 class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Наши клиенты — лидеры<br>своих индустрий{% elif lang == 'en' %}Our Clients Are<br>Industry Leaders{% else %}Mijozlarimiz o'z<br>sohalarining liderlari{% endif %}
             </h3>
+            <p class="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+                {% if lang == 'ru' %}Более 500 успешных проектов для ведущих ресторанов, отелей и бизнес-центров Узбекистана{% elif lang == 'en' %}Over 500 successful projects for leading restaurants, hotels and business centers in Uzbekistan{% else %}O'zbekistonning yetakchi restoranlari, mehmonxonalari va biznes markazlari uchun 500 dan ortiq muvaffaqiyatli loyihalar{% endif %}
+            </p>
         </div>
-        <div class="grid grid-cols-3 md:grid-cols-6 gap-8 md:gap-12 items-center">
-            <div class="flex items-center justify-center brand-logo">
-                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+
+        <!-- Awards & Certifications -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-12">
+            <div class="bg-white border-2 border-[#1a1a2e]/10 p-6 md:p-8 text-center hover:border-[#c9a96e] hover:shadow-xl transition-all duration-300 group">
+                <div class="w-16 h-16 mx-auto mb-4 bg-[#1a1a2e] flex items-center justify-center group-hover:bg-[#c9a96e] transition-colors">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                     </svg>
                 </div>
-            </div>
-            <div class="flex items-center justify-center brand-logo">
-                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                    </svg>
+                <div class="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-1">ISO 9001</div>
+                <div class="text-xs md:text-sm text-gray-500">
+                    {% if lang == 'ru' %}Сертификат качества{% elif lang == 'en' %}Quality Certificate{% else %}Sifat sertifikati{% endif %}
                 </div>
             </div>
-            <div class="flex items-center justify-center brand-logo">
-                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+            <div class="bg-white border-2 border-[#1a1a2e]/10 p-6 md:p-8 text-center hover:border-[#c9a96e] hover:shadow-xl transition-all duration-300 group">
+                <div class="w-16 h-16 mx-auto mb-4 bg-[#1a1a2e] flex items-center justify-center group-hover:bg-[#c9a96e] transition-colors">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                     </svg>
                 </div>
-            </div>
-            <div class="flex items-center justify-center brand-logo">
-                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
-                    </svg>
+                <div class="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-1">500+</div>
+                <div class="text-xs md:text-sm text-gray-500">
+                    {% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}
                 </div>
             </div>
-            <div class="flex items-center justify-center brand-logo">
-                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+            <div class="bg-white border-2 border-[#1a1a2e]/10 p-6 md:p-8 text-center hover:border-[#c9a96e] hover:shadow-xl transition-all duration-300 group">
+                <div class="w-16 h-16 mx-auto mb-4 bg-[#1a1a2e] flex items-center justify-center group-hover:bg-[#c9a96e] transition-colors">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
                     </svg>
                 </div>
+                <div class="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-1">98%</div>
+                <div class="text-xs md:text-sm text-gray-500">
+                    {% if lang == 'ru' %}Довольных клиентов{% elif lang == 'en' %}Happy Clients{% else %}Mamnun mijozlar{% endif %}
+                </div>
             </div>
-            <div class="flex items-center justify-center brand-logo">
-                <div class="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
-                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+            <div class="bg-white border-2 border-[#1a1a2e]/10 p-6 md:p-8 text-center hover:border-[#c9a96e] hover:shadow-xl transition-all duration-300 group">
+                <div class="w-16 h-16 mx-auto mb-4 bg-[#1a1a2e] flex items-center justify-center group-hover:bg-[#c9a96e] transition-colors">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"/>
                     </svg>
+                </div>
+                <div class="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-1">12+</div>
+                <div class="text-xs md:text-sm text-gray-500">
+                    {% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years Experience{% else %}Yillik tajriba{% endif %}
                 </div>
             </div>
         </div>
@@ -545,70 +621,117 @@
     </div>
 </section>
 
-<!-- How We Work - Process Section -->
-<section class="py-16 lg:py-24 bg-gray-50">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-12 md:mb-16 animate-on-scroll">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlаymiz{% endif %}
+<!-- How We Work - Process Section with Navy Design -->
+<section class="py-20 lg:py-28 bg-white relative overflow-hidden">
+    <!-- Decorative background pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-0 left-1/4 w-64 h-64 border-4 border-[#1a1a2e] rounded-full"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 border-4 border-[#c9a96e] rounded-full"></div>
+    </div>
+
+    <div class="container mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center mb-16 md:mb-20 animate-on-scroll">
+            <span class="text-[#c9a96e] text-sm uppercase tracking-[0.3em] font-semibold mb-3 block">
+                {% if lang == 'ru' %}Наш процесс{% elif lang == 'en' %}Our Process{% else %}Bizning jarayonimiz{% endif %}
+            </span>
+            <h2 class="text-3xl md:text-5xl lg:text-6xl font-light text-[#1a1a2e] mb-6" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}От первой встречи<br>до установки{% elif lang == 'en' %}From First Meeting<br>to Installation{% else %}Birinchi uchrashuvdan<br>o'rnatishgacha{% endif %}
             </h2>
-            <p class="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
-                {% if lang == 'ru' %}Простой и прозрачный процесс от консультации до установки{% elif lang == 'en' %}Simple and transparent process from consultation to installation{% else %}Maslahatdan o'rnatishgacha oddiy va shaffof jarayon{% endif %}
+            <p class="text-gray-600 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+                {% if lang == 'ru' %}Мы сопровождаем вас на каждом этапе создания идеального интерьера. Прозрачный процесс, четкие сроки, гарантированный результат.{% elif lang == 'en' %}We accompany you at every stage of creating the perfect interior. Transparent process, clear deadlines, guaranteed result.{% else %}Biz sizni mukammal interer yaratishning har bir bosqichida yo'llab boramiz. Shaffof jarayon, aniq muddatlar, kafolatlangan natija.{% endif %}
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 max-w-6xl mx-auto">
-            <div class="process-step text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 relative">
-                    <span class="text-2xl font-light" style="font-family: 'Playfair Display', serif;">01</span>
-                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#c9a96e]"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 max-w-7xl mx-auto">
+            <div class="process-step relative">
+                <div class="bg-gradient-to-br from-[#1a1a2e] to-[#2a2a3e] p-8 md:p-10 h-full group hover:shadow-2xl transition-all duration-500">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-[#c9a96e] flex items-center justify-center">
+                            <span class="text-3xl font-light text-white" style="font-family: 'Playfair Display', serif;">01</span>
+                        </div>
+                        <svg class="w-8 h-8 text-[#c9a96e]/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-light text-white mb-4" style="font-family: 'Playfair Display', serif;">
+                        {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}
+                    </h3>
+                    <p class="text-white/70 text-sm md:text-base leading-relaxed">
+                        {% if lang == 'ru' %}Встречаемся, обсуждаем ваши пожелания и бюджет. Бесплатный выезд дизайнера на объект.{% elif lang == 'en' %}We meet, discuss your wishes and budget. Free designer visit to the site.{% else %}Uchrashamiz, istaklaringiz va byudjetingizni muhokama qilamiz. Dizaynerning bepul ob'ektga tashrifi.{% endif %}
+                    </p>
+                    <!-- Connection line -->
+                    <div class="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-[#c9a96e]/30"></div>
                 </div>
-                <h3 class="text-lg font-medium text-[#1a1a2e] mb-3">
-                    {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}
-                </h3>
-                <p class="text-sm text-gray-600">
-                    {% if lang == 'ru' %}Бесплатная консультация и обсуждение проекта{% elif lang == 'en' %}Free consultation and project discussion{% else %}Bepul maslahat va loyihani muhokama qilish{% endif %}
-                </p>
             </div>
 
-            <div class="process-step text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 relative">
-                    <span class="text-2xl font-light" style="font-family: 'Playfair Display', serif;">02</span>
-                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#c9a96e]"></div>
+            <div class="process-step relative">
+                <div class="bg-gradient-to-br from-[#1a1a2e] to-[#2a2a3e] p-8 md:p-10 h-full group hover:shadow-2xl transition-all duration-500">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-[#c9a96e] flex items-center justify-center">
+                            <span class="text-3xl font-light text-white" style="font-family: 'Playfair Display', serif;">02</span>
+                        </div>
+                        <svg class="w-8 h-8 text-[#c9a96e]/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-light text-white mb-4" style="font-family: 'Playfair Display', serif;">
+                        {% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}
+                    </h3>
+                    <p class="text-white/70 text-sm md:text-base leading-relaxed">
+                        {% if lang == 'ru' %}Создаем фотореалистичную 3D визуализацию. Вносим правки до идеального результата.{% elif lang == 'en' %}Create photorealistic 3D visualization. Make adjustments until perfect result.{% else %}Fotorealistik 3D vizualizatsiya yaratamiz. Mukammal natijaga erishguncha tuzatishlar kiritamiz.{% endif %}
+                    </p>
+                    <div class="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-[#c9a96e]/30"></div>
                 </div>
-                <h3 class="text-lg font-medium text-[#1a1a2e] mb-3">
-                    {% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}
-                </h3>
-                <p class="text-sm text-gray-600">
-                    {% if lang == 'ru' %}Создаем 3D визуализацию вашей мебели{% elif lang == 'en' %}Create 3D visualization of your furniture{% else %}Mebelingizning 3D vizualizatsiyasini yaratamiz{% endif %}
-                </p>
             </div>
 
-            <div class="process-step text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 relative">
-                    <span class="text-2xl font-light" style="font-family: 'Playfair Display', serif;">03</span>
-                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#c9a96e]"></div>
+            <div class="process-step relative">
+                <div class="bg-gradient-to-br from-[#1a1a2e] to-[#2a2a3e] p-8 md:p-10 h-full group hover:shadow-2xl transition-all duration-500">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-[#c9a96e] flex items-center justify-center">
+                            <span class="text-3xl font-light text-white" style="font-family: 'Playfair Display', serif;">03</span>
+                        </div>
+                        <svg class="w-8 h-8 text-[#c9a96e]/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-light text-white mb-4" style="font-family: 'Playfair Display', serif;">
+                        {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
+                    </h3>
+                    <p class="text-white/70 text-sm md:text-base leading-relaxed">
+                        {% if lang == 'ru' %}Изготавливаем мебель из премиум материалов. Контроль качества на каждом этапе.{% elif lang == 'en' %}Manufacture furniture from premium materials. Quality control at every stage.{% else %}Premium materiallardan mebel ishlab chiqaramiz. Har bir bosqichda sifat nazorati.{% endif %}
+                    </p>
+                    <div class="hidden lg:block absolute top-1/2 -right-3 w-6 h-0.5 bg-[#c9a96e]/30"></div>
                 </div>
-                <h3 class="text-lg font-medium text-[#1a1a2e] mb-3">
-                    {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
-                </h3>
-                <p class="text-sm text-gray-600">
-                    {% if lang == 'ru' %}Изготовление с использованием лучших материалов{% elif lang == 'en' %}Manufacturing using the best materials{% else %}Eng yaxshi materiallar yordamida ishlab chiqarish{% endif %}
-                </p>
             </div>
 
-            <div class="process-step text-center animate-on-scroll">
-                <div class="w-20 h-20 bg-[#1a1a2e] text-white flex items-center justify-center mx-auto mb-6 relative">
-                    <span class="text-2xl font-light" style="font-family: 'Playfair Display', serif;">04</span>
-                    <div class="absolute -top-2 -right-2 w-6 h-6 bg-[#c9a96e]"></div>
+            <div class="process-step relative">
+                <div class="bg-gradient-to-br from-[#1a1a2e] to-[#2a2a3e] p-8 md:p-10 h-full group hover:shadow-2xl transition-all duration-500">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-16 h-16 bg-[#c9a96e] flex items-center justify-center">
+                            <span class="text-3xl font-light text-white" style="font-family: 'Playfair Display', serif;">04</span>
+                        </div>
+                        <svg class="w-8 h-8 text-[#c9a96e]/30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-light text-white mb-4" style="font-family: 'Playfair Display', serif;">
+                        {% if lang == 'ru' %}Доставка и монтаж{% elif lang == 'en' %}Delivery & Install{% else %}Yetkazish va o'rnatish{% endif %}
+                    </h3>
+                    <p class="text-white/70 text-sm md:text-base leading-relaxed">
+                        {% if lang == 'ru' %}Доставляем в срок и профессионально устанавливаем. Гарантия 3 года.{% elif lang == 'en' %}Deliver on time and professionally install. 3 year warranty.{% else %}O'z vaqtida yetkazamiz va professional o'rnatamiz. 3 yillik kafolat.{% endif %}
+                    </p>
                 </div>
-                <h3 class="text-lg font-medium text-[#1a1a2e] mb-3">
-                    {% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}
-                </h3>
-                <p class="text-sm text-gray-600">
-                    {% if lang == 'ru' %}Доставка и профессиональная установка{% elif lang == 'en' %}Delivery and professional installation{% else %}Yetkazish va professional o'rnatish{% endif %}
-                </p>
             </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="text-center mt-16">
+            <a href="/contact" class="inline-flex items-center gap-3 bg-[#c9a96e] hover:bg-[#b8976a] text-white px-10 py-5 text-base md:text-lg font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                {% if lang == 'ru' %}Начать проект{% elif lang == 'en' %}Start Project{% else %}Loyihani boshlash{% endif %}
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
         </div>
     </div>
 </section>
