@@ -1,261 +1,239 @@
 {% extends "base.html" %}
 
-{% block title %}{% if lang == 'ru' %}Наши филиалы{% elif lang == 'en' %}Our Stores{% else %}Filiallarimiz{% endif %} - Furniglass{% endblock %}
+{% block title %}{% if lang == 'ru' %}Магазины{% elif lang == 'en' %}Stores{% else %}Do'konlar{% endif %} - Furniglass{% endblock %}
 
 {% block extra_css %}
-<!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+    
+    .font-serif { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
+    
     #map-container {
-        height: 500px;
+        height: 600px;
         width: 100%;
     }
     
     @media (max-width: 768px) {
-        #map-container {
-            height: 400px;
-        }
+        #map-container { height: 400px; }
     }
     
     .store-card {
         transition: all 0.3s ease;
+        border-left: 2px solid transparent;
     }
     
-    .store-card:hover {
-        border-color: #1a1a2e;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .store-card:hover,
+    .store-card.active {
+        border-left-color: #c9a96e;
+        background: #fafafa;
     }
     
-    /* Custom Leaflet Popup Styling */
     .custom-popup .leaflet-popup-content-wrapper {
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        border-radius: 0;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         padding: 0;
-        overflow: hidden;
     }
     
     .custom-popup .leaflet-popup-content {
         margin: 0;
-        padding: 0;
     }
     
     .custom-popup .leaflet-popup-tip {
         background: white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .reveal-section.revealed {
+        opacity: 1;
+        transform: translateY(0);
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-white py-12 lg:py-16 border-b border-gray-100">
-    <div class="container mx-auto px-4 lg:px-8">
+<section class="py-16 lg:py-24 bg-[#0a0a0a]">
+    <div class="container mx-auto px-6 lg:px-16">
         <div class="max-w-3xl">
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Наши филиалы{% elif lang == 'en' %}Our Stores{% else %}Filiallarimiz{% endif %}
+            <div class="h-[1px] w-16 bg-[#c9a96e] mb-8"></div>
+            <p class="text-[#c9a96e] text-xs tracking-[0.4em] uppercase mb-4">{% if lang == 'ru' %}Локации{% elif lang == 'en' %}Locations{% else %}Joylashuvlar{% endif %}</p>
+            <h1 class="font-serif text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] mb-6">
+                {% if lang == 'ru' %}Наши магазины{% elif lang == 'en' %}Our Stores{% else %}Bizning do'konlar{% endif %}
             </h1>
-            <p class="text-gray-500 text-lg">
-                {% if lang == 'ru' %}Найдите ближайший к вам филиал Furniglass{% elif lang == 'en' %}Find the nearest Furniglass store{% else %}O'zingizga eng yaqin Furniglass filialini toping{% endif %}
+            <p class="text-white/60 text-base md:text-lg max-w-xl">
+                {% if lang == 'ru' %}Найдите ближайший к вам магазин Furniglass{% elif lang == 'en' %}Find the nearest Furniglass store{% else %}O'zingizga eng yaqin Furniglass do'konini toping{% endif %}
             </p>
         </div>
     </div>
 </section>
 
-<!-- Stores Section -->
-<section class="py-12 lg:py-16 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
+<!-- Map & Stores Section -->
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
         {% if stores %}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Map -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div class="lg:col-span-2 order-2 lg:order-1">
+                <div class="border border-gray-200 overflow-hidden">
                     <div id="map-container"></div>
                 </div>
             </div>
             
             <!-- Stores List -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg border border-gray-200 p-6">
-                    <h2 class="text-xl font-medium text-[#1a1a2e] mb-6">
-                        {% if lang == 'ru' %}Все филиалы{% elif lang == 'en' %}All Stores{% else %}Barcha filiallar{% endif %}
-                    </h2>
-                    <div id="stores-list" class="space-y-4">
-                        <!-- Stores will be loaded here -->
-                    </div>
+            <div class="lg:col-span-1 order-1 lg:order-2">
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Все магазины{% elif lang == 'en' %}All Stores{% else %}Barcha do'konlar{% endif %}</p>
+                <h2 class="font-serif text-2xl md:text-3xl text-[#0a0a0a] font-light mb-8">
+                    {% if lang == 'ru' %}Выберите магазин{% elif lang == 'en' %}Select a store{% else %}Do'konni tanlang{% endif %}
+                </h2>
+                <div id="stores-list" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                    <!-- Stores loaded via JS -->
                 </div>
             </div>
         </div>
         {% else %}
-        <!-- Empty State -->
-        <div class="text-center py-20">
-            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-map-marker-alt text-4xl text-gray-300"></i>
-            </div>
-            <h3 class="text-xl font-medium text-[#1a1a2e] mb-2">
-                {% if lang == 'ru' %}Филиалы не найдены{% elif lang == 'en' %}No stores found{% else %}Filial topilmadi{% endif %}
-            </h3>
-            <p class="text-gray-500">
-                {% if lang == 'ru' %}В данный момент нет доступных филиалов{% elif lang == 'en' %}No stores available at the moment{% else %}Hozircha mavjud filiallar yo'q{% endif %}
-            </p>
+        <div class="text-center py-16">
+            <p class="text-gray-500">{% if lang == 'ru' %}Магазины не найдены{% elif lang == 'en' %}No stores found{% else %}Do'konlar topilmadi{% endif %}</p>
         </div>
         {% endif %}
     </div>
 </section>
-{% endblock %}
 
-{% block extra_js %}
-<!-- Leaflet JS -->
+<!-- Contact Info -->
+<section class="py-16 lg:py-24 bg-[#fafafa] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="w-14 h-14 mx-auto mb-4 bg-[#0a0a0a] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</h3>
+                <a href="tel:+998712000262" class="text-gray-500 hover:text-[#c9a96e] transition">71 200 02 62</a>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 mx-auto mb-4 bg-[#0a0a0a] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-[#0a0a0a] mb-2">Email</h3>
+                <a href="mailto:furniglass77@gmail.com" class="text-gray-500 hover:text-[#c9a96e] transition">furniglass77@gmail.com</a>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 mx-auto mb-4 bg-[#0a0a0a] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</h3>
+                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Ташкент, Олмазор{% elif lang == 'en' %}Tashkent, Almazar{% else %}Toshkent, Olmazor{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-14 h-14 mx-auto mb-4 bg-[#0a0a0a] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Часы работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</h3>
+                <p class="text-gray-500 text-sm">9:00 - 18:00</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const lang = '{{ lang }}';
-    let map = null;
-    let markers = [];
-    let selectedStoreCard = null;
+    // Reveal sections
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealSections.forEach(section => observer.observe(section));
     
-    // Initialize map
-    map = L.map('map-container').setView([41.3111, 69.2797], 12); // Toshkent center
+    // Map
+    const mapContainer = document.getElementById('map-container');
+    if (!mapContainer) return;
+    
+    const map = L.map('map-container').setView([41.3111, 69.2797], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap'
     }).addTo(map);
     
-    loadStores();
+    let markers = [];
     
-    async function loadStores() {
-        try {
-            const response = await fetch('/api/stores');
-            const storesData = await response.json();
+    fetch('/api/stores')
+        .then(r => r.json())
+        .then(stores => {
             const storesList = document.getElementById('stores-list');
-            
-            // Clear previous markers
-            markers.forEach(marker => map.removeLayer(marker));
-            markers = [];
-            
-            // Clear stores list
             storesList.innerHTML = '';
             
-            if (storesData.length === 0) {
-                storesList.innerHTML = '<p class="text-gray-500 text-center py-8">{% if lang == "ru" %}Филиалы не найдены{% elif lang == "en" %}No stores found{% else %}Filial topilmadi{% endif %}</p>';
-                return;
-            }
-            
-            // Add markers and list items
-            storesData.forEach((store) => {
+            stores.forEach(store => {
+                // Add marker
                 if (store.latitude && store.longitude) {
-                    // Create popup content with full details
                     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${store.latitude},${store.longitude}`;
-                    const popupContent = `
-                        <div style="min-width: 250px; padding: 0;">
-                            <div style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
-                                <h3 style="font-weight: 600; font-size: 18px; margin: 0 0 8px 0; color: #1a1a2e; font-family: 'Playfair Display', serif;">${store.name}</h3>
-                            </div>
-                            <div style="padding: 12px; font-size: 14px; color: #4b5563; line-height: 1.8;">
-                                <div style="display: flex; align-items: flex-start; margin-bottom: 10px;">
-                                    <span style="color: #c9a96e; margin-right: 10px; margin-top: 2px;">📍</span>
-                                    <span style="flex: 1;">${store.address}</span>
-                                </div>
-                                ${store.phone ? `
-                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                                    <span style="color: #c9a96e; margin-right: 10px;">📞</span>
-                                    <a href="tel:${store.phone}" style="color: #4b5563; text-decoration: none; flex: 1;">${store.phone}</a>
-                                </div>
-                                ` : ''}
-                                ${store.email ? `
-                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                                    <span style="color: #c9a96e; margin-right: 10px;">✉️</span>
-                                    <a href="mailto:${store.email}" style="color: #4b5563; text-decoration: none; flex: 1; word-break: break-word;">${store.email}</a>
-                                </div>
-                                ` : ''}
-                                ${store.working_hours ? `
-                                <div style="display: flex; align-items: flex-start; margin-bottom: 0;">
-                                    <span style="color: #c9a96e; margin-right: 10px; margin-top: 2px;">🕐</span>
-                                    <span style="flex: 1;">${store.working_hours}</span>
-                                </div>
-                                ` : ''}
-                            </div>
-                            <div style="padding: 12px; border-top: 1px solid #e5e7eb; background: #f9fafb;">
-                                <a href="${mapsUrl}" target="_blank" style="display: block; width: 100%; text-align: center; background: #1a1a2e; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='#000'" onmouseout="this.style.background='#1a1a2e'">
-                                    🗺️ {% if lang == 'ru' %}Проложить маршрут{% elif lang == 'en' %}Get Directions{% else %}Borish{% endif %}
-                                </a>
-                            </div>
+                    const popup = `
+                        <div style="min-width: 220px; padding: 16px;">
+                            <h3 style="font-weight: 600; font-size: 16px; margin: 0 0 12px 0; color: #0a0a0a;">${store.name}</h3>
+                            <p style="font-size: 13px; color: #666; margin: 0 0 8px 0;">${store.address}</p>
+                            ${store.phone ? `<p style="font-size: 13px; color: #666; margin: 0 0 8px 0;">📞 ${store.phone}</p>` : ''}
+                            ${store.working_hours ? `<p style="font-size: 13px; color: #666; margin: 0 0 12px 0;">🕐 ${store.working_hours}</p>` : ''}
+                            <a href="${mapsUrl}" target="_blank" style="display: block; text-align: center; background: #0a0a0a; color: white; padding: 10px; text-decoration: none; font-size: 13px;">
+                                {% if lang == 'ru' %}Маршрут{% elif lang == 'en' %}Directions{% else %}Borish{% endif %}
+                            </a>
                         </div>
                     `;
                     
                     const marker = L.marker([store.latitude, store.longitude])
                         .addTo(map)
-                        .bindPopup(popupContent, { maxWidth: 320, className: 'custom-popup' });
+                        .bindPopup(popup, { className: 'custom-popup' });
                     
                     marker.on('click', () => {
-                        highlightStoreCard(store.id);
-                        // Open details in list
+                        document.querySelectorAll('.store-card').forEach(c => c.classList.remove('active'));
                         const card = document.querySelector(`[data-store-id="${store.id}"]`);
-                        if (card) {
-                            const details = card.querySelector('.store-details');
-                            if (details) {
-                                details.classList.remove('hidden');
-                                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                            }
-                        }
+                        if (card) card.classList.add('active');
                     });
                     
                     markers.push(marker);
                 }
                 
                 // Add to list
-                const storeItem = document.createElement('div');
-                storeItem.className = 'store-card p-4 border border-gray-200 rounded-lg cursor-pointer';
-                storeItem.dataset.storeId = store.id;
-                storeItem.innerHTML = `
-                    <h3 class="font-medium text-[#1a1a2e] mb-2">${store.name}</h3>
-                    <div class="store-details hidden">
-                        <p class="text-sm text-gray-600 mb-2">${store.address}</p>
-                        ${store.phone ? `<p class="text-sm text-gray-500 mb-1"><i class="fas fa-phone text-xs mr-1"></i>${store.phone}</p>` : ''}
-                        ${store.email ? `<p class="text-sm text-gray-500 mb-1"><i class="fas fa-envelope text-xs mr-1"></i>${store.email}</p>` : ''}
-                        ${store.working_hours ? `<p class="text-sm text-gray-500 mb-1"><i class="fas fa-clock text-xs mr-1"></i>${store.working_hours}</p>` : ''}
-                    </div>
+                const item = document.createElement('div');
+                item.className = 'store-card p-4 cursor-pointer';
+                item.dataset.storeId = store.id;
+                item.innerHTML = `
+                    <h3 class="font-medium text-[#0a0a0a] mb-1">${store.name}</h3>
+                    <p class="text-sm text-gray-500 mb-2">${store.address}</p>
+                    ${store.phone ? `<p class="text-sm text-gray-400">${store.phone}</p>` : ''}
                 `;
-                storeItem.addEventListener('click', () => {
-                    const details = storeItem.querySelector('.store-details');
-                    if (details.classList.contains('hidden')) {
-                        // Show details
-                        details.classList.remove('hidden');
-                        if (store.latitude && store.longitude) {
-                            map.setView([store.latitude, store.longitude], 15);
-                            highlightStoreCard(store.id);
-                        }
-                    } else {
-                        // Hide details
-                        details.classList.add('hidden');
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.store-card').forEach(c => c.classList.remove('active'));
+                    item.classList.add('active');
+                    if (store.latitude && store.longitude) {
+                        map.setView([store.latitude, store.longitude], 15);
+                        markers.find(m => m.getLatLng().lat === store.latitude)?.openPopup();
                     }
                 });
-                storesList.appendChild(storeItem);
+                storesList.appendChild(item);
             });
             
-            // Fit map to show all markers
             if (markers.length > 0) {
-                const group = new L.featureGroup(markers);
-                map.fitBounds(group.getBounds().pad(0.1));
+                map.fitBounds(L.featureGroup(markers).getBounds().pad(0.1));
             }
-        } catch (error) {
-            console.error('Error loading stores:', error);
-            document.getElementById('stores-list').innerHTML = '<p class="text-red-500 text-center py-8">{% if lang == "ru" %}Ошибка загрузки{% elif lang == "en" %}Loading error{% else %}Yuklash xatosi{% endif %}</p>';
-        }
-    }
-    
-    function highlightStoreCard(storeId) {
-        // Remove previous highlight
-        document.querySelectorAll('.store-card').forEach(card => {
-            card.classList.remove('border-[#1a1a2e]', 'bg-gray-50');
         });
-        
-        // Highlight selected card
-        const card = document.querySelector(`[data-store-id="${storeId}"]`);
-        if (card) {
-            card.classList.add('border-[#1a1a2e]', 'bg-gray-50');
-            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-    }
 });
 </script>
 {% endblock %}

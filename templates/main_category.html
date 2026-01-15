@@ -4,73 +4,225 @@
 
 {% block extra_css %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+    
+    :root {
+        --accent: #c9a96e;
+        --dark: #0a0a0a;
+    }
+    
+    .font-serif { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
+    
+    /* Hero */
+    .hero-main {
+        position: relative;
+        height: 80vh;
+        min-height: 600px;
+        overflow: hidden;
+    }
+    
+    .hero-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+    }
+    
+    @media (min-width: 768px) {
+        .hero-bg { background-attachment: fixed; }
+    }
+    
+    .hero-bg::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.6) 50%, rgba(10,10,10,0.4) 100%);
+    }
+    
+    @media (max-width: 767px) {
+        .hero-bg::after {
+            background: linear-gradient(to bottom, rgba(10,10,10,0.6) 0%, rgba(10,10,10,0.9) 100%);
+        }
+    }
+    
+    /* Animations */
+    @keyframes fadeUp {
+        0% { opacity: 0; transform: translateY(30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes lineExpand {
+        0% { width: 0; }
+        100% { width: 60px; }
+    }
+    
+    .animate-fadeUp {
+        animation: fadeUp 0.8s ease forwards;
+        opacity: 0;
+    }
+    
+    .animate-line {
+        animation: lineExpand 0.8s ease forwards;
+        animation-delay: 0.5s;
+    }
+    
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    
+    /* Product card */
     .product-card {
-        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        background: #fff;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
     .product-card:hover {
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        transform: translateY(-5px);
+        transform: translateY(-8px);
+        box-shadow: 0 30px 60px -20px rgba(0,0,0,0.15);
     }
     
-    .category-card {
-        transition: all 0.3s ease;
+    .product-card:hover .product-img {
+        transform: scale(1.05);
     }
     
-    .category-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    .product-img {
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    
+    /* Category card */
+    .cat-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+    
+    .cat-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(10,10,10,0.8) 0%, transparent 60%);
+        transition: all 0.4s;
+    }
+    
+    .cat-card:hover::after {
+        background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.3) 100%);
+    }
+    
+    .cat-card:hover img {
+        transform: scale(1.1);
+    }
+    
+    .cat-card img {
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    /* Reveal animation */
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .reveal-section.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Line clamp */
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative h-[50vh] md:h-[60vh] overflow-hidden bg-gray-900">
-    {% if main_category.image %}
-    <div class="absolute inset-0">
-        <img src="/uploads/{{ main_category.image }}" alt="{{ main_category.get_name(lang) }}" 
-             class="w-full h-full object-cover opacity-60">
-    </div>
-    {% endif %}
-    <div class="relative h-full flex items-center justify-center text-center px-4">
-        <div class="max-w-3xl">
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-light text-white mb-4" style="font-family: 'Playfair Display', serif;">
-                {{ main_category.get_name(lang) }}
-            </h1>
-            {% if main_category.get_description(lang) %}
-            <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto">
-                {{ main_category.get_description(lang) }}
-            </p>
-            {% endif %}
+<section class="hero-main -mt-[70px] md:-mt-[80px]">
+    <div class="hero-bg" style="background-image: url('{% if main_category.image %}/uploads/{{ main_category.image }}{% else %}/uploads/designs/3.jpg{% endif %}');"></div>
+    
+    <div class="relative h-full flex items-center">
+        <div class="container mx-auto px-6 lg:px-16">
+            <div class="max-w-3xl">
+                <!-- Accent Line -->
+                <div class="animate-line h-[1px] bg-[#c9a96e] mb-8 w-0"></div>
+                
+                <!-- Breadcrumb -->
+                <p class="animate-fadeUp text-white/50 text-sm tracking-wider mb-4">
+                    <a href="/" class="hover:text-white transition">{% if lang == 'ru' %}Главная{% elif lang == 'en' %}Home{% else %}Bosh sahifa{% endif %}</a>
+                    <span class="mx-2">/</span>
+                    <span class="text-[#c9a96e]">{{ main_category.get_name(lang) }}</span>
+                </p>
+                
+                <!-- Title -->
+                <h1 class="animate-fadeUp delay-1 font-serif text-white text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-6">
+                    {{ main_category.get_name(lang) }}
+                </h1>
+                
+                <!-- Description -->
+                {% if main_category.get_description(lang) %}
+                <p class="animate-fadeUp delay-2 text-white/60 text-base md:text-lg font-light max-w-xl mb-8 leading-relaxed">
+                    {{ main_category.get_description(lang)[:200] }}{% if main_category.get_description(lang)|length > 200 %}...{% endif %}
+                </p>
+                {% endif %}
+                
+                <!-- CTA -->
+                <div class="animate-fadeUp delay-3 flex flex-wrap gap-4">
+                    <a href="#products-section" class="bg-[#c9a96e] text-white px-8 py-4 text-sm tracking-[0.15em] uppercase hover:bg-[#b8965d] transition-colors">
+                        {% if lang == 'ru' %}Смотреть товары{% elif lang == 'en' %}View Products{% else %}Mahsulotlarni ko'rish{% endif %}
+                    </a>
+                    <a href="/contact" class="border border-white/30 text-white px-8 py-4 text-sm tracking-[0.15em] uppercase hover:bg-white hover:text-[#0a0a0a] transition-all">
+                        {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
+                    </a>
+                </div>
+                
+                <!-- Stats -->
+                <div class="animate-fadeUp delay-4 flex gap-10 mt-12 pt-8 border-t border-white/10">
+                    <div>
+                        <p class="font-serif text-3xl text-white">{{ categories|length }}</p>
+                        <p class="text-white/40 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Категорий{% elif lang == 'en' %}Categories{% else %}Kategoriya{% endif %}</p>
+                    </div>
+                    <div>
+                        <p class="font-serif text-3xl text-white">{{ all_products|length if all_products else '100+' }}</p>
+                        <p class="text-white/40 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Товаров{% elif lang == 'en' %}Products{% else %}Mahsulot{% endif %}</p>
+                    </div>
+                    <div>
+                        <p class="font-serif text-3xl text-white">25</p>
+                        <p class="text-white/40 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Лет гарантии{% elif lang == 'en' %}Years Warranty{% else %}Yil kafolat{% endif %}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Categories Section (Small) -->
+<!-- Categories Section -->
 {% if categories %}
-<section class="py-8 lg:py-12 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-6 md:mb-8">
-            <h2 class="text-xl md:text-2xl lg:text-3xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Категории{% elif lang == 'en' %}Categories{% else %}Kategoriyalar{% endif %}
-            </h2>
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+            <div>
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-3">{% if lang == 'ru' %}Категории{% elif lang == 'en' %}Categories{% else %}Kategoriyalar{% endif %}</p>
+                <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-[#0a0a0a] font-light">
+                    {{ main_category.get_name(lang) }} {% if lang == 'ru' %}категории{% elif lang == 'en' %}categories{% else %}kategoriyalari{% endif %}
+                </h2>
+            </div>
         </div>
         
-        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+        <!-- Categories Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {% for category in categories %}
-            <a href="#category-{{ category.id }}" class="category-card scroll-smooth">
-                <div class="relative aspect-square overflow-hidden bg-gray-100 rounded-lg">
-                    {% if category.image %}
-                    <img src="/uploads/{{ category.image }}" alt="{{ category.get_name(lang) }}" 
-                         class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
-                    {% else %}
-                    <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                        <i class="fas fa-couch text-2xl text-gray-300"></i>
-                    </div>
-                    {% endif %}
+            <a href="#category-{{ category.id }}" class="cat-card group relative aspect-square">
+                {% if category.image %}
+                <img src="/uploads/{{ category.image }}" alt="{{ category.get_name(lang) }}" class="absolute inset-0 w-full h-full object-cover">
+                {% else %}
+                <div class="absolute inset-0 bg-gradient-to-br from-[#2a2a3e] to-[#1a1a2e]"></div>
+                {% endif %}
+                <div class="absolute inset-0 z-10 flex flex-col justify-end p-4">
+                    <h3 class="text-white font-medium text-sm line-clamp-2">{{ category.get_name(lang) }}</h3>
+                    <p class="text-white/50 text-xs mt-1">{{ category.products|length }} {% if lang == 'ru' %}шт{% elif lang == 'en' %}pcs{% else %}dona{% endif %}</p>
                 </div>
-                <h3 class="mt-2 text-xs md:text-sm font-medium text-[#1a1a2e] text-center line-clamp-2">{{ category.get_name(lang) }}</h3>
             </a>
             {% endfor %}
         </div>
@@ -78,316 +230,306 @@
 </section>
 {% endif %}
 
-<!-- Additional Information Section (Expanded) -->
-<section class="py-16 lg:py-24 bg-gray-50">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="max-w-6xl mx-auto">
-            {% if main_category.get_description(lang) %}
-            <div class="mb-12">
-                <h2 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e] mb-6" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}О нас{% elif lang == 'en' %}About Us{% else %}Biz haqimizda{% endif %}
+<!-- About Section -->
+<section class="py-16 lg:py-24 bg-[#0a0a0a] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <!-- Content -->
+            <div>
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}О направлении{% elif lang == 'en' %}About{% else %}Yo'nalish haqida{% endif %}</p>
+                <h2 class="font-serif text-3xl md:text-4xl text-white font-light leading-tight mb-6">
+                    {% if lang == 'ru' %}Мебель для {{ main_category.get_name(lang) }}{% elif lang == 'en' %}Furniture for {{ main_category.get_name(lang) }}{% else %}{{ main_category.get_name(lang) }} uchun mebel{% endif %}
                 </h2>
-                <div class="text-gray-700 leading-relaxed text-base md:text-lg whitespace-pre-line">
+                
+                {% if main_category.get_description(lang) %}
+                <p class="text-white/60 leading-relaxed mb-8">
                     {{ main_category.get_description(lang) }}
-                </div>
-            </div>
-            {% endif %}
-            
-            <!-- Key Features (Expanded) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="w-14 h-14 bg-[#1a1a2e] rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-check-circle text-white text-xl"></i>
+                </p>
+                {% else %}
+                <p class="text-white/60 leading-relaxed mb-8">
+                    {% if lang == 'ru' %}
+                    Мы создаём уникальную мебель высочайшего качества. Каждое изделие производится с использованием лучших материалов и современных технологий.
+                    {% elif lang == 'en' %}
+                    We create unique furniture of the highest quality. Each piece is produced using the best materials and modern technologies.
+                    {% else %}
+                    Biz eng yuqori sifatli noyob mebellar yaratamiz. Har bir buyum eng yaxshi materiallar va zamonaviy texnologiyalar yordamida ishlab chiqariladi.
+                    {% endif %}
+                </p>
+                {% endif %}
+                
+                <!-- Features -->
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-[#c9a96e]/20 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{% if lang == 'ru' %}Premium материалы{% elif lang == 'en' %}Premium materials{% else %}Premium materiallar{% endif %}</p>
+                        </div>
                     </div>
-                    <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">
-                        {% if lang == 'ru' %}Качественные материалы{% elif lang == 'en' %}Quality Materials{% else %}Yuqori sifatli materiallar{% endif %}
-                    </h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        {% if lang == 'ru' %}Используем только лучшие материалы от проверенных поставщиков{% elif lang == 'en' %}We use only the best materials from trusted suppliers{% else %}Faqat ishonchli yetkazib beruvchilardan eng yaxshi materiallardan foydalanamiz{% endif %}
-                    </p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="w-14 h-14 bg-[#1a1a2e] rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-tools text-white text-xl"></i>
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-[#c9a96e]/20 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{% if lang == 'ru' %}25 лет гарантии{% elif lang == 'en' %}25 years warranty{% else %}25 yil kafolat{% endif %}</p>
+                        </div>
                     </div>
-                    <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">
-                        {% if lang == 'ru' %}Профессиональная сборка{% elif lang == 'en' %}Professional Assembly{% else %}Professional yig'ilish{% endif %}
-                    </h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        {% if lang == 'ru' %}Опытные мастера с многолетним опытом работы{% elif lang == 'en' %}Experienced craftsmen with years of experience{% else %}Ko'p yillik tajribaga ega mutaxassislar{% endif %}
-                    </p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="w-14 h-14 bg-[#1a1a2e] rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-shipping-fast text-white text-xl"></i>
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-[#c9a96e]/20 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free delivery{% else %}Bepul yetkazish{% endif %}</p>
+                        </div>
                     </div>
-                    <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">
-                        {% if lang == 'ru' %}Быстрая доставка{% elif lang == 'en' %}Fast Delivery{% else %}Tezkor yetkazib berish{% endif %}
-                    </h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        {% if lang == 'ru' %}Доставляем в кратчайшие сроки по всему городу{% elif lang == 'en' %}We deliver in the shortest time throughout the city{% else %}Shahar bo'ylab eng qisqa muddatda yetkazib beramiz{% endif %}
-                    </p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <div class="w-14 h-14 bg-[#1a1a2e] rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-headset text-white text-xl"></i>
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-[#c9a96e]/20 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium text-sm">{% if lang == 'ru' %}Индивидуальный дизайн{% elif lang == 'en' %}Custom design{% else %}Individual dizayn{% endif %}</p>
+                        </div>
                     </div>
-                    <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">
-                        {% if lang == 'ru' %}Поддержка клиентов{% elif lang == 'en' %}Customer Support{% else %}Mijozlar yordami{% endif %}
-                    </h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        {% if lang == 'ru' %}Круглосуточная поддержка и консультация{% elif lang == 'en' %}24/7 support and consultation{% else %}Kun bo'yi yordam va maslahat{% endif %}
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Statistics -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-16">
-                <div class="text-center">
-                    <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                        2500+
-                    </div>
-                    <p class="text-gray-600 text-sm md:text-base">
-                        {% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}
-                    </p>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                        5000+
-                    </div>
-                    <p class="text-gray-600 text-sm md:text-base">
-                        {% if lang == 'ru' %}Довольных клиентов{% elif lang == 'en' %}Satisfied Customers{% else %}Mamnun mijozlar{% endif %}
-                    </p>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                        25
-                    </div>
-                    <p class="text-gray-600 text-sm md:text-base">
-                        {% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years Experience{% else %}Yillik tajriba{% endif %}
-                    </p>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-2" style="font-family: 'Playfair Display', serif;">
-                        25
-                    </div>
-                    <p class="text-gray-600 text-sm md:text-base">
-                        {% if lang == 'ru' %}Лет гарантии{% elif lang == 'en' %}Years Warranty{% else %}Yillik kafolat{% endif %}
-                    </p>
                 </div>
             </div>
             
-            <!-- Contact Information -->
-            <div class="bg-white p-8 md:p-10 rounded-lg shadow-sm">
-                <h2 class="text-2xl md:text-3xl lg:text-4xl font-light text-[#1a1a2e] mb-8" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Контактная информация{% elif lang == 'en' %}Contact Information{% else %}Kontakt ma'lumotlari{% endif %}
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-phone-alt text-white"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-medium text-[#1a1a2e] mb-1">
-                                {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}
-                            </h3>
-                            <a href="tel:+998712000262" class="text-gray-700 hover:text-[#c9a96e] transition">
-                                71 200 02 62
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-envelope text-white"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-medium text-[#1a1a2e] mb-1">
-                                Email
-                            </h3>
-                            <a href="mailto:furniglass77@gmail.com" class="text-gray-700 hover:text-[#c9a96e] transition">
-                                furniglass77@gmail.com
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-map-marker-alt text-white"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-medium text-[#1a1a2e] mb-1">
-                                {% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}
-                            </h3>
-                            <p class="text-gray-700">
-                                {% if lang == 'ru' %}Ташкент, Олмазорский район, массив Бешкурган, дом 2{% elif lang == 'en' %}Tashkent, Almazar district, Beshkurgan area, house 2{% else %}Toshkent shaxar Olmazor tumani beshqo'rg'on mavzesi 2-uy{% endif %}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-clock text-white"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-medium text-[#1a1a2e] mb-1">
-                                {% if lang == 'ru' %}Время работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}
-                            </h3>
-                            <p class="text-gray-700">
-                                {% if lang == 'ru' %}9:00 - 18:00{% elif lang == 'en' %}9:00 AM - 6:00 PM{% else %}9:00 dan 18:00 gacha{% endif %}
-                            </p>
-                        </div>
-                    </div>
+            <!-- Stats -->
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-white/5 p-8 text-center">
+                    <p class="font-serif text-5xl lg:text-6xl text-[#c9a96e]">2500+</p>
+                    <p class="text-white/50 text-sm mt-2">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
+                </div>
+                <div class="bg-white/5 p-8 text-center">
+                    <p class="font-serif text-5xl lg:text-6xl text-[#c9a96e]">5000+</p>
+                    <p class="text-white/50 text-sm mt-2">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Clients{% else %}Mijozlar{% endif %}</p>
+                </div>
+                <div class="bg-white/5 p-8 text-center">
+                    <p class="font-serif text-5xl lg:text-6xl text-[#c9a96e]">25</p>
+                    <p class="text-white/50 text-sm mt-2">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil tajriba{% endif %}</p>
+                </div>
+                <div class="bg-white/5 p-8 text-center">
+                    <p class="font-serif text-5xl lg:text-6xl text-[#c9a96e]">25</p>
+                    <p class="text-white/50 text-sm mt-2">{% if lang == 'ru' %}Лет гарантии{% elif lang == 'en' %}Years Warranty{% else %}Yil kafolat{% endif %}</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Products Section with Search & Filters -->
-<section class="py-16 lg:py-24 bg-white" id="products-section">
-    <div class="container mx-auto px-4 lg:px-8">
-        <!-- Search and Filters -->
+<!-- Products Section -->
+<section class="py-16 lg:py-24 bg-[#fafafa] reveal-section" id="products-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Header with Search & Filters -->
         <div class="mb-12">
-            <!-- Search Bar -->
-            <div class="mb-6">
-                <div class="relative max-w-2xl mx-auto">
-                    <input type="text" 
-                           id="product-search" 
-                           placeholder='{% if lang == "ru" %}Поиск продуктов...{% elif lang == "en" %}Search products...{% else %}Mahsulotlarni qidirish...{% endif %}'
-                           class="w-full px-6 py-4 pr-12 border-b-2 border-gray-300 focus:border-[#1a1a2e] outline-none text-lg bg-transparent transition">
-                    <svg class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+                <div>
+                    <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-3">{% if lang == 'ru' %}Коллекция{% elif lang == 'en' %}Collection{% else %}Kolleksiya{% endif %}</p>
+                    <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-[#0a0a0a] font-light">
+                        {% if lang == 'ru' %}Наши товары{% elif lang == 'en' %}Our Products{% else %}Bizning mahsulotlar{% endif %}
+                    </h2>
+                </div>
+                
+                <!-- Search -->
+                <div class="relative w-full lg:w-80">
+                    <input type="text" id="product-search" 
+                           placeholder="{% if lang == 'ru' %}Поиск...{% elif lang == 'en' %}Search...{% else %}Qidirish...{% endif %}"
+                           class="w-full px-4 py-3 pr-12 border border-gray-200 bg-white focus:border-[#c9a96e] outline-none text-sm transition">
+                    <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
                 </div>
             </div>
             
-            <!-- Filters -->
-            <div class="flex flex-wrap items-center gap-4 justify-center mb-8">
+            <!-- Filters Row -->
+            <div class="flex flex-wrap items-center gap-4 pb-6 border-b border-gray-200">
                 <!-- Category Filter -->
-                <div class="flex items-center gap-2">
-                    <label class="text-sm font-medium text-gray-700">
-                        {% if lang == 'ru' %}Категория:{% elif lang == 'en' %}Category:{% else %}Kategoriya:{% endif %}
-                    </label>
-                    <select id="category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1a1a2e] text-sm">
-                        <option value="">{% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}</option>
-                        {% for category in categories %}
-                        <option value="{{ category.id }}">{{ category.get_name(lang) }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                <select id="category-filter" class="px-4 py-2 border border-gray-200 bg-white focus:border-[#c9a96e] outline-none text-sm">
+                    <option value="">{% if lang == 'ru' %}Все категории{% elif lang == 'en' %}All categories{% else %}Barcha kategoriyalar{% endif %}</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.get_name(lang) }}</option>
+                    {% endfor %}
+                </select>
                 
-                <!-- Price Filter -->
+                <!-- Price Range -->
                 <div class="flex items-center gap-2">
-                    <label class="text-sm font-medium text-gray-700">
-                        {% if lang == 'ru' %}Цена:{% elif lang == 'en' %}Price:{% else %}Narx:{% endif %}
-                    </label>
-                    <input type="number" 
-                           id="min-price" 
-                           placeholder='{% if lang == "ru" %}От{% elif lang == "en" %}From{% else %}Dan{% endif %}'
-                           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1a1a2e] text-sm w-24">
-                    <span class="text-gray-500">-</span>
-                    <input type="number" 
-                           id="max-price" 
-                           placeholder='{% if lang == "ru" %}До{% elif lang == "en" %}To{% else %}Gacha{% endif %}'
-                           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1a1a2e] text-sm w-24">
+                    <input type="number" id="min-price" placeholder="{% if lang == 'ru' %}От{% elif lang == 'en' %}From{% else %}Dan{% endif %}"
+                           class="w-24 px-3 py-2 border border-gray-200 bg-white focus:border-[#c9a96e] outline-none text-sm">
+                    <span class="text-gray-400">—</span>
+                    <input type="number" id="max-price" placeholder="{% if lang == 'ru' %}До{% elif lang == 'en' %}To{% else %}Gacha{% endif %}"
+                           class="w-24 px-3 py-2 border border-gray-200 bg-white focus:border-[#c9a96e] outline-none text-sm">
                 </div>
                 
                 <!-- Sort -->
-                <div class="flex items-center gap-2">
-                    <label class="text-sm font-medium text-gray-700">
-                        {% if lang == 'ru' %}Сортировать:{% elif lang == 'en' %}Sort:{% else %}Saralash:{% endif %}
-                    </label>
-                    <select id="sort-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1a1a2e] text-sm">
-                        <option value="default">{% if lang == 'ru' %}По умолчанию{% elif lang == 'en' %}Default{% else %}Standart{% endif %}</option>
-                        <option value="price_asc">{% if lang == 'ru' %}Цена: по возрастанию{% elif lang == 'en' %}Price: Low to High{% else %}Narx: Pastdan yuqoriga{% endif %}</option>
-                        <option value="price_desc">{% if lang == 'ru' %}Цена: по убыванию{% elif lang == 'en' %}Price: High to Low{% else %}Narx: Yuqoridan pastga{% endif %}</option>
-                        <option value="name_asc">{% if lang == 'ru' %}Название: А-Я{% elif lang == 'en' %}Name: A-Z{% else %}Nomi: A-Z{% endif %}</option>
-                    </select>
-                </div>
+                <select id="sort-filter" class="px-4 py-2 border border-gray-200 bg-white focus:border-[#c9a96e] outline-none text-sm">
+                    <option value="default">{% if lang == 'ru' %}По умолчанию{% elif lang == 'en' %}Default{% else %}Standart{% endif %}</option>
+                    <option value="price_asc">{% if lang == 'ru' %}Цена ↑{% elif lang == 'en' %}Price ↑{% else %}Narx ↑{% endif %}</option>
+                    <option value="price_desc">{% if lang == 'ru' %}Цена ↓{% elif lang == 'en' %}Price ↓{% else %}Narx ↓{% endif %}</option>
+                    <option value="name_asc">{% if lang == 'ru' %}Название{% elif lang == 'en' %}Name{% else %}Nomi{% endif %}</option>
+                </select>
                 
-                <!-- Clear Filters -->
-                <button id="clear-filters" class="px-4 py-2 text-sm text-gray-600 hover:text-[#1a1a2e] transition">
+                <!-- Clear -->
+                <button id="clear-filters" class="text-sm text-gray-500 hover:text-[#c9a96e] transition">
                     {% if lang == 'ru' %}Сбросить{% elif lang == 'en' %}Clear{% else %}Tozalash{% endif %}
                 </button>
-            </div>
-            
-            <!-- Results Count -->
-            <div class="text-center mb-6">
-                <p id="results-count" class="text-gray-600 text-sm">
-                    <span id="products-count">0</span> {% if lang == 'ru' %}продуктов{% elif lang == 'en' %}products{% else %}mahsulot{% endif %}
-                </p>
+                
+                <!-- Results Count -->
+                <span class="ml-auto text-sm text-gray-500">
+                    <span id="products-count">0</span> {% if lang == 'ru' %}товаров{% elif lang == 'en' %}products{% else %}mahsulot{% endif %}
+                </span>
             </div>
         </div>
         
         <!-- Products Grid -->
-        <div id="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            <!-- Products will be loaded here via JavaScript -->
+        <div id="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+            <!-- Products loaded via JS -->
         </div>
         
         <!-- Empty State -->
-        <div id="empty-state" class="hidden text-center py-12">
-            <p class="text-gray-500 text-lg">
-                {% if lang == 'ru' %}Продукты не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulotlar topilmadi{% endif %}
-            </p>
+        <div id="empty-state" class="hidden text-center py-16">
+            <p class="text-gray-500">{% if lang == 'ru' %}Товары не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulotlar topilmadi{% endif %}</p>
         </div>
         
-        <!-- Loading State -->
-        <div id="loading-state" class="hidden text-center py-12">
-            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#1a1a2e]"></div>
+        <!-- Loading -->
+        <div id="loading-state" class="hidden text-center py-16">
+            <div class="inline-block w-8 h-8 border-2 border-[#c9a96e] border-t-transparent rounded-full animate-spin"></div>
         </div>
     </div>
 </section>
 
-<!-- Product Detail Modal -->
-<div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden overflow-y-auto">
-    <div class="min-h-screen px-4 py-8">
-        <div class="bg-white rounded-lg max-w-6xl mx-auto my-8 relative">
-            <button id="close-modal" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-lg hover:bg-gray-100 transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-            <div id="modal-content" class="p-6 md:p-8">
-                <!-- Product details will be loaded here -->
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <!-- Reviews Section -->
-<section class="py-16 lg:py-24 bg-gray-50">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-12 md:mb-16">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Отзывы клиентов{% elif lang == 'en' %}Client Reviews{% else %}Mijozlar fikrlari{% endif %}
+{% if reviews %}
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-3">{% if lang == 'ru' %}Отзывы{% elif lang == 'en' %}Reviews{% else %}Fikrlar{% endif %}</p>
+            <h2 class="font-serif text-3xl md:text-4xl text-[#0a0a0a] font-light">
+                {% if lang == 'ru' %}Что говорят клиенты{% elif lang == 'en' %}What clients say{% else %}Mijozlar fikri{% endif %}
             </h2>
         </div>
         
-        {% if reviews %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <!-- Reviews Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for review in reviews[:6] %}
-            <div class="bg-white p-6 md:p-8 rounded-lg shadow-sm">
-                <div class="flex items-center gap-1 mb-4">
+            <div class="bg-[#fafafa] p-8 border-l-2 border-[#c9a96e]">
+                <!-- Stars -->
+                <div class="flex gap-1 mb-4">
                     {% for i in range(5) %}
                     <svg class="w-4 h-4 {% if i < review.rating %}text-[#c9a96e]{% else %}text-gray-300{% endif %}" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                     </svg>
                     {% endfor %}
                 </div>
-                <p class="text-gray-700 mb-4 leading-relaxed">{{ review.get_text(lang) }}</p>
-                <p class="text-[#1a1a2e] font-medium">{{ review.name }}</p>
+                <p class="text-gray-600 leading-relaxed mb-6">{{ review.get_text(lang) }}</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-[#c9a96e] flex items-center justify-center text-white font-medium text-sm">
+                        {{ review.name[:2]|upper }}
+                    </div>
+                    <p class="font-medium text-[#0a0a0a]">{{ review.name }}</p>
+                </div>
             </div>
             {% endfor %}
         </div>
-        {% else %}
-        <div class="text-center py-12">
-            <p class="text-gray-500 text-lg">
-                {% if lang == 'ru' %}Пока нет отзывов{% elif lang == 'en' %}No reviews yet{% else %}Hozircha fikrlar yo'q{% endif %}
-            </p>
+    </div>
+</section>
+{% endif %}
+
+<!-- Contact CTA -->
+<section class="py-16 lg:py-24 bg-[#0a0a0a] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Контакты{% elif lang == 'en' %}Contact{% else %}Aloqa{% endif %}</p>
+                <h2 class="font-serif text-3xl md:text-4xl text-white font-light leading-tight mb-6">
+                    {% if lang == 'ru' %}Готовы обсудить ваш проект?{% elif lang == 'en' %}Ready to discuss your project?{% else %}Loyihangizni muhokama qilishga tayyormisiz?{% endif %}
+                </h2>
+                <p class="text-white/60 mb-8">
+                    {% if lang == 'ru' %}Свяжитесь с нами для бесплатной консультации{% elif lang == 'en' %}Contact us for a free consultation{% else %}Bepul maslahat uchun biz bilan bog'laning{% endif %}
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="/contact" class="bg-[#c9a96e] text-white px-8 py-4 text-sm tracking-[0.15em] uppercase hover:bg-[#b8965d] transition-colors">
+                        {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact Us{% else %}Bog'lanish{% endif %}
+                    </a>
+                    <a href="tel:+998712000262" class="border border-white/20 text-white px-8 py-4 text-sm tracking-[0.15em] uppercase hover:bg-white/5 transition-colors">
+                        71 200 02 62
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-white/5 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-white/40 text-xs uppercase tracking-wider mb-1">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</p>
+                        <a href="tel:+998712000262" class="text-white hover:text-[#c9a96e] transition">71 200 02 62</a>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-white/5 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-white/40 text-xs uppercase tracking-wider mb-1">Email</p>
+                        <a href="mailto:furniglass77@gmail.com" class="text-white hover:text-[#c9a96e] transition">furniglass77@gmail.com</a>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-white/5 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-white/40 text-xs uppercase tracking-wider mb-1">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
+                        <p class="text-white text-sm">{% if lang == 'ru' %}Ташкент, Олмазор{% elif lang == 'en' %}Tashkent, Almazar{% else %}Toshkent, Olmazor{% endif %}</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-white/5 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-white/40 text-xs uppercase tracking-wider mb-1">{% if lang == 'ru' %}Часы работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</p>
+                        <p class="text-white text-sm">9:00 - 18:00</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endif %}
     </div>
 </section>
 
+<!-- Product Modal -->
+<div id="product-modal" class="fixed inset-0 bg-black/80 z-50 hidden overflow-y-auto">
+    <div class="min-h-screen px-4 py-8 flex items-center justify-center">
+        <div class="bg-white max-w-5xl w-full relative">
+            <button id="close-modal" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white shadow-lg hover:bg-gray-100 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <div id="modal-content" class="p-6 md:p-10"></div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -395,7 +537,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const mainCategorySlug = '{{ main_category.slug }}';
     const lang = '{{ lang }}';
-    const rate = {{ rate }};
     
     // Elements
     const searchInput = document.getElementById('product-search');
@@ -413,214 +554,130 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalContent = document.getElementById('modal-content');
     
     let debounceTimer;
-    let currentProducts = [];
     
-    // Load products on page load
+    // Reveal sections on scroll
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealSections.forEach(section => revealObserver.observe(section));
+    
+    // Load products
     loadProducts();
     
     // Event listeners
-    searchInput.addEventListener('input', function() {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(loadProducts, 300);
-    });
-    
+    searchInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(loadProducts, 300); });
     categoryFilter.addEventListener('change', loadProducts);
-    minPriceInput.addEventListener('input', function() {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(loadProducts, 500);
-    });
-    maxPriceInput.addEventListener('input', function() {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(loadProducts, 500);
-    });
+    minPriceInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(loadProducts, 500); });
+    maxPriceInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(loadProducts, 500); });
     sortFilter.addEventListener('change', loadProducts);
     clearFiltersBtn.addEventListener('click', clearFilters);
     closeModalBtn.addEventListener('click', closeModal);
-    productModal.addEventListener('click', function(e) {
-        if (e.target === productModal) {
-            closeModal();
-        }
-    });
+    productModal.addEventListener('click', e => { if (e.target === productModal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     
-    // Load products function
     function loadProducts() {
         loadingState.classList.remove('hidden');
         emptyState.classList.add('hidden');
         productsContainer.innerHTML = '';
         
         const params = new URLSearchParams();
-        if (searchInput.value.trim()) {
-            params.append('search', searchInput.value.trim());
-        }
-        if (categoryFilter.value) {
-            params.append('category', categoryFilter.value);
-        }
-        if (minPriceInput.value) {
-            params.append('min_price', minPriceInput.value);
-        }
-        if (maxPriceInput.value) {
-            params.append('max_price', maxPriceInput.value);
-        }
-        if (sortFilter.value !== 'default') {
-            params.append('sort', sortFilter.value);
-        }
+        if (searchInput.value.trim()) params.append('search', searchInput.value.trim());
+        if (categoryFilter.value) params.append('category', categoryFilter.value);
+        if (minPriceInput.value) params.append('min_price', minPriceInput.value);
+        if (maxPriceInput.value) params.append('max_price', maxPriceInput.value);
+        if (sortFilter.value !== 'default') params.append('sort', sortFilter.value);
         
         fetch(`/api/main-category-products/${mainCategorySlug}?${params.toString()}`)
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
-                currentProducts = data.products;
                 resultsCount.textContent = data.total;
                 loadingState.classList.add('hidden');
-                
                 if (data.products.length === 0) {
                     emptyState.classList.remove('hidden');
                 } else {
                     renderProducts(data.products);
                 }
             })
-            .catch(error => {
-                console.error('Error loading products:', error);
+            .catch(() => {
                 loadingState.classList.add('hidden');
                 emptyState.classList.remove('hidden');
             });
     }
     
-    // Render products
     function renderProducts(products) {
-        productsContainer.innerHTML = '';
-        
-        products.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.className = 'product-card bg-white rounded-lg overflow-hidden cursor-pointer';
-            productCard.onclick = () => showProductDetail(product);
-            
-            const imageUrl = product.images && product.images.length > 0 
-                ? `/uploads/${product.images[0]}` 
-                : '';
-            
-            productCard.innerHTML = `
-                <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
-                    ${imageUrl ? 
-                        `<img src="${imageUrl}" alt="${product.name}" class="w-full h-full object-cover">` :
-                        `<div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                            <i class="fas fa-image text-4xl text-gray-300"></i>
-                        </div>`
-                    }
-                </div>
-                <div class="p-4">
-                    <h3 class="text-base font-medium text-[#1a1a2e] mb-1 line-clamp-2">${product.name}</h3>
-                    <p class="text-[#c9a96e] font-semibold text-lg">${product.price_formatted} so'm</p>
+        productsContainer.innerHTML = products.map(product => {
+            const imageUrl = product.images && product.images.length > 0 ? `/uploads/${product.images[0]}` : '';
+            return `
+                <div class="product-card cursor-pointer" onclick='showProductDetail(${JSON.stringify(product).replace(/'/g, "&#39;")})'>
+                    <div class="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${product.name}" class="product-img w-full h-full object-cover">` : 
+                        `<div class="w-full h-full flex items-center justify-center"><svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>`}
+                        ${product.is_bestseller ? `<span class="absolute top-3 left-3 bg-[#c9a96e] text-white text-[10px] tracking-wider uppercase px-2 py-1">Top</span>` : ''}
+                    </div>
+                    <div class="p-4">
+                        <p class="text-[10px] text-gray-400 tracking-wider uppercase mb-1">${product.category_name || ''}</p>
+                        <h3 class="font-medium text-[#0a0a0a] text-sm mb-2 line-clamp-2">${product.name}</h3>
+                        <p class="font-serif text-lg text-[#0a0a0a]">${product.price_formatted} so'm</p>
+                    </div>
                 </div>
             `;
-            
-            productsContainer.appendChild(productCard);
-        });
+        }).join('');
     }
     
-    // Show product detail modal
-    function showProductDetail(product) {
-        const imageUrl = product.images && product.images.length > 0 
-            ? `/uploads/${product.images[0]}` 
-            : '';
-        
+    window.showProductDetail = function(product) {
+        const imageUrl = product.images && product.images.length > 0 ? `/uploads/${product.images[0]}` : '';
         let imagesHTML = '';
         if (product.images && product.images.length > 0) {
             imagesHTML = product.images.map((img, idx) => `
-                <div class="thumbnail cursor-pointer border-2 ${idx === 0 ? 'border-[#1a1a2e]' : 'border-transparent'}" 
-                     onclick="changeModalImage(this, '/uploads/${img}')">
-                    <div class="aspect-square p-2 bg-gray-100">
-                        <img src="/uploads/${img}" alt="${product.name}" class="w-full h-full object-contain">
-                    </div>
+                <div class="cursor-pointer border-2 ${idx === 0 ? 'border-[#c9a96e]' : 'border-transparent'} hover:border-[#c9a96e] transition" onclick="changeModalImage(this, '/uploads/${img}')">
+                    <div class="aspect-square bg-gray-100 p-2"><img src="/uploads/${img}" alt="" class="w-full h-full object-contain"></div>
                 </div>
             `).join('');
         }
         
         modalContent.innerHTML = `
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Images -->
                 <div>
-                    <div class="bg-gray-100 overflow-hidden mb-4">
-                        <div class="aspect-square p-8 flex items-center justify-center">
-                            <img id="modal-main-image" src="${imageUrl || ''}" alt="${product.name}" 
-                                 class="w-full h-full object-contain">
-                        </div>
+                    <div class="aspect-square bg-gray-100 mb-4 flex items-center justify-center p-8">
+                        <img id="modal-main-image" src="${imageUrl}" alt="${product.name}" class="max-w-full max-h-full object-contain">
                     </div>
-                    ${imagesHTML ? `
-                    <div class="grid grid-cols-4 gap-3">
-                        ${imagesHTML}
-                    </div>
-                    ` : ''}
+                    ${imagesHTML ? `<div class="grid grid-cols-4 gap-2">${imagesHTML}</div>` : ''}
                 </div>
-                
-                <!-- Info -->
                 <div>
-                    <div class="mb-4">
-                        ${product.category_name ? `<span class="text-sm text-gray-500">${product.category_name}</span>` : ''}
-                        ${product.is_bestseller ? `<span class="bg-[#8B7355] text-white px-2 py-0.5 text-xs font-medium ml-2">Top</span>` : ''}
-                    </div>
-                    
-                    <h2 class="text-3xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
-                        ${product.name}
-                    </h2>
-                    
-                    <p class="text-3xl font-light text-[#c9a96e] mb-6">${product.price_formatted} so'm</p>
-                    
-                    ${product.description ? `
-                    <div class="mb-6">
-                        <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">${lang === 'ru' ? 'Описание' : lang === 'en' ? 'Description' : 'Tavsif'}</h3>
-                        <p class="text-gray-700 leading-relaxed">${product.description}</p>
-                    </div>
-                    ` : ''}
-                    
-                    ${product.material ? `
-                    <div class="mb-6">
-                        <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">${lang === 'ru' ? 'Материал' : lang === 'en' ? 'Material' : 'Material'}</h3>
-                        <p class="text-gray-700">${product.material}</p>
-                    </div>
-                    ` : ''}
-                    
-                    ${product.size ? `
-                    <div class="mb-6">
-                        <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">${lang === 'ru' ? 'Размер' : lang === 'en' ? 'Size' : 'O\'lcham'}</h3>
-                        <p class="text-gray-700">${product.size}</p>
-                    </div>
-                    ` : ''}
-                    
-                    ${product.warranty ? `
-                    <div class="mb-6">
-                        <h3 class="text-lg font-medium text-[#1a1a2e] mb-2">${lang === 'ru' ? 'Гарантия' : lang === 'en' ? 'Warranty' : 'Kafolat'}</h3>
-                        <p class="text-gray-700">${product.warranty}</p>
-                    </div>
-                    ` : ''}
-                    
+                    ${product.category_name ? `<p class="text-[#c9a96e] text-xs tracking-wider uppercase mb-2">${product.category_name}</p>` : ''}
+                    <h2 class="font-serif text-3xl text-[#0a0a0a] font-light mb-4">${product.name}</h2>
+                    <p class="font-serif text-2xl text-[#c9a96e] mb-6">${product.price_formatted} so'm</p>
+                    ${product.description ? `<div class="mb-6"><p class="text-gray-600 leading-relaxed">${product.description}</p></div>` : ''}
+                    ${product.material ? `<div class="mb-4"><span class="text-sm text-gray-500">Material:</span> <span class="text-sm">${product.material}</span></div>` : ''}
+                    ${product.size ? `<div class="mb-4"><span class="text-sm text-gray-500">O'lcham:</span> <span class="text-sm">${product.size}</span></div>` : ''}
                     <div class="flex gap-4 mt-8">
-                        <a href="/product/${product.id}" 
-                           class="flex-1 bg-[#1a1a2e] hover:bg-[#c9a96e] text-white px-6 py-3 text-center font-medium transition">
-                            ${lang === 'ru' ? 'Подробнее' : lang === 'en' ? 'View Details' : 'Batafsil'}
-                        </a>
+                        <a href="/product/${product.id}" class="flex-1 bg-[#0a0a0a] text-white text-center py-4 text-sm tracking-wider uppercase hover:bg-[#c9a96e] transition">${lang === 'ru' ? 'Подробнее' : lang === 'en' ? 'View Details' : 'Batafsil'}</a>
+                        <a href="tel:+998712000262" class="flex-1 border border-[#0a0a0a] text-center py-4 text-sm tracking-wider uppercase hover:bg-[#0a0a0a] hover:text-white transition">71 200 02 62</a>
                     </div>
                 </div>
             </div>
         `;
-        
         productModal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-    }
-    
-    // Change modal image
-    window.changeModalImage = function(thumb, imageUrl) {
-        document.getElementById('modal-main-image').src = imageUrl;
-        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('border-[#1a1a2e]'));
-        thumb.classList.add('border-[#1a1a2e]');
     };
     
-    // Close modal
+    window.changeModalImage = function(thumb, imageUrl) {
+        document.getElementById('modal-main-image').src = imageUrl;
+        document.querySelectorAll('#modal-content .cursor-pointer').forEach(t => t.classList.remove('border-[#c9a96e]'));
+        thumb.classList.add('border-[#c9a96e]');
+    };
+    
     function closeModal() {
         productModal.classList.add('hidden');
         document.body.style.overflow = '';
     }
     
-    // Clear filters
     function clearFilters() {
         searchInput.value = '';
         categoryFilter.value = '';
@@ -629,22 +686,6 @@ document.addEventListener('DOMContentLoaded', function() {
         sortFilter.value = 'default';
         loadProducts();
     }
-    
-    // ESC key to close modal
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !productModal.classList.contains('hidden')) {
-            closeModal();
-        }
-    });
 });
 </script>
-<style>
-    .thumbnail {
-        transition: all 0.2s ease;
-    }
-    .thumbnail:hover {
-        border-color: #1a1a2e !important;
-    }
-</style>
 {% endblock %}
-

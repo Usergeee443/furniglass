@@ -1,992 +1,256 @@
 {% extends "base.html" %}
 
-{% block title %}{{ T.nav.portfolio[lang] }} - Furniglass{% endblock %}
+{% block title %}Portfolio - Furniglass{% endblock %}
 
 {% block extra_css %}
 <style>
-    .portfolio-card {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+    
+    .font-serif { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
+    
+    .hero-bg {
+        position: absolute;
+        inset: 0;
+        background-image: url('/uploads/designs/3.jpg');
+        background-size: cover;
+        background-position: center;
     }
-
+    
+    @media (min-width: 768px) {
+        .hero-bg { background-attachment: fixed; }
+    }
+    
+    .hero-bg::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.9) 100%);
+    }
+    
+    .portfolio-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
     .portfolio-card:hover {
         transform: translateY(-8px);
     }
-
-    .portfolio-card:hover .portfolio-overlay {
-        opacity: 1;
-    }
-
-    .portfolio-card:hover .portfolio-content {
-        transform: translateY(0);
-    }
-
-    .portfolio-overlay {
-        opacity: 0;
-        transition: all 0.4s ease;
-    }
-
-    .portfolio-content {
-        transform: translateY(20px);
-        transition: all 0.4s ease;
-    }
-
-    .filter-btn.active {
-        background: #1a1a2e;
-        color: white;
-        border-color: #1a1a2e;
-    }
-
-    /* Horizontal Scroll Gallery Styles */
-    .scroll-gallery-section {
-        position: relative;
-        will-change: transform;
-    }
-
-    .scroll-gallery-container {
-        position: relative;
-    }
-
-    .gallery-panel {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-    }
-
-    .intro-panel, .outro-panel {
-        padding: 80px 0;
-    }
-
-    /* Gallery Slides Wrapper */
-    .gallery-slides-wrapper {
-        position: relative;
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    .gallery-slides {
-        position: sticky;
-        top: 0;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        gap: 0;
-        will-change: transform;
-    }
-
-    .gallery-slide {
-        flex: 0 0 100vw;
-        height: 100vh;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 5vw;
-    }
-
-    .slide-image {
-        position: absolute;
-        inset: 0;
-        overflow: hidden;
-    }
-
-    .slide-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: brightness(0.7);
+    
+    .portfolio-card:hover img {
         transform: scale(1.1);
-        transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-        will-change: transform;
     }
-
-    /* Parallax zoom effect when slide is active */
-    .gallery-slide.active .slide-image img {
-        transform: scale(1);
+    
+    .portfolio-card img {
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .slide-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(26, 26, 46, 0.7) 100%);
-        transition: opacity 0.6s ease;
-    }
-
-    .slide-content {
-        position: relative;
-        z-index: 10;
-        max-width: 650px;
-        color: white;
-        padding: 50px;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 8px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        transform: translateX(120px) translateY(20px);
-        opacity: 0;
-        transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .gallery-slide.active .slide-content {
-        transform: translateX(0) translateY(0);
-        opacity: 1;
-    }
-
-    .slide-icon {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, #c9a96e 0%, #b8956b 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 25px rgba(201, 169, 110, 0.3);
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .gallery-slide.active .slide-icon {
-        animation: iconPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes iconPulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
-
-    .slide-icon svg {
-        width: 35px;
-        height: 35px;
-        color: white;
-    }
-
-    .slide-number {
-        font-size: 90px;
-        font-weight: 700;
-        line-height: 1;
-        color: rgba(201, 169, 110, 0.25);
-        margin-bottom: 20px;
-        font-family: 'Playfair Display', serif;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .slide-title {
-        font-size: 42px;
-        font-weight: 700;
-        margin-bottom: 20px;
-        color: white;
-        font-family: 'Playfair Display', serif;
-        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
-        line-height: 1.2;
-    }
-
-    .slide-description {
-        font-size: 17px;
-        line-height: 1.8;
-        color: rgba(255, 255, 255, 0.9);
-        margin-bottom: 25px;
-    }
-
-    .slide-features {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 20px;
-    }
-
-    .slide-feature-tag {
-        padding: 8px 16px;
-        background: rgba(201, 169, 110, 0.2);
-        border: 1px solid rgba(201, 169, 110, 0.4);
-        border-radius: 4px;
-        font-size: 13px;
-        color: #c9a96e;
-        font-weight: 500;
-    }
-
-    /* Progress Indicator */
-    .scroll-progress {
-        position: fixed;
-        bottom: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 16px 28px;
-        background: rgba(26, 26, 46, 0.95);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(201, 169, 110, 0.3);
-        border-radius: 50px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        opacity: 0;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .scroll-progress.visible {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-
-    .progress-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-        position: relative;
-    }
-
-    .progress-dot:hover {
-        background: rgba(201, 169, 110, 0.6);
-        transform: scale(1.2);
-    }
-
-    .progress-dot.active {
-        background: #c9a96e;
-        transform: scale(1.4);
-        box-shadow: 0 0 15px rgba(201, 169, 110, 0.6);
-    }
-
-    .progress-dot.active::after {
+    
+    .portfolio-card::after {
         content: '';
         position: absolute;
-        inset: -4px;
-        border: 2px solid rgba(201, 169, 110, 0.4);
-        border-radius: 50%;
-        animation: progressRipple 1.5s ease-out infinite;
+        inset: 0;
+        background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.2) 50%, transparent 100%);
+        transition: all 0.4s;
     }
-
-    @keyframes progressRipple {
-        0% {
-            transform: scale(0.8);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1.8);
-            opacity: 0;
-        }
+    
+    .portfolio-card:hover::after {
+        background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 60%, rgba(10,10,10,0.1) 100%);
     }
-
-    /* Keyboard Navigation Hint */
-    .keyboard-hint {
-        position: fixed;
-        bottom: 100px;
-        right: 40px;
-        z-index: 99;
-        padding: 12px 20px;
-        background: rgba(26, 26, 46, 0.9);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(201, 169, 110, 0.3);
-        border-radius: 8px;
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 12px;
+    
+    .filter-btn {
+        transition: all 0.3s ease;
+    }
+    
+    .filter-btn.active {
+        background: #0a0a0a;
+        color: white;
+    }
+    
+    .reveal-section {
         opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .keyboard-hint.visible {
+    
+    .reveal-section.revealed {
         opacity: 1;
-    }
-
-    .keyboard-hint kbd {
-        display: inline-block;
-        padding: 4px 8px;
-        background: rgba(201, 169, 110, 0.2);
-        border: 1px solid rgba(201, 169, 110, 0.3);
-        border-radius: 4px;
-        font-family: monospace;
-        color: #c9a96e;
-        margin: 0 4px;
-    }
-
-    /* Mobile Optimization */
-    @media (max-width: 768px) {
-        .slide-content {
-            padding: 30px;
-            transform: translateX(50px) translateY(10px);
-            border-radius: 6px;
-        }
-
-        .slide-icon {
-            width: 55px;
-            height: 55px;
-            margin-bottom: 20px;
-        }
-
-        .slide-icon svg {
-            width: 28px;
-            height: 28px;
-        }
-
-        .slide-number {
-            font-size: 65px;
-        }
-
-        .slide-title {
-            font-size: 30px;
-            margin-bottom: 15px;
-        }
-
-        .slide-description {
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .gallery-slide {
-            padding: 0 20px;
-        }
-
-        .scroll-progress {
-            bottom: 20px;
-            padding: 12px 20px;
-            gap: 12px;
-        }
-
-        .progress-dot {
-            width: 8px;
-            height: 8px;
-        }
-
-        .keyboard-hint {
-            display: none;
-        }
-
-        .slide-features {
-            gap: 8px;
-        }
-
-        .slide-feature-tag {
-            padding: 6px 12px;
-            font-size: 11px;
-        }
-    }
-
-    /* Smooth scroll for better performance */
-    @media (prefers-reduced-motion: no-preference) {
-        html {
-            scroll-behavior: smooth;
-        }
+        transform: translateY(0);
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative bg-[#1a1a2e] py-20 lg:py-32">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Портфолио{% elif lang == 'en' %}Portfolio{% else %}Portfolio{% endif %}
+<section class="relative h-[60vh] min-h-[500px] -mt-[70px] md:-mt-[80px] flex items-center">
+    <div class="hero-bg"></div>
+    <div class="relative container mx-auto px-6 lg:px-16 pt-20">
+        <div class="max-w-3xl">
+            <div class="h-[1px] w-16 bg-[#c9a96e] mb-8"></div>
+            <p class="text-[#c9a96e] text-xs tracking-[0.4em] uppercase mb-4">Portfolio</p>
+            <h1 class="font-serif text-white text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-6">
+                {% if lang == 'ru' %}Наши работы{% elif lang == 'en' %}Our Works{% else %}Bizning ishlarimiz{% endif %}
             </h1>
-            <p class="text-white/60 text-lg md:text-xl font-light max-w-2xl mx-auto">
-                {% if lang == 'ru' %}
-                15 лет опыта
-                {% elif lang == 'en' %}
-                15 years of experience
-                {% else %}
-                15 yillik tajriba
-                {% endif %}
+            <p class="text-white/60 text-base md:text-lg max-w-xl">
+                {% if lang == 'ru' %}2500+ успешно завершенных проектов за 25 лет работы{% elif lang == 'en' %}2500+ successfully completed projects over 25 years{% else %}25 yil davomida 2500+ muvaffaqiyatli loyihalar{% endif %}
             </p>
         </div>
     </div>
 </section>
 
 <!-- Stats -->
-<section class="py-12 bg-[#1a1a2e]">
-    <div class="container mx-auto px-4 lg:px-8">
+<section class="py-12 bg-[#0a0a0a]">
+    <div class="container mx-auto px-6 lg:px-16">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <p class="text-4xl font-light text-white mb-1" style="font-family: 'Playfair Display', serif;">2500+</p>
-                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
+                <p class="font-serif text-4xl text-white">2500+</p>
+                <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-light text-white mb-1" style="font-family: 'Playfair Display', serif;">500+</p>
-                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Кухни{% elif lang == 'en' %}Kitchens{% else %}Oshxonalar{% endif %}</p>
+                <p class="font-serif text-4xl text-white">5000+</p>
+                <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Clients{% else %}Mijozlar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-light text-white mb-1" style="font-family: 'Playfair Display', serif;">800+</p>
-                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Спальни{% elif lang == 'en' %}Bedrooms{% else %}Yotoqxonalar{% endif %}</p>
+                <p class="font-serif text-4xl text-white">25</p>
+                <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil tajriba{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-light text-white mb-1" style="font-family: 'Playfair Display', serif;">300+</p>
-                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Офисы{% elif lang == 'en' %}Offices{% else %}Ofislar{% endif %}</p>
+                <p class="font-serif text-4xl text-white">25</p>
+                <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Лет гарантии{% elif lang == 'en' %}Years Warranty{% else %}Yil kafolat{% endif %}</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Filter & Portfolio Grid -->
-<section class="py-20 lg:py-28 bg-[#FAF9F6]">
-    <div class="container mx-auto px-4 lg:px-8">
+<!-- Filters & Grid -->
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
         <!-- Filters -->
-        <div class="flex flex-wrap justify-center gap-1 mb-14 max-w-4xl mx-auto">
-            <a href="/portfolio" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if not request.args.get('room_type') %}active{% endif %}">
+        <div class="flex flex-wrap justify-center gap-2 mb-12">
+            <a href="/portfolio" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if not request.args.get('room_type') %}active{% endif %}">
                 {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
             </a>
-            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
+            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
                 {% if lang == 'ru' %}Кухня{% elif lang == 'en' %}Kitchen{% else %}Oshxona{% endif %}
             </a>
-            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
+            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
                 {% if lang == 'ru' %}Спальня{% elif lang == 'en' %}Bedroom{% else %}Yotoqxona{% endif %}
             </a>
-            <a href="/portfolio?room_type=Zal" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
+            <a href="/portfolio?room_type=Zal" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
                 {% if lang == 'ru' %}Гостиная{% elif lang == 'en' %}Living Room{% else %}Zal{% endif %}
             </a>
-            <a href="/portfolio?room_type=Bolalar" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Bolalar' %}active{% endif %}">
-                {% if lang == 'ru' %}Детская{% elif lang == 'en' %}Kids Room{% else %}Bolalar xonasi{% endif %}
-            </a>
-            <a href="/portfolio?room_type=Ofis" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
+            <a href="/portfolio?room_type=Ofis" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
                 {% if lang == 'ru' %}Офис{% elif lang == 'en' %}Office{% else %}Ofis{% endif %}
             </a>
-        </div>
-        
+    </div>
+    
         <!-- Portfolio Grid -->
-        {% if portfolios %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for portfolio in portfolios %}
-            <div class="portfolio-card bg-white overflow-hidden border border-gray-100">
-                <!-- Main Image -->
-                <div class="relative aspect-[4/3] overflow-hidden">
-                    {% if portfolio.after_image %}
-                    <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.title_uz }}" class="w-full h-full object-cover">
-                    {% else %}
-                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <i class="fas fa-image text-5xl text-gray-300"></i>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Overlay -->
-                    <div class="portfolio-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end p-6">
-                        <div class="portfolio-content text-white">
+    {% if portfolios %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for portfolio in portfolios %}
+            <div class="portfolio-card aspect-[4/3]">
+                {% if portfolio.after_image %}
+                <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.title_uz }}" class="absolute inset-0 w-full h-full object-cover">
+                {% else %}
+                <div class="absolute inset-0 bg-gradient-to-br from-[#2a2a3e] to-[#1a1a2e]"></div>
+                {% endif %}
+                <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
                             {% if portfolio.room_type_uz %}
-                            <span class="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 text-xs font-medium mb-3">
-                                {{ portfolio.room_type_uz }}
-                            </span>
+                    <span class="text-[#c9a96e] text-xs tracking-wider uppercase mb-2">{{ portfolio.room_type_uz }}</span>
                             {% endif %}
-                            <h3 class="text-xl font-bold">{{ portfolio.title_uz }}</h3>
-                        </div>
-                    </div>
-                    
-                    <!-- Room Type Badge -->
-                    {% if portfolio.room_type_uz %}
-                    <div class="absolute top-4 right-4 bg-[#1a1a2e] text-white px-3 py-1.5 text-xs font-medium">
-                        {{ portfolio.room_type_uz }}
-                    </div>
-                    {% endif %}
-                </div>
-                
-                <!-- Content -->
-                <div class="p-6">
-                    <h3 class="text-lg font-light text-[#1a1a2e] mb-3" style="font-family: 'Playfair Display', serif;">{{ portfolio.title_uz }}</h3>
-
-                    {% if portfolio.description_uz %}
-                    <p class="text-gray-500 text-sm mb-4 line-clamp-2 font-light">{{ portfolio.description_uz }}</p>
-                    {% endif %}
-                    
-                    <!-- Before/After if available -->
-                    {% if portfolio.before_image and portfolio.after_image %}
-                    <div class="border-t border-gray-100 pt-4 mt-4">
-                        <p class="text-xs font-medium text-gray-400 mb-3">{% if lang == 'ru' %}До и После{% elif lang == 'en' %}Before & After{% else %}Oldin va Keyin{% endif %}</p>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="relative overflow-hidden">
-                                <img src="/uploads/{{ portfolio.before_image }}" alt="Oldin" class="w-full aspect-square object-cover">
-                                <span class="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1">{% if lang == 'ru' %}До{% elif lang == 'en' %}Before{% else %}Oldin{% endif %}</span>
-                            </div>
-                            <div class="relative overflow-hidden">
-                                <img src="/uploads/{{ portfolio.after_image }}" alt="Keyin" class="w-full aspect-square object-cover">
-                                <span class="absolute bottom-2 left-2 bg-[#1a1a2e] text-white text-xs px-2 py-1">{% if lang == 'ru' %}После{% elif lang == 'en' %}After{% else %}Keyin{% endif %}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="text-white text-xl font-medium">{{ portfolio.title_uz }}</h3>
+                {% if portfolio.description_uz %}
+                    <p class="text-white/50 text-sm mt-2 line-clamp-2">{{ portfolio.description_uz[:100] }}...</p>
                     {% endif %}
                 </div>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <!-- Empty State -->
-        <div class="bg-white p-16 text-center max-w-lg mx-auto border border-gray-100">
-            <div class="w-24 h-24 bg-gray-100 flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-images text-gray-300 text-4xl"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-[#1a1a2e] mb-4 font-display">
-                {% if lang == 'ru' %}Проекты не найдены{% elif lang == 'en' %}No projects found{% else %}Loyihalar topilmadi{% endif %}
-            </h3>
-            <p class="text-gray-500 mb-8">
-                {% if lang == 'ru' %}В этой категории пока нет проектов. Выберите другую категорию.{% elif lang == 'en' %}No projects in this category yet. Select another category.{% else %}Ushbu kategoriyada hozircha loyihalar mavjud emas. Boshqa kategoriyani tanlang.{% endif %}
-            </p>
-            <a href="/portfolio" class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-black text-white px-6 py-3 font-medium transition">
-                {% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All projects{% else %}Barcha loyihalar{% endif %}
-            </a>
+        <div class="text-center py-16">
+            <p class="text-gray-500">{% if lang == 'ru' %}Проекты не найдены{% elif lang == 'en' %}No projects found{% else %}Loyihalar topilmadi{% endif %}</p>
+            <a href="/portfolio" class="inline-block mt-4 text-[#c9a96e] hover:underline">{% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All projects{% else %}Barcha loyihalar{% endif %}</a>
         </div>
         {% endif %}
     </div>
 </section>
 
-<!-- Featured Projects -->
-<section class="py-20 lg:py-28 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="max-w-3xl mx-auto text-center mb-16">
-            <span class="inline-block bg-[#c9a96e]/10 text-[#c9a96e] px-4 py-2 text-sm font-medium mb-6">
-                {% if lang == 'ru' %}Лучшие проекты{% elif lang == 'en' %}Best Projects{% else %}Eng yaxshi loyihalar{% endif %}
-            </span>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] mb-6 font-display">
-                {% if lang == 'ru' %}Проекты, Которыми Мы Гордимся{% elif lang == 'en' %}Projects We're Proud Of{% else %}Biz Faxrlanadigan Loyihalar{% endif %}
+<!-- Process Section -->
+<section class="py-16 lg:py-24 bg-[#0a0a0a] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="text-center mb-16">
+            <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Процесс{% elif lang == 'en' %}Process{% else %}Jarayon{% endif %}</p>
+            <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-white font-light">
+                {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlaymiz{% endif %}
             </h2>
-            <p class="text-gray-600 text-lg">
-                {% if lang == 'ru' %}Примеры наших самых сложных и красивых проектов{% elif lang == 'en' %}Examples of our most complex and beautiful projects{% else %}Eng murakkab va chiroyli loyihalarimizdan namunalar{% endif %}
-            </p>
         </div>
         
-        <!-- Featured Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Large Feature -->
-            <div class="portfolio-card relative overflow-hidden h-[500px]">
-                <img src="/uploads/designs/3.jpg" alt="Premium oshxona" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-8">
-                    <div class="text-white">
-                        <span class="inline-block bg-[#c9a96e] px-3 py-1 text-xs font-bold mb-4">
-                            Premium
-                        </span>
-                        <h3 class="text-2xl font-bold mb-2 font-display">{% if lang == 'ru' %}Современная Кухня{% elif lang == 'en' %}Modern Kitchen{% else %}Zamonaviy Oshxona Loyihasi{% endif %}</h3>
-                        <p class="text-white/70 mb-4">Mirzo Ulug'bek, 45 m²</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="bg-white/20 px-3 py-1 text-xs">MDF fasad</span>
-                            <span class="bg-white/20 px-3 py-1 text-xs">Blum</span>
-                            <span class="bg-white/20 px-3 py-1 text-xs">LED</span>
-                        </div>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center">
+                    <span class="font-serif text-2xl text-[#c9a96e]">01</span>
                 </div>
+                <h3 class="text-white font-medium mb-2">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}</h3>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Бесплатная консультация{% elif lang == 'en' %}Free consultation{% else %}Bepul maslahat{% endif %}</p>
             </div>
-            
-            <!-- Two Smaller Features -->
-            <div class="space-y-8">
-                <div class="portfolio-card relative overflow-hidden h-[236px]">
-                    <img src="/uploads/designs/3.jpg" alt="Klassik yotoqxona" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6">
-                        <div class="text-white">
-                            <span class="inline-block bg-[#1a1a2e] px-3 py-1 text-xs font-bold mb-3">
-                                {% if lang == 'ru' %}Классика{% elif lang == 'en' %}Classic{% else %}Klassik{% endif %}
-                            </span>
-                            <h3 class="text-xl font-bold mb-1 font-display">{% if lang == 'ru' %}Классическая Спальня{% elif lang == 'en' %}Classic Bedroom{% else %}Klassik Yotoqxona{% endif %}</h3>
-                            <p class="text-white/70 text-sm">Yunusobod, 30 m²</p>
-                        </div>
-                    </div>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center">
+                    <span class="font-serif text-2xl text-[#c9a96e]">02</span>
                 </div>
-                
-                <div class="portfolio-card relative overflow-hidden h-[236px]">
-                    <img src="/uploads/designs/3.jpg" alt="Zamonaviy ofis" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6">
-                        <div class="text-white">
-                            <span class="inline-block bg-[#1a1a2e] px-3 py-1 text-xs font-bold mb-3">
-                                {% if lang == 'ru' %}Корпоративный{% elif lang == 'en' %}Corporate{% else %}Korporativ{% endif %}
-                            </span>
-                            <h3 class="text-xl font-bold mb-1 font-display">{% if lang == 'ru' %}IT Офис{% elif lang == 'en' %}IT Office{% else %}IT Kompaniya Ofisi{% endif %}</h3>
-                            <p class="text-white/70 text-sm">Minor, 150 m²</p>
+                <h3 class="text-white font-medium mb-2">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</h3>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Визуализация проекта{% elif lang == 'en' %}Project visualization{% else %}Loyiha vizualizatsiyasi{% endif %}</p>
                         </div>
-                    </div>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center">
+                    <span class="font-serif text-2xl text-[#c9a96e]">03</span>
                 </div>
+                <h3 class="text-white font-medium mb-2">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</h3>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}7-14 дней{% elif lang == 'en' %}7-14 days{% else %}7-14 kun{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center">
+                    <span class="font-serif text-2xl text-[#c9a96e]">04</span>
+                </div>
+                <h3 class="text-white font-medium mb-2">{% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish{% endif %}</h3>
+                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free delivery{% else %}Bepul yetkazish{% endif %}</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Horizontal Scroll Gallery Section -->
-<section class="scroll-gallery-section bg-[#1a1a2e] overflow-hidden">
-    <div class="scroll-gallery-container">
-        <!-- Intro Panel -->
-        <div class="gallery-panel intro-panel">
-            <div class="container mx-auto px-4 lg:px-8 h-full flex items-center justify-center">
-                <div class="max-w-3xl text-center">
-                    <span class="inline-block bg-[#c9a96e]/20 text-[#c9a96e] px-6 py-3 text-sm font-medium mb-8 backdrop-blur-sm">
-                        {% if lang == 'ru' %}Процесс работы{% elif lang == 'en' %}Our Process{% else %}Ish jarayoni{% endif %}
-                    </span>
-                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 font-display leading-tight">
-                        {% if lang == 'ru' %}От идеи до готового проекта{% elif lang == 'en' %}From idea to finished project{% else %}Fikrdan tayyor loyihagacha{% endif %}
-                    </h2>
-                    <p class="text-white/70 text-lg md:text-xl">
-                        {% if lang == 'ru' %}Прокрутите вниз, чтобы увидеть наш процесс{% elif lang == 'en' %}Scroll down to see our process{% else %}Jarayonni ko'rish uchun pastga scroll qiling{% endif %}
-                    </p>
-                    <div class="mt-8 animate-bounce">
-                        <svg class="w-6 h-6 mx-auto text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Image Gallery Panels -->
-        <div class="gallery-slides-wrapper">
-            <div class="gallery-slides">
-                <!-- Slide 1 - Consultation -->
-                <div class="gallery-slide" data-slide="1">
-                    <div class="slide-image">
-                        <img src="/uploads/designs/3.jpg" alt="Konsultatsiya">
-                        <div class="slide-overlay"></div>
-                    </div>
-                    <div class="slide-content">
-                        <div class="slide-icon">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                            </svg>
-                        </div>
-                        <div class="slide-number">01</div>
-                        <h3 class="slide-title">
-                            {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
-                        </h3>
-                        <p class="slide-description">
-                            {% if lang == 'ru' %}Бесплатная консультация и помощь в выборе стиля, материалов и дизайна для вашего интерьера{% elif lang == 'en' %}Free consultation and assistance in choosing style, materials and design for your interior{% else %}Bepul maslahat va interyer uchun uslub, materiallar va dizayn tanlashda yordam{% endif %}
-                        </p>
-                        <div class="slide-features">
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}Бесплатно{% elif lang == 'en' %}Free{% else %}Bepul{% endif %}</span>
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}Онлайн/Офлайн{% elif lang == 'en' %}Online/Offline{% else %}Online/Offline{% endif %}</span>
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}30-60 мин{% elif lang == 'en' %}30-60 min{% else %}30-60 daq{% endif %}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide 2 - Measurement -->
-                <div class="gallery-slide" data-slide="2">
-                    <div class="slide-image">
-                        <img src="/uploads/designs/3.jpg" alt="O'lchov">
-                        <div class="slide-overlay"></div>
-                    </div>
-                    <div class="slide-content">
-                        <div class="slide-icon">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
-                            </svg>
-                        </div>
-                        <div class="slide-number">02</div>
-                        <h3 class="slide-title">
-                            {% if lang == 'ru' %}Замер и Дизайн{% elif lang == 'en' %}Measurement & Design{% else %}O'lchov va Dizayn{% endif %}
-                        </h3>
-                        <p class="slide-description">
-                            {% if lang == 'ru' %}Профессиональный замер помещения и создание детального 3D проекта с визуализацией{% elif lang == 'en' %}Professional room measurement and detailed 3D project creation with visualization{% else %}Professional xonani o'lchash va vizualizatsiya bilan batafsil 3D loyiha tayyorlash{% endif %}
-                        </p>
-                        <div class="slide-features">
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}3D Визуализация{% elif lang == 'en' %}3D Visualization{% else %}3D Vizualizatsiya{% endif %}</span>
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}Точный замер{% elif lang == 'en' %}Precise Measurement{% else %}Aniq o'lchov{% endif %}</span>
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}2-3 дня{% elif lang == 'en' %}2-3 days{% else %}2-3 kun{% endif %}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide 3 - Production -->
-                <div class="gallery-slide" data-slide="3">
-                    <div class="slide-image">
-                        <img src="/uploads/designs/3.jpg" alt="Ishlab chiqarish">
-                        <div class="slide-overlay"></div>
-                    </div>
-                    <div class="slide-content">
-                        <div class="slide-icon">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-                            </svg>
-                        </div>
-                        <div class="slide-number">03</div>
-                        <h3 class="slide-title">
-                            {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab Chiqarish{% endif %}
-                        </h3>
-                        <p class="slide-description">
-                            {% if lang == 'ru' %}Изготовление мебели на современном оборудовании из качественных материалов с соблюдением всех стандартов{% elif lang == 'en' %}Furniture manufacturing on modern equipment from quality materials with all standards compliance{% else %}Zamonaviy uskunada sifatli materiallardan va barcha standartlarga rioya qilgan holda mebel tayyorlash{% endif %}
-                        </p>
-                        <div class="slide-features">
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}ЧПУ станки{% elif lang == 'en' %}CNC Machines{% else %}CNC Mashinalar{% endif %}</span>
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}Контроль качества{% elif lang == 'en' %}Quality Control{% else %}Sifat nazorati{% endif %}</span>
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}7-14 дней{% elif lang == 'en' %}7-14 days{% else %}7-14 kun{% endif %}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slide 4 - Installation -->
-                <div class="gallery-slide" data-slide="4">
-                    <div class="slide-image">
-                        <img src="/uploads/designs/3.jpg" alt="O'rnatish">
-                        <div class="slide-overlay"></div>
-                    </div>
-                    <div class="slide-content">
-                        <div class="slide-icon">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                        </div>
-                        <div class="slide-number">04</div>
-                        <h3 class="slide-title">
-                            {% if lang == 'ru' %}Доставка и Монтаж{% elif lang == 'en' %}Delivery & Installation{% else %}Yetkazish va O'rnatish{% endif %}
-                        </h3>
-                        <p class="slide-description">
-                            {% if lang == 'ru' %}Бережная доставка и профессиональная установка мебели в вашем помещении с гарантией{% elif lang == 'en' %}Careful delivery and professional furniture installation in your space with warranty{% else %}Ehtiyotkorlik bilan yetkazish va kafolat bilan professional o'rnatish xizmati{% endif %}
-                        </p>
-                        <div class="slide-features">
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free Delivery{% else %}Bepul yetkazish{% endif %}</span>
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}Монтаж за 1 день{% elif lang == 'en' %}1 Day Setup{% else %}1 kunda o'rnatish{% endif %}</span>
-                            <span class="slide-feature-tag">{% if lang == 'ru' %}Гарантия 2 года{% elif lang == 'en' %}2 Year Warranty{% else %}2 yil kafolat{% endif %}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Outro Panel -->
-        <div class="gallery-panel outro-panel">
-            <div class="container mx-auto px-4 lg:px-8 h-full flex items-center justify-center">
-                <div class="max-w-3xl text-center">
-                    <div class="w-24 h-24 bg-[#c9a96e] flex items-center justify-center mx-auto mb-8">
-                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-6 font-display">
-                        {% if lang == 'ru' %}Готово к заказу?{% elif lang == 'en' %}Ready to order?{% else %}Buyurtma berishga tayyormisiz?{% endif %}
-                    </h3>
-                    <p class="text-white/70 text-lg mb-8">
-                        {% if lang == 'ru' %}Начнем воплощать вашу мечту в реальность{% elif lang == 'en' %}Let's turn your dream into reality{% else %}Orzuingizni haqiqatga aylantiramiz{% endif %}
-                    </p>
-                    <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#c9a96e] hover:bg-[#b8956b] text-white px-8 py-4 font-medium transition">
-                        {% if lang == 'ru' %}Начать проект{% elif lang == 'en' %}Start Project{% else %}Loyiha Boshlash{% endif %}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="py-20 lg:py-32 bg-[#1a1a2e]">
-    <div class="container mx-auto px-4 lg:px-8">
+<!-- CTA -->
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-light text-white mb-10" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Начать проект{% elif lang == 'en' %}Start a project{% else %}Loyiha boshlash{% endif %}
+            <h2 class="font-serif text-3xl md:text-4xl text-[#0a0a0a] font-light mb-6">
+                {% if lang == 'ru' %}Готовы начать проект?{% elif lang == 'en' %}Ready to start a project?{% else %}Loyiha boshlashga tayyormisiz?{% endif %}
             </h2>
-
-            <a href="/contact" class="inline-block border border-white/40 text-white hover:bg-white hover:text-[#1a1a2e] px-12 py-5 text-sm uppercase tracking-widest font-light transition-all duration-500">
-                {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
-            </a>
+            <p class="text-gray-500 mb-8">
+                {% if lang == 'ru' %}Свяжитесь с нами для бесплатной консультации{% elif lang == 'en' %}Contact us for a free consultation{% else %}Bepul maslahat uchun bog'laning{% endif %}
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/contact" class="bg-[#0a0a0a] text-white px-8 py-4 text-sm tracking-wider uppercase hover:bg-[#c9a96e] transition-colors">
+                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
+                </a>
+                <a href="tel:+998712000262" class="border border-[#0a0a0a] px-8 py-4 text-sm tracking-wider uppercase hover:bg-[#0a0a0a] hover:text-white transition-all">
+                    71 200 02 62
+                </a>
+            </div>
         </div>
-    </div>
+</div>
 </section>
 
-<!-- Progress Indicator -->
-<div class="scroll-progress" id="scrollProgress">
-    <div class="progress-dot" data-slide="1"></div>
-    <div class="progress-dot" data-slide="2"></div>
-    <div class="progress-dot" data-slide="3"></div>
-    <div class="progress-dot" data-slide="4"></div>
-</div>
-
-<!-- Keyboard Navigation Hint -->
-<div class="keyboard-hint" id="keyboardHint">
-    {% if lang == 'ru' %}
-        Используйте <kbd>←</kbd> <kbd>→</kbd> для навигации
-    {% elif lang == 'en' %}
-        Use <kbd>←</kbd> <kbd>→</kbd> to navigate
-    {% else %}
-        Navigatsiya uchun <kbd>←</kbd> <kbd>→</kbd> ishlatishingiz mumkin
-    {% endif %}
-</div>
-{% endblock %}
-
-{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const gallerySection = document.querySelector('.scroll-gallery-section');
-    const galleryWrapper = document.querySelector('.gallery-slides-wrapper');
-    const gallerySlides = document.querySelector('.gallery-slides');
-    const slides = document.querySelectorAll('.gallery-slide');
-    const progressIndicator = document.getElementById('scrollProgress');
-    const progressDots = document.querySelectorAll('.progress-dot');
-    const keyboardHint = document.getElementById('keyboardHint');
-
-    if (!gallerySection || !gallerySlides) return;
-
-    let scrollHeight = 0;
-    let slideCount = slides.length;
-    let currentSlideIndex = 0;
-    let isInGallery = false;
-
-    // Touch/Swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    let touchStartY = 0;
-    let touchEndY = 0;
-
-    // Calculate total scroll height needed
-    function calculateScrollHeight() {
-        scrollHeight = slideCount * window.innerHeight;
-        if (galleryWrapper) {
-            galleryWrapper.style.height = scrollHeight + 'px';
-        }
-    }
-
-    // Get current slide index
-    function getCurrentSlideIndex() {
-        const wrapperRect = galleryWrapper.getBoundingClientRect();
-        const wrapperTop = wrapperRect.top;
-        const windowHeight = window.innerHeight;
-
-        if (wrapperTop <= 0 && wrapperTop > -scrollHeight) {
-            const scrollProgress = Math.abs(wrapperTop) / (scrollHeight - windowHeight);
-            return Math.floor(scrollProgress * slideCount);
-        }
-        return -1;
-    }
-
-    // Navigate to specific slide
-    function navigateToSlide(slideIndex) {
-        if (slideIndex < 0 || slideIndex >= slideCount) return;
-
-        const scrollTarget = galleryWrapper.offsetTop + (slideIndex * window.innerHeight) + (window.innerHeight / 2);
-        window.scrollTo({
-            top: scrollTarget,
-            behavior: 'smooth'
-        });
-    }
-
-    // Update slide positions based on scroll
-    function updateSlidePositions() {
-        if (!galleryWrapper) return;
-
-        const wrapperRect = galleryWrapper.getBoundingClientRect();
-        const wrapperTop = wrapperRect.top;
-        const windowHeight = window.innerHeight;
-
-        // Check if gallery section is in view
-        if (wrapperTop <= 0 && wrapperTop > -scrollHeight) {
-            isInGallery = true;
-
-            // Calculate scroll progress (0 to 1)
-            const scrollProgress = Math.abs(wrapperTop) / (scrollHeight - windowHeight);
-
-            // Calculate horizontal translation
-            const maxTranslate = (slideCount - 1) * window.innerWidth;
-            const translateX = scrollProgress * maxTranslate;
-
-            // Apply transform
-            gallerySlides.style.transform = `translateX(-${translateX}px)`;
-
-            // Update active slide
-            currentSlideIndex = Math.floor(scrollProgress * slideCount);
-            slides.forEach((slide, index) => {
-                if (index === currentSlideIndex) {
-                    slide.classList.add('active');
-                } else {
-                    slide.classList.remove('active');
-                }
-            });
-
-            // Update progress indicator
-            progressDots.forEach((dot, index) => {
-                if (index === currentSlideIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-
-            // Show UI elements
-            progressIndicator.classList.add('visible');
-            keyboardHint.classList.add('visible');
-        } else {
-            isInGallery = false;
-            progressIndicator.classList.remove('visible');
-            keyboardHint.classList.remove('visible');
-        }
-    }
-
-    // Keyboard navigation
-    document.addEventListener('keydown', function(e) {
-        if (!isInGallery) return;
-
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-            e.preventDefault();
-            navigateToSlide(currentSlideIndex + 1);
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-            e.preventDefault();
-            navigateToSlide(currentSlideIndex - 1);
-        }
-    });
-
-    // Touch/Swipe handlers
-    galleryWrapper.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
-    }, { passive: true });
-
-    galleryWrapper.addEventListener('touchend', function(e) {
-        if (!isInGallery) return;
-
-        touchEndX = e.changedTouches[0].screenX;
-        touchEndY = e.changedTouches[0].screenY;
-
-        const swipeThreshold = 50;
-        const horizontalDiff = touchStartX - touchEndX;
-        const verticalDiff = Math.abs(touchStartY - touchEndY);
-
-        // Only trigger swipe if horizontal movement is dominant
-        if (Math.abs(horizontalDiff) > swipeThreshold && Math.abs(horizontalDiff) > verticalDiff) {
-            if (horizontalDiff > 0) {
-                // Swipe left - next slide
-                navigateToSlide(currentSlideIndex + 1);
-            } else {
-                // Swipe right - previous slide
-                navigateToSlide(currentSlideIndex - 1);
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
             }
-        }
-    }, { passive: true });
-
-    // Progress dot click handlers
-    progressDots.forEach((dot, index) => {
-        dot.addEventListener('click', function() {
-            navigateToSlide(index);
         });
-    });
-
-    // Initialize
-    calculateScrollHeight();
-    updateSlidePositions();
-
-    // Update on scroll with smooth performance
-    let ticking = false;
-    window.addEventListener('scroll', function() {
-        if (!ticking) {
-            window.requestAnimationFrame(function() {
-                updateSlidePositions();
-                ticking = false;
-            });
-            ticking = true;
-        }
-    });
-
-    // Update on resize
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            calculateScrollHeight();
-            updateSlidePositions();
-        }, 250);
-    });
-
-    // Initial activation of first slide
-    if (slides.length > 0) {
-        slides[0].classList.add('active');
-    }
-
-    // Auto-hide keyboard hint after 5 seconds
-    setTimeout(function() {
-        if (isInGallery) {
-            keyboardHint.style.transition = 'opacity 0.8s ease';
-            keyboardHint.style.opacity = '0';
-        }
-    }, 5000);
+    }, { threshold: 0.1 });
+    revealSections.forEach(section => observer.observe(section));
 });
 </script>
 {% endblock %}

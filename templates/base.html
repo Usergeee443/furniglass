@@ -168,14 +168,14 @@
                     <a href="/products" class="nav-link {% if request.endpoint == 'products' %}active{% endif %}">
                         {{ T.nav.products[lang] }}
                     </a>
-                    <a href="/collections" class="nav-link {% if request.endpoint == 'collections' %}active{% endif %}">
-                        {% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}
-                    </a>
                     <a href="/portfolio" class="nav-link {% if request.endpoint == 'portfolio' %}active{% endif %}">
                         Portfolio
                     </a>
-                    <a href="/interior-design" class="nav-link {% if request.endpoint == 'interior_design' %}active{% endif %}">
-                        {% if lang == 'ru' %}Дизайн{% elif lang == 'en' %}Design{% else %}Dizayn{% endif %}
+                    <a href="/stores" class="nav-link {% if request.endpoint == 'stores' %}active{% endif %}">
+                        {% if lang == 'ru' %}Магазины{% elif lang == 'en' %}Stores{% else %}Do'konlar{% endif %}
+                    </a>
+                    <a href="/about" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">
+                        {{ T.nav.about[lang] }}
                     </a>
                     <a href="/contact" class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}">
                         {{ T.nav.contact[lang] }}
@@ -260,9 +260,8 @@
                             <nav class="space-y-4 lg:space-y-6">
                                 <a href="/" class="mobile-nav-link block">{{ T.nav.home[lang] }}</a>
                                 <a href="/products" class="mobile-nav-link block">{{ T.nav.products[lang] }}</a>
-                                <a href="/collections" class="mobile-nav-link block">{% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}</a>
                                 <a href="/portfolio" class="mobile-nav-link block">Portfolio</a>
-                                <a href="/interior-design" class="mobile-nav-link block">{% if lang == 'ru' %}Дизайн интерьера{% elif lang == 'en' %}Interior Design{% else %}Interer Dizayn{% endif %}</a>
+                                <a href="/stores" class="mobile-nav-link block">{% if lang == 'ru' %}Магазины{% elif lang == 'en' %}Stores{% else %}Do'konlar{% endif %}</a>
                                 <a href="/about" class="mobile-nav-link block">{{ T.nav.about[lang] }}</a>
                                 <a href="/contact" class="mobile-nav-link block">{{ T.nav.contact[lang] }}</a>
                             </nav>

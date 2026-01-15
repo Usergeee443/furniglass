@@ -2,155 +2,160 @@
 
 {% block title %}{{ T.nav.contact[lang] }} - Furniglass{% endblock %}
 
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+    
+    .font-serif { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
+    
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .reveal-section.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .contact-card {
+        transition: all 0.4s ease;
+    }
+    
+    .contact-card:hover {
+        background: #0a0a0a;
+        color: white;
+    }
+    
+    .contact-card:hover .card-label {
+        color: rgba(255,255,255,0.5);
+    }
+    
+    input, textarea, select {
+        transition: all 0.3s ease;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+        background: white !important;
+        box-shadow: 0 0 0 2px #c9a96e;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section -->
-<section class="relative bg-[#1a1a2e] py-20 lg:py-32">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}
-                Контакты
-                {% elif lang == 'en' %}
-                Contact
-                {% else %}
-                Bog'lanish
-                {% endif %}
+<section class="py-16 lg:py-24 bg-[#0a0a0a]">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="max-w-3xl">
+            <div class="h-[1px] w-16 bg-[#c9a96e] mb-8"></div>
+            <p class="text-[#c9a96e] text-xs tracking-[0.4em] uppercase mb-4">{% if lang == 'ru' %}Контакты{% elif lang == 'en' %}Contact{% else %}Aloqa{% endif %}</p>
+            <h1 class="font-serif text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] mb-6">
+                {% if lang == 'ru' %}Свяжитесь с нами{% elif lang == 'en' %}Get in Touch{% else %}Biz bilan bog'laning{% endif %}
             </h1>
-            <p class="text-white/60 text-lg md:text-xl font-light max-w-2xl mx-auto">
-                {% if lang == 'ru' %}
-                Мы всегда готовы помочь
-                {% elif lang == 'en' %}
-                We're always ready to help
-                {% else %}
-                Biz sizga yordam berishga doimo tayyormiz
-                {% endif %}
+            <p class="text-white/60 text-base md:text-lg max-w-xl">
+                {% if lang == 'ru' %}Мы готовы ответить на ваши вопросы{% elif lang == 'en' %}We're ready to answer your questions{% else %}Savollaringizga javob berishga tayyormiz{% endif %}
             </p>
         </div>
     </div>
 </section>
 
-<!-- Quick Contact Cards -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-1 max-w-5xl mx-auto">
-            <!-- Phone -->
-            <a href="tel:+998712000262" class="bg-[#FAF9F6] p-8 text-center hover:bg-[#1a1a2e] hover:text-white transition-all duration-500 group">
-                <h3 class="font-light text-sm uppercase tracking-widest mb-3 group-hover:text-white/60">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</h3>
-                <p class="text-sm font-light">71 200 02 62</p>
+<!-- Quick Contact -->
+<section class="py-0 bg-white">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-2 md:grid-cols-4 -mt-8">
+            <a href="tel:+998712000262" class="contact-card bg-[#fafafa] p-6 lg:p-8 text-center">
+                <p class="card-label text-gray-400 text-xs uppercase tracking-wider mb-2">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</p>
+                <p class="font-medium">71 200 02 62</p>
             </a>
-
-            <!-- Email -->
-            <a href="mailto:furniglass77@gmail.com" class="bg-[#FAF9F6] p-8 text-center hover:bg-[#1a1a2e] hover:text-white transition-all duration-500 group">
-                <h3 class="font-light text-sm uppercase tracking-widest mb-3 group-hover:text-white/60">Email</h3>
-                <p class="text-sm font-light break-all">furniglass77@gmail.com</p>
+            <a href="mailto:furniglass77@gmail.com" class="contact-card bg-[#fafafa] p-6 lg:p-8 text-center">
+                <p class="card-label text-gray-400 text-xs uppercase tracking-wider mb-2">Email</p>
+                <p class="font-medium text-sm">furniglass77@gmail.com</p>
             </a>
-
-            <!-- Address -->
-            <div class="bg-[#FAF9F6] p-8 text-center">
-                <h3 class="font-light text-sm uppercase tracking-widest mb-3">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</h3>
-                <p class="text-sm font-light">
-                    {% if lang == 'ru' %}Ташкент, Олмазор{% elif lang == 'en' %}Tashkent, Almazar{% else %}Toshkent, Olmazor{% endif %}
-                </p>
+            <div class="contact-card bg-[#fafafa] p-6 lg:p-8 text-center">
+                <p class="card-label text-gray-400 text-xs uppercase tracking-wider mb-2">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
+                <p class="font-medium text-sm">{% if lang == 'ru' %}Ташкент, Олмазор{% elif lang == 'en' %}Tashkent, Almazar{% else %}Toshkent, Olmazor{% endif %}</p>
             </div>
-
-            <!-- Working Hours -->
-            <div class="bg-[#FAF9F6] p-8 text-center">
-                <h3 class="font-light text-sm uppercase tracking-widest mb-3">{% if lang == 'ru' %}Время{% elif lang == 'en' %}Hours{% else %}Vaqt{% endif %}</h3>
-                <p class="text-sm font-light">9:00 - 18:00</p>
+            <div class="contact-card bg-[#fafafa] p-6 lg:p-8 text-center">
+                <p class="card-label text-gray-400 text-xs uppercase tracking-wider mb-2">{% if lang == 'ru' %}Часы{% elif lang == 'en' %}Hours{% else %}Vaqt{% endif %}</p>
+                <p class="font-medium">9:00 - 18:00</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Main Contact Section -->
-<section class="py-20 lg:py-28 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-            <!-- Left - Contact Form -->
+            <!-- Contact Form -->
             <div>
-                <h2 class="text-3xl md:text-4xl font-light text-[#1a1a2e] mb-8" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Напишите нам{% elif lang == 'en' %}Write to us{% else %}Yozing{% endif %}
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Напишите нам{% elif lang == 'en' %}Write to us{% else %}Bizga yozing{% endif %}</p>
+                <h2 class="font-serif text-3xl md:text-4xl text-[#0a0a0a] font-light mb-8">
+                    {% if lang == 'ru' %}Отправить сообщение{% elif lang == 'en' %}Send a message{% else %}Xabar yuborish{% endif %}
                 </h2>
                 
-                <!-- Contact Form -->
                 <form method="POST" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-[#1a1a2e] mb-2">
-                                {% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your Name{% else %}Ismingiz{% endif %}
-                            </label>
-                            <input type="text" name="name" placeholder="{% if lang == 'ru' %}Введите имя{% elif lang == 'en' %}Enter name{% else %}Ismingizni kiriting{% endif %}" 
-                                class="w-full bg-[#FAF9F6] border-0 px-4 py-4 text-gray-700 focus:ring-2 focus:ring-[#1a1a2e] outline-none transition">
+                            <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">{% if lang == 'ru' %}Имя{% elif lang == 'en' %}Name{% else %}Ism{% endif %}</label>
+                            <input type="text" name="name" class="w-full bg-[#fafafa] border-0 px-4 py-4 text-[#0a0a0a] outline-none">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-[#1a1a2e] mb-2">
-                                {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} *
-                            </label>
-                            <input type="tel" name="phone" placeholder="+998 __ ___ __ __" required
-                                class="w-full bg-[#FAF9F6] border-0 px-4 py-4 text-gray-700 focus:ring-2 focus:ring-[#1a1a2e] outline-none transition">
+                            <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} *</label>
+                            <input type="tel" name="phone" required class="w-full bg-[#fafafa] border-0 px-4 py-4 text-[#0a0a0a] outline-none">
                         </div>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-[#1a1a2e] mb-2">
-                            {% if lang == 'ru' %}Тема{% elif lang == 'en' %}Subject{% else %}Mavzu{% endif %}
-                        </label>
-                        <select name="subject" class="w-full bg-[#FAF9F6] border-0 px-4 py-4 text-gray-700 focus:ring-2 focus:ring-[#1a1a2e] outline-none transition">
-                            <option value="">{% if lang == 'ru' %}Выберите тему{% elif lang == 'en' %}Select subject{% else %}Mavzuni tanlang{% endif %}</option>
+                        <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">{% if lang == 'ru' %}Тема{% elif lang == 'en' %}Subject{% else %}Mavzu{% endif %}</label>
+                        <select name="subject" class="w-full bg-[#fafafa] border-0 px-4 py-4 text-[#0a0a0a] outline-none">
+                            <option value="">{% if lang == 'ru' %}Выберите{% elif lang == 'en' %}Select{% else %}Tanlang{% endif %}</option>
                             <option value="order">{% if lang == 'ru' %}Новый заказ{% elif lang == 'en' %}New Order{% else %}Yangi buyurtma{% endif %}</option>
                             <option value="consultation">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}</option>
-                            <option value="price">{% if lang == 'ru' %}Узнать цену{% elif lang == 'en' %}Price Inquiry{% else %}Narx so'rash{% endif %}</option>
-                            <option value="warranty">{% if lang == 'ru' %}Гарантия{% elif lang == 'en' %}Warranty{% else %}Kafolat{% endif %}</option>
-                            <option value="other">{% if lang == 'ru' %}Другое{% elif lang == 'en' %}Other{% else %}Boshqa{% endif %}</option>
+                            <option value="price">{% if lang == 'ru' %}Узнать цену{% elif lang == 'en' %}Price{% else %}Narx{% endif %}</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-[#1a1a2e] mb-2">
-                            {% if lang == 'ru' %}Сообщение{% elif lang == 'en' %}Message{% else %}Xabar{% endif %}
-                        </label>
-                        <textarea name="message" rows="5" placeholder="{% if lang == 'ru' %}Напишите сообщение...{% elif lang == 'en' %}Write your message...{% else %}Xabaringizni yozing...{% endif %}" 
-                            class="w-full bg-[#FAF9F6] border-0 px-4 py-4 text-gray-700 focus:ring-2 focus:ring-[#1a1a2e] outline-none transition resize-none"></textarea>
+                        <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2">{% if lang == 'ru' %}Сообщение{% elif lang == 'en' %}Message{% else %}Xabar{% endif %}</label>
+                        <textarea name="message" rows="5" class="w-full bg-[#fafafa] border-0 px-4 py-4 text-[#0a0a0a] outline-none resize-none"></textarea>
                     </div>
                     
-                    <button type="submit" class="w-full border border-[#1a1a2e]/30 text-[#1a1a2e] hover:bg-[#1a1a2e] hover:text-white py-4 text-sm uppercase tracking-widest font-light transition-all duration-500">
+                    <button type="submit" class="w-full bg-[#0a0a0a] text-white py-4 text-sm tracking-wider uppercase hover:bg-[#c9a96e] transition-colors">
                         {% if lang == 'ru' %}Отправить{% elif lang == 'en' %}Send{% else %}Yuborish{% endif %}
                     </button>
                 </form>
             </div>
             
-            <!-- Right - Info -->
-            <div class="space-y-1">
+            <!-- Info & Map -->
+            <div class="space-y-6">
                 <!-- Office Info -->
-                <div class="bg-[#1a1a2e] p-12">
+                <div class="bg-[#0a0a0a] p-8 lg:p-10">
+                    <h3 class="font-serif text-2xl text-white font-light mb-8">{% if lang == 'ru' %}Наш офис{% elif lang == 'en' %}Our Office{% else %}Bizning ofis{% endif %}</h3>
+                    
                     <div class="space-y-6">
                         <div>
-                            <p class="font-light text-white/40 text-xs uppercase tracking-widest mb-2">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
-                            <p class="text-white font-light">
-                                {% if lang == 'ru' %}Ташкент, Олмазорский район, массив Бешкурган, дом 2{% elif lang == 'en' %}Tashkent, Almazar district, Beshkurgan area, house 2{% else %}Toshkent shaxar Olmazor tumani beshqo'rg'on mavzesi 2-uy{% endif %}
-                            </p>
+                            <p class="text-[#c9a96e] text-xs uppercase tracking-wider mb-2">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</p>
+                            <p class="text-white/80">{% if lang == 'ru' %}Ташкент, Олмазорский район, массив Бешкурган, дом 2{% elif lang == 'en' %}Tashkent, Almazar district, Beshkurgan area, house 2{% else %}Toshkent shaxar Olmazor tumani beshqo'rg'on mavzesi 2-uy{% endif %}</p>
                         </div>
-
                         <div>
-                            <p class="font-light text-white/40 text-xs uppercase tracking-widest mb-2">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</p>
-                            <a href="tel:+998712000262" class="text-white font-light hover:text-white/60 transition">71 200 02 62</a>
+                            <p class="text-[#c9a96e] text-xs uppercase tracking-wider mb-2">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</p>
+                            <a href="tel:+998712000262" class="text-white/80 hover:text-white transition">71 200 02 62</a>
                         </div>
-
                         <div>
-                            <p class="font-light text-white/40 text-xs uppercase tracking-widest mb-2">Email</p>
-                            <a href="mailto:furniglass77@gmail.com" class="text-white font-light hover:text-white/60 transition">furniglass77@gmail.com</a>
+                            <p class="text-[#c9a96e] text-xs uppercase tracking-wider mb-2">Email</p>
+                            <a href="mailto:furniglass77@gmail.com" class="text-white/80 hover:text-white transition">furniglass77@gmail.com</a>
                         </div>
-
                         <div>
-                            <p class="font-light text-white/40 text-xs uppercase tracking-widest mb-2">{% if lang == 'ru' %}Время работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</p>
-                            <p class="text-white font-light">9:00 - 18:00</p>
+                            <p class="text-[#c9a96e] text-xs uppercase tracking-wider mb-2">{% if lang == 'ru' %}Часы работы{% elif lang == 'en' %}Hours{% else %}Ish vaqti{% endif %}</p>
+                            <p class="text-white/80">{% if lang == 'ru' %}Пн-Сб{% elif lang == 'en' %}Mon-Sat{% else %}Du-Sha{% endif %}: 9:00 - 18:00</p>
                         </div>
                     </div>
                 </div>
-
-
+                
                 <!-- Map -->
-                <div class="overflow-hidden h-96">
+                <div class="h-80 bg-gray-100">
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.1234567890!2d69.2401234!3d41.2994567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE3JzU4LjAiTiA2OcKwMTQnMjQuNCJF!5e0!3m2!1suz!2s!4v1234567890"
                         width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
@@ -162,31 +167,46 @@
 </section>
 
 <!-- Social Media -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Социальные сети{% elif lang == 'en' %}Social Media{% else %}Ijtimoiy tarmoqlar{% endif %}
-            </h2>
+<section class="py-16 lg:py-20 bg-[#fafafa] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="text-center mb-10">
+            <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-3">{% if lang == 'ru' %}Мы в соцсетях{% elif lang == 'en' %}Follow us{% else %}Bizni kuzating{% endif %}</p>
+            <h2 class="font-serif text-3xl text-[#0a0a0a] font-light">{% if lang == 'ru' %}Социальные сети{% elif lang == 'en' %}Social Media{% else %}Ijtimoiy tarmoqlar{% endif %}</h2>
         </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-1 max-w-3xl mx-auto">
-            <a href="https://instagram.com/furniglass" class="bg-[#FAF9F6] p-8 text-center hover:bg-[#1a1a2e] hover:text-white transition-all duration-500">
-                <p class="font-light text-sm">Instagram</p>
+        
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="https://instagram.com/furniglass" target="_blank" class="flex items-center gap-3 bg-white px-6 py-4 hover:bg-[#0a0a0a] hover:text-white transition-all">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span class="text-sm">Instagram</span>
             </a>
-
-            <a href="https://t.me/furniglass_channel" class="bg-[#FAF9F6] p-8 text-center hover:bg-[#1a1a2e] hover:text-white transition-all duration-500">
-                <p class="font-light text-sm">Telegram</p>
+            <a href="https://t.me/furniglass_channel" target="_blank" class="flex items-center gap-3 bg-white px-6 py-4 hover:bg-[#0a0a0a] hover:text-white transition-all">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                <span class="text-sm">Telegram</span>
             </a>
-
-            <a href="https://facebook.com/furniglass" class="bg-[#FAF9F6] p-8 text-center hover:bg-[#1a1a2e] hover:text-white transition-all duration-500">
-                <p class="font-light text-sm">Facebook</p>
+            <a href="https://facebook.com/furniglass" target="_blank" class="flex items-center gap-3 bg-white px-6 py-4 hover:bg-[#0a0a0a] hover:text-white transition-all">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <span class="text-sm">Facebook</span>
             </a>
-
-            <a href="https://youtube.com/@furniglass" class="bg-[#FAF9F6] p-8 text-center hover:bg-[#1a1a2e] hover:text-white transition-all duration-500">
-                <p class="font-light text-sm">YouTube</p>
+            <a href="https://youtube.com/@furniglass" target="_blank" class="flex items-center gap-3 bg-white px-6 py-4 hover:bg-[#0a0a0a] hover:text-white transition-all">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span class="text-sm">YouTube</span>
             </a>
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealSections.forEach(section => observer.observe(section));
+});
+</script>
 {% endblock %}

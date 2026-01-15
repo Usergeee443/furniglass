@@ -2,152 +2,198 @@
 
 {% block title %}{{ T.about.title[lang] }} - Furniglass{% endblock %}
 
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
+    
+    .font-serif { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
+    
+    .hero-bg {
+        position: absolute;
+        inset: 0;
+        background-image: url('/uploads/designs/3.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+    
+    @media (min-width: 768px) {
+        .hero-bg { background-attachment: fixed; }
+    }
+    
+    .hero-bg::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(10,10,10,0.8) 0%, rgba(10,10,10,0.9) 100%);
+    }
+    
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .reveal-section.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-left: 40px;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 8px;
+        height: 8px;
+        background: #c9a96e;
+    }
+    
+    .timeline-item::after {
+        content: '';
+        position: absolute;
+        left: 3px;
+        top: 20px;
+        width: 2px;
+        height: calc(100% + 20px);
+        background: #e5e5e5;
+    }
+    
+    .timeline-item:last-child::after {
+        display: none;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<!-- Hero Section - Minimal -->
-<section class="relative bg-[#1a1a2e] py-20 lg:py-32">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
+<!-- Hero Section -->
+<section class="relative h-[50vh] min-h-[400px] -mt-[70px] md:-mt-[80px] flex items-center">
+    <div class="hero-bg"></div>
+    <div class="relative container mx-auto px-6 lg:px-16 pt-20">
+        <div class="max-w-3xl">
+            <div class="h-[1px] w-16 bg-[#c9a96e] mb-8"></div>
+            <p class="text-[#c9a96e] text-xs tracking-[0.4em] uppercase mb-4">{% if lang == 'ru' %}О компании{% elif lang == 'en' %}About{% else %}Kompaniya{% endif %}</p>
+            <h1 class="font-serif text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1]">
                 {% if lang == 'ru' %}О нас{% elif lang == 'en' %}About Us{% else %}Biz haqimizda{% endif %}
             </h1>
-            <p class="text-white/60 text-lg md:text-xl font-light max-w-2xl mx-auto">
-                {% if lang == 'ru' %}С 2009 года{% elif lang == 'en' %}Since 2009{% else %}2009-yildan beri{% endif %}
-            </p>
         </div>
     </div>
 </section>
 
-<!-- Stats Section -->
-<section class="py-16 bg-[#1a1a2e]">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+<!-- Stats -->
+<section class="py-10 bg-[#0a0a0a]">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <p class="text-4xl lg:text-5xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">2009</p>
-                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Год основания{% elif lang == 'en' %}Founded{% else %}Tashkil etilgan{% endif %}</p>
+                <p class="font-serif text-4xl text-white">1999</p>
+                <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Год основания{% elif lang == 'en' %}Founded{% else %}Tashkil etilgan{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl lg:text-5xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">5000+</p>
-                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Customers{% else %}Mijozlar{% endif %}</p>
+                <p class="font-serif text-4xl text-white">5000+</p>
+                <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Clients{% else %}Mijozlar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl lg:text-5xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">50+</p>
-                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Специалистов{% elif lang == 'en' %}Specialists{% else %}Mutaxassislar{% endif %}</p>
+                <p class="font-serif text-4xl text-white">2500+</p>
+                <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl lg:text-5xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">5000m²</p>
-                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</p>
+                <p class="font-serif text-4xl text-white">25</p>
+                <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Лет гарантии{% elif lang == 'en' %}Years Warranty{% else %}Yil kafolat{% endif %}</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Our Story Section -->
-<section class="py-20 lg:py-28 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
+<!-- Our Story -->
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <!-- Left - Image -->
-            <div>
-                <div class="aspect-[4/5] overflow-hidden bg-gray-100">
-                    <img src="/uploads/designs/3.jpg" alt="Furniglass ishlab chiqarish" 
-                         class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            <!-- Image -->
+            <div class="relative">
+                <div class="aspect-[4/5] overflow-hidden">
+                    <img src="/uploads/designs/2.jpg" alt="Furniglass" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute -bottom-6 -right-6 bg-[#c9a96e] p-6 lg:p-8">
+                    <p class="font-serif text-4xl text-white">25+</p>
+                    <p class="text-white/80 text-xs uppercase tracking-wider mt-1">{% if lang == 'ru' %}Лет{% elif lang == 'en' %}Years{% else %}Yil{% endif %}</p>
                 </div>
             </div>
             
-            <!-- Right - Content -->
+            <!-- Content -->
             <div>
-                <h2 class="text-3xl md:text-4xl font-light text-[#1a1a2e] mb-6" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Наша История{% elif lang == 'en' %}Our Story{% else %}Bizning Tariximiz{% endif %}
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Наша история{% elif lang == 'en' %}Our Story{% else %}Bizning tarix{% endif %}</p>
+                <h2 class="font-serif text-3xl md:text-4xl text-[#0a0a0a] font-light mb-6">
+                    {% if lang == 'ru' %}25 лет совершенства{% elif lang == 'en' %}25 Years of Excellence{% else %}25 yillik mukammallik{% endif %}
                 </h2>
-
-                <div class="space-y-4 text-gray-600 leading-relaxed font-light">
+                
+                <div class="space-y-4 text-gray-600 leading-relaxed">
                     <p>
                         {% if lang == 'ru' %}
-                        Furniglass был основан в 2009 году в Ташкенте как небольшая семейная мастерская.
-                        Основатели — Абдуллаев Карим и Холматов Сардор — превратили свою страсть к мебельному производству в большую мечту.
+                        Furniglass был основан в 1999 году в Ташкенте. За 25 лет мы превратились из небольшой мастерской в ведущего производителя мебели для кафе, ресторанов, клиник и домов.
                         {% elif lang == 'en' %}
-                        Furniglass was founded in 2009 in Tashkent as a small family workshop.
-                        The founders — Abdullayev Karim and Kholmatov Sardor — turned their passion for furniture making into a big dream.
+                        Furniglass was founded in 1999 in Tashkent. Over 25 years, we have grown from a small workshop into a leading furniture manufacturer for cafes, restaurants, clinics and homes.
                         {% else %}
-                        Furniglass kompaniyasi 2009-yilda Toshkent shahrida kichik oilaviy ustaxona sifatida boshlangan.
-                        Asoschilarimiz — Abdullayev Karim va Xolmatov Sardor — mebel ishlab chiqarishga bo'lgan ehtiroslarini katta orzuga aylantirdilar.
+                        Furniglass 1999 yilda Toshkentda tashkil etilgan. 25 yil davomida biz kichik ustaxonadan kafe, restoran, klinika va uylar uchun yetakchi mebel ishlab chiqaruvchiga aylandik.
                         {% endif %}
                     </p>
-
                     <p>
                         {% if lang == 'ru' %}
-                        В первые годы мы обслуживали только местных клиентов. Однако наша преданность качеству и удовлетворенности клиентов позволила компании быстро развиваться.
-                        В 2015 году мы открыли первый большой производственный цех.
+                        Наша преданность качеству и удовлетворенности клиентов сделала нас одним из самых надежных брендов в Узбекистане.
                         {% elif lang == 'en' %}
-                        In the early years, we served only local customers. However, our dedication to quality and customer satisfaction allowed the company to grow rapidly.
-                        In 2015, we opened our first large production facility.
+                        Our dedication to quality and customer satisfaction has made us one of the most trusted brands in Uzbekistan.
                         {% else %}
-                        Birinchi yillarda biz faqat mahalliy mijozlarga xizmat ko'rsatardik. Ammo sifatga va mijozlar mamnuniyatiga bo'lgan sadoqatimiz tufayli kompaniyamiz tez rivojlandi.
-                        2015-yilda birinchi katta ishlab chiqarish tsexini ochdik.
-                        {% endif %}
-                    </p>
-
-                    <p>
-                        {% if lang == 'ru' %}
-                        Сегодня у нас производственная площадь более 5000 м², более 50 профессиональных мастеров и дизайнеров.
-                        Мы доставляем мебель во все регионы Узбекистана.
-                        {% elif lang == 'en' %}
-                        Today we have a production area of over 5000 m², more than 50 professional craftsmen and designers.
-                        We deliver furniture to all regions of Uzbekistan.
-                        {% else %}
-                        Bugun 5000 m² dan ortiq ishlab chiqarish maydoniga ega bo'lib, 50 dan ortiq professional ustamiz va dizaynerimiz bor.
-                        Biz O'zbekistonning barcha viloyatlariga mebel yetkazib beramiz.
+                        Sifat va mijozlar mamnuniyatiga bo'lgan sadoqatimiz bizni O'zbekistondagi eng ishonchli brendlardan biriga aylantirdi.
                         {% endif %}
                     </p>
                 </div>
-
-                <div class="mt-8">
-                    <a href="/portfolio" class="inline-block border border-[#1a1a2e]/30 text-[#1a1a2e] hover:bg-[#1a1a2e] hover:text-white px-8 py-4 text-sm uppercase tracking-widest font-light transition-all duration-500">
-                        {% if lang == 'ru' %}Наши работы{% elif lang == 'en' %}Our Works{% else %}Bizning ishlarimiz{% endif %}
-                    </a>
-                </div>
+                
+                <a href="/portfolio" class="inline-flex items-center gap-3 mt-8 text-[#0a0a0a] hover:text-[#c9a96e] transition-colors group">
+                    <span class="text-sm tracking-wider">{% if lang == 'ru' %}Наши работы{% elif lang == 'en' %}Our Works{% else %}Bizning ishlarimiz{% endif %}</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Mission & Vision -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
-            <!-- Mission -->
-            <div class="bg-[#FAF9F6] p-12 lg:p-16">
-                <h3 class="text-2xl font-light text-[#1a1a2e] mb-6" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Миссия{% elif lang == 'en' %}Mission{% else %}Missiya{% endif %}
+<section class="py-16 lg:py-24 bg-[#fafafa] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-8 lg:p-12">
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Миссия{% elif lang == 'en' %}Mission{% else %}Missiya{% endif %}</p>
+                <h3 class="font-serif text-2xl md:text-3xl text-[#0a0a0a] font-light mb-4">
+                    {% if lang == 'ru' %}Качество для каждого{% elif lang == 'en' %}Quality for Everyone{% else %}Har kim uchun sifat{% endif %}
                 </h3>
-                <p class="text-gray-600 leading-relaxed font-light">
+                <p class="text-gray-600 leading-relaxed">
                     {% if lang == 'ru' %}
-                    Предоставлять народу Узбекистана качественную мебель современного дизайна по доступным ценам.
-                    Помогать каждому дому стать удобным, красивым и функциональным.
+                    Предоставлять премиальную мебель современного дизайна. Помогать каждому пространству стать удобным, красивым и функциональным.
                     {% elif lang == 'en' %}
-                    To provide the people of Uzbekistan with quality furniture of modern design at affordable prices.
-                    To help every home become comfortable, beautiful and functional.
+                    To provide premium furniture of modern design. To help every space become comfortable, beautiful and functional.
                     {% else %}
-                    O'zbekiston xalqiga premium sifatli, zamonaviy dizayndagi mebellarni arzon narxda taqdim etish.
-                    Har bir uyni qulay, chiroyli va funksional qilishga yordam berish.
+                    Zamonaviy dizayndagi premium mebellarni taqdim etish. Har bir makonga qulay, chiroyli va funksional bo'lishga yordam berish.
                     {% endif %}
                 </p>
             </div>
-
-            <!-- Vision -->
-            <div class="bg-[#1a1a2e] p-12 lg:p-16">
-                <h3 class="text-2xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
-                    {% if lang == 'ru' %}Видение{% elif lang == 'en' %}Vision{% else %}Viziya{% endif %}
+            
+            <div class="bg-[#0a0a0a] p-8 lg:p-12">
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Видение{% elif lang == 'en' %}Vision{% else %}Viziya{% endif %}</p>
+                <h3 class="font-serif text-2xl md:text-3xl text-white font-light mb-4">
+                    {% if lang == 'ru' %}Лидер региона{% elif lang == 'en' %}Regional Leader{% else %}Mintaqa yetakchisi{% endif %}
                 </h3>
-                <p class="text-white/60 leading-relaxed font-light">
+                <p class="text-white/60 leading-relaxed">
                     {% if lang == 'ru' %}
-                    Стать крупнейшим и самым надежным мебельным брендом Центральной Азии.
-                    Лидировать в отрасли с инновационными технологиями и экологичным подходом.
+                    Стать крупнейшим и самым надежным мебельным брендом Центральной Азии с инновационными технологиями.
                     {% elif lang == 'en' %}
-                    To become the largest and most trusted furniture brand in Central Asia.
-                    To lead the industry with innovative technologies and eco-friendly approaches.
+                    To become the largest and most trusted furniture brand in Central Asia with innovative technologies.
                     {% else %}
-                    Markaziy Osiyoning eng yirik va ishonchli mebel brendi bo'lish.
-                    Innovatsion texnologiyalar va ekologik yondashuvlar bilan sanoatni yetaklab borish.
+                    Innovatsion texnologiyalar bilan Markaziy Osiyoning eng yirik va ishonchli mebel brendi bo'lish.
                     {% endif %}
                 </p>
             </div>
@@ -156,73 +202,39 @@
 </section>
 
 <!-- Timeline -->
-<section class="py-20 lg:py-28 bg-[#FAF9F6]">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Наш Путь{% elif lang == 'en' %}Our Journey{% else %}Bizning Yo'limiz{% endif %}
-            </h2>
-        </div>
-        
-        <div class="max-w-4xl mx-auto">
-            <div class="relative">
-                <!-- Timeline line -->
-                <div class="absolute left-0 md:left-1/2 transform md:-translate-x-px w-0.5 h-full bg-gray-200"></div>
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-12">
+                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}История{% elif lang == 'en' %}History{% else %}Tarix{% endif %}</p>
+                <h2 class="font-serif text-3xl md:text-4xl text-[#0a0a0a] font-light">
+                    {% if lang == 'ru' %}Наш путь{% elif lang == 'en' %}Our Journey{% else %}Bizning yo'limiz{% endif %}
+                </h2>
+            </div>
+            
+            <div class="space-y-10">
+                <div class="timeline-item">
+                    <p class="font-serif text-2xl text-[#c9a96e] mb-2">1999</p>
+                    <h4 class="font-medium text-[#0a0a0a] mb-1">{% if lang == 'ru' %}Основание{% elif lang == 'en' %}Founded{% else %}Tashkil etildi{% endif %}</h4>
+                    <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Начало работы в небольшой мастерской{% elif lang == 'en' %}Started in a small workshop{% else %}Kichik ustaxonada ish boshlandi{% endif %}</p>
+                </div>
                 
-                <!-- 2009 -->
-                <div class="relative flex items-start mb-12">
-                    <div class="hidden md:flex md:w-1/2 md:pr-8 md:justify-end">
-                        <div class="text-right">
-                            <span class="inline-block text-[#1a1a2e] text-2xl font-light mb-3" style="font-family: 'Playfair Display', serif;">2009</span>
-                            <h4 class="text-base font-light text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Основание компании{% elif lang == 'en' %}Company Founded{% else %}Kompaniya tashkil etildi{% endif %}</h4>
-                            <p class="text-gray-500 text-sm font-light">{% if lang == 'ru' %}Начали работу в небольшой мастерской{% elif lang == 'en' %}Started work in a small workshop{% else %}Kichik ustaxonada ish boshlandi{% endif %}</p>
-                        </div>
-                    </div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full bg-[#1a1a2e]"></div>
-                    <div class="md:hidden pl-8">
-                        <span class="inline-block text-[#1a1a2e] text-2xl font-light mb-3" style="font-family: 'Playfair Display', serif;">2009</span>
-                        <h4 class="text-base font-light text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Основание компании{% elif lang == 'en' %}Company Founded{% else %}Kompaniya tashkil etildi{% endif %}</h4>
-                        <p class="text-gray-500 text-sm font-light">{% if lang == 'ru' %}Начали работу в небольшой мастерской{% elif lang == 'en' %}Started work in a small workshop{% else %}Kichik ustaxonada ish boshlandi{% endif %}</p>
-                    </div>
+                <div class="timeline-item">
+                    <p class="font-serif text-2xl text-[#c9a96e] mb-2">2010</p>
+                    <h4 class="font-medium text-[#0a0a0a] mb-1">{% if lang == 'ru' %}Расширение{% elif lang == 'en' %}Expansion{% else %}Kengayish{% endif %}</h4>
+                    <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Открытие первой фабрики{% elif lang == 'en' %}Opening of first factory{% else %}Birinchi fabrika ochildi{% endif %}</p>
                 </div>
-
-                <!-- 2015 -->
-                <div class="relative flex items-start mb-12">
-                    <div class="hidden md:block md:w-1/2"></div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full bg-[#1a1a2e]"></div>
-                    <div class="md:w-1/2 pl-8">
-                        <span class="inline-block text-[#1a1a2e] text-2xl font-light mb-3" style="font-family: 'Playfair Display', serif;">2015</span>
-                        <h4 class="text-base font-light text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Новая фабрика{% elif lang == 'en' %}New Factory{% else %}Yangi fabrika{% endif %}</h4>
-                        <p class="text-gray-500 text-sm font-light">{% if lang == 'ru' %}Переехали на производственную площадь 1000 м²{% elif lang == 'en' %}Moved to 1000 m² production area{% else %}1000 m² ishlab chiqarish maydoniga ko'chdik{% endif %}</p>
-                    </div>
+                
+                <div class="timeline-item">
+                    <p class="font-serif text-2xl text-[#c9a96e] mb-2">2018</p>
+                    <h4 class="font-medium text-[#0a0a0a] mb-1">{% if lang == 'ru' %}Сертификация{% elif lang == 'en' %}Certification{% else %}Sertifikatsiya{% endif %}</h4>
+                    <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Получение ISO 9001:2015{% elif lang == 'en' %}ISO 9001:2015 certified{% else %}ISO 9001:2015 sertifikati{% endif %}</p>
                 </div>
-
-                <!-- 2018 -->
-                <div class="relative flex items-start mb-12">
-                    <div class="hidden md:flex md:w-1/2 md:pr-8 md:justify-end">
-                        <div class="text-right">
-                            <span class="inline-block text-[#1a1a2e] text-2xl font-light mb-3" style="font-family: 'Playfair Display', serif;">2018</span>
-                            <h4 class="text-base font-light text-[#1a1a2e] mb-2">{% if lang == 'ru' %}ISO Сертификация{% elif lang == 'en' %}ISO Certification{% else %}ISO Sertifikati{% endif %}</h4>
-                            <p class="text-gray-500 text-sm font-light">{% if lang == 'ru' %}Получили международный сертификат ISO 9001:2015{% elif lang == 'en' %}Received ISO 9001:2015 certificate{% else %}ISO 9001:2015 sertifikatiga ega bo'ldik{% endif %}</p>
-                        </div>
-                    </div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full bg-[#1a1a2e]"></div>
-                    <div class="md:hidden pl-8">
-                        <span class="inline-block text-[#1a1a2e] text-2xl font-light mb-3" style="font-family: 'Playfair Display', serif;">2018</span>
-                        <h4 class="text-base font-light text-[#1a1a2e] mb-2">{% if lang == 'ru' %}ISO Сертификация{% elif lang == 'en' %}ISO Certification{% else %}ISO Sertifikati{% endif %}</h4>
-                        <p class="text-gray-500 text-sm font-light">{% if lang == 'ru' %}Получили международный сертификат ISO 9001:2015{% elif lang == 'en' %}Received ISO 9001:2015 certificate{% else %}ISO 9001:2015 sertifikatiga ega bo'ldik{% endif %}</p>
-                    </div>
-                </div>
-
-                <!-- 2024 -->
-                <div class="relative flex items-start">
-                    <div class="hidden md:block md:w-1/2"></div>
-                    <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full bg-[#1a1a2e]"></div>
-                    <div class="md:w-1/2 pl-8">
-                        <span class="inline-block text-[#1a1a2e] text-2xl font-light mb-3" style="font-family: 'Playfair Display', serif;">2024</span>
-                        <h4 class="text-base font-light text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Сегодня{% elif lang == 'en' %}Today{% else %}Bugun{% endif %}</h4>
-                        <p class="text-gray-500 text-sm font-light">{% if lang == 'ru' %}5000+ клиентов, 5000 м² производство, доставка по всему Узбекистану{% elif lang == 'en' %}5000+ customers, 5000 m² production, delivery across Uzbekistan{% else %}5000+ mijoz, 5000 m² ishlab chiqarish, O'zbekiston bo'ylab yetkazib berish{% endif %}</p>
-                    </div>
+                
+                <div class="timeline-item">
+                    <p class="font-serif text-2xl text-[#c9a96e] mb-2">2024</p>
+                    <h4 class="font-medium text-[#0a0a0a] mb-1">{% if lang == 'ru' %}Сегодня{% elif lang == 'en' %}Today{% else %}Bugun{% endif %}</h4>
+                    <p class="text-gray-500 text-sm">{% if lang == 'ru' %}5000+ клиентов, 2500+ проектов{% elif lang == 'en' %}5000+ clients, 2500+ projects{% else %}5000+ mijoz, 2500+ loyiha{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -230,55 +242,76 @@
 </section>
 
 <!-- Materials -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4 lg:px-8">
+<section class="py-16 lg:py-20 bg-[#0a0a0a] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-light text-[#1a1a2e]" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Материалы{% elif lang == 'en' %}Materials{% else %}Materiallar{% endif %}
-            </h2>
+            <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Партнёры{% elif lang == 'en' %}Partners{% else %}Hamkorlar{% endif %}</p>
+            <h2 class="font-serif text-3xl text-white font-light">{% if lang == 'ru' %}Материалы{% elif lang == 'en' %}Materials{% else %}Materiallar{% endif %}</h2>
         </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1">
-            <div class="text-center p-8 bg-[#FAF9F6]">
-                <p class="text-xl font-light text-[#1a1a2e] mb-1" style="font-family: 'Playfair Display', serif;">EGGER</p>
-                <p class="text-xs text-gray-400 font-light">Avstriya</p>
+        
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
+            <div class="bg-white/5 p-6 text-center">
+                <p class="font-serif text-lg text-white">EGGER</p>
+                <p class="text-white/40 text-xs mt-1">Austria</p>
             </div>
-            <div class="text-center p-8 bg-[#FAF9F6]">
-                <p class="text-xl font-light text-[#1a1a2e] mb-1" style="font-family: 'Playfair Display', serif;">BLUM</p>
-                <p class="text-xs text-gray-400 font-light">Avstriya</p>
+            <div class="bg-white/5 p-6 text-center">
+                <p class="font-serif text-lg text-white">BLUM</p>
+                <p class="text-white/40 text-xs mt-1">Austria</p>
             </div>
-            <div class="text-center p-8 bg-[#FAF9F6]">
-                <p class="text-xl font-light text-[#1a1a2e] mb-1" style="font-family: 'Playfair Display', serif;">Hettich</p>
-                <p class="text-xs text-gray-400 font-light">Germaniya</p>
+            <div class="bg-white/5 p-6 text-center">
+                <p class="font-serif text-lg text-white">Hettich</p>
+                <p class="text-white/40 text-xs mt-1">Germany</p>
             </div>
-            <div class="text-center p-8 bg-[#FAF9F6]">
-                <p class="text-xl font-light text-[#1a1a2e] mb-1" style="font-family: 'Playfair Display', serif;">REHAU</p>
-                <p class="text-xs text-gray-400 font-light">Germaniya</p>
+            <div class="bg-white/5 p-6 text-center">
+                <p class="font-serif text-lg text-white">REHAU</p>
+                <p class="text-white/40 text-xs mt-1">Germany</p>
             </div>
-            <div class="text-center p-8 bg-[#FAF9F6]">
-                <p class="text-xl font-light text-[#1a1a2e] mb-1" style="font-family: 'Playfair Display', serif;">Grass</p>
-                <p class="text-xs text-gray-400 font-light">Avstriya</p>
+            <div class="bg-white/5 p-6 text-center">
+                <p class="font-serif text-lg text-white">Grass</p>
+                <p class="text-white/40 text-xs mt-1">Austria</p>
             </div>
-            <div class="text-center p-8 bg-[#FAF9F6]">
-                <p class="text-xl font-light text-[#1a1a2e] mb-1" style="font-family: 'Playfair Display', serif;">Kronospan</p>
-                <p class="text-xs text-gray-400 font-light">Avstriya</p>
+            <div class="bg-white/5 p-6 text-center">
+                <p class="font-serif text-lg text-white">Kronospan</p>
+                <p class="text-white/40 text-xs mt-1">Austria</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-20 lg:py-32 bg-[#1a1a2e]">
-    <div class="container mx-auto px-4 lg:px-8">
+<!-- CTA -->
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-light text-white mb-10" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Готовы начать?{% elif lang == 'en' %}Ready to Start?{% else %}Boshlashga tayyormisiz?{% endif %}
+            <h2 class="font-serif text-3xl md:text-4xl text-[#0a0a0a] font-light mb-6">
+                {% if lang == 'ru' %}Готовы начать проект?{% elif lang == 'en' %}Ready to start a project?{% else %}Loyiha boshlashga tayyormisiz?{% endif %}
             </h2>
-
-            <a href="/contact" class="inline-block border border-white/40 text-white hover:bg-white hover:text-[#1a1a2e] px-12 py-5 text-sm uppercase tracking-widest font-light transition-all duration-500">
-                {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
-            </a>
+            <p class="text-gray-500 mb-8">
+                {% if lang == 'ru' %}Свяжитесь с нами для бесплатной консультации{% elif lang == 'en' %}Contact us for a free consultation{% else %}Bepul maslahat uchun bog'laning{% endif %}
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/contact" class="bg-[#0a0a0a] text-white px-8 py-4 text-sm tracking-wider uppercase hover:bg-[#c9a96e] transition-colors">
+                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
+                </a>
+                <a href="tel:+998712000262" class="border border-[#0a0a0a] px-8 py-4 text-sm tracking-wider uppercase hover:bg-[#0a0a0a] hover:text-white transition-all">
+                    71 200 02 62
+                </a>
+            </div>
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealSections.forEach(section => observer.observe(section));
+});
+</script>
 {% endblock %}

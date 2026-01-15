@@ -414,14 +414,7 @@ def main_category_detail(slug):
     
     # O'sha asosiy kategoriyaga tegishli mahsulotlar (kategoriyalar orqali)
     category_ids = [c.id for c in categories]
-    products = Product.query.filter(Product.category_id.in_(category_ids)).all() if category_ids else []
-    
-    # Kategoriyalar bo'yicha mahsulotlarni guruhlash
-    products_by_category = {}
-    for category in categories:
-        category_products = [p for p in products if p.category_id == category.id]
-        if category_products:
-            products_by_category[category.id] = category_products
+    all_products = Product.query.filter(Product.category_id.in_(category_ids)).all() if category_ids else []
     
     # O'sha asosiy kategoriyaga tegishli sharhlar
     reviews = Review.query.filter_by(main_category_id=main_category.id).order_by(Review.created_at.desc()).all()
@@ -431,8 +424,7 @@ def main_category_detail(slug):
     return render_template('main_category.html', 
                          main_category=main_category,
                          categories=categories,
-                         products=products,
-                         products_by_category=products_by_category,
+                         all_products=all_products,
                          reviews=reviews,
                          rate=rate,
                          lang=lang)
