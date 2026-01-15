@@ -378,27 +378,19 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative bg-white py-20 lg:py-28">
+<section class="relative bg-[#1a1a2e] py-20 lg:py-32">
     <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
-            <!-- Breadcrumb -->
-            <div class="flex items-center justify-center gap-2 text-sm text-gray-400 mb-8">
-                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
-                <span>/</span>
-                <span class="text-[#1a1a2e]">Portfolio</span>
-            </div>
-            
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] leading-tight mb-6 font-display">
-                {% if lang == 'ru' %}Наши Проекты{% elif lang == 'en' %}Our Projects{% else %}Bajarilgan Loyihalarimiz{% endif %}
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Портфолио{% elif lang == 'en' %}Portfolio{% else %}Portfolio{% endif %}
             </h1>
-            
-            <p class="text-gray-600 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+            <p class="text-white/60 text-lg md:text-xl font-light max-w-2xl mx-auto">
                 {% if lang == 'ru' %}
-                15 лет мы украшаем тысячи домов и офисов современной мебелью. Вот некоторые из наших проектов.
+                15 лет опыта
                 {% elif lang == 'en' %}
-                For 15 years we have been decorating thousands of homes and offices with modern furniture. Here are some of our projects.
+                15 years of experience
                 {% else %}
-                15 yil davomida biz minglab uy va ofislarni zamonaviy mebel bilan bezadik. Mana ba'zi loyihalarimiz.
+                15 yillik tajriba
                 {% endif %}
             </p>
         </div>
@@ -410,20 +402,20 @@
     <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <p class="text-4xl font-bold text-white mb-1 font-display">2500+</p>
-                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
+                <p class="text-4xl font-light text-white mb-1" style="font-family: 'Playfair Display', serif;">2500+</p>
+                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-bold text-white mb-1 font-display">500+</p>
-                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Кухни{% elif lang == 'en' %}Kitchens{% else %}Oshxonalar{% endif %}</p>
+                <p class="text-4xl font-light text-white mb-1" style="font-family: 'Playfair Display', serif;">500+</p>
+                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Кухни{% elif lang == 'en' %}Kitchens{% else %}Oshxonalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-bold text-white mb-1 font-display">800+</p>
-                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Спальни{% elif lang == 'en' %}Bedrooms{% else %}Yotoqxonalar{% endif %}</p>
+                <p class="text-4xl font-light text-white mb-1" style="font-family: 'Playfair Display', serif;">800+</p>
+                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Спальни{% elif lang == 'en' %}Bedrooms{% else %}Yotoqxonalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="text-4xl font-bold text-white mb-1 font-display">300+</p>
-                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Офисы{% elif lang == 'en' %}Offices{% else %}Ofislar{% endif %}</p>
+                <p class="text-4xl font-light text-white mb-1" style="font-family: 'Playfair Display', serif;">300+</p>
+                <p class="text-white/50 text-sm font-light">{% if lang == 'ru' %}Офисы{% elif lang == 'en' %}Offices{% else %}Ofislar{% endif %}</p>
             </div>
         </div>
     </div>
@@ -433,23 +425,23 @@
 <section class="py-20 lg:py-28 bg-[#FAF9F6]">
     <div class="container mx-auto px-4 lg:px-8">
         <!-- Filters -->
-        <div class="flex flex-wrap justify-center gap-3 mb-14">
-            <a href="/portfolio" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if not request.args.get('room_type') %}active{% endif %}">
+        <div class="flex flex-wrap justify-center gap-1 mb-14 max-w-4xl mx-auto">
+            <a href="/portfolio" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if not request.args.get('room_type') %}active{% endif %}">
                 {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
             </a>
-            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
+            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
                 {% if lang == 'ru' %}Кухня{% elif lang == 'en' %}Kitchen{% else %}Oshxona{% endif %}
             </a>
-            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
+            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
                 {% if lang == 'ru' %}Спальня{% elif lang == 'en' %}Bedroom{% else %}Yotoqxona{% endif %}
             </a>
-            <a href="/portfolio?room_type=Zal" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
+            <a href="/portfolio?room_type=Zal" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
                 {% if lang == 'ru' %}Гостиная{% elif lang == 'en' %}Living Room{% else %}Zal{% endif %}
             </a>
-            <a href="/portfolio?room_type=Bolalar" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Bolalar' %}active{% endif %}">
+            <a href="/portfolio?room_type=Bolalar" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Bolalar' %}active{% endif %}">
                 {% if lang == 'ru' %}Детская{% elif lang == 'en' %}Kids Room{% else %}Bolalar xonasi{% endif %}
             </a>
-            <a href="/portfolio?room_type=Ofis" class="filter-btn px-6 py-3 text-sm font-medium border border-gray-200 bg-white transition hover:bg-[#1a1a2e] hover:text-white hover:border-[#1a1a2e] {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
+            <a href="/portfolio?room_type=Ofis" class="filter-btn px-8 py-4 text-xs font-light uppercase tracking-widest bg-[#FAF9F6] transition-all duration-500 hover:bg-[#1a1a2e] hover:text-white {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
                 {% if lang == 'ru' %}Офис{% elif lang == 'en' %}Office{% else %}Ofis{% endif %}
             </a>
         </div>
@@ -491,10 +483,10 @@
                 
                 <!-- Content -->
                 <div class="p-6">
-                    <h3 class="text-lg font-bold text-[#1a1a2e] mb-3 font-display">{{ portfolio.title_uz }}</h3>
-                    
+                    <h3 class="text-lg font-light text-[#1a1a2e] mb-3" style="font-family: 'Playfair Display', serif;">{{ portfolio.title_uz }}</h3>
+
                     {% if portfolio.description_uz %}
-                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">{{ portfolio.description_uz }}</p>
+                    <p class="text-gray-500 text-sm mb-4 line-clamp-2 font-light">{{ portfolio.description_uz }}</p>
                     {% endif %}
                     
                     <!-- Before/After if available -->
@@ -768,24 +760,16 @@
 </section>
 
 <!-- CTA Section -->
-<section class="py-20 lg:py-28 bg-[#1a1a2e]">
+<section class="py-20 lg:py-32 bg-[#1a1a2e]">
     <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 font-display">
-                {% if lang == 'ru' %}Ваш проект - следующий{% elif lang == 'en' %}Your Project is Next{% else %}Sizning Loyihangiz Keyingi Bo'lsin{% endif %}
+            <h2 class="text-3xl md:text-4xl font-light text-white mb-10" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Начать проект{% elif lang == 'en' %}Start a project{% else %}Loyiha boshlash{% endif %}
             </h2>
-            <p class="text-white/60 text-lg mb-10 max-w-xl mx-auto">
-                {% if lang == 'ru' %}Создадим мебель вашей мечты вместе. Свяжитесь для бесплатной консультации.{% elif lang == 'en' %}Let's create your dream furniture together. Contact us for free consultation.{% else %}Orzuingizdagi mebelni birga yaratamiz. Bepul maslahat uchun bog'laning.{% endif %}
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#c9a96e] hover:bg-[#b8956b] text-white px-8 py-4 font-medium transition">
-                    {% if lang == 'ru' %}Начать проект{% elif lang == 'en' %}Start Project{% else %}Loyiha Boshlash{% endif %}
-                </a>
-                <a href="/contact" class="inline-flex items-center justify-center gap-2 border border-white/30 text-white px-8 py-4 font-medium transition hover:bg-white hover:text-[#1a1a2e]">
-                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
-                </a>
-            </div>
+
+            <a href="/contact" class="inline-block border border-white/40 text-white hover:bg-white hover:text-[#1a1a2e] px-12 py-5 text-sm uppercase tracking-widest font-light transition-all duration-500">
+                {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
+            </a>
         </div>
     </div>
 </section>

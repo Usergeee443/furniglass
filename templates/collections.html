@@ -59,24 +59,15 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section - Clean & Minimal -->
-<section class="bg-white py-12 lg:py-16 border-b border-gray-100">
+<!-- Hero Section -->
+<section class="bg-[#1a1a2e] py-20 lg:py-32">
     <div class="container mx-auto px-4 lg:px-8">
-        <div class="max-w-3xl">
-            <!-- Breadcrumb -->
-            <div class="flex items-center gap-2 text-sm text-gray-400 mb-6">
-                <a href="/" class="hover:text-[#1a1a2e] transition">{{ T.nav.home[lang] }}</a>
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-                <span class="text-[#1a1a2e]">{% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}</span>
-            </div>
-            
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-light text-[#1a1a2e] mb-4" style="font-family: 'Playfair Display', serif;">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
                 {% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}
             </h1>
-            <p class="text-gray-500 text-lg">
-                {% if lang == 'ru' %}Откройте для себя наши эксклюзивные коллекции мебели{% elif lang == 'en' %}Discover our exclusive furniture collections{% else %}Eksklyuziv mebel kolleksiyalarimizni kashf eting{% endif %}
+            <p class="text-white/60 text-lg md:text-xl font-light max-w-2xl mx-auto">
+                {% if lang == 'ru' %}Эксклюзивные коллекции{% elif lang == 'en' %}Exclusive collections{% else %}Eksklyuziv kolleksiyalar{% endif %}
             </p>
         </div>
     </div>
@@ -100,20 +91,14 @@
                     {% endif %}
                     <div class="collection-overlay"></div>
                     <div class="collection-content">
-                        <h3 class="text-2xl font-semibold text-white mb-2" style="font-family: 'Playfair Display', serif;">
+                        <h3 class="text-2xl font-light text-white mb-2" style="font-family: 'Playfair Display', serif;">
                             {{ collection.get_name(lang) }}
                         </h3>
                         {% if collection.get_description(lang) %}
-                        <p class="text-white/90 text-sm line-clamp-2 mb-3">
+                        <p class="text-white/90 text-sm line-clamp-2 mb-3 font-light">
                             {{ collection.get_description(lang)[:120] }}{% if collection.get_description(lang)|length > 120 %}...{% endif %}
                         </p>
                         {% endif %}
-                        <div class="flex items-center text-white font-medium text-sm group-hover:text-[#c9a96e] transition">
-                            {% if lang == 'ru' %}Смотреть коллекцию{% elif lang == 'en' %}View collection{% else %}Kolleksiyani ko'rish{% endif %}
-                            <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
                     </div>
                 </div>
             </a>
@@ -143,30 +128,16 @@
 </section>
 
 <!-- CTA Section -->
-<section class="py-20 lg:py-28 bg-[#1a1a2e]">
+<section class="py-20 lg:py-32 bg-[#1a1a2e]">
     <div class="container mx-auto px-4 lg:px-8">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-light text-white mb-6" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Не нашли нужную коллекцию?{% elif lang == 'en' %}Didn't find the right collection?{% else %}Kerakli kolleksiyani topmadingizmi?{% endif %}
+            <h2 class="text-3xl md:text-4xl font-light text-white mb-10" style="font-family: 'Playfair Display', serif;">
+                {% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom order{% else %}Maxsus buyurtma{% endif %}
             </h2>
-            <p class="text-white/70 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-                {% if lang == 'ru' %}Мы можем создать мебель по вашему индивидуальному заказу. Свяжитесь с нами для консультации.{% elif lang == 'en' %}We can create furniture according to your individual order. Contact us for a consultation.{% else %}Biz sizning individual buyurtmangiz bo'yicha mebel yaratishimiz mumkin. Maslahat olish uchun biz bilan bog'laning.{% endif %}
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/order" class="inline-flex items-center justify-center gap-2 bg-[#c9a96e] hover:bg-[#b8956b] text-white px-8 py-4 font-medium transition">
-                    {% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Maxsus buyurtma{% endif %}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
-                <a href="/contact" class="inline-flex items-center justify-center gap-2 border-2 border-white/30 text-white px-8 py-4 font-medium transition hover:bg-white hover:text-[#1a1a2e]">
-                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                </a>
-            </div>
+
+            <a href="/contact" class="inline-block border border-white/40 text-white hover:bg-white hover:text-[#1a1a2e] px-12 py-5 text-sm uppercase tracking-widest font-light transition-all duration-500">
+                {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
+            </a>
         </div>
     </div>
 </section>
