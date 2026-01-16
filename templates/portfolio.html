@@ -4,10 +4,6 @@
 
 {% block extra_css %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
-    
-    .font-serif { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
-    
     .hero-bg {
         position: absolute;
         inset: 0;
@@ -24,13 +20,13 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(to bottom, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.9) 100%);
+        background: linear-gradient(to bottom, rgba(26,26,46,0.8) 0%, rgba(26,26,46,0.95) 100%);
     }
     
     .portfolio-card {
         position: relative;
         overflow: hidden;
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.5s ease;
     }
     
     .portfolio-card:hover {
@@ -42,19 +38,19 @@
     }
     
     .portfolio-card img {
-        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: transform 0.6s ease;
     }
     
     .portfolio-card::after {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.2) 50%, transparent 100%);
+        background: linear-gradient(to top, rgba(26,26,46,0.9) 0%, rgba(26,26,46,0.2) 50%, transparent 100%);
         transition: all 0.4s;
     }
     
     .portfolio-card:hover::after {
-        background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 60%, rgba(10,10,10,0.1) 100%);
+        background: linear-gradient(to top, rgba(26,26,46,0.95) 0%, rgba(26,26,46,0.4) 60%, rgba(26,26,46,0.1) 100%);
     }
     
     .filter-btn {
@@ -62,14 +58,14 @@
     }
     
     .filter-btn.active {
-        background: #0a0a0a;
+        background: #1a1a2e;
         color: white;
     }
     
     .reveal-section {
         opacity: 0;
         transform: translateY(40px);
-        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.8s ease;
     }
     
     .reveal-section.revealed {
@@ -81,13 +77,13 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative h-[60vh] min-h-[500px] -mt-[70px] md:-mt-[80px] flex items-center">
+<section class="relative h-[50vh] min-h-[400px] -mt-[70px] md:-mt-[80px] flex items-center">
     <div class="hero-bg"></div>
     <div class="relative container mx-auto px-6 lg:px-16 pt-20">
         <div class="max-w-3xl">
-            <div class="h-[1px] w-16 bg-[#c9a96e] mb-8"></div>
-            <p class="text-[#c9a96e] text-xs tracking-[0.4em] uppercase mb-4">Portfolio</p>
-            <h1 class="font-serif text-white text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-6">
+            <div class="h-[2px] w-16 bg-[#f59e0b] mb-8"></div>
+            <p class="text-[#f59e0b] text-xs tracking-[0.3em] uppercase mb-4">Portfolio</p>
+            <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6">
                 {% if lang == 'ru' %}Наши работы{% elif lang == 'en' %}Our Works{% else %}Bizning ishlarimiz{% endif %}
             </h1>
             <p class="text-white/60 text-base md:text-lg max-w-xl">
@@ -98,23 +94,23 @@
 </section>
 
 <!-- Stats -->
-<section class="py-12 bg-[#0a0a0a]">
+<section class="py-10 bg-[#1a1a2e]">
     <div class="container mx-auto px-6 lg:px-16">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <p class="font-serif text-4xl text-white">2500+</p>
+                <p class="text-4xl font-bold text-white">2500+</p>
                 <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="font-serif text-4xl text-white">5000+</p>
+                <p class="text-4xl font-bold text-white">5000+</p>
                 <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Clients{% else %}Mijozlar{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="font-serif text-4xl text-white">25</p>
+                <p class="text-4xl font-bold text-white">25</p>
                 <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil tajriba{% endif %}</p>
             </div>
             <div class="text-center">
-                <p class="font-serif text-4xl text-white">25</p>
+                <p class="text-4xl font-bold text-white">25</p>
                 <p class="text-white/40 text-sm mt-1">{% if lang == 'ru' %}Лет гарантии{% elif lang == 'en' %}Years Warranty{% else %}Yil kafolat{% endif %}</p>
             </div>
         </div>
@@ -126,27 +122,27 @@
     <div class="container mx-auto px-6 lg:px-16">
         <!-- Filters -->
         <div class="flex flex-wrap justify-center gap-2 mb-12">
-            <a href="/portfolio" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if not request.args.get('room_type') %}active{% endif %}">
+            <a href="/portfolio" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if not request.args.get('room_type') %}active{% endif %}">
                 {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
             </a>
-            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
+            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
                 {% if lang == 'ru' %}Кухня{% elif lang == 'en' %}Kitchen{% else %}Oshxona{% endif %}
             </a>
-            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
+            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
                 {% if lang == 'ru' %}Спальня{% elif lang == 'en' %}Bedroom{% else %}Yotoqxona{% endif %}
             </a>
-            <a href="/portfolio?room_type=Zal" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
+            <a href="/portfolio?room_type=Zal" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
                 {% if lang == 'ru' %}Гостиная{% elif lang == 'en' %}Living Room{% else %}Zal{% endif %}
             </a>
-            <a href="/portfolio?room_type=Ofis" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#0a0a0a] {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
+            <a href="/portfolio?room_type=Ofis" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
                 {% if lang == 'ru' %}Офис{% elif lang == 'en' %}Office{% else %}Ofis{% endif %}
             </a>
-    </div>
-    
+        </div>
+        
         <!-- Portfolio Grid -->
-    {% if portfolios %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for portfolio in portfolios %}
+        {% if portfolios %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for portfolio in portfolios %}
             <div class="portfolio-card aspect-[4/3]">
                 {% if portfolio.after_image %}
                 <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.title_uz }}" class="absolute inset-0 w-full h-full object-cover">
@@ -154,11 +150,11 @@
                 <div class="absolute inset-0 bg-gradient-to-br from-[#2a2a3e] to-[#1a1a2e]"></div>
                 {% endif %}
                 <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
-                            {% if portfolio.room_type_uz %}
-                    <span class="text-[#c9a96e] text-xs tracking-wider uppercase mb-2">{{ portfolio.room_type_uz }}</span>
-                            {% endif %}
-                    <h3 class="text-white text-xl font-medium">{{ portfolio.title_uz }}</h3>
-                {% if portfolio.description_uz %}
+                    {% if portfolio.room_type_uz %}
+                    <span class="text-[#f59e0b] text-xs tracking-wider uppercase mb-2">{{ portfolio.room_type_uz }}</span>
+                    {% endif %}
+                    <h3 class="text-white text-xl font-bold">{{ portfolio.title_uz }}</h3>
+                    {% if portfolio.description_uz %}
                     <p class="text-white/50 text-sm mt-2 line-clamp-2">{{ portfolio.description_uz[:100] }}...</p>
                     {% endif %}
                 </div>
@@ -168,49 +164,49 @@
         {% else %}
         <div class="text-center py-16">
             <p class="text-gray-500">{% if lang == 'ru' %}Проекты не найдены{% elif lang == 'en' %}No projects found{% else %}Loyihalar topilmadi{% endif %}</p>
-            <a href="/portfolio" class="inline-block mt-4 text-[#c9a96e] hover:underline">{% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All projects{% else %}Barcha loyihalar{% endif %}</a>
+            <a href="/portfolio" class="inline-block mt-4 text-[#f59e0b] hover:underline font-medium">{% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All projects{% else %}Barcha loyihalar{% endif %}</a>
         </div>
         {% endif %}
     </div>
 </section>
 
 <!-- Process Section -->
-<section class="py-16 lg:py-24 bg-[#0a0a0a] reveal-section">
+<section class="py-16 lg:py-24 bg-[#1a1a2e] reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
-        <div class="text-center mb-16">
-            <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Процесс{% elif lang == 'en' %}Process{% else %}Jarayon{% endif %}</p>
-            <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl text-white font-light">
+        <div class="text-center mb-12">
+            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">{% if lang == 'ru' %}Процесс{% elif lang == 'en' %}Process{% else %}Jarayon{% endif %}</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-white">
                 {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlaymiz{% endif %}
             </h2>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center">
-                    <span class="font-serif text-2xl text-[#c9a96e]">01</span>
+                <div class="w-16 h-16 mx-auto mb-5 border border-[#f59e0b]/40 flex items-center justify-center">
+                    <span class="text-2xl font-bold text-[#f59e0b]">01</span>
                 </div>
-                <h3 class="text-white font-medium mb-2">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}</h3>
+                <h3 class="text-white font-bold mb-2">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}</h3>
                 <p class="text-white/50 text-sm">{% if lang == 'ru' %}Бесплатная консультация{% elif lang == 'en' %}Free consultation{% else %}Bepul maslahat{% endif %}</p>
             </div>
             <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center">
-                    <span class="font-serif text-2xl text-[#c9a96e]">02</span>
+                <div class="w-16 h-16 mx-auto mb-5 border border-[#f59e0b]/40 flex items-center justify-center">
+                    <span class="text-2xl font-bold text-[#f59e0b]">02</span>
                 </div>
-                <h3 class="text-white font-medium mb-2">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</h3>
+                <h3 class="text-white font-bold mb-2">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</h3>
                 <p class="text-white/50 text-sm">{% if lang == 'ru' %}Визуализация проекта{% elif lang == 'en' %}Project visualization{% else %}Loyiha vizualizatsiyasi{% endif %}</p>
-                        </div>
+            </div>
             <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center">
-                    <span class="font-serif text-2xl text-[#c9a96e]">03</span>
+                <div class="w-16 h-16 mx-auto mb-5 border border-[#f59e0b]/40 flex items-center justify-center">
+                    <span class="text-2xl font-bold text-[#f59e0b]">03</span>
                 </div>
-                <h3 class="text-white font-medium mb-2">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</h3>
+                <h3 class="text-white font-bold mb-2">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</h3>
                 <p class="text-white/50 text-sm">{% if lang == 'ru' %}7-14 дней{% elif lang == 'en' %}7-14 days{% else %}7-14 kun{% endif %}</p>
             </div>
             <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-6 border border-[#c9a96e]/30 flex items-center justify-center">
-                    <span class="font-serif text-2xl text-[#c9a96e]">04</span>
+                <div class="w-16 h-16 mx-auto mb-5 border border-[#f59e0b]/40 flex items-center justify-center">
+                    <span class="text-2xl font-bold text-[#f59e0b]">04</span>
                 </div>
-                <h3 class="text-white font-medium mb-2">{% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish{% endif %}</h3>
+                <h3 class="text-white font-bold mb-2">{% if lang == 'ru' %}Установка{% elif lang == 'en' %}Installation{% else %}O'rnatish{% endif %}</h3>
                 <p class="text-white/50 text-sm">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free delivery{% else %}Bepul yetkazish{% endif %}</p>
             </div>
         </div>
@@ -221,22 +217,22 @@
 <section class="py-16 lg:py-24 bg-white reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="font-serif text-3xl md:text-4xl text-[#0a0a0a] font-light mb-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-6">
                 {% if lang == 'ru' %}Готовы начать проект?{% elif lang == 'en' %}Ready to start a project?{% else %}Loyiha boshlashga tayyormisiz?{% endif %}
             </h2>
             <p class="text-gray-500 mb-8">
                 {% if lang == 'ru' %}Свяжитесь с нами для бесплатной консультации{% elif lang == 'en' %}Contact us for a free consultation{% else %}Bepul maslahat uchun bog'laning{% endif %}
             </p>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="/contact" class="bg-[#0a0a0a] text-white px-8 py-4 text-sm tracking-wider uppercase hover:bg-[#c9a96e] transition-colors">
+                <a href="/contact" class="bg-[#1a1a2e] text-white px-8 py-4 text-sm tracking-wider uppercase font-medium hover:bg-[#f59e0b] transition-colors">
                     {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
                 </a>
-                <a href="tel:+998712000262" class="border border-[#0a0a0a] px-8 py-4 text-sm tracking-wider uppercase hover:bg-[#0a0a0a] hover:text-white transition-all">
+                <a href="tel:+998712000262" class="border-2 border-[#1a1a2e] px-8 py-4 text-sm tracking-wider uppercase font-medium hover:bg-[#1a1a2e] hover:text-white transition-all">
                     71 200 02 62
                 </a>
             </div>
         </div>
-</div>
+    </div>
 </section>
 
 <script>

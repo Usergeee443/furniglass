@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Buyurtma berish - Furniglass{% endblock %}
+{% block title %}{% if lang == 'ru' %}Оформление заказа{% elif lang == 'en' %}Checkout{% else %}Buyurtma berish{% endif %} - Furniglass{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -9,113 +9,140 @@
         border: 2px solid #e5e7eb;
     }
     .form-input:focus {
-        border-color: #232339;
-        box-shadow: 0 0 0 4px rgba(45, 74, 62, 0.1);
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+    }
+    .payment-option {
+        transition: all 0.3s ease;
+    }
+    .payment-option:has(input:checked) {
+        border-color: #1a1a2e;
+        background: rgba(26, 26, 46, 0.03);
+    }
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease;
+    }
+    .reveal-section.revealed {
+        opacity: 1;
+        transform: translateY(0);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="bg-[#F5F5F7] min-h-screen py-8 lg:py-12">
-    <div class="container mx-auto px-4">
-        <!-- Header -->
-        <div class="mb-8">
-            <a href="/cart" class="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-4 transition">
-                <i class="fas fa-arrow-left"></i>
-                Savatchaga qaytish
+<!-- Hero Section -->
+<section class="bg-[#1a1a2e] py-12 lg:py-16">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="max-w-3xl">
+            <a href="/cart" class="inline-flex items-center gap-2 text-white/60 hover:text-white mb-4 transition font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                {% if lang == 'ru' %}Вернуться в корзину{% elif lang == 'en' %}Back to cart{% else %}Savatchaga qaytish{% endif %}
             </a>
-            <h1 class="text-2xl md:text-3xl font-bold text-[#232339]">Buyurtma berish</h1>
+            <div class="h-[2px] w-16 bg-[#f59e0b] mb-6"></div>
+            <h1 class="text-white text-3xl md:text-4xl font-bold">{% if lang == 'ru' %}Оформление заказа{% elif lang == 'en' %}Checkout{% else %}Buyurtma berish{% endif %}</h1>
         </div>
-        
+    </div>
+</section>
+
+<section class="bg-[#f8f8f8] min-h-screen py-8 lg:py-12 reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
         <form method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             <!-- Checkout Form -->
-            <div class="lg:col-span-2">
-                <div class="bg-white  p-6 md:p-8">
-                    <h3 class="text-lg font-semibold text-[#232339] mb-6 flex items-center gap-2">
-                        <div class="w-8 h-8 bg-[#232339] text-white  flex items-center justify-center text-sm">1</div>
-                        Shaxsiy ma'lumotlar
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Personal Info -->
+                <div class="bg-white p-6 md:p-8">
+                    <h3 class="text-lg font-bold text-[#1a1a2e] mb-6 flex items-center gap-3">
+                        <div class="w-8 h-8 bg-[#1a1a2e] text-white flex items-center justify-center text-sm font-bold">1</div>
+                        {% if lang == 'ru' %}Личные данные{% elif lang == 'en' %}Personal Information{% else %}Shaxsiy ma'lumotlar{% endif %}
                     </h3>
                     
                     <div class="space-y-5">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Ismingiz *</label>
+                            <label class="block text-sm font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your Name{% else %}Ismingiz{% endif %} *</label>
                             <input type="text" name="name" required 
-                                class="form-input w-full  px-4 py-3.5 outline-none" 
-                                placeholder="To'liq ismingizni kiriting">
+                                class="form-input w-full px-4 py-3.5 outline-none" 
+                                placeholder="{% if lang == 'ru' %}Введите полное имя{% elif lang == 'en' %}Enter full name{% else %}To'liq ismingizni kiriting{% endif %}">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Telefon raqam *</label>
+                            <label class="block text-sm font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon raqam{% endif %} *</label>
                             <input type="tel" name="phone" required 
-                                class="form-input w-full  px-4 py-3.5 outline-none" 
+                                class="form-input w-full px-4 py-3.5 outline-none" 
                                 placeholder="+998 90 123 45 67">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Manzil *</label>
+                            <label class="block text-sm font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %} *</label>
                             <textarea name="address" rows="3" required 
-                                class="form-input w-full  px-4 py-3.5 outline-none resize-none" 
-                                placeholder="Shahar, tuman, ko'cha, uy raqami"></textarea>
+                                class="form-input w-full px-4 py-3.5 outline-none resize-none" 
+                                placeholder="{% if lang == 'ru' %}Город, район, улица, дом{% elif lang == 'en' %}City, district, street, house{% else %}Shahar, tuman, ko'cha, uy raqami{% endif %}"></textarea>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Qo'shimcha izoh</label>
+                            <label class="block text-sm font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Комментарий{% elif lang == 'en' %}Comment{% else %}Qo'shimcha izoh{% endif %}</label>
                             <textarea name="comment" rows="2" 
-                                class="form-input w-full  px-4 py-3.5 outline-none resize-none" 
-                                placeholder="Ixtiyoriy: qo'shimcha ma'lumotlar"></textarea>
+                                class="form-input w-full px-4 py-3.5 outline-none resize-none" 
+                                placeholder="{% if lang == 'ru' %}Дополнительная информация{% elif lang == 'en' %}Additional information{% else %}Ixtiyoriy: qo'shimcha ma'lumotlar{% endif %}"></textarea>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Payment Method -->
+                <div class="bg-white p-6 md:p-8">
+                    <h3 class="text-lg font-bold text-[#1a1a2e] mb-6 flex items-center gap-3">
+                        <div class="w-8 h-8 bg-[#1a1a2e] text-white flex items-center justify-center text-sm font-bold">2</div>
+                        {% if lang == 'ru' %}Способ оплаты{% elif lang == 'en' %}Payment Method{% else %}To'lov usuli{% endif %}
+                    </h3>
                     
-                    <div class="mt-8 pt-6 border-t border-gray-100">
-                        <h3 class="text-lg font-semibold text-[#232339] mb-4 flex items-center gap-2">
-                            <div class="w-8 h-8 bg-[#232339] text-white  flex items-center justify-center text-sm">2</div>
-                            To'lov usuli
-                        </h3>
+                    <div class="space-y-3">
+                        <label class="payment-option flex items-center gap-4 p-4 border-2 border-[#1a1a2e] cursor-pointer">
+                            <input type="radio" name="payment" value="cash" checked class="w-5 h-5 accent-[#1a1a2e]">
+                            <div class="flex-1">
+                                <p class="font-bold text-[#1a1a2e]">{% if lang == 'ru' %}Наличные{% elif lang == 'en' %}Cash{% else %}Naqd pul{% endif %}</p>
+                                <p class="text-sm text-gray-500">{% if lang == 'ru' %}Оплата при доставке{% elif lang == 'en' %}Pay on delivery{% else %}Yetkazib berishda to'lash{% endif %}</p>
+                            </div>
+                            <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </label>
                         
-                        <div class="space-y-3">
-                            <label class="flex items-center gap-4 p-4 border-2 border-[#232339]  cursor-pointer bg-[#232339]/5">
-                                <input type="radio" name="payment" value="cash" checked class="w-5 h-5 text-[#232339]">
-                                <div class="flex-1">
-                                    <p class="font-medium text-[#232339]">Naqd pul</p>
-                                    <p class="text-sm text-gray-500">Yetkazib berishda to'lash</p>
-                                </div>
-                                <i class="fas fa-money-bill-wave text-[#232339] text-xl"></i>
-                            </label>
-                            
-                            <label class="flex items-center gap-4 p-4 border-2 border-gray-200  cursor-pointer hover:border-gray-300 transition">
-                                <input type="radio" name="payment" value="card" class="w-5 h-5 text-[#232339]">
-                                <div class="flex-1">
-                                    <p class="font-medium text-[#232339]">Plastik karta</p>
-                                    <p class="text-sm text-gray-500">Payme, Click, Uzum Bank</p>
-                                </div>
-                                <i class="fas fa-credit-card text-gray-400 text-xl"></i>
-                            </label>
-                        </div>
+                        <label class="payment-option flex items-center gap-4 p-4 border-2 border-gray-200 cursor-pointer hover:border-gray-300 transition">
+                            <input type="radio" name="payment" value="card" class="w-5 h-5 accent-[#1a1a2e]">
+                            <div class="flex-1">
+                                <p class="font-bold text-[#1a1a2e]">{% if lang == 'ru' %}Банковская карта{% elif lang == 'en' %}Bank Card{% else %}Plastik karta{% endif %}</p>
+                                <p class="text-sm text-gray-500">Payme, Click, Uzum Bank</p>
+                            </div>
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                            </svg>
+                        </label>
                     </div>
                 </div>
             </div>
             
             <!-- Order Summary -->
             <div class="lg:col-span-1">
-                <div class="bg-white  p-6 sticky top-24">
-                    <h3 class="text-lg font-semibold text-[#232339] mb-6">Buyurtma</h3>
+                <div class="bg-white p-6 sticky top-24">
+                    <h3 class="text-lg font-bold text-[#1a1a2e] mb-6">{% if lang == 'ru' %}Ваш заказ{% elif lang == 'en' %}Your Order{% else %}Buyurtma{% endif %}</h3>
                     
                     <!-- Cart Items Preview -->
                     <div class="space-y-4 mb-6 max-h-60 overflow-y-auto">
                         {% for item in cart_items %}
                         <div class="flex gap-3">
-                            <div class="w-16 h-16 bg-[#FAFAFA]  overflow-hidden flex-shrink-0">
+                            <div class="w-16 h-16 bg-[#f8f8f8] overflow-hidden flex-shrink-0">
                                 {% if item.product.images %}
                                     {% set images = item.product.images|from_json %}
                                     {% if images %}
-                                        <img src="/uploads/{{ images[0] }}" alt="{{ item.product.get_name(lang) }}" class="w-full h-full object-contain">
+                                    <img src="/uploads/{{ images[0] }}" alt="{{ item.product.get_name(lang) }}" class="w-full h-full object-contain">
                                     {% endif %}
                                 {% endif %}
                             </div>
                             <div class="flex-1">
-                                <p class="text-sm font-medium text-[#232339] line-clamp-1">{{ item.product.get_name(lang) }}</p>
-                                <p class="text-xs text-gray-400">{{ item.quantity }} dona</p>
-                                <p class="text-sm font-semibold text-[#232339]">{{ "{:,.0f}".format(item.subtotal) }} so'm</p>
+                                <p class="text-sm font-bold text-[#1a1a2e] line-clamp-1">{{ item.product.get_name(lang) }}</p>
+                                <p class="text-xs text-gray-400">{{ item.quantity }} {% if lang == 'ru' %}шт{% elif lang == 'en' %}pcs{% else %}dona{% endif %}</p>
+                                <p class="text-sm font-bold text-[#1a1a2e]">{{ "{:,.0f}".format(item.subtotal) }} {{ T.common.sum[lang] }}</p>
                             </div>
                         </div>
                         {% endfor %}
@@ -123,34 +150,90 @@
                     
                     <div class="space-y-3 mb-6 border-t border-gray-100 pt-4">
                         <div class="flex justify-between text-gray-600">
-                            <span>Mahsulotlar</span>
-                            <span>{{ "{:,.0f}".format(total) }} so'm</span>
+                            <span>{{ T.nav.products[lang] }}</span>
+                            <span class="font-medium">{{ "{:,.0f}".format(total) }} {{ T.common.sum[lang] }}</span>
                         </div>
                         <div class="flex justify-between text-gray-600">
-                            <span>Yetkazib berish</span>
-                            <span class="text-green-600">Bepul</span>
+                            <span>{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib berish{% endif %}</span>
+                            <span class="text-green-600 font-medium">{{ T.common.free[lang] }}</span>
                         </div>
                     </div>
                     
                     <div class="border-t border-gray-100 pt-4 mb-6">
                         <div class="flex justify-between">
-                            <span class="text-lg font-semibold text-[#232339]">Jami:</span>
-                            <span class="text-xl font-bold text-[#232339]">{{ "{:,.0f}".format(total) }} so'm</span>
+                            <span class="text-lg font-bold text-[#1a1a2e]">{% if lang == 'ru' %}Итого:{% elif lang == 'en' %}Total:{% else %}Jami:{% endif %}</span>
+                            <span class="text-xl font-bold text-[#1a1a2e]">{{ "{:,.0f}".format(total) }} {{ T.common.sum[lang] }}</span>
                         </div>
                     </div>
                     
-                    <button type="submit" class="w-full bg-[#232339] hover:bg-[#000000] text-white py-4  font-medium transition flex items-center justify-center gap-2">
-                        <i class="fas fa-check"></i>
-                        Buyurtmani tasdiqlash
+                    <button type="submit" class="w-full bg-[#1a1a2e] hover:bg-[#f59e0b] text-white py-4 font-bold tracking-wider uppercase transition flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        {% if lang == 'ru' %}Подтвердить заказ{% elif lang == 'en' %}Confirm Order{% else %}Buyurtmani tasdiqlash{% endif %}
                     </button>
                     
                     <p class="text-xs text-gray-400 text-center mt-4">
-                        Buyurtma berishda siz shartlarga rozilik bildirasiz
+                        {% if lang == 'ru' %}Оформляя заказ, вы соглашаетесь с условиями{% elif lang == 'en' %}By placing an order, you agree to the terms{% else %}Buyurtma berishda siz shartlarga rozilik bildirasiz{% endif %}
                     </p>
                 </div>
             </div>
         </form>
     </div>
 </section>
+
+<!-- Features -->
+<section class="py-10 bg-[#1a1a2e]">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="w-10 h-10 mx-auto mb-3 border border-[#f59e0b]/40 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <p class="text-white font-bold text-xs">{% if lang == 'ru' %}Безопасная оплата{% elif lang == 'en' %}Secure Payment{% else %}Xavfsiz to'lov{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-10 h-10 mx-auto mb-3 border border-[#f59e0b]/40 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                    </svg>
+                </div>
+                <p class="text-white font-bold text-xs">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free Delivery{% else %}Bepul yetkazish{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-10 h-10 mx-auto mb-3 border border-[#f59e0b]/40 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <p class="text-white font-bold text-xs">{% if lang == 'ru' %}3-7 дней{% elif lang == 'en' %}3-7 Days{% else %}3-7 kun{% endif %}</p>
+            </div>
+            <div class="text-center">
+                <div class="w-10 h-10 mx-auto mb-3 border border-[#f59e0b]/40 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                </div>
+                <p class="text-white font-bold text-xs">{% if lang == 'ru' %}Поддержка 24/7{% elif lang == 'en' %}24/7 Support{% else %}24/7 yordam{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealSections.forEach(section => observer.observe(section));
+});
+</script>
+{% endblock %}

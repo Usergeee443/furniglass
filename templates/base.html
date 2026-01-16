@@ -11,7 +11,7 @@
         
         :root {
             --color-primary: #1a1a2e;
-            --color-accent: #c9a96e;
+            --color-accent: #f59e0b;
             --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
             --font-body: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
@@ -69,7 +69,7 @@
             bottom: 0;
             left: 0;
             width: 0;
-            height: 1px;
+            height: 2px;
             background: var(--color-accent);
             transition: width 0.3s ease;
         }
@@ -415,13 +415,13 @@
                         {{ T.footer.description[lang] }}
                     </p>
                     <div class="flex gap-3">
-                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#c9a96e] hover:text-[#c9a96e] transition">
+                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#f59e0b] hover:text-[#f59e0b] transition">
                             <i class="fab fa-instagram text-sm"></i>
                         </a>
-                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#c9a96e] hover:text-[#c9a96e] transition">
+                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#f59e0b] hover:text-[#f59e0b] transition">
                             <i class="fab fa-telegram-plane text-sm"></i>
                         </a>
-                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#c9a96e] hover:text-[#c9a96e] transition">
+                        <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#f59e0b] hover:text-[#f59e0b] transition">
                             <i class="fab fa-facebook-f text-sm"></i>
                         </a>
                     </div>
@@ -431,11 +431,11 @@
                 <div>
                     <h4 class="text-xs font-medium uppercase tracking-wider mb-6">{{ T.footer.quick_links[lang] }}</h4>
                     <ul class="space-y-3">
-                        <li><a href="/products" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{{ T.nav.products[lang] }}</a></li>
-                        <li><a href="/collections" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}Коллекции{% elif lang == 'en' %}Collections{% else %}Kolleksiyalar{% endif %}</a></li>
-                        <li><a href="/portfolio" class="text-white/50 hover:text-[#c9a96e] text-sm transition">Portfolio</a></li>
-                        <li><a href="/about" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{{ T.nav.about[lang] }}</a></li>
-                        <li><a href="/faq" class="text-white/50 hover:text-[#c9a96e] text-sm transition">FAQ</a></li>
+                        <li><a href="/products" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{{ T.nav.products[lang] }}</a></li>
+                        <li><a href="/portfolio" class="text-white/50 hover:text-[#f59e0b] text-sm transition">Portfolio</a></li>
+                        <li><a href="/stores" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{% if lang == 'ru' %}Магазины{% elif lang == 'en' %}Stores{% else %}Do'konlar{% endif %}</a></li>
+                        <li><a href="/about" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{{ T.nav.about[lang] }}</a></li>
+                        <li><a href="/contact" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{{ T.nav.contact[lang] }}</a></li>
                     </ul>
                 </div>
                 
@@ -443,10 +443,10 @@
                 <div>
                     <h4 class="text-xs font-medium uppercase tracking-wider mb-6">{{ T.footer.our_services[lang] }}</h4>
                     <ul class="space-y-3">
-                        <li><a href="/interior-design" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}Дизайн интерьера{% elif lang == 'en' %}Interior Design{% else %}Interer dizayn{% endif %}</a></li>
-                        <li><a href="/services" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</a></li>
-                        <li><a href="/order" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Maxsus buyurtma{% endif %}</a></li>
-                        <li><a href="/services" class="text-white/50 hover:text-[#c9a96e] text-sm transition">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib berish{% endif %}</a></li>
+                        <li><a href="/services" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</a></li>
+                        <li><a href="/order" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Maxsus buyurtma{% endif %}</a></li>
+                        <li><a href="/services" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib berish{% endif %}</a></li>
+                        <li><a href="/faq" class="text-white/50 hover:text-[#f59e0b] text-sm transition">FAQ</a></li>
                     </ul>
                 </div>
                 
@@ -455,13 +455,13 @@
                     <h4 class="text-xs font-medium uppercase tracking-wider mb-6">{{ T.footer.contact_info[lang] }}</h4>
                     <ul class="space-y-4">
                         <li>
-                            <a href="tel:+998712000262" class="flex items-center gap-3 text-white/50 hover:text-[#c9a96e] text-sm transition">
+                            <a href="tel:+998712000262" class="flex items-center gap-3 text-white/50 hover:text-[#f59e0b] text-sm transition">
                                 <i class="fas fa-phone text-xs"></i>
                                 71 200 02 62
                             </a>
                         </li>
                         <li>
-                            <a href="mailto:furniglass77@gmail.com" class="flex items-center gap-3 text-white/50 hover:text-[#c9a96e] text-sm transition">
+                            <a href="mailto:furniglass77@gmail.com" class="flex items-center gap-3 text-white/50 hover:text-[#f59e0b] text-sm transition">
                                 <i class="fas fa-envelope text-xs"></i>
                                 furniglass77@gmail.com
                             </a>

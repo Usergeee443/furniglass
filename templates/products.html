@@ -4,8 +4,6 @@
 
 {% block extra_css %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
-    
     .line-clamp-1 {
         display: -webkit-box;
         -webkit-line-clamp: 1;
@@ -14,254 +12,270 @@
     }
     
     .category-tab {
-        transition: all 0.2s ease;
-    }
-    
-    .category-tab.active {
-        color: #1a1a2e;
-        border-bottom-color: #1a1a2e;
-    }
-    
-    .product-card {
+        position: relative;
         transition: all 0.3s ease;
     }
     
-    .product-card:hover {
-        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    .category-tab::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #f59e0b;
+        transition: width 0.3s ease;
     }
     
-    .product-card:hover .product-image img {
-        transform: scale(1.05);
+    .category-tab.active::after,
+    .category-tab:hover::after {
+        width: 100%;
     }
     
-    .product-image img {
-        transition: transform 0.5s ease;
+    /* Premium Product Card */
+    .product-card {
+        position: relative;
+        background: #fff;
+        overflow: hidden;
+    }
+    
+    .product-card .card-image {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .product-card .card-image::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(26,26,46,0.6) 0%, transparent 50%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 1;
+    }
+    
+    .product-card:hover .card-image::before {
+        opacity: 1;
+    }
+    
+    .product-card .card-image img {
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .product-card:hover .card-image img {
+        transform: scale(1.08);
+    }
+    
+    .product-card .card-actions {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        display: flex;
+        gap: 8px;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: all 0.4s ease;
+        z-index: 2;
+    }
+    
+    .product-card:hover .card-actions {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .product-card .card-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 2;
+    }
+    
+    .product-card .card-content {
+        padding: 20px;
+        background: #fff;
+        position: relative;
+    }
+    
+    .product-card .card-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 20px;
+        right: 20px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+    }
+    
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease;
+    }
+    
+    .reveal-section.revealed {
+        opacity: 1;
+        transform: translateY(0);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section - Minimalist -->
-<section class="bg-[#1a1a2e] py-20 lg:py-32">
-    <div class="container mx-auto px-4 lg:px-8">
+<!-- Hero Section -->
+<section class="bg-[#1a1a2e] py-20 lg:py-28">
+    <div class="container mx-auto px-6 lg:px-16">
         <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-light text-white" style="font-family: 'Playfair Display', serif;">
-                {% if lang == 'ru' %}Каталог{% elif lang == 'en' %}Catalog{% else %}Katalog{% endif %}
+            <div class="inline-block h-[2px] w-16 bg-[#f59e0b] mb-8"></div>
+            <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] mb-6">
+                {% if lang == 'ru' %}Коллекция{% elif lang == 'en' %}Collection{% else %}Kolleksiya{% endif %}
             </h1>
+            <p class="text-white/50 text-lg">
+                {{ products|length }} {% if lang == 'ru' %}эксклюзивных изделий{% elif lang == 'en' %}exclusive pieces{% else %}eksklyuziv mahsulot{% endif %}
+            </p>
         </div>
     </div>
 </section>
 
 <!-- Category Tabs & Products -->
-<section class="bg-white py-12 lg:py-16">
-    <div class="container mx-auto px-4 lg:px-8">
-        <!-- Category Tabs - Minimalist -->
-        <div class="border-b border-gray-200 mb-12 overflow-x-auto">
-            <div class="flex gap-8 min-w-max">
-                <a href="/products" class="py-4 text-sm font-light {% if not request.args.get('category') %}border-b-2 border-[#1a1a2e] text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
+<section class="bg-white py-12 lg:py-20 reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Category Tabs -->
+        <div class="border-b border-gray-100 mb-12 overflow-x-auto">
+            <div class="flex gap-8 min-w-max justify-center">
+                <a href="/products" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if not request.args.get('category') %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
                     {{ T.common.all[lang] }}
                 </a>
                 {% for cat in categories %}
-                <a href="/products?category={{ cat.id }}" class="py-4 text-sm font-light {% if request.args.get('category', '')|string == cat.id|string %}border-b-2 border-[#1a1a2e] text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
+                <a href="/products?category={{ cat.id }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if request.args.get('category', '')|string == cat.id|string %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
                     {{ cat.get_name(lang) }}
                 </a>
                 {% endfor %}
             </div>
         </div>
         
-        <!-- Products Count & Sort -->
-        <div class="flex items-center justify-between mb-8">
-            <p class="text-sm text-gray-500">
-                {{ products|length }} {% if lang == 'ru' %}продуктов{% elif lang == 'en' %}products{% else %}mahsulot{% endif %}
-            </p>
-            <button id="open-filter" class="md:hidden flex items-center gap-2 text-sm text-[#1a1a2e] font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-                </svg>
-                {% if lang == 'ru' %}Фильтры{% elif lang == 'en' %}Filters{% else %}Filterlar{% endif %}
-            </button>
-        </div>
-        
         <!-- Products Grid -->
         {% if products %}
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {% for product in products %}
-            <div class="product-card bg-white group">
-                <!-- Product Image -->
-                <a href="/product/{{ product.id }}" class="block relative product-image overflow-hidden">
-                    <div class="aspect-[3/4] w-full">
-                        {% if product.images %}
-                            {% set images = product.images|from_json %}
-                            {% if images %}
-                                <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
-                                     class="w-full h-full object-cover">
-                            {% else %}
-                                <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                                    <i class="fas fa-image text-4xl text-gray-300"></i>
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                                <i class="fas fa-image text-4xl text-gray-300"></i>
-                            </div>
+            <article class="product-card group">
+                <div class="card-image aspect-[4/5] bg-[#f5f5f5]">
+                    {% if product.images %}
+                        {% set images = product.images|from_json %}
+                        {% if images %}
+                        <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
+                             class="w-full h-full object-cover">
                         {% endif %}
-                    </div>
-                    
-                    <!-- Badge -->
-                    {% if product.is_bestseller %}
-                    <span class="absolute top-3 left-3 bg-[#8B7355] text-white text-[10px] md:text-xs px-2 py-1 font-medium">
-                        {% if lang == 'ru' %}Хит{% elif lang == 'en' %}Best{% else %}Top{% endif %}
-                    </span>
                     {% endif %}
                     
-                    <!-- Quick Add Button -->
-                    <button class="add-to-cart-btn absolute bottom-3 right-3 w-10 h-10 bg-white shadow-lg flex items-center justify-center text-[#1a1a2e] opacity-0 group-hover:opacity-100 transition-all hover:bg-[#1a1a2e] hover:text-white"
-                            data-product-id="{{ product.id }}">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
-                        </svg>
-                    </button>
-                </a>
+                    {% if product.is_bestseller %}
+                    <div class="card-badge">
+                        <span class="inline-block bg-[#f59e0b] text-white text-[10px] px-3 py-1.5 font-medium tracking-widest uppercase">
+                            {% if lang == 'ru' %}Хит{% elif lang == 'en' %}Best{% else %}Top{% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-actions">
+                        <a href="/product/{{ product.id }}" class="flex-1 bg-white text-[#1a1a2e] text-center py-3 text-xs font-medium tracking-wider uppercase hover:bg-[#f59e0b] hover:text-white transition">
+                            {% if lang == 'ru' %}Подробнее{% elif lang == 'en' %}Details{% else %}Batafsil{% endif %}
+                        </a>
+                        <button class="add-to-cart-btn w-12 bg-[#1a1a2e] text-white flex items-center justify-center hover:bg-[#f59e0b] transition"
+                                data-product-id="{{ product.id }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
                 
-                <!-- Product Info -->
-                <div class="pt-2 pb-2">
+                <div class="card-content">
+                    <p class="text-[11px] text-[#f59e0b] tracking-widest uppercase mb-2">
+                        {{ product.category.get_name(lang) if product.category else 'Mebel' }}
+                    </p>
                     <a href="/product/{{ product.id }}" class="block">
-                        <h3 class="text-xs md:text-sm font-medium text-[#1a1a2e] mb-0.5 line-clamp-1 group-hover:underline">
+                        <h3 class="text-[#1a1a2e] font-medium mb-3 line-clamp-1 group-hover:text-[#f59e0b] transition-colors">
                             {{ product.get_name(lang) }}
                         </h3>
                     </a>
-                    <!-- Price - moved right after name -->
-                    <div class="flex items-baseline gap-1.5 mb-1.5">
-                        <span class="text-[10px] text-gray-400 line-through">${{ "%.0f"|format(product.price * 1.2) }}</span>
-                        <span class="text-xs md:text-sm font-semibold text-[#1a1a2e]">From ${{ "%.0f"|format(product.price) }}</span>
-                    </div>
-                    <p class="text-[10px] md:text-xs text-gray-500 mb-1.5">
-                        {{ product.category.get_name(lang) if product.category else ('Mebel' if lang == 'uz' else ('Мебель' if lang == 'ru' else 'Furniture')) }}
-                    </p>
-                    
-                    <!-- Color options -->
-                    <div class="flex items-center gap-1 mb-0">
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#4a4a4a] border border-gray-200"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#1a1a2e] border border-gray-200"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#8B4513] border border-gray-200"></span>
-                        <span class="text-[10px] text-gray-400 ml-0.5">+ more</span>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-xl font-light text-[#1a1a2e]">${{ "%.0f"|format(product.price) }}</span>
+                        <span class="text-sm text-gray-400 line-through">${{ "%.0f"|format(product.price * 1.2) }}</span>
                     </div>
                 </div>
-            </div>
+            </article>
             {% endfor %}
         </div>
         
-        <!-- Load More -->
         {% if products|length >= 12 %}
-        <div class="text-center mt-12">
-            <button class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-[#c9a96e] text-white px-10 py-4 text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                {% if lang == 'ru' %}Показать ещё{% elif lang == 'en' %}Show more{% else %}Ko'proq ko'rish{% endif %}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                </svg>
+        <div class="text-center mt-16">
+            <button class="inline-flex items-center gap-3 border border-[#1a1a2e] text-[#1a1a2e] px-12 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#1a1a2e] hover:text-white transition-all">
+                {% if lang == 'ru' %}Загрузить ещё{% elif lang == 'en' %}Load more{% else %}Ko'proq ko'rish{% endif %}
             </button>
         </div>
         {% endif %}
         
         {% else %}
-        <!-- Empty State -->
-        <div class="py-20 text-center max-w-md mx-auto">
-            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        <div class="py-24 text-center max-w-md mx-auto">
+            <div class="w-24 h-24 border border-gray-200 flex items-center justify-center mx-auto mb-8">
+                <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
             </div>
-            <h3 class="text-xl font-medium text-[#1a1a2e] mb-2">
-                {% if lang == 'ru' %}Продукты не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulot topilmadi{% endif %}
+            <h3 class="text-2xl font-light text-[#1a1a2e] mb-3">
+                {% if lang == 'ru' %}Товары не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulot topilmadi{% endif %}
             </h3>
-            <p class="text-gray-500 mb-6">
-                {% if lang == 'ru' %}В этой категории пока нет товаров{% elif lang == 'en' %}There are no products in this category yet{% else %}Ushbu kategoriyada hozircha mahsulot yo'q{% endif %}
+            <p class="text-gray-400 mb-8">
+                {% if lang == 'ru' %}В этой категории пока нет товаров{% elif lang == 'en' %}No products in this category{% else %}Bu kategoriyada mahsulot yo'q{% endif %}
             </p>
-            <a href="/products" class="inline-flex items-center gap-2 bg-[#1a1a2e] hover:bg-[#c9a96e] text-white px-8 py-4 text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
-                {% if lang == 'ru' %}Все продукты{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
+            <a href="/products" class="inline-flex items-center gap-2 border border-[#1a1a2e] text-[#1a1a2e] px-8 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#1a1a2e] hover:text-white transition-all">
+                {% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}
             </a>
         </div>
         {% endif %}
     </div>
 </section>
 
-
-<!-- Filters Modal for Mobile -->
-<div id="filter-modal" class="fixed inset-0 bg-black/50 z-50 hidden">
-    <div class="absolute bottom-0 left-0 right-0 bg-white p-6 max-h-[80vh] overflow-y-auto rounded-t-2xl">
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="text-lg font-medium text-[#1a1a2e]">{% if lang == 'ru' %}Фильтры{% elif lang == 'en' %}Filters{% else %}Filterlar{% endif %}</h3>
-            <button id="close-filter" class="p-2 hover:bg-gray-100 rounded-full transition">
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-        
-        <form method="GET" action="/products" class="space-y-6">
-            <!-- Price Filter -->
-            <div>
-                <label class="block text-sm font-medium text-[#1a1a2e] mb-3">{% if lang == 'ru' %}Диапазон цен{% elif lang == 'en' %}Price range{% else %}Narx oralig'i{% endif %}</label>
-                <div class="flex gap-3">
-                    <input type="number" name="min_price" placeholder="Min" value="{{ request.args.get('min_price', '') }}" 
-                        class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#1a1a2e] outline-none rounded-none">
-                    <input type="number" name="max_price" placeholder="Max" value="{{ request.args.get('max_price', '') }}" 
-                        class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#1a1a2e] outline-none rounded-none">
-                </div>
-            </div>
-            
-            {% if materials %}
-            <div>
-                <label class="block text-sm font-medium text-[#1a1a2e] mb-3">Material</label>
-                <select name="material" class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#1a1a2e] outline-none bg-white rounded-none">
-                    <option value="">{% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}</option>
-                    {% for mat in materials %}
-                        <option value="{{ mat }}" {% if request.args.get('material') == mat %}selected{% endif %}>{{ mat }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% endif %}
-            
-            <div class="flex gap-3 pt-4">
-                <a href="/products" class="flex-1 py-3.5 text-center border border-gray-200 text-gray-600 text-sm font-medium hover:border-[#1a1a2e] transition">
-                    {% if lang == 'ru' %}Сбросить{% elif lang == 'en' %}Reset{% else %}Tozalash{% endif %}
+<!-- CTA Section -->
+<section class="py-24 bg-[#f5f5f5]">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="max-w-3xl mx-auto text-center">
+            <p class="text-[#f59e0b] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}</p>
+            <h2 class="text-3xl md:text-4xl font-light text-[#1a1a2e] mb-6">
+                {% if lang == 'ru' %}Нужна помощь в выборе?{% elif lang == 'en' %}Need help choosing?{% else %}Tanlashda yordam kerakmi?{% endif %}
+            </h2>
+            <p class="text-gray-500 mb-10 max-w-xl mx-auto">
+                {% if lang == 'ru' %}Наши специалисты помогут подобрать идеальную мебель для вашего пространства{% elif lang == 'en' %}Our specialists will help you find the perfect furniture for your space{% else %}Mutaxassislarimiz sizning makoningiz uchun mukammal mebel tanlashda yordam beradi{% endif %}
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/contact" class="bg-[#1a1a2e] text-white px-10 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#f59e0b] transition-colors">
+                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
                 </a>
-                <button type="submit" class="flex-1 py-3.5 bg-[#1a1a2e] text-white text-sm font-medium hover:bg-black transition">
-                    {% if lang == 'ru' %}Применить{% elif lang == 'en' %}Apply{% else %}Qo'llash{% endif %}
-                </button>
+                <a href="tel:+998712000262" class="border border-[#1a1a2e] text-[#1a1a2e] px-10 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#1a1a2e] hover:text-white transition-all">
+                    71 200 02 62
+                </a>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    const filterModal = document.getElementById('filter-modal');
-    const openFilter = document.getElementById('open-filter');
-    const closeFilter = document.getElementById('close-filter');
-    
-    openFilter?.addEventListener('click', () => {
-        filterModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    });
-    
-    closeFilter?.addEventListener('click', () => {
-        filterModal.classList.add('hidden');
-        document.body.style.overflow = '';
-    });
-    
-    filterModal?.addEventListener('click', (e) => {
-        if (e.target === filterModal) {
-            filterModal.classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    // Reveal sections
+    const revealSections = document.querySelectorAll('.reveal-section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealSections.forEach(section => observer.observe(section));
 
-    // Add to cart functionality
+    // Add to cart
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
@@ -271,7 +285,7 @@
             const button = this;
             const originalHTML = button.innerHTML;
             
-            button.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
+            button.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="32" stroke-dashoffset="32"/></svg>';
             
             try {
                 const formData = new FormData();
@@ -279,9 +293,7 @@
                 
                 const response = await fetch(`/cart/add/${productId}`, {
                     method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                     body: formData
                 });
                 
@@ -293,33 +305,28 @@
                     });
                     
                     button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
-                    button.classList.add('bg-green-500', 'text-white');
-                    button.classList.remove('bg-white', 'hover:bg-[#1a1a2e]');
+                    button.classList.add('!bg-green-500');
                     
                     showToast(data.message);
                     
                     setTimeout(() => {
                         button.innerHTML = originalHTML;
-                        button.classList.remove('bg-green-500');
-                        button.classList.add('bg-white', 'hover:bg-[#1a1a2e]');
+                        button.classList.remove('!bg-green-500');
                     }, 2000);
                 }
             } catch (error) {
                 button.innerHTML = originalHTML;
-                console.error('Error:', error);
             }
         });
     });
 
     function showToast(message) {
         const toast = document.createElement('div');
-        toast.className = 'fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-[#1a1a2e] text-white px-6 py-3 z-50 flex items-center gap-2 shadow-lg';
-        toast.innerHTML = `<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> ${message}`;
+        toast.className = 'fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-[#1a1a2e] text-white px-8 py-4 z-50 flex items-center gap-3 shadow-2xl';
+        toast.innerHTML = `<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> <span class="font-medium">${message}</span>`;
         document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
+        setTimeout(() => toast.remove(), 3000);
     }
+});
 </script>
 {% endblock %}

@@ -5,10 +5,6 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
-    
-    .font-serif { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
-    
     #map-container {
         height: 600px;
         width: 100%;
@@ -20,13 +16,13 @@
     
     .store-card {
         transition: all 0.3s ease;
-        border-left: 2px solid transparent;
+        border-left: 3px solid transparent;
     }
     
     .store-card:hover,
     .store-card.active {
-        border-left-color: #c9a96e;
-        background: #fafafa;
+        border-left-color: #f59e0b;
+        background: #f8f8f8;
     }
     
     .custom-popup .leaflet-popup-content-wrapper {
@@ -46,7 +42,7 @@
     .reveal-section {
         opacity: 0;
         transform: translateY(40px);
-        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.8s ease;
     }
     
     .reveal-section.revealed {
@@ -58,12 +54,12 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="py-16 lg:py-24 bg-[#0a0a0a]">
+<section class="py-16 lg:py-20 bg-[#1a1a2e]">
     <div class="container mx-auto px-6 lg:px-16">
         <div class="max-w-3xl">
-            <div class="h-[1px] w-16 bg-[#c9a96e] mb-8"></div>
-            <p class="text-[#c9a96e] text-xs tracking-[0.4em] uppercase mb-4">{% if lang == 'ru' %}Локации{% elif lang == 'en' %}Locations{% else %}Joylashuvlar{% endif %}</p>
-            <h1 class="font-serif text-white text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] mb-6">
+            <div class="h-[2px] w-16 bg-[#f59e0b] mb-8"></div>
+            <p class="text-[#f59e0b] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Локации{% elif lang == 'en' %}Locations{% else %}Joylashuvlar{% endif %}</p>
+            <h1 class="text-white text-4xl md:text-5xl font-bold leading-[1.1] mb-6">
                 {% if lang == 'ru' %}Наши магазины{% elif lang == 'en' %}Our Stores{% else %}Bizning do'konlar{% endif %}
             </h1>
             <p class="text-white/60 text-base md:text-lg max-w-xl">
@@ -84,65 +80,65 @@
                     <div id="map-container"></div>
                 </div>
             </div>
-            
-            <!-- Stores List -->
+
+<!-- Stores List -->
             <div class="lg:col-span-1 order-1 lg:order-2">
-                <p class="text-[#c9a96e] text-xs tracking-[0.3em] uppercase mb-4">{% if lang == 'ru' %}Все магазины{% elif lang == 'en' %}All Stores{% else %}Barcha do'konlar{% endif %}</p>
-                <h2 class="font-serif text-2xl md:text-3xl text-[#0a0a0a] font-light mb-8">
+                <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">{% if lang == 'ru' %}Все магазины{% elif lang == 'en' %}All Stores{% else %}Barcha do'konlar{% endif %}</p>
+                <h2 class="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-8">
                     {% if lang == 'ru' %}Выберите магазин{% elif lang == 'en' %}Select a store{% else %}Do'konni tanlang{% endif %}
                 </h2>
                 <div id="stores-list" class="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                     <!-- Stores loaded via JS -->
                 </div>
             </div>
-        </div>
+                    </div>
         {% else %}
         <div class="text-center py-16">
             <p class="text-gray-500">{% if lang == 'ru' %}Магазины не найдены{% elif lang == 'en' %}No stores found{% else %}Do'konlar topilmadi{% endif %}</p>
-        </div>
-        {% endif %}
+                    </div>
+                    {% endif %}
     </div>
 </section>
 
 <!-- Contact Info -->
-<section class="py-16 lg:py-24 bg-[#fafafa] reveal-section">
+<section class="py-16 lg:py-20 bg-[#f8f8f8] reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="text-center">
-                <div class="w-14 h-14 mx-auto mb-4 bg-[#0a0a0a] flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-14 h-14 mx-auto mb-4 bg-[#1a1a2e] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                     </svg>
                 </div>
-                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</h3>
-                <a href="tel:+998712000262" class="text-gray-500 hover:text-[#c9a96e] transition">71 200 02 62</a>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %}</h3>
+                <a href="tel:+998712000262" class="text-gray-500 hover:text-[#f59e0b] transition">71 200 02 62</a>
             </div>
             <div class="text-center">
-                <div class="w-14 h-14 mx-auto mb-4 bg-[#0a0a0a] flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-14 h-14 mx-auto mb-4 bg-[#1a1a2e] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
-                </div>
-                <h3 class="font-medium text-[#0a0a0a] mb-2">Email</h3>
-                <a href="mailto:furniglass77@gmail.com" class="text-gray-500 hover:text-[#c9a96e] transition">furniglass77@gmail.com</a>
-            </div>
+                    </div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">Email</h3>
+                <a href="mailto:furniglass77@gmail.com" class="text-gray-500 hover:text-[#f59e0b] transition">furniglass77@gmail.com</a>
+                    </div>
             <div class="text-center">
-                <div class="w-14 h-14 mx-auto mb-4 bg-[#0a0a0a] flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-14 h-14 mx-auto mb-4 bg-[#1a1a2e] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
                 </div>
-                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</h3>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Адрес{% elif lang == 'en' %}Address{% else %}Manzil{% endif %}</h3>
                 <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Ташкент, Олмазор{% elif lang == 'en' %}Tashkent, Almazar{% else %}Toshkent, Olmazor{% endif %}</p>
             </div>
             <div class="text-center">
-                <div class="w-14 h-14 mx-auto mb-4 bg-[#0a0a0a] flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#c9a96e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-14 h-14 mx-auto mb-4 bg-[#1a1a2e] flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
-                <h3 class="font-medium text-[#0a0a0a] mb-2">{% if lang == 'ru' %}Часы работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</h3>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Часы работы{% elif lang == 'en' %}Working Hours{% else %}Ish vaqti{% endif %}</h3>
                 <p class="text-gray-500 text-sm">9:00 - 18:00</p>
             </div>
         </div>
@@ -182,16 +178,15 @@ document.addEventListener('DOMContentLoaded', function() {
             storesList.innerHTML = '';
             
             stores.forEach(store => {
-                // Add marker
                 if (store.latitude && store.longitude) {
                     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${store.latitude},${store.longitude}`;
                     const popup = `
                         <div style="min-width: 220px; padding: 16px;">
-                            <h3 style="font-weight: 600; font-size: 16px; margin: 0 0 12px 0; color: #0a0a0a;">${store.name}</h3>
+                            <h3 style="font-weight: 700; font-size: 16px; margin: 0 0 12px 0; color: #1a1a2e;">${store.name}</h3>
                             <p style="font-size: 13px; color: #666; margin: 0 0 8px 0;">${store.address}</p>
                             ${store.phone ? `<p style="font-size: 13px; color: #666; margin: 0 0 8px 0;">📞 ${store.phone}</p>` : ''}
                             ${store.working_hours ? `<p style="font-size: 13px; color: #666; margin: 0 0 12px 0;">🕐 ${store.working_hours}</p>` : ''}
-                            <a href="${mapsUrl}" target="_blank" style="display: block; text-align: center; background: #0a0a0a; color: white; padding: 10px; text-decoration: none; font-size: 13px;">
+                            <a href="${mapsUrl}" target="_blank" style="display: block; text-align: center; background: #1a1a2e; color: white; padding: 10px; text-decoration: none; font-size: 13px; font-weight: 600;">
                                 {% if lang == 'ru' %}Маршрут{% elif lang == 'en' %}Directions{% else %}Borish{% endif %}
                             </a>
                         </div>
@@ -210,12 +205,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     markers.push(marker);
                 }
                 
-                // Add to list
                 const item = document.createElement('div');
                 item.className = 'store-card p-4 cursor-pointer';
                 item.dataset.storeId = store.id;
                 item.innerHTML = `
-                    <h3 class="font-medium text-[#0a0a0a] mb-1">${store.name}</h3>
+                    <h3 class="font-bold text-[#1a1a2e] mb-1">${store.name}</h3>
                     <p class="text-sm text-gray-500 mb-2">${store.address}</p>
                     ${store.phone ? `<p class="text-sm text-gray-400">${store.phone}</p>` : ''}
                 `;
