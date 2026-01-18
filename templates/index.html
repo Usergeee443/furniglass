@@ -183,6 +183,112 @@
     /* Line clamp */
     .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    /* Configurator Styles */
+    .config-hotspot {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    
+    .config-hotspot:hover {
+        transform: scale(1.15);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .config-hotspot.active {
+        background: var(--accent);
+    }
+    
+    .config-hotspot.active .hotspot-icon {
+        filter: brightness(0) invert(1);
+    }
+    
+    .hotspot-pulse {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--accent);
+        opacity: 0;
+        animation: hotspotPulse 2s infinite;
+    }
+    
+    @keyframes hotspotPulse {
+        0% { transform: scale(1); opacity: 0.5; }
+        100% { transform: scale(2); opacity: 0; }
+    }
+    
+    .hotspot-icon {
+        font-size: 18px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Config Buttons */
+    .config-btn {
+        padding: 10px 16px;
+        border: 1px solid #e5e5e5;
+        background: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .config-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    
+    .config-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+    }
+    
+    /* Config Color Swatches */
+    .config-color {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+    
+    .config-color:hover {
+        transform: scale(1.1);
+    }
+    
+    .config-color.active {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--accent);
+    }
+    
+    .config-color::after {
+        content: '';
+        position: absolute;
+        inset: -6px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        transition: border-color 0.2s;
+    }
+    
+    .config-color.active::after {
+        border-color: var(--accent);
+    }
 </style>
 {% endblock %}
 
@@ -624,6 +730,185 @@
 </section>
 {% endif %}
 
+<!-- Individual Configurator Section -->
+<section class="py-16 lg:py-24 bg-[#f8f8f8] reveal-section" id="configurator">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Header -->
+        <div class="max-w-3xl mb-12 lg:mb-16">
+            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">
+                {% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Individual buyurtma{% endif %}
+            </p>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] leading-tight mb-6">
+                {% if lang == 'ru' %}Furniglass — создаёт мебель в вашем стиле{% elif lang == 'en' %}Furniglass — creates furniture in your style{% else %}Furniglass — mebelni siz istagan uslubda yaratadi{% endif %}
+            </h2>
+            <p class="text-gray-600 text-base lg:text-lg leading-relaxed">
+                {% if lang == 'ru' %}Вы выбираете каждую деталь: тип ножек, материал, цвет, узор и стиль. Furniglass производит мебель не стандартную, а по вашему вкусу.{% elif lang == 'en' %}You choose every detail: leg type, material, color, pattern and style. Furniglass produces furniture not standard, but according to your taste.{% else %}Siz har bir detalni o'zingiz tanlaysiz: oyoq turi, material, rang, naqsh va stil. Furniglass mebellarni standart emas, sizning didingizga moslab ishlab chiqaradi.{% endif %}
+            </p>
+        </div>
+        
+        <!-- Configurator Card -->
+        <div class="bg-white shadow-xl overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- Left: Product Image with Interactive Points -->
+                <div class="relative bg-[#f5f5f5] p-8 lg:p-12 min-h-[400px] lg:min-h-[600px]">
+                    <!-- Main Product Image -->
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <img src="/uploads/designs/chair-config.png" alt="Configurable Chair" class="max-w-full max-h-[500px] object-contain" id="config-main-image" onerror="this.src='/uploads/products/default.jpg'">
+                        
+                        <!-- Interactive Hotspots -->
+                        <!-- Legs -->
+                        <button class="config-hotspot absolute bottom-[15%] left-[35%]" data-config="legs" aria-label="Oyoqlar">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">🦵</span>
+                        </button>
+                        
+                        <!-- Seat -->
+                        <button class="config-hotspot absolute top-[45%] left-[50%]" data-config="seat" aria-label="O'rindiq">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">🪑</span>
+                        </button>
+                        
+                        <!-- Backrest -->
+                        <button class="config-hotspot absolute top-[20%] left-[45%]" data-config="backrest" aria-label="Suyanchiq">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">🧱</span>
+                        </button>
+                        
+                        <!-- Pattern -->
+                        <button class="config-hotspot absolute top-[35%] right-[30%]" data-config="pattern" aria-label="Naqsh">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">✨</span>
+                        </button>
+                        
+                        <!-- Color/Material -->
+                        <button class="config-hotspot absolute bottom-[35%] right-[25%]" data-config="material" aria-label="Material">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">🎨</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Right: Configuration Options -->
+                <div class="p-6 lg:p-10">
+                    <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-6">
+                        {% if lang == 'ru' %}Настройте под себя{% elif lang == 'en' %}Customize for yourself{% else %}O'zingizga moslab sozlang{% endif %}
+                    </h3>
+                    
+                    <!-- Config Options -->
+                    <div class="space-y-6">
+                        <!-- Legs Option -->
+                        <div class="config-option" data-option="legs">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Classic</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="config-btn active" data-value="classic">Classic</button>
+                                <button class="config-btn" data-value="modern">Modern</button>
+                                <button class="config-btn" data-value="vintage">Vintage</button>
+                                <button class="config-btn" data-value="minimalist">Minimalist</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Seat Option -->
+                        <div class="config-option" data-option="seat">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Ko'ja</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="config-btn active" data-value="koja">Ko'ja</button>
+                                <button class="config-btn" data-value="mato">Mato</button>
+                                <button class="config-btn" data-value="velvet">Velvet</button>
+                                <button class="config-btn" data-value="eko">Eko-ko'ja</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Backrest Option -->
+                        <div class="config-option" data-option="backrest">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Yumshoq</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="config-btn active" data-value="soft">Yumshoq</button>
+                                <button class="config-btn" data-value="firm">Qattiq</button>
+                                <button class="config-btn" data-value="ergonomic">Ergonomik</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Pattern Option -->
+                        <div class="config-option" data-option="pattern">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Oddiy</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="config-btn active" data-value="plain">Oddiy</button>
+                                <button class="config-btn" data-value="quilted">Tikuv</button>
+                                <button class="config-btn" data-value="tufted">Tugmali</button>
+                                <button class="config-btn" data-value="modern">Modern Line</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Color Option -->
+                        <div class="config-option" data-option="material">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Qora</span>
+                            </div>
+                            <div class="flex flex-wrap gap-3">
+                                <button class="config-color active" data-value="black" data-label="Qora" style="background: #1a1a2e;" title="Qora"></button>
+                                <button class="config-color" data-value="brown" data-label="Jigarrang" style="background: #8B4513;" title="Jigarrang"></button>
+                                <button class="config-color" data-value="beige" data-label="Bej" style="background: #D4B896;" title="Bej"></button>
+                                <button class="config-color" data-value="gray" data-label="Kulrang" style="background: #6B7280;" title="Kulrang"></button>
+                                <button class="config-color" data-value="white" data-label="Oq" style="background: #F5F5F5; border: 1px solid #ddd;" title="Oq"></button>
+                                <button class="config-color" data-value="green" data-label="Yashil" style="background: #2D5A3D;" title="Yashil"></button>
+                                <button class="config-color" data-value="blue" data-label="Ko'k" style="background: #1E3A5F;" title="Ko'k"></button>
+                                <button class="config-color" data-value="gold" data-label="Oltin" style="background: linear-gradient(135deg, #D4AF37, #F5D061);" title="Oltin"></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Summary -->
+                    <div class="mt-8 pt-6 border-t border-gray-100">
+                        <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
+                            {% if lang == 'ru' %}Ваша конфигурация{% elif lang == 'en' %}Your Configuration{% else %}Sizning konfiguratsiyangiz{% endif %}
+                        </h4>
+                        <div id="config-summary" class="bg-[#f8f8f8] p-4 text-sm space-y-2">
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-legs">Classic</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-seat">Ko'ja</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-backrest">Yumshoq</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-pattern">Oddiy</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-material">Qora</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- CTA Button -->
+                    <div class="mt-6">
+                        <a href="#" id="config-order-btn" class="block w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
+                            {% if lang == 'ru' %}Заказать эту конфигурацию{% elif lang == 'en' %}Order this configuration{% else %}Shu variantda buyurtma berish{% endif %}
+                        </a>
+                        <p class="text-center text-xs text-gray-400 mt-3">
+                            {% if lang == 'ru' %}Мы свяжемся с вами для уточнения деталей{% elif lang == 'en' %}We will contact you to clarify details{% else %}Tafsilotlarni aniqlashtirish uchun siz bilan bog'lanamiz{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Testimonials -->
 <section class="py-16 lg:py-24 bg-white reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
@@ -703,6 +988,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Section reveal animation
     const revealSections = document.querySelectorAll('.reveal-section');
     
     const revealObserver = new IntersectionObserver((entries) => {
@@ -718,6 +1004,118 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     revealSections.forEach(section => revealObserver.observe(section));
+    
+    // ===== CONFIGURATOR FUNCTIONALITY =====
+    const config = {
+        legs: { value: 'classic', label: 'Classic' },
+        seat: { value: 'koja', label: "Ko'ja" },
+        backrest: { value: 'soft', label: 'Yumshoq' },
+        pattern: { value: 'plain', label: 'Oddiy' },
+        material: { value: 'black', label: 'Qora' }
+    };
+    
+    // Hotspot click handlers
+    const hotspots = document.querySelectorAll('.config-hotspot');
+    hotspots.forEach(hotspot => {
+        hotspot.addEventListener('click', function() {
+            const configType = this.dataset.config;
+            const optionSection = document.querySelector(`.config-option[data-option="${configType}"]`);
+            
+            // Remove active from all hotspots
+            hotspots.forEach(h => h.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Scroll to option section on mobile
+            if (window.innerWidth < 1024 && optionSection) {
+                optionSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // Highlight the option section
+            document.querySelectorAll('.config-option').forEach(opt => opt.classList.remove('ring-2', 'ring-[#f59e0b]'));
+            if (optionSection) {
+                optionSection.classList.add('ring-2', 'ring-[#f59e0b]');
+                setTimeout(() => optionSection.classList.remove('ring-2', 'ring-[#f59e0b]'), 2000);
+            }
+        });
+    });
+    
+    // Config button handlers
+    const configBtns = document.querySelectorAll('.config-btn');
+    configBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const option = this.closest('.config-option');
+            const optionType = option.dataset.option;
+            const value = this.dataset.value;
+            const label = this.textContent.trim();
+            
+            // Update active state
+            option.querySelectorAll('.config-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update config
+            config[optionType] = { value, label };
+            
+            // Update label
+            option.querySelector('.config-selected-label').textContent = label;
+            
+            // Update summary
+            updateSummary();
+        });
+    });
+    
+    // Color swatch handlers
+    const colorBtns = document.querySelectorAll('.config-color');
+    colorBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const option = this.closest('.config-option');
+            const optionType = option.dataset.option;
+            const value = this.dataset.value;
+            const label = this.dataset.label;
+            
+            // Update active state
+            option.querySelectorAll('.config-color').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update config
+            config[optionType] = { value, label };
+            
+            // Update label
+            option.querySelector('.config-selected-label').textContent = label;
+            
+            // Update summary
+            updateSummary();
+        });
+    });
+    
+    function updateSummary() {
+        document.getElementById('summary-legs').textContent = config.legs.label;
+        document.getElementById('summary-seat').textContent = config.seat.label;
+        document.getElementById('summary-backrest').textContent = config.backrest.label;
+        document.getElementById('summary-pattern').textContent = config.pattern.label;
+        document.getElementById('summary-material').textContent = config.material.label;
+    }
+    
+    // Order button handler
+    const orderBtn = document.getElementById('config-order-btn');
+    if (orderBtn) {
+        orderBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Create WhatsApp message
+            const message = `Salom! Men individual mebel buyurtma bermoqchiman:
+
+🦵 Oyoqlar: ${config.legs.label}
+🪑 O'rindiq: ${config.seat.label}
+🧱 Suyanchiq: ${config.backrest.label}
+✨ Naqsh: ${config.pattern.label}
+🎨 Rang: ${config.material.label}
+
+Iltimos, narx va muddatni ayting.`;
+            
+            const whatsappUrl = `https://wa.me/998712000262?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+    }
 });
 </script>
 {% endblock %}
