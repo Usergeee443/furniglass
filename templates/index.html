@@ -186,31 +186,34 @@
     
     /* Configurator Styles */
     .config-hotspot {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.95);
-        border: none;
+        background: #fff;
+        border: 2px solid var(--accent);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 10;
     }
     
     .config-hotspot:hover {
-        transform: scale(1.15);
-        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+        transform: scale(1.1);
+        box-shadow: 0 6px 24px rgba(245, 158, 11, 0.4);
+        border-color: var(--accent-hover);
     }
     
     .config-hotspot.active {
         background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 6px 24px rgba(245, 158, 11, 0.5);
     }
     
-    .config-hotspot.active .hotspot-icon {
-        filter: brightness(0) invert(1);
+    .config-hotspot.active .hotspot-icon svg {
+        stroke: #fff;
     }
     
     .hotspot-pulse {
@@ -224,70 +227,72 @@
     }
     
     @keyframes hotspotPulse {
-        0% { transform: scale(1); opacity: 0.5; }
-        100% { transform: scale(2); opacity: 0; }
+        0% { transform: scale(1); opacity: 0.6; }
+        100% { transform: scale(1.8); opacity: 0; }
     }
     
     .hotspot-icon {
-        font-size: 18px;
         position: relative;
         z-index: 1;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .hotspot-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--accent);
+        transition: stroke 0.3s ease;
     }
     
     /* Config Buttons */
     .config-btn {
-        padding: 10px 16px;
-        border: 1px solid #e5e5e5;
+        padding: 10px 20px;
+        border: 2px solid #e5e5e5;
         background: #fff;
+        border-radius: 8px;
         font-size: 13px;
         font-weight: 500;
         color: #666;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .config-btn:hover {
-        border-color: var(--primary);
-        color: var(--primary);
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
     }
     
     .config-btn.active {
-        background: var(--primary);
-        border-color: var(--primary);
+        background: var(--accent);
+        border-color: var(--accent);
         color: #fff;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
     
     /* Config Color Swatches */
     .config-color {
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
-        border: 3px solid transparent;
+        border: 3px solid #e5e5e5;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
     .config-color:hover {
-        transform: scale(1.1);
+        transform: scale(1.15);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     }
     
     .config-color.active {
         border-color: var(--accent);
-        box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--accent);
-    }
-    
-    .config-color::after {
-        content: '';
-        position: absolute;
-        inset: -6px;
-        border-radius: 50%;
-        border: 2px solid transparent;
-        transition: border-color 0.2s;
-    }
-    
-    .config-color.active::after {
-        border-color: var(--accent);
+        box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--accent), 0 4px 16px rgba(245, 158, 11, 0.4);
+        transform: scale(1.1);
     }
 </style>
 {% endblock %}
@@ -297,7 +302,7 @@
 <section class="hero-section -mt-[70px] md:-mt-[80px]">
     <div class="hero-bg-image"></div>
     
-    <div class="relative h-full flex items-center">
+    <div class="relative h-full flex items-center pt-[90px] md:pt-[100px]">
         <div class="container mx-auto px-6 lg:px-16">
             <div class="max-w-3xl">
                 <!-- Accent Line -->
@@ -325,25 +330,9 @@
                     </a>
                     <a href="/contact" class="border border-white/40 text-white px-8 py-4 text-sm tracking-wider uppercase font-medium hover:bg-white hover:text-[#1a1a2e] transition-all">
                         {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
-                    </a>
-                </div>
-                
-                <!-- Stats Row -->
-                <div class="animate-reveal animate-reveal-delay-4 flex gap-10 md:gap-16 mt-16 pt-8 border-t border-white/20">
-                    <div>
-                        <p class="text-3xl md:text-4xl font-bold text-white">25+</p>
-                        <p class="text-white/50 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil tajriba{% endif %}</p>
-                    </div>
-                    <div>
-                        <p class="text-3xl md:text-4xl font-bold text-white">5000+</p>
-                        <p class="text-white/50 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Clients{% else %}Mijozlar{% endif %}</p>
-                    </div>
-                    <div>
-                        <p class="text-3xl md:text-4xl font-bold text-white">2500+</p>
-                        <p class="text-white/50 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
-                    </div>
-                </div>
+                </a>
             </div>
+        </div>
         </div>
     </div>
 </section>
@@ -399,7 +388,7 @@
                     <svg class="w-5 h-5 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                     </svg>
-                </div>
+                        </div>
                 <p class="text-white text-sm font-medium">25 {% if lang == 'ru' %}лет гарантии{% elif lang == 'en' %}years warranty{% else %}yil kafolat{% endif %}</p>
                         </div>
             <div class="flex items-center gap-4">
@@ -442,14 +431,14 @@
                 <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e]">
                     {% if lang == 'ru' %}Популярные товары{% elif lang == 'en' %}Popular Products{% else %}Mashhur mahsulotlar{% endif %}
             </h2>
-            </div>
+                    </div>
             <a href="/products" class="group flex items-center gap-3 text-[#1a1a2e] hover:text-[#f59e0b] transition-colors">
                 <span class="text-sm font-medium">{% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}</span>
                 <svg class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
             </a>
-                        </div>
+                </div>
         
         <!-- Products Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
@@ -480,7 +469,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
                             </svg>
                                     </button>
-                    </div>
+                        </div>
                         </div>
                 
                 <div class="card-content">
@@ -523,8 +512,8 @@
                     {% if lang == 'ru' %}Все категории мебели{% elif lang == 'en' %}All Furniture Categories{% else %}Barcha mebel kategoriyalari{% endif %}
             </h2>
             </div>
-        </div>
-        
+            </div>
+            
         <!-- Categories Grid -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
             {% for category in categories[:12] %}
@@ -544,8 +533,8 @@
                 </div>
             </a>
             {% endfor %}
-        </div>
-    </div>
+                    </div>
+                </div>
 </section>
 {% endif %}
 
@@ -557,13 +546,8 @@
             <div class="relative">
                 <div class="aspect-[4/5] overflow-hidden">
                     <img src="/uploads/designs/2.jpg" alt="Furniglass" class="w-full h-full object-cover">
+                    </div>
                 </div>
-                <!-- Floating Stats -->
-                <div class="absolute -bottom-6 -right-4 lg:-right-6 bg-[#f59e0b] p-6 lg:p-8">
-                    <p class="text-4xl lg:text-5xl font-bold text-white">25+</p>
-                    <p class="text-white/80 text-xs tracking-wider uppercase mt-1">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil tajriba{% endif %}</p>
-                </div>
-            </div>
             
             <!-- Content -->
             <div>
@@ -588,21 +572,21 @@
                             <svg class="w-4 h-4 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
-                        </div>
+                    </div>
                         <div>
                             <p class="text-white font-medium text-sm">{% if lang == 'ru' %}Премиум материалы{% elif lang == 'en' %}Premium materials{% else %}Premium materiallar{% endif %}</p>
-                        </div>
+                </div>
                     </div>
                     <div class="flex items-start gap-3">
                         <div class="w-8 h-8 bg-[#f59e0b]/20 flex items-center justify-center flex-shrink-0 mt-1">
                             <svg class="w-4 h-4 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
-                        </div>
+                </div>
                         <div>
                             <p class="text-white font-medium text-sm">{% if lang == 'ru' %}25 лет гарантии{% elif lang == 'en' %}25 years warranty{% else %}25 yil kafolat{% endif %}</p>
-                        </div>
                     </div>
+                </div>
                     <div class="flex items-start gap-3">
                         <div class="w-8 h-8 bg-[#f59e0b]/20 flex items-center justify-center flex-shrink-0 mt-1">
                             <svg class="w-4 h-4 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -640,42 +624,111 @@
 <section class="py-16 lg:py-24 bg-white reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
         <!-- Header -->
-        <div class="text-center max-w-3xl mx-auto mb-12">
-            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">{% if lang == 'ru' %}Процесс{% elif lang == 'en' %}Process{% else %}Jarayon{% endif %}</p>
-            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e]">
+        <div class="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] mb-4">
                 {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlaymiz{% endif %}
             </h2>
+            <p class="text-gray-600 text-base lg:text-lg">
+                {% if lang == 'ru' %}3 этапа: Консультация → Производство → Доставка{% elif lang == 'en' %}3 steps: Consultation → Production → Delivery{% else %}3 bosqich: Konsultatsiya → Ishlab chiqarish → Yetkazish{% endif %}
+            </p>
         </div>
         
-        <!-- Steps -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="text-center group">
-                <div class="w-16 h-16 mx-auto mb-5 border-2 border-[#f59e0b]/30 flex items-center justify-center group-hover:bg-[#f59e0b] group-hover:border-[#f59e0b] transition-all">
-                    <span class="text-2xl font-bold text-[#f59e0b] group-hover:text-white transition-colors">01</span>
-                </div>
-                <h3 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}</h3>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Обсуждаем ваши идеи{% elif lang == 'en' %}Discuss your ideas{% else %}G'oyalaringizni muhokama qilamiz{% endif %}</p>
-            </div>
-            <div class="text-center group">
-                <div class="w-16 h-16 mx-auto mb-5 border-2 border-[#f59e0b]/30 flex items-center justify-center group-hover:bg-[#f59e0b] group-hover:border-[#f59e0b] transition-all">
-                    <span class="text-2xl font-bold text-[#f59e0b] group-hover:text-white transition-colors">02</span>
+        <!-- Steps with connecting line -->
+        <div class="relative max-w-5xl mx-auto">
+            <!-- Connecting dashed line -->
+            <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 -translate-y-1/2" style="background: repeating-linear-gradient(to right, #3b82f6 0, #3b82f6 8px, transparent 8px, transparent 16px); z-index: 1;"></div>
+            
+            <!-- Steps Container -->
+            <div class="relative grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 z-10">
+                <!-- Step 1: Consultation -->
+                <div class="relative">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
+                        <!-- Icon -->
+                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                            <svg class="w-full h-full text-[#60a5fa]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <!-- Speech bubbles overlapping -->
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 8h.01M19 8h.01M23 8c0 3.314-2.686 6-6 6a5.9 5.9 0 01-2.553-.569L12 15l.447-2.231A5.9 5.9 0 0111 12c0-3.314 2.686-6 6-6s6 2.686 6 6z" opacity="0.6"/>
+                            </svg>
                         </div>
-                <h3 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</h3>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Визуализация проекта{% elif lang == 'en' %}Project visualization{% else %}Loyiha vizualizatsiyasi{% endif %}</p>
+                        
+                        <!-- Title -->
+                        <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-3 text-center">
+                            {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
+                        </h3>
+                        
+                        <!-- Description -->
+                        <p class="text-gray-600 text-sm lg:text-base text-center leading-relaxed">
+                            {% if lang == 'ru' %}Бесплатная консультация, помощь в выборе стиля и дизайна мебели{% elif lang == 'en' %}Free consultation, help with choosing style and furniture design{% else %}Bepul maslahat, uslub va mebel dizaynini tanlashda yordam{% endif %}
+                        </p>
                     </div>
-            <div class="text-center group">
-                <div class="w-16 h-16 mx-auto mb-5 border-2 border-[#f59e0b]/30 flex items-center justify-center group-hover:bg-[#f59e0b] group-hover:border-[#f59e0b] transition-all">
-                    <span class="text-2xl font-bold text-[#f59e0b] group-hover:text-white transition-colors">03</span>
+                    
+                    <!-- Step Number Badge -->
+                    <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-lg z-20">
+                        <span class="text-white font-bold text-lg">1</span>
+                    </div>
                 </div>
-                <h3 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}</h3>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Изготовление мебели{% elif lang == 'en' %}Furniture manufacturing{% else %}Mebel yasash{% endif %}</p>
-            </div>
-            <div class="text-center group">
-                <div class="w-16 h-16 mx-auto mb-5 border-2 border-[#f59e0b]/30 flex items-center justify-center group-hover:bg-[#f59e0b] group-hover:border-[#f59e0b] transition-all">
-                    <span class="text-2xl font-bold text-[#f59e0b] group-hover:text-white transition-colors">04</span>
+                
+                <!-- Step 2: Production -->
+                <div class="relative lg:mt-16">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
+                        <!-- Icon -->
+                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                            <svg class="w-full h-full text-[#60a5fa]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <!-- Document with folded corner -->
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                                <!-- Lines inside document -->
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9h6M6 12h6M6 15h3" opacity="0.5"/>
+                                <!-- Folded corner -->
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 2.25L21 3.75l-1.5 1.5v-3z" fill="currentColor" opacity="0.3"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-3 text-center">
+                            {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
+                        </h3>
+                        
+                        <!-- Description -->
+                        <p class="text-gray-600 text-sm lg:text-base text-center leading-relaxed">
+                            {% if lang == 'ru' %}Профессиональное изготовление мебели по вашим размерам и требованиям{% elif lang == 'en' %}Professional furniture manufacturing according to your dimensions and requirements{% else %}Sizning o'lchamlaringiz va talablaringiz bo'yicha professional mebel yasash{% endif %}
+                        </p>
+                    </div>
+                    
+                    <!-- Step Number Badge -->
+                    <div class="absolute -top-4 lg:-top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-lg z-20">
+                        <span class="text-white font-bold text-lg">2</span>
+                    </div>
                 </div>
-                <h3 class="font-bold text-[#1a1a2e] mb-2">{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}</h3>
-                <p class="text-gray-500 text-sm">{% if lang == 'ru' %}Доставляем и устанавливаем{% elif lang == 'en' %}Deliver and install{% else %}Yetkazamiz va o'rnatamiz{% endif %}</p>
+                
+                <!-- Step 3: Delivery -->
+                <div class="relative">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
+                        <!-- Icon -->
+                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                            <svg class="w-full h-full text-[#60a5fa]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <!-- Thumbs up hand -->
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.493 18.5c-.425 0-.82-.236-.975-.632A7.48 7.48 0 016 15.375c0-1.75.599-3.358 1.336-4.634.453-.767 1.05-1.422 1.755-1.928L12.5 6.5c.217-.216.5-.5.5-.5s.283.284.5.5l2.916 2.423c.705.506 1.302 1.161 1.755 1.928.737 1.276 1.336 2.884 1.336 4.634a7.48 7.48 0 01-.518 2.868c-.155.396-.55.632-.975.632h-9.014z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.493 18.5h9.014M7.493 18.5c-.425 0-.82-.236-.975-.632A7.48 7.48 0 016 15.375c0-1.75.599-3.358 1.336-4.634.453-.767 1.05-1.422 1.755-1.928L12.5 6.5c.217-.216.5-.5.5-.5s.283.284.5.5l2.916 2.423c.705.506 1.302 1.161 1.755 1.928.737 1.276 1.336 2.884 1.336 4.634a7.48 7.48 0 01-.518 2.868c-.155.396-.55.632-.975.632" opacity="0.3"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-3 text-center">
+                            {% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}
+                        </h3>
+                        
+                        <!-- Description -->
+                        <p class="text-gray-600 text-sm lg:text-base text-center leading-relaxed">
+                            {% if lang == 'ru' %}Доставка готовой мебели и профессиональная установка на месте{% elif lang == 'en' %}Delivery of finished furniture and professional on-site installation{% else %}Tayyor mebelni yetkazish va professional o'rnatish{% endif %}
+                        </p>
+                    </div>
+                    
+                    <!-- Step Number Badge -->
+                    <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-lg z-20">
+                        <span class="text-white font-bold text-lg">3</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -690,34 +743,34 @@
                 <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">{% if lang == 'ru' %}Популярное{% elif lang == 'en' %}Popular{% else %}Ommabop{% endif %}</p>
                 <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e]">
                     {% if lang == 'ru' %}Ещё больше товаров{% elif lang == 'en' %}More Products{% else %}Ko'proq mahsulotlar{% endif %}
-                </h2>
-            </div>
-        </div>
+            </h2>
+                        </div>
+                    </div>
         
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
             {% for product in bestsellers[12:22] %}
             <article class="product-card group bg-white">
                 <a href="/product/{{ product.id }}" class="block">
                     <div class="relative aspect-[3/4] overflow-hidden bg-[#f0f0f0]">
-                        {% if product.images %}
-                            {% set images = product.images|from_json %}
-                            {% if images %}
-                            <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
+                                {% if product.images %}
+                                    {% set images = product.images|from_json %}
+                                    {% if images %}
+                                        <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
                                  class="product-img w-full h-full object-cover">
-                            {% endif %}
-                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
                     </div>
                     <div class="p-3">
                         <h3 class="font-semibold text-[#1a1a2e] text-sm mb-1 line-clamp-1 group-hover:text-[#f59e0b] transition-colors">
-                            {{ product.get_name(lang) }}
-                        </h3>
+                                        {{ product.get_name(lang) }}
+                                    </h3>
                         <p class="font-bold text-[#1a1a2e]">${{ "%.0f"|format(product.price) }}</p>
                 </div>
             </a>
             </article>
             {% endfor %}
-        </div>
-        
+                        </div>
+                                
         <div class="mt-10 text-center">
             <a href="/products" class="inline-flex items-center gap-3 border-2 border-[#1a1a2e] text-[#1a1a2e] px-8 py-4 text-sm tracking-wider uppercase font-medium hover:bg-[#1a1a2e] hover:text-white transition-all">
                 {% if lang == 'ru' %}Смотреть все{% elif lang == 'en' %}View all{% else %}Barchasini ko'rish{% endif %}
@@ -747,10 +800,10 @@
         </div>
         
         <!-- Configurator Card -->
-        <div class="bg-white shadow-xl overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
             <div class="grid grid-cols-1 lg:grid-cols-2">
                 <!-- Left: Product Image with Interactive Points -->
-                <div class="relative bg-[#f5f5f5] p-8 lg:p-12 min-h-[400px] lg:min-h-[600px]">
+                <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 p-8 lg:p-12 min-h-[400px] lg:min-h-[600px]">
                     <!-- Main Product Image -->
                     <div class="relative w-full h-full flex items-center justify-center">
                         <img src="/uploads/designs/chair-config.png" alt="Configurable Chair" class="max-w-full max-h-[500px] object-contain" id="config-main-image" onerror="this.src='/uploads/products/default.jpg'">
@@ -759,31 +812,51 @@
                         <!-- Legs -->
                         <button class="config-hotspot absolute bottom-[15%] left-[35%]" data-config="legs" aria-label="Oyoqlar">
                             <span class="hotspot-pulse"></span>
-                            <span class="hotspot-icon">🦵</span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                                </svg>
+                            </span>
                         </button>
                         
                         <!-- Seat -->
                         <button class="config-hotspot absolute top-[45%] left-[50%]" data-config="seat" aria-label="O'rindiq">
                             <span class="hotspot-pulse"></span>
-                            <span class="hotspot-icon">🪑</span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                </svg>
+                            </span>
                         </button>
                         
                         <!-- Backrest -->
                         <button class="config-hotspot absolute top-[20%] left-[45%]" data-config="backrest" aria-label="Suyanchiq">
                             <span class="hotspot-pulse"></span>
-                            <span class="hotspot-icon">🧱</span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </span>
                         </button>
                         
                         <!-- Pattern -->
                         <button class="config-hotspot absolute top-[35%] right-[30%]" data-config="pattern" aria-label="Naqsh">
                             <span class="hotspot-pulse"></span>
-                            <span class="hotspot-icon">✨</span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                            </span>
                         </button>
                         
                         <!-- Color/Material -->
                         <button class="config-hotspot absolute bottom-[35%] right-[25%]" data-config="material" aria-label="Material">
                             <span class="hotspot-pulse"></span>
-                            <span class="hotspot-icon">🎨</span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                                </svg>
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -803,14 +876,14 @@
                                     {% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}
                                 </span>
                                 <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Classic</span>
-                            </div>
+        </div>
                             <div class="flex flex-wrap gap-2">
                                 <button class="config-btn active" data-value="classic">Classic</button>
                                 <button class="config-btn" data-value="modern">Modern</button>
                                 <button class="config-btn" data-value="vintage">Vintage</button>
                                 <button class="config-btn" data-value="minimalist">Minimalist</button>
-                            </div>
-                        </div>
+                    </div>
+                    </div>
                         
                         <!-- Seat Option -->
                         <div class="config-option" data-option="seat">
@@ -819,14 +892,14 @@
                                     {% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}
                                 </span>
                                 <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Ko'ja</span>
-                            </div>
+                </div>
                             <div class="flex flex-wrap gap-2">
                                 <button class="config-btn active" data-value="koja">Ko'ja</button>
                                 <button class="config-btn" data-value="mato">Mato</button>
                                 <button class="config-btn" data-value="velvet">Velvet</button>
                                 <button class="config-btn" data-value="eko">Eko-ko'ja</button>
-                            </div>
-                        </div>
+        </div>
+    </div>
                         
                         <!-- Backrest Option -->
                         <div class="config-option" data-option="backrest">
@@ -835,13 +908,13 @@
                                     {% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}
                                 </span>
                                 <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Yumshoq</span>
-                            </div>
+                        </div>
                             <div class="flex flex-wrap gap-2">
                                 <button class="config-btn active" data-value="soft">Yumshoq</button>
                                 <button class="config-btn" data-value="firm">Qattiq</button>
                                 <button class="config-btn" data-value="ergonomic">Ergonomik</button>
-                            </div>
-                        </div>
+                    </div>
+                    </div>
                         
                         <!-- Pattern Option -->
                         <div class="config-option" data-option="pattern">
@@ -850,14 +923,14 @@
                                     {% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}
                                 </span>
                                 <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Oddiy</span>
-                            </div>
+                </div>
                             <div class="flex flex-wrap gap-2">
                                 <button class="config-btn active" data-value="plain">Oddiy</button>
                                 <button class="config-btn" data-value="quilted">Tikuv</button>
                                 <button class="config-btn" data-value="tufted">Tugmali</button>
                                 <button class="config-btn" data-value="modern">Modern Line</button>
-                            </div>
-                        </div>
+        </div>
+    </div>
                         
                         <!-- Color Option -->
                         <div class="config-option" data-option="material">
@@ -866,7 +939,7 @@
                                     {% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}
                                 </span>
                                 <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Qora</span>
-                            </div>
+        </div>
                             <div class="flex flex-wrap gap-3">
                                 <button class="config-color active" data-value="black" data-label="Qora" style="background: #1a1a2e;" title="Qora"></button>
                                 <button class="config-color" data-value="brown" data-label="Jigarrang" style="background: #8B4513;" title="Jigarrang"></button>
@@ -876,9 +949,9 @@
                                 <button class="config-color" data-value="green" data-label="Yashil" style="background: #2D5A3D;" title="Yashil"></button>
                                 <button class="config-color" data-value="blue" data-label="Ko'k" style="background: #1E3A5F;" title="Ko'k"></button>
                                 <button class="config-color" data-value="gold" data-label="Oltin" style="background: linear-gradient(135deg, #D4AF37, #F5D061);" title="Oltin"></button>
-                            </div>
+                </div>
+            </div>
                         </div>
-                    </div>
                     
                     <!-- Summary -->
                     <div class="mt-8 pt-6 border-t border-gray-100">
@@ -891,8 +964,8 @@
                             <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-backrest">Yumshoq</span></div>
                             <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-pattern">Oddiy</span></div>
                             <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-material">Qora</span></div>
-                        </div>
                     </div>
+                        </div>
                     
                     <!-- CTA Button -->
                     <div class="mt-6">
@@ -903,8 +976,8 @@
                             {% if lang == 'ru' %}Мы свяжемся с вами для уточнения деталей{% elif lang == 'en' %}We will contact you to clarify details{% else %}Tafsilotlarni aniqlashtirish uchun siz bilan bog'lanamiz{% endif %}
                         </p>
                     </div>
-                </div>
-            </div>
+                        </div>
+                    </div>
         </div>
     </div>
 </section>
@@ -917,9 +990,9 @@
                 <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">{% if lang == 'ru' %}Отзывы{% elif lang == 'en' %}Testimonials{% else %}Fikrlar{% endif %}</p>
                 <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e]">
                     {% if lang == 'ru' %}Что говорят клиенты{% elif lang == 'en' %}What clients say{% else %}Mijozlar fikri{% endif %}
-            </h2>
+                </h2>
             </div>
-        </div>
+            </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-[#f8f8f8] p-8 border-l-4 border-[#f59e0b]">
@@ -931,10 +1004,10 @@
                     <div>
                         <p class="font-bold text-[#1a1a2e]">Alisher Karimov</p>
                         <p class="text-sm text-gray-400">{% if lang == 'ru' %}Ресторатор{% elif lang == 'en' %}Restaurateur{% else %}Restorator{% endif %}</p>
-                    </div>
-                </div>
-            </div>
-            
+        </div>
+                        </div>
+        </div>
+        
             <div class="bg-[#f8f8f8] p-8 border-l-4 border-[#f59e0b]">
                 <p class="text-gray-600 leading-relaxed mb-6">
                     {% if lang == 'ru' %}"Профессиональный подход от начала до конца. Рекомендую всем, кто ценит качество."{% elif lang == 'en' %}"Professional approach from start to finish. I recommend to everyone who values quality."{% else %}"Boshidan oxirigacha professional yondashuv. Sifatni qadrlaydigan hammaga tavsiya qilaman."{% endif %}
@@ -944,9 +1017,9 @@
                         <div>
                         <p class="font-bold text-[#1a1a2e]">Dilnoza Nazarova</p>
                         <p class="text-sm text-gray-400">{% if lang == 'ru' %}Дизайнер{% elif lang == 'en' %}Designer{% else %}Dizayner{% endif %}</p>
-                        </div>
-                        </div>
-                        </div>
+        </div>
+    </div>
+        </div>
 
             <div class="bg-[#f8f8f8] p-8 border-l-4 border-[#f59e0b]">
                 <p class="text-gray-600 leading-relaxed mb-6">
@@ -954,7 +1027,7 @@
                 </p>
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center text-white font-bold">SO</div>
-                        <div>
+                    <div>
                         <p class="font-bold text-[#1a1a2e]">Sardor Otaboyev</p>
                         <p class="text-sm text-gray-400">{% if lang == 'ru' %}Директор клиники{% elif lang == 'en' %}Clinic Director{% else %}Klinika direktori{% endif %}</p>
                     </div>
@@ -970,7 +1043,7 @@
         <div class="max-w-3xl mx-auto text-center">
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
                 {% if lang == 'ru' %}Готовы к сотрудничеству?{% elif lang == 'en' %}Ready to collaborate?{% else %}Hamkorlikka tayyormisiz?{% endif %}
-            </h2>
+                </h2>
             <p class="text-white/60 text-base mb-10 max-w-xl mx-auto">
                 {% if lang == 'ru' %}Свяжитесь с нами для бесплатной консультации{% elif lang == 'en' %}Contact us for a free consultation{% else %}Bepul maslahat uchun biz bilan bog'laning{% endif %}
             </p>
@@ -1116,6 +1189,62 @@ Iltimos, narx va muddatni ayting.`;
             window.open(whatsappUrl, '_blank');
         });
     }
+    
+    // Add to cart functionality
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const productId = this.dataset.productId;
+            const button = this;
+            const originalHTML = button.innerHTML;
+            
+            button.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="32" stroke-dashoffset="32"/></svg>';
+            button.disabled = true;
+            
+            try {
+                const formData = new FormData();
+                formData.append('quantity', '1');
+                
+                const response = await fetch(`/cart/add/${productId}`, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update cart badge
+                    document.querySelectorAll('.cart-badge').forEach(badge => {
+                        badge.textContent = data.cart_count;
+                    });
+                    
+                    // Show success state
+                    button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                    button.classList.remove('bg-[#1a1a2e]');
+                    button.classList.add('bg-green-600');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalHTML;
+                        button.classList.add('bg-[#1a1a2e]');
+                        button.classList.remove('bg-green-600');
+                        button.disabled = false;
+                    }, 2000);
+                } else {
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
+                    alert(data.message || 'Xatolik yuz berdi');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+                alert('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.');
+            }
+        });
+    });
 });
 </script>
 {% endblock %}

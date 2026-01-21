@@ -150,7 +150,7 @@
 <section class="hero-main -mt-[70px] md:-mt-[80px]">
     <div class="hero-bg" style="background-image: url('{% if main_category.image %}/uploads/{{ main_category.image }}{% else %}/uploads/designs/3.jpg{% endif %}');"></div>
     
-    <div class="relative h-full flex items-center">
+    <div class="relative h-full flex items-center pt-[70px] md:pt-[80px]">
         <div class="container mx-auto px-6 lg:px-16">
             <div class="max-w-3xl">
                 <div class="h-[2px] w-16 bg-[#f59e0b] mb-8"></div>
@@ -231,49 +231,6 @@
 </section>
 {% endif %}
 
-<!-- Features Section -->
-<section class="py-12 lg:py-16 bg-[#1a1a2e] reveal-section">
-    <div class="container mx-auto px-6 lg:px-16">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div class="text-center">
-                <div class="w-14 h-14 mx-auto mb-4 border border-[#f59e0b]/40 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>
-                    </svg>
-                </div>
-                <p class="text-white font-bold text-3xl mb-1">2500+</p>
-                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Проектов{% elif lang == 'en' %}Projects{% else %}Loyihalar{% endif %}</p>
-            </div>
-            <div class="text-center">
-                <div class="w-14 h-14 mx-auto mb-4 border border-[#f59e0b]/40 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                </div>
-                <p class="text-white font-bold text-3xl mb-1">5000+</p>
-                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Клиентов{% elif lang == 'en' %}Clients{% else %}Mijozlar{% endif %}</p>
-            </div>
-            <div class="text-center">
-                <div class="w-14 h-14 mx-auto mb-4 border border-[#f59e0b]/40 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <p class="text-white font-bold text-3xl mb-1">25</p>
-                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Лет опыта{% elif lang == 'en' %}Years{% else %}Yil tajriba{% endif %}</p>
-            </div>
-            <div class="text-center">
-                <div class="w-14 h-14 mx-auto mb-4 border border-[#f59e0b]/40 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                </div>
-                <p class="text-white font-bold text-3xl mb-1">25</p>
-                <p class="text-white/50 text-sm">{% if lang == 'ru' %}Лет гарантии{% elif lang == 'en' %}Years Warranty{% else %}Yil kafolat{% endif %}</p>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- Products Section -->
 <section class="py-12 lg:py-16 bg-[#f8f8f8] reveal-section" id="products-section">
