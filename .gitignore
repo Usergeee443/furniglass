@@ -4,10 +4,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
-venv/
-ENV/
-.venv/
 build/
 develop-eggs/
 dist/
@@ -23,6 +19,12 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
 
 # Flask
 instance/
@@ -51,13 +53,10 @@ Thumbs.db
 # Logs
 *.log
 
-# Uploads (keep structure but ignore large files)
-static/uploads/products/*
-static/uploads/categories/*
-static/uploads/portfolio/*
-!static/uploads/products/.gitkeep
-!static/uploads/categories/.gitkeep
-!static/uploads/portfolio/.gitkeep
-!static/uploads/designs/
-!static/uploads/icons/
+# Static files (uploads - production'da cloud storage ishlatiladi)
+# static/uploads/products/*
+# static/uploads/categories/*
+# static/uploads/portfolio/*
 
+# Render
+.render/

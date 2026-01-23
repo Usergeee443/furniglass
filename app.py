@@ -2103,10 +2103,12 @@ if __name__ == '__main__':
             print("Created default main categories: Cafe & Restaurant, Xonadon, Clinika")
     
     # Production mode - Render.com will use gunicorn
-    if os.environ.get('RENDER'):
+    if os.environ.get('RENDER') or os.environ.get('PORT'):
         # On Render.com, gunicorn will handle the app
+        # Port is automatically set by Render
         pass
     else:
         # Local development
-        app.run(debug=True)
+        port = int(os.environ.get('PORT', 5002))
+        app.run(host='0.0.0.0', port=port, debug=True)
 
