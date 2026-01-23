@@ -156,17 +156,12 @@
         transform: scale(1.08);
     }
     
-    .category-card:hover .category-content {
-        transform: translateY(-8px);
-    }
-    
+
     .category-card img {
-        transition: transform 0.6s ease;
+        transition: transform 1.5s ease;
     }
     
-    .category-content {
-        transition: transform 0.4s ease;
-    }
+
     
     /* Section reveal */
     .reveal-section {
@@ -305,12 +300,13 @@
     <div class="relative h-full flex items-center pt-[90px] md:pt-[100px]">
         <div class="container mx-auto px-6 lg:px-16">
             <div class="max-w-3xl">
-                <!-- Accent Line -->
+                <!-- Accent Line 
                 <div class="animate-line h-[2px] bg-[#f59e0b] mb-8 w-0"></div>
+                -->
                 
                 <!-- Subtitle -->
                 <p class="animate-reveal text-[#f59e0b] text-xs md:text-sm tracking-[0.3em] uppercase mb-4">
-                    {% if lang == 'ru' %}Премиум мебель{% elif lang == 'en' %}Premium Furniture{% else %}Premium Mebel{% endif %}
+                    {% if lang == 'ru' %}FURNI GLASS{% elif lang == 'en' %}FURNI GLASS{% else %}FURNI GLASS{% endif %}
                 </p>
                 
                 <!-- Main Title -->
@@ -621,112 +617,82 @@
 </section>
 
 <!-- Process Section -->
-<section class="py-16 lg:py-24 bg-white reveal-section">
+<section class="py-12 lg:py-16 bg-white reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
         <!-- Header -->
-        <div class="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] mb-4">
+        <div class="text-center max-w-3xl mx-auto mb-8 lg:mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-3">
                 {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlaymiz{% endif %}
             </h2>
-            <p class="text-gray-600 text-base lg:text-lg">
+            <p class="text-gray-600 text-sm lg:text-base">
                 {% if lang == 'ru' %}3 этапа: Консультация → Производство → Доставка{% elif lang == 'en' %}3 steps: Consultation → Production → Delivery{% else %}3 bosqich: Konsultatsiya → Ishlab chiqarish → Yetkazish{% endif %}
             </p>
         </div>
         
         <!-- Steps with connecting line -->
-        <div class="relative max-w-5xl mx-auto">
+        <div class="relative max-w-4xl mx-auto">
             <!-- Connecting dashed line -->
-            <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 -translate-y-1/2" style="background: repeating-linear-gradient(to right, #3b82f6 0, #3b82f6 8px, transparent 8px, transparent 16px); z-index: 1;"></div>
+            <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-px -translate-y-1/2" style="background: repeating-linear-gradient(to right, #f59e0b 0, #f59e0b 6px, transparent 6px, transparent 12px); z-index: 1;"></div>
             
             <!-- Steps Container -->
-            <div class="relative grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 z-10">
+            <div class="relative grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 z-10">
                 <!-- Step 1: Consultation -->
                 <div class="relative">
-                    <div class="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
-                        <!-- Icon -->
-                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-                            <svg class="w-full h-full text-[#60a5fa]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <!-- Speech bubbles overlapping -->
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 8h.01M19 8h.01M23 8c0 3.314-2.686 6-6 6a5.9 5.9 0 01-2.553-.569L12 15l.447-2.231A5.9 5.9 0 0111 12c0-3.314 2.686-6 6-6s6 2.686 6 6z" opacity="0.6"/>
-                            </svg>
+                    <div class="bg-white p-5 lg:p-6 border border-gray-200 hover:border-[#f59e0b] transition-colors">
+                        <!-- Step Number Badge -->
+                        <div class="absolute -top-3 left-0 w-8 h-8 bg-[#f59e0b] flex items-center justify-center z-20">
+                            <span class="text-white font-bold text-sm">1</span>
                         </div>
                         
                         <!-- Title -->
-                        <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-3 text-center">
+                        <h3 class="text-lg lg:text-xl font-bold text-[#1a1a2e] mb-2">
                             {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Konsultatsiya{% endif %}
                         </h3>
                         
                         <!-- Description -->
-                        <p class="text-gray-600 text-sm lg:text-base text-center leading-relaxed">
+                        <p class="text-gray-600 text-sm leading-relaxed">
                             {% if lang == 'ru' %}Бесплатная консультация, помощь в выборе стиля и дизайна мебели{% elif lang == 'en' %}Free consultation, help with choosing style and furniture design{% else %}Bepul maslahat, uslub va mebel dizaynini tanlashda yordam{% endif %}
                         </p>
-                    </div>
-                    
-                    <!-- Step Number Badge -->
-                    <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-lg z-20">
-                        <span class="text-white font-bold text-lg">1</span>
                     </div>
                 </div>
                 
                 <!-- Step 2: Production -->
-                <div class="relative lg:mt-16">
-                    <div class="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
-                        <!-- Icon -->
-                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-                            <svg class="w-full h-full text-[#60a5fa]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <!-- Document with folded corner -->
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-                                <!-- Lines inside document -->
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9h6M6 12h6M6 15h3" opacity="0.5"/>
-                                <!-- Folded corner -->
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 2.25L21 3.75l-1.5 1.5v-3z" fill="currentColor" opacity="0.3"/>
-                            </svg>
+                <div class="relative lg:mt-12">
+                    <div class="bg-white p-5 lg:p-6 border border-gray-200 hover:border-[#f59e0b] transition-colors">
+                        <!-- Step Number Badge -->
+                        <div class="absolute -top-3 left-0 w-8 h-8 bg-[#f59e0b] flex items-center justify-center z-20">
+                            <span class="text-white font-bold text-sm">2</span>
                         </div>
                         
                         <!-- Title -->
-                        <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-3 text-center">
+                        <h3 class="text-lg lg:text-xl font-bold text-[#1a1a2e] mb-2">
                             {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
                         </h3>
                         
                         <!-- Description -->
-                        <p class="text-gray-600 text-sm lg:text-base text-center leading-relaxed">
+                        <p class="text-gray-600 text-sm leading-relaxed">
                             {% if lang == 'ru' %}Профессиональное изготовление мебели по вашим размерам и требованиям{% elif lang == 'en' %}Professional furniture manufacturing according to your dimensions and requirements{% else %}Sizning o'lchamlaringiz va talablaringiz bo'yicha professional mebel yasash{% endif %}
                         </p>
-                    </div>
-                    
-                    <!-- Step Number Badge -->
-                    <div class="absolute -top-4 lg:-top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-lg z-20">
-                        <span class="text-white font-bold text-lg">2</span>
                     </div>
                 </div>
                 
                 <!-- Step 3: Delivery -->
                 <div class="relative">
-                    <div class="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
-                        <!-- Icon -->
-                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-                            <svg class="w-full h-full text-[#60a5fa]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                <!-- Thumbs up hand -->
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.493 18.5c-.425 0-.82-.236-.975-.632A7.48 7.48 0 016 15.375c0-1.75.599-3.358 1.336-4.634.453-.767 1.05-1.422 1.755-1.928L12.5 6.5c.217-.216.5-.5.5-.5s.283.284.5.5l2.916 2.423c.705.506 1.302 1.161 1.755 1.928.737 1.276 1.336 2.884 1.336 4.634a7.48 7.48 0 01-.518 2.868c-.155.396-.55.632-.975.632h-9.014z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.493 18.5h9.014M7.493 18.5c-.425 0-.82-.236-.975-.632A7.48 7.48 0 016 15.375c0-1.75.599-3.358 1.336-4.634.453-.767 1.05-1.422 1.755-1.928L12.5 6.5c.217-.216.5-.5.5-.5s.283.284.5.5l2.916 2.423c.705.506 1.302 1.161 1.755 1.928.737 1.276 1.336 2.884 1.336 4.634a7.48 7.48 0 01-.518 2.868c-.155.396-.55.632-.975.632" opacity="0.3"/>
-                            </svg>
+                    <div class="bg-white p-5 lg:p-6 border border-gray-200 hover:border-[#f59e0b] transition-colors">
+                        <!-- Step Number Badge -->
+                        <div class="absolute -top-3 left-0 w-8 h-8 bg-[#f59e0b] flex items-center justify-center z-20">
+                            <span class="text-white font-bold text-sm">3</span>
                         </div>
                         
                         <!-- Title -->
-                        <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-3 text-center">
+                        <h3 class="text-lg lg:text-xl font-bold text-[#1a1a2e] mb-2">
                             {% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}
                         </h3>
                         
                         <!-- Description -->
-                        <p class="text-gray-600 text-sm lg:text-base text-center leading-relaxed">
+                        <p class="text-gray-600 text-sm leading-relaxed">
                             {% if lang == 'ru' %}Доставка готовой мебели и профессиональная установка на месте{% elif lang == 'en' %}Delivery of finished furniture and professional on-site installation{% else %}Tayyor mebelni yetkazish va professional o'rnatish{% endif %}
                         </p>
-                    </div>
-                    
-                    <!-- Step Number Badge -->
-                    <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-[#3b82f6] rounded-full flex items-center justify-center shadow-lg z-20">
-                        <span class="text-white font-bold text-lg">3</span>
                     </div>
                 </div>
             </div>

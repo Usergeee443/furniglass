@@ -64,7 +64,13 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.6);
         }
         
-        /* Warranty Badge - iOS 26 Style */
+        .header-hidden {
+            transform: translateY(calc(-100% + 20px)) translateZ(0);
+            -webkit-transform: translateY(calc(-100% + 20px)) translateZ(0);
+            cursor: pointer;
+        }
+        
+        /* Warranty Badge - Header Style */
         .warranty-badge {
             position: fixed;
             top: 80px;
@@ -83,7 +89,7 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.5);
             padding: 6px 16px;
             pointer-events: none;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 1 !important;
             visibility: visible !important;
             will-change: transform;
@@ -95,6 +101,7 @@
         .warranty-badge p {
             font-size: 10px;
             font-weight: 500;
+            color: #1a1a2e;
         }
         
         @media (min-width: 768px) {
@@ -110,45 +117,39 @@
         }
         
         .warranty-badge.scrolled {
-            transform: translateX(-50%) translateY(10px) translateZ(0);
-            -webkit-transform: translateX(-50%) translateY(10px) translateZ(0);
-        }
-        
-        @media (min-width: 768px) {
-            .warranty-badge.scrolled {
-                transform: translateX(-50%) translateY(20px) translateZ(0);
-                -webkit-transform: translateX(-50%) translateY(20px) translateZ(0);
-            }
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(45px) saturate(180%);
+            -webkit-backdrop-filter: blur(45px) saturate(180%);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.15),
+                0 4px 12px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            transform: translateX(-50%) translateZ(0);
+            -webkit-transform: translateX(-50%) translateZ(0);
         }
         
         .warranty-badge.header-hidden-badge {
-            transform: translateX(-50%) translateY(-50px) translateZ(0);
-            -webkit-transform: translateX(-50%) translateY(-50px) translateZ(0);
+            transform: translateX(-50%) translateY(calc(-70px + 20px)) translateZ(0);
+            -webkit-transform: translateX(-50%) translateY(calc(-70px + 20px)) translateZ(0);
         }
         
         @media (min-width: 768px) {
             .warranty-badge.header-hidden-badge {
-                transform: translateX(-50%) translateY(-40px) translateZ(0);
-                -webkit-transform: translateX(-50%) translateY(-40px) translateZ(0);
+                transform: translateX(-50%) translateY(calc(-80px + 20px)) translateZ(0);
+                -webkit-transform: translateX(-50%) translateY(calc(-80px + 20px)) translateZ(0);
             }
         }
         
         .warranty-badge.scrolled.header-hidden-badge {
-            transform: translateX(-50%) translateY(-50px) translateZ(0);
-            -webkit-transform: translateX(-50%) translateY(-50px) translateZ(0);
+            transform: translateX(-50%) translateY(calc(-70px + 20px)) translateZ(0);
+            -webkit-transform: translateX(-50%) translateY(calc(-70px + 20px)) translateZ(0);
         }
         
         @media (min-width: 768px) {
             .warranty-badge.scrolled.header-hidden-badge {
-                transform: translateX(-50%) translateY(-40px) translateZ(0);
-                -webkit-transform: translateX(-50%) translateY(-40px) translateZ(0);
+                transform: translateX(-50%) translateY(calc(-80px + 20px)) translateZ(0);
+                -webkit-transform: translateX(-50%) translateY(calc(-80px + 20px)) translateZ(0);
             }
-        }
-        
-        .header-hidden {
-            transform: translateY(calc(-100% + 20px)) translateZ(0);
-            -webkit-transform: translateY(calc(-100% + 20px)) translateZ(0);
-            cursor: pointer;
         }
         
         .nav-link {
@@ -203,38 +204,31 @@
             left: 0;
             right: 0;
             z-index: 9999;
-            padding: 6px 10px;
-            padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+            padding: 8px 16px;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
             pointer-events: none;
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
-            contain: layout style paint;
         }
         
         .bottom-nav-inner {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.72);
             backdrop-filter: blur(40px) saturate(180%);
             -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-radius: 28px;
-            border: 0.5px solid rgba(255, 255, 255, 0.7);
+            border-radius: 100px;
+            border: 0.5px solid rgba(255, 255, 255, 0.4);
             box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                0 2px 8px rgba(0, 0, 0, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                0 8px 32px rgba(0, 0, 0, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
             pointer-events: auto;
             overflow: hidden;
-            max-width: 300px;
+            max-width: 240px;
             margin: 0 auto;
-            padding: 4px;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            contain: layout style paint;
+            padding: 6px;
         }
         
         .bottom-nav-item {
@@ -242,104 +236,67 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 6px 10px;
+            padding: 4px 4px;
             min-width: 0;
             flex: 1;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-tap-highlight-color: transparent;
             position: relative;
-            border-radius: 18px;
+            border-radius: 16px;
         }
         
         .bottom-nav-item:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
         }
         
         .bottom-nav-item.active {
             color: #f59e0b;
         }
         
-        .bottom-nav-item.active::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: calc(100% - 8px);
-            height: 32px;
-            background: rgba(245, 158, 11, 0.15);
-            border-radius: 16px;
-            z-index: -1;
-        }
-        
-        .bottom-nav-item.active svg {
-            color: #f59e0b;
-        }
-        
+       
         .bottom-nav-item:not(.active) {
-            color: rgba(0, 0, 0, 0.65);
+            color: rgba(26, 26, 46, 0.65);
         }
         
         .bottom-nav-item:not(.active):hover {
-            color: rgba(0, 0, 0, 0.85);
+            color: rgba(26, 26, 46, 0.85);
         }
         
         .bottom-nav-item svg {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             width: 22px;
             height: 22px;
-            stroke-width: 1.5;
+            stroke-width: 1;
         }
         
         .bottom-nav-item.active svg {
-            stroke-width: 2;
+            stroke-width: 1.5;
         }
         
         .bottom-nav-item span {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 500;
-            margin-top: 2px;
-            line-height: 1.1;
-            letter-spacing: -0.01em;
+            margin-top: 4px;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
         }
         
         /* Prevent body scroll bounce on iOS */
         html {
             overflow-x: hidden;
             overscroll-behavior: none;
-            -webkit-overflow-scrolling: touch;
-            height: 100%;
         }
         
         body {
             overflow-x: hidden;
             overscroll-behavior-y: contain;
             -webkit-overflow-scrolling: touch;
-            position: relative;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
         
         @supports (-webkit-touch-callout: none) {
-            html {
-                height: -webkit-fill-available;
-            }
             body {
                 min-height: -webkit-fill-available;
             }
-        }
-        
-        /* Smooth scrolling optimization */
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        /* Prevent scroll chaining */
-        .overflow-y-auto,
-        .overflow-y-scroll {
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
         }
         
         /* Search Modal */
@@ -392,12 +349,18 @@
                 </a>
                 
                 <!-- Center: Main Navigation (Desktop) -->
-                <nav class="hidden lg:flex items-center gap-6">
-                    <a href="/" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
-                        {% if lang == 'ru' %}Главная{% elif lang == 'en' %}Home{% else %}Asosiy{% endif %}
-                    </a>
+                <nav class="hidden lg:flex items-center gap-8">
                     <a href="/products" class="nav-link {% if request.endpoint == 'products' %}active{% endif %}">
                         {{ T.nav.products[lang] }}
+                    </a>
+                    <a href="/portfolio" class="nav-link {% if request.endpoint == 'portfolio' %}active{% endif %}">
+                        Portfolio
+                    </a>
+                    <a href="/stores" class="nav-link {% if request.endpoint == 'stores' %}active{% endif %}">
+                        {% if lang == 'ru' %}Магазины{% elif lang == 'en' %}Stores{% else %}Do'konlar{% endif %}
+                    </a>
+                    <a href="/about" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">
+                        {{ T.nav.about[lang] }}
                     </a>
                     <a href="/contact" class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}">
                         {{ T.nav.contact[lang] }}
@@ -458,7 +421,7 @@
         </div>
     </header>
 
-    <!-- Warranty Badge - iOS 26 Style -->
+    <!-- Warranty Badge - Liquid Glass Style -->
     <div id="warranty-badge" class="warranty-badge">
         <p class="text-[#1a1a2e] tracking-wide">
             {% if lang == 'ru' %}25 лет гарантии{% elif lang == 'en' %}25 Years Warranty{% else %}25 yillik kafolat{% endif %}
@@ -790,18 +753,6 @@
         
         window.addEventListener('scroll', onScroll, { passive: true });
         
-        // Touch events optimization for mobile
-        let touchStartY = 0;
-        let touchEndY = 0;
-        
-        document.addEventListener('touchstart', (e) => {
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-        
-        document.addEventListener('touchmove', (e) => {
-            touchEndY = e.touches[0].clientY;
-        }, { passive: true });
-        
         // Header yashiringanda ko'rinib turgan qismini bosganda ochilishi
         header.addEventListener('click', function(e) {
             if (this.classList.contains('header-hidden')) {
@@ -813,7 +764,7 @@
                     warrantyBadge.classList.remove('header-hidden-badge');
                 }
                 scrollDelta = 0;
-                lastScrollY = window.scrollY;
+                lastScrollY = window.scrollY || window.pageYOffset;
             }
         });
 
