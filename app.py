@@ -449,6 +449,11 @@ def product_detail(product_id):
         related_products.extend(other_products)
     return render_template('product_detail.html', product=product, usd_rate=rate, related_products=related_products)
 
+@app.route('/google9029ae48d4d9d006.html')
+def google_verification():
+    """Google Search Console verification file"""
+    return 'google-site-verification: google9029ae48d4d9d006.html', 200, {'Content-Type': 'text/html; charset=utf-8'}
+
 @app.route('/portfolio')
 def portfolio():
     room_type = request.args.get('room_type')
