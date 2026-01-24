@@ -51,7 +51,29 @@
             will-change: transform;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
-            contain: layout style paint;
+            /* Remove contain property on mobile to allow scrolling */
+            contain: layout style;
+        }
+        
+        @media (max-width: 768px) {
+            .site-header {
+                /* Remove contain on mobile to prevent scroll blocking */
+                contain: none;
+                /* Ensure touch events pass through for scrolling */
+                touch-action: auto;
+                /* Ensure header doesn't block scroll events */
+                pointer-events: auto;
+                /* Make sure header doesn't cover entire screen */
+                height: auto;
+                /* Ensure header doesn't interfere with body scroll */
+                will-change: transform;
+            }
+            
+            /* Ensure body content is scrollable on mobile */
+            body > *:not(.site-header):not(.warranty-badge):not(.bottom-nav) {
+                position: relative;
+                z-index: 1;
+            }
         }
         
         .site-header.scrolled {
@@ -281,21 +303,61 @@
             letter-spacing: -0.02em;
         }
         
-        /* Prevent body scroll bounce on iOS */
+        /* Prevent body scroll bounce on iOS - Mobile only */
         html {
             overflow-x: hidden;
-            overscroll-behavior: none;
         }
         
         body {
             overflow-x: hidden;
-            overscroll-behavior-y: contain;
-            -webkit-overflow-scrolling: touch;
+            /* Enable smooth scrolling on all devices */
+            scroll-behavior: smooth;
+            /* Ensure body is scrollable by default */
+            overflow-y: auto;
+        }
+        
+        /* Mobile-specific scroll behavior */
+        @media (max-width: 768px) {
+            html {
+                /* Only prevent horizontal overscroll bounce */
+                overscroll-behavior-x: none;
+                /* Ensure scrolling works - remove overflow restrictions */
+                overflow-y: scroll !important;
+                -webkit-overflow-scrolling: touch;
+                height: 100%;
+                /* Force scroll to work */
+                position: relative;
+            }
+            
+            body {
+                /* Allow vertical scroll, only prevent bounce effect */
+                overscroll-behavior-y: none;
+                -webkit-overflow-scrolling: touch;
+                /* Ensure touch scrolling works */
+                touch-action: pan-y pan-x;
+                /* Ensure body can scroll - use scroll instead of auto */
+                overflow-y: scroll !important;
+                overflow-x: hidden;
+                position: relative;
+                height: auto;
+                /* Ensure body is scrollable */
+                min-height: 100vh;
+                /* Force scroll to work on mobile */
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Ensure main content is scrollable */
+            main, .container, [class*="container"] {
+                position: relative;
+                z-index: 1;
+            }
         }
         
         @supports (-webkit-touch-callout: none) {
-            body {
-                min-height: -webkit-fill-available;
+            @media (max-width: 768px) {
+                body {
+                    min-height: -webkit-fill-available;
+                }
             }
         }
         
@@ -518,7 +580,7 @@
                 </a>
                 <a href="/products" class="bottom-nav-item {% if request.endpoint == 'products' %}active{% endif %}">
                     <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3.75 21h16.5M4.5 21V9.75M19.5 21V9.75M4.5 9.75L12 3l7.5 6.75M4.5 9.75h15M9 21v-6.75h6V21" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <span>{{ T.nav.products[lang] }}</span>
                 </a>
