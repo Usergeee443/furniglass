@@ -121,7 +121,7 @@
             
             /* Ensure body content is scrollable on mobile */
             body > *:not(.site-header):not(.warranty-badge):not(.bottom-nav) {
-                position: relative;
+            position: relative;
                 z-index: 1;
             }
         }
@@ -568,9 +568,9 @@
                                 <a href="/stores" class="mobile-nav-link block">{% if lang == 'ru' %}Магазины{% elif lang == 'en' %}Stores{% else %}Do'konlar{% endif %}</a>
                                 <a href="/about" class="mobile-nav-link block">{{ T.nav.about[lang] }}</a>
                                 <a href="/contact" class="mobile-nav-link block">{{ T.nav.contact[lang] }}</a>
-                            </nav>
+    </nav>
                         </div>
-                        
+
                         <!-- Secondary Links -->
                         <div class="border-t lg:border-t-0 lg:border-l border-gray-100 pt-8 lg:pt-0 lg:pl-16">
                             <p class="text-xs font-medium uppercase tracking-wider text-gray-400 mb-6">{% if lang == 'ru' %}Другие страницы{% elif lang == 'en' %}Other Pages{% else %}Boshqa sahifalar{% endif %}</p>
@@ -602,7 +602,7 @@
                                 <div class="flex gap-3 mt-6">
                                     <a href="#" class="w-10 h-10 border border-gray-200 flex items-center justify-center text-gray-600 hover:border-[#1a1a2e] hover:text-[#1a1a2e] transition">
                                         <i class="fab fa-instagram"></i>
-                                    </a>
+                </a>
                                     <a href="#" class="w-10 h-10 border border-gray-200 flex items-center justify-center text-gray-600 hover:border-[#1a1a2e] hover:text-[#1a1a2e] transition">
                                         <i class="fab fa-telegram-plane"></i>
                                     </a>
@@ -669,7 +669,7 @@
                     </div>
                     <div id="search-empty" class="hidden text-center py-8 text-gray-500">
                         {% if lang == 'ru' %}Ничего не найдено{% elif lang == 'en' %}Nothing found{% else %}Hech narsa topilmadi{% endif %}
-                    </div>
+                        </div>
                     <div id="search-content"></div>
                 </div>
             </div>
@@ -713,8 +713,8 @@
                         <a href="#" class="w-9 h-9 border border-white/20 flex items-center justify-center text-white/60 hover:border-[#f59e0b] hover:text-[#f59e0b] transition">
                             <i class="fab fa-facebook-f text-sm"></i>
                         </a>
+                        </div>
                     </div>
-                </div>
                 
                 <!-- Quick Links -->
                 <div>
@@ -864,7 +864,7 @@
         }
         
         window.addEventListener('scroll', onScroll, { passive: true });
-        
+
         // Header yashiringanda ko'rinib turgan qismini bosganda ochilishi
         header.addEventListener('click', function(e) {
             if (this.classList.contains('header-hidden')) {

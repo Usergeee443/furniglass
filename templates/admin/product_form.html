@@ -384,29 +384,29 @@ function handleImageUpload(input) {
     const container = document.getElementById('images-preview');
     const placeholder = document.getElementById('upload-placeholder');
     
-    container.innerHTML = '';
-    container.classList.remove('hidden');
-    placeholder.classList.add('hidden');
-    
-    files.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const div = document.createElement('div');
-            div.className = `image-item aspect-square rounded-lg overflow-hidden border-2 ${index === 0 ? 'border-[#F5C242]' : 'border-gray-200'} relative group`;
-            div.innerHTML = `
-                <img src="${e.target.result}" class="w-full h-full object-cover">
-                ${index === 0 ? '<div class="main-image-badge">ASOSIY</div>' : ''}
-                <div class="set-main-btn" onclick="setAsMain(${index}, 'new')">
-                    <span class="bg-[#F5C242] text-[#232339] px-3 py-1.5 rounded-lg text-xs font-bold">Asosiy qilish</span>
-                </div>
-            `;
-            container.appendChild(div);
-        }
-        reader.readAsDataURL(file);
-    });
-    
-    mainImageIndex = 0;
-    document.getElementById('new-main-image-index').value = 0;
+        container.innerHTML = '';
+        container.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        
+        files.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = `image-item aspect-square rounded-lg overflow-hidden border-2 ${index === 0 ? 'border-[#F5C242]' : 'border-gray-200'} relative group`;
+                div.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-full object-cover">
+                    ${index === 0 ? '<div class="main-image-badge">ASOSIY</div>' : ''}
+                    <div class="set-main-btn" onclick="setAsMain(${index}, 'new')">
+                        <span class="bg-[#F5C242] text-[#232339] px-3 py-1.5 rounded-lg text-xs font-bold">Asosiy qilish</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+            reader.readAsDataURL(file);
+        });
+        
+        mainImageIndex = 0;
+        document.getElementById('new-main-image-index').value = 0;
     
     // Debug: input elementini tekshirish
     console.log('Input files:', input.files);

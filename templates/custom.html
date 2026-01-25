@@ -1,0 +1,952 @@
+{% extends "base.html" %}
+
+{% block title %}{% if lang == 'ru' %}Индивидуальный заказ мебели | Furniglass — создаёт мебель в вашем стиле{% elif lang == 'en' %}Custom Furniture Order | Furniglass — creates furniture in your style{% else %}Individual mebel buyurtmasi | Furniglass — mebelni siz istagan uslubda yaratadi{% endif %}{% endblock %}
+
+{% block meta_title %}{% if lang == 'ru' %}Индивидуальный заказ мебели | Furniglass{% elif lang == 'en' %}Custom Furniture Order | Furniglass{% else %}Individual mebel buyurtmasi | Furniglass{% endif %}{% endblock %}
+
+{% block meta_description %}{% if lang == 'ru' %}Создайте мебель своей мечты с Furniglass. Выбирайте каждую деталь: тип ножек, материал, цвет, узор и стиль. Индивидуальный дизайн, 25 лет гарантии.{% elif lang == 'en' %}Create your dream furniture with Furniglass. Choose every detail: leg type, material, color, pattern and style. Custom design, 25 years warranty.{% else %}Furniglass bilan orzuingizdagi mebelni yarating. Har bir detalni tanlang: oyoq turi, material, rang, naqsh va stil. Individual dizayn, 25 yillik kafolat.{% endif %}{% endblock %}
+
+{% block meta_keywords %}{% if lang == 'ru' %}индивидуальный заказ мебели, custom furniture, Furniglass, мебель на заказ, дизайн мебели{% elif lang == 'en' %}custom furniture order, individual furniture, Furniglass, custom design, furniture design{% else %}individual mebel buyurtmasi, custom mebel, Furniglass, mebel dizayni, individual dizayn{% endif %}{% endblock %}
+
+{% block canonical %}{{ request.url_root.rstrip('/') }}/custom{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --accent: #f59e0b;
+        --accent-hover: #d97706;
+        --dark: #1a1a2e;
+    }
+    
+    /* Hero Section */
+    .custom-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #2a2a3e 100%);
+        position: relative;
+        overflow: hidden;
+        padding-top: 90px;
+        padding-bottom: 80px;
+    }
+    
+    .custom-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('/uploads/designs/chair-config.png') center/cover no-repeat;
+        opacity: 0.05;
+        z-index: 0;
+    }
+    
+    .custom-hero-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Section reveal */
+    .reveal-section {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s ease;
+    }
+    
+    .reveal-section.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Configurator Styles */
+    .config-hotspot {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid var(--accent);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10;
+    }
+    
+    .config-hotspot:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 24px rgba(245, 158, 11, 0.4);
+        border-color: var(--accent-hover);
+    }
+    
+    .config-hotspot.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 6px 24px rgba(245, 158, 11, 0.5);
+    }
+    
+    .config-hotspot.active .hotspot-icon svg {
+        stroke: #fff;
+    }
+    
+    .hotspot-pulse {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--accent);
+        opacity: 0;
+        animation: hotspotPulse 2s infinite;
+    }
+    
+    @keyframes hotspotPulse {
+        0% { transform: scale(1); opacity: 0.6; }
+        100% { transform: scale(1.8); opacity: 0; }
+    }
+    
+    .hotspot-icon {
+        position: relative;
+        z-index: 1;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .hotspot-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: var(--accent);
+        transition: stroke 0.3s ease;
+    }
+    
+    /* Config Buttons */
+    .config-btn {
+        padding: 10px 20px;
+        border: 2px solid #e5e5e5;
+        background: #fff;
+        border-radius: 0;
+        font-size: 13px;
+        font-weight: 500;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .config-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+    }
+    
+    .config-btn.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+    
+    /* Config Color Swatches */
+    .config-color {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 3px solid #e5e5e5;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .config-color:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .config-color.active {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--accent), 0 4px 16px rgba(245, 158, 11, 0.4);
+        transform: scale(1.1);
+    }
+    
+    /* Config Option */
+    .config-option {
+        padding: 16px;
+        border-radius: 0;
+        background: #fafafa;
+        transition: all 0.3s ease;
+    }
+    
+    .config-option:hover {
+        background: #f5f5f5;
+    }
+    
+    /* Configurator Card */
+    .configurator-card {
+        background: white;
+        border-radius: 0;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .configurator-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Benefits Grid */
+    .benefit-card {
+        padding: 32px 24px;
+        background: #fff;
+        border-radius: 0;
+        transition: all 0.3s ease;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .benefit-card:hover {
+        background: #f8f8f8;
+        box-shadow: 0 12px 32px rgba(245, 158, 11, 0.15);
+        transform: translateY(-6px);
+        border-color: #f59e0b;
+    }
+    
+    /* Process Number */
+    .process-number {
+        position: relative;
+    }
+    
+    .process-number::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(245, 158, 11, 0.1);
+        z-index: -1;
+        animation: pulse-ring 2s infinite;
+    }
+    
+    @keyframes pulse-ring {
+        0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+        100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0; }
+    }
+    
+    /* Bottom Sheet */
+    .bottom-sheet {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .bottom-sheet.active {
+        transform: translateY(0);
+    }
+    
+    .bottom-sheet-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    
+    .bottom-sheet-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .bottom-sheet-header {
+        padding: 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 1;
+    }
+    
+    .bottom-sheet-content {
+        padding: 20px;
+    }
+    
+    .bottom-sheet-handle {
+        width: 40px;
+        height: 4px;
+        background: #d1d5db;
+        border-radius: 2px;
+        margin: 0 auto 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="custom-hero">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="custom-hero-content max-w-4xl mx-auto text-center">
+            <p class="text-[#f59e0b] text-xs md:text-sm tracking-[0.3em] uppercase mb-4">
+                {% if lang == 'ru' %}ИНДИВИДУАЛЬНЫЙ ЗАКАЗ{% elif lang == 'en' %}CUSTOM ORDER{% else %}INDIVIDUAL BUYURTMA{% endif %}
+            </p>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                {% if lang == 'ru' %}Furniglass — создаёт<br>мебель в вашем стиле{% elif lang == 'en' %}Furniglass — creates<br>furniture in your style{% else %}Furniglass — mebelni<br>siz istagan uslubda yaratadi{% endif %}
+            </h1>
+            <p class="text-white/70 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                {% if lang == 'ru' %}Вы выбираете каждую деталь: тип ножек, материал, цвет, узор и стиль. Furniglass производит мебель не стандартную, а по вашему вкусу.{% elif lang == 'en' %}You choose every detail: leg type, material, color, pattern and style. Furniglass produces furniture not standard, but according to your taste.{% else %}Siz har bir detalni o'zingiz tanlaysiz: oyoq turi, material, rang, naqsh va stil. Furniglass mebellarni standart emas, sizning didingizga moslab ishlab chiqaradi.{% endif %}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Configurator Section -->
+<section class="py-16 lg:py-24 bg-[#f8f8f8] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="configurator-card">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <!-- Left: Product Image with Interactive Points -->
+                <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 p-8 lg:p-12 min-h-[400px] lg:min-h-[600px]">
+                    <!-- Main Product Image -->
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <img src="/uploads/designs/chair-config.png" alt="{% if lang == 'ru' %}Настраиваемое кресло{% elif lang == 'en' %}Configurable Chair{% else %}Sozlanishi mumkin bo'lgan stul{% endif %}" class="max-w-full max-h-[500px] object-contain" id="config-main-image" onerror="this.src='/uploads/products/default.jpg'">
+                        
+                        <!-- Interactive Hotspots -->
+                        <!-- Legs -->
+                        <button class="config-hotspot absolute bottom-[15%] left-[35%]" data-config="legs" aria-label="{% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                                </svg>
+                            </span>
+                        </button>
+                        
+                        <!-- Seat -->
+                        <button class="config-hotspot absolute top-[45%] left-[50%]" data-config="seat" aria-label="{% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                </svg>
+                            </span>
+                        </button>
+                        
+                        <!-- Backrest -->
+                        <button class="config-hotspot absolute top-[20%] left-[45%]" data-config="backrest" aria-label="{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        
+                        <!-- Pattern -->
+                        <button class="config-hotspot absolute top-[35%] right-[30%]" data-config="pattern" aria-label="{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                            </span>
+                        </button>
+                        
+                        <!-- Color/Material -->
+                        <button class="config-hotspot absolute bottom-[35%] right-[25%]" data-config="material" aria-label="{% if lang == 'ru' %}Материал{% elif lang == 'en' %}Material{% else %}Material{% endif %}">
+                            <span class="hotspot-pulse"></span>
+                            <span class="hotspot-icon">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Right: Configuration Options -->
+                <div class="p-6 lg:p-10">
+                    <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-6">
+                        {% if lang == 'ru' %}Настройте под себя{% elif lang == 'en' %}Customize for yourself{% else %}O'zingizga moslab sozlang{% endif %}
+                    </h3>
+                    
+                    <!-- Config Options -->
+                    <div class="space-y-6">
+                        <!-- Legs Option -->
+                        <div class="config-option" data-option="legs">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Classic</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="config-btn active" data-value="classic">Classic</button>
+                                <button class="config-btn" data-value="modern">Modern</button>
+                                <button class="config-btn" data-value="vintage">Vintage</button>
+                                <button class="config-btn" data-value="minimalist">Minimalist</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Seat Option -->
+                        <div class="config-option" data-option="seat">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Ko'ja</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="config-btn active" data-value="koja">Ko'ja</button>
+                                <button class="config-btn" data-value="mato">Mato</button>
+                                <button class="config-btn" data-value="velvet">Velvet</button>
+                                <button class="config-btn" data-value="eko">Eko-ko'ja</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Backrest Option -->
+                        <div class="config-option" data-option="backrest">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Yumshoq</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="config-btn active" data-value="soft">Yumshoq</button>
+                                <button class="config-btn" data-value="firm">Qattiq</button>
+                                <button class="config-btn" data-value="ergonomic">Ergonomik</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Pattern Option -->
+                        <div class="config-option" data-option="pattern">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Oddiy</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button class="config-btn active" data-value="plain">Oddiy</button>
+                                <button class="config-btn" data-value="quilted">Tikuv</button>
+                                <button class="config-btn" data-value="tufted">Tugmali</button>
+                                <button class="config-btn" data-value="modern">Modern Line</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Color Option -->
+                        <div class="config-option" data-option="material">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                                    {% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}
+                                </span>
+                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Qora</span>
+                            </div>
+                            <div class="flex flex-wrap gap-3">
+                                <button class="config-color active" data-value="black" data-label="Qora" style="background: #1a1a2e;" title="Qora"></button>
+                                <button class="config-color" data-value="brown" data-label="Jigarrang" style="background: #8B4513;" title="Jigarrang"></button>
+                                <button class="config-color" data-value="beige" data-label="Bej" style="background: #D4B896;" title="Bej"></button>
+                                <button class="config-color" data-value="gray" data-label="Kulrang" style="background: #6B7280;" title="Kulrang"></button>
+                                <button class="config-color" data-value="white" data-label="Oq" style="background: #F5F5F5; border: 1px solid #ddd;" title="Oq"></button>
+                                <button class="config-color" data-value="green" data-label="Yashil" style="background: #2D5A3D;" title="Yashil"></button>
+                                <button class="config-color" data-value="blue" data-label="Ko'k" style="background: #1E3A5F;" title="Ko'k"></button>
+                                <button class="config-color" data-value="gold" data-label="Oltin" style="background: linear-gradient(135deg, #D4AF37, #F5D061);" title="Oltin"></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Summary -->
+                    <div class="mt-8 pt-6 border-t border-gray-100">
+                        <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
+                            {% if lang == 'ru' %}Ваша конфигурация{% elif lang == 'en' %}Your Configuration{% else %}Sizning konfiguratsiyangiz{% endif %}
+                        </h4>
+                        <div id="config-summary" class="bg-[#f8f8f8] p-4 text-sm space-y-2">
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-legs">Classic</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-seat">Ko'ja</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-backrest">Yumshoq</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-pattern">Oddiy</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-material">Qora</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- CTA Button -->
+                    <div class="mt-6">
+                        <button type="button" id="config-order-btn" class="block w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
+                            {% if lang == 'ru' %}Заказать эту конфигурацию{% elif lang == 'en' %}Order this configuration{% else %}Shu variantda buyurtma berish{% endif %}
+                        </button>
+                        <p class="text-center text-xs text-gray-400 mt-3">
+                            {% if lang == 'ru' %}Мы свяжемся с вами для уточнения деталей{% elif lang == 'en' %}We will contact you to clarify details{% else %}Tafsilotlarni aniqlashtirish uchun siz bilan bog'lanamiz{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="text-center mb-12">
+            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">
+                {% if lang == 'ru' %}Процесс{% elif lang == 'en' %}Process{% else %}Jarayon{% endif %}
+            </p>
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e]">
+                {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlaymiz{% endif %}
+            </h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            <div class="text-center">
+                <div class="process-number w-16 h-16 bg-[#f59e0b] rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">1</div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">
+                    {% if lang == 'ru' %}Консультация{% elif lang == 'en' %}Consultation{% else %}Maslahat{% endif %}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Обсуждаем ваши потребности и предпочтения{% elif lang == 'en' %}We discuss your needs and preferences{% else %}Ehtiyojlaringiz va didlaringizni muhokama qilamiz{% endif %}
+                </p>
+            </div>
+            
+            <div class="text-center">
+                <div class="process-number w-16 h-16 bg-[#f59e0b] rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">2</div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">
+                    {% if lang == 'ru' %}Дизайн{% elif lang == 'en' %}Design{% else %}Dizayn{% endif %}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Создаём эскиз и 3D-визуализацию{% elif lang == 'en' %}We create a sketch and 3D visualization{% else %}Eskiz va 3D vizualizatsiya yaratamiz{% endif %}
+                </p>
+            </div>
+            
+            <div class="text-center">
+                <div class="process-number w-16 h-16 bg-[#f59e0b] rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">3</div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">
+                    {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Изготавливаем мебель по вашему заказу{% elif lang == 'en' %}We manufacture furniture according to your order{% else %}Buyurtmangiz bo'yicha mebel ishlab chiqaramiz{% endif %}
+                </p>
+            </div>
+            
+            <div class="text-center">
+                <div class="process-number w-16 h-16 bg-[#f59e0b] rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">4</div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">
+                    {% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazish{% endif %}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Доставляем и устанавливаем мебель{% elif lang == 'en' %}We deliver and install furniture{% else %}Mebelni yetkazib beramiz va o'rnatamiz{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="py-16 lg:py-24 bg-[#f8f8f8] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="text-center mb-12">
+            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">
+                {% if lang == 'ru' %}Преимущества{% elif lang == 'en' %}Benefits{% else %}Afzalliklar{% endif %}
+            </p>
+            <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e]">
+                {% if lang == 'ru' %}Почему выбирают индивидуальный заказ{% elif lang == 'en' %}Why choose custom order{% else %}Nima uchun individual buyurtma{% endif %}
+            </h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="benefit-card">
+                <div class="w-12 h-12 bg-[#f59e0b]/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">
+                    {% if lang == 'ru' %}Уникальный дизайн{% elif lang == 'en' %}Unique Design{% else %}Noyob dizayn{% endif %}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Мебель создаётся специально для вас{% elif lang == 'en' %}Furniture created specifically for you{% else %}Mebel siz uchun maxsus yaratiladi{% endif %}
+                </p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="w-12 h-12 bg-[#f59e0b]/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">
+                    {% if lang == 'ru' %}25 лет гарантии{% elif lang == 'en' %}25 Years Warranty{% else %}25 yil kafolat{% endif %}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Долговечность и надёжность{% elif lang == 'en' %}Durability and reliability{% else %}Uzoq muddatli va ishonchli{% endif %}
+                </p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="w-12 h-12 bg-[#f59e0b]/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">
+                    {% if lang == 'ru' %}Быстрое производство{% elif lang == 'en' %}Fast Production{% else %}Tez ishlab chiqarish{% endif %}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Соблюдение сроков{% elif lang == 'en' %}On-time delivery{% else %}Muddatlarni bajarish{% endif %}
+                </p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="w-12 h-12 bg-[#f59e0b]/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-[#1a1a2e] mb-2">
+                    {% if lang == 'ru' %}Профессиональная консультация{% elif lang == 'en' %}Professional Consultation{% else %}Professional maslahat{% endif %}
+                </h3>
+                <p class="text-gray-600 text-sm">
+                    {% if lang == 'ru' %}Помощь в выборе и дизайне{% elif lang == 'en' %}Help with selection and design{% else %}Tanlash va dizayn bo'yicha yordam{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 lg:py-24 bg-[#1a1a2e] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
+                {% if lang == 'ru' %}Готовы создать мебель своей мечты?{% elif lang == 'en' %}Ready to create your dream furniture?{% else %}Orzuingizdagi mebelni yaratishga tayyormisiz?{% endif %}
+            </h2>
+            <p class="text-white/60 text-base mb-10 max-w-xl mx-auto">
+                {% if lang == 'ru' %}Свяжитесь с нами для бесплатной консультации{% elif lang == 'en' %}Contact us for a free consultation{% else %}Bepul maslahat uchun biz bilan bog'laning{% endif %}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/contact" class="bg-[#f59e0b] hover:bg-[#d97706] text-white px-10 py-4 text-sm tracking-wider uppercase font-medium transition-colors">
+                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact Us{% else %}Bog'lanish{% endif %}
+                </a>
+                <a href="tel:+998712000262" class="border border-white/30 text-white px-10 py-4 text-sm tracking-wider uppercase font-medium hover:bg-white/10 transition-colors">
+                    71 200 02 62
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bottom Sheet for Order Form -->
+<div class="bottom-sheet-overlay" id="bottom-sheet-overlay"></div>
+<div class="bottom-sheet" id="bottom-sheet">
+    <div class="bottom-sheet-handle"></div>
+    <div class="bottom-sheet-header">
+        <h3 class="text-xl font-bold text-[#1a1a2e]">
+            {% if lang == 'ru' %}Оформить заказ{% elif lang == 'en' %}Place Order{% else %}Buyurtma berish{% endif %}
+        </h3>
+        <button type="button" id="close-bottom-sheet" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#1a1a2e] transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <div class="bottom-sheet-content">
+        <form id="order-form">
+            <!-- Configuration Summary -->
+            <div class="bg-[#f8f8f8] p-4 mb-6">
+                <h4 class="font-semibold text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}Ваша конфигурация{% elif lang == 'en' %}Your Configuration{% else %}Sizning konfiguratsiyangiz{% endif %}
+                </h4>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-legs">Classic</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-seat">Ko'ja</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-backrest">Yumshoq</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-pattern">Oddiy</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-material">Qora</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Fields -->
+            <div class="space-y-4">
+                <div>
+                    <label for="order-name" class="block text-sm font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your name{% else %}Ismingiz{% endif %} <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="order-name" name="name" required
+                           class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
+                           placeholder="{% if lang == 'ru' %}Введите ваше имя{% elif lang == 'en' %}Enter your name{% else %}Ismingizni kiriting{% endif %}">
+                </div>
+                
+                <div>
+                    <label for="order-phone" class="block text-sm font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} <span class="text-red-500">*</span>
+                    </label>
+                    <input type="tel" id="order-phone" name="phone" required
+                           class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
+                           placeholder="+998901234567">
+                </div>
+                
+                <div>
+                    <label for="order-message" class="block text-sm font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Дополнительное сообщение{% elif lang == 'en' %}Additional message{% else %}Qo'shimcha xabar{% endif %}
+                    </label>
+                    <textarea id="order-message" name="message" rows="4"
+                              class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition resize-none"
+                              placeholder="{% if lang == 'ru' %}Ваши пожелания или вопросы...{% elif lang == 'en' %}Your wishes or questions...{% else %}Istaklaringiz yoki savollaringiz...{% endif %}"></textarea>
+                </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="mt-6">
+                <button type="submit" id="submit-order-btn" class="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
+                    {% if lang == 'ru' %}Отправить заказ{% elif lang == 'en' %}Send Order{% else %}Buyurtmani yuborish{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Section reveal animation
+    const revealSections = document.querySelectorAll('.reveal-section');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    revealSections.forEach(section => revealObserver.observe(section));
+    
+    // ===== CONFIGURATOR FUNCTIONALITY =====
+    const config = {
+        legs: { value: 'classic', label: 'Classic' },
+        seat: { value: 'koja', label: "Ko'ja" },
+        backrest: { value: 'soft', label: 'Yumshoq' },
+        pattern: { value: 'plain', label: 'Oddiy' },
+        material: { value: 'black', label: 'Qora' }
+    };
+    
+    // Hotspot click handlers
+    const hotspots = document.querySelectorAll('.config-hotspot');
+    hotspots.forEach(hotspot => {
+        hotspot.addEventListener('click', function() {
+            const configType = this.dataset.config;
+            const optionSection = document.querySelector(`.config-option[data-option="${configType}"]`);
+            
+            // Remove active from all hotspots
+            hotspots.forEach(h => h.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Scroll to option section on mobile
+            if (window.innerWidth < 1024 && optionSection) {
+                optionSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // Highlight the option section
+            document.querySelectorAll('.config-option').forEach(opt => opt.classList.remove('ring-2', 'ring-[#f59e0b]'));
+            if (optionSection) {
+                optionSection.classList.add('ring-2', 'ring-[#f59e0b]');
+                setTimeout(() => optionSection.classList.remove('ring-2', 'ring-[#f59e0b]'), 2000);
+            }
+        });
+    });
+    
+    // Config button handlers
+    const configBtns = document.querySelectorAll('.config-btn');
+    configBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const option = this.closest('.config-option');
+            const optionType = option.dataset.option;
+            const value = this.dataset.value;
+            const label = this.textContent.trim();
+            
+            // Update active state
+            option.querySelectorAll('.config-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update config
+            config[optionType] = { value, label };
+            
+            // Update label
+            option.querySelector('.config-selected-label').textContent = label;
+            
+            // Update summary
+            updateSummary();
+        });
+    });
+    
+    // Color swatch handlers
+    const colorBtns = document.querySelectorAll('.config-color');
+    colorBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const option = this.closest('.config-option');
+            const optionType = option.dataset.option;
+            const value = this.dataset.value;
+            const label = this.dataset.label;
+            
+            // Update active state
+            option.querySelectorAll('.config-color').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update config
+            config[optionType] = { value, label };
+            
+            // Update label
+            option.querySelector('.config-selected-label').textContent = label;
+            
+            // Update summary
+            updateSummary();
+        });
+    });
+    
+    function updateSummary() {
+        document.getElementById('summary-legs').textContent = config.legs.label;
+        document.getElementById('summary-seat').textContent = config.seat.label;
+        document.getElementById('summary-backrest').textContent = config.backrest.label;
+        document.getElementById('summary-pattern').textContent = config.pattern.label;
+        document.getElementById('summary-material').textContent = config.material.label;
+    }
+    
+    // Bottom Sheet Functions
+    const bottomSheet = document.getElementById('bottom-sheet');
+    const bottomSheetOverlay = document.getElementById('bottom-sheet-overlay');
+    const closeBottomSheetBtn = document.getElementById('close-bottom-sheet');
+    const orderForm = document.getElementById('order-form');
+    
+    function openBottomSheet() {
+        // Update form with current config
+        document.getElementById('form-legs').textContent = config.legs.label;
+        document.getElementById('form-seat').textContent = config.seat.label;
+        document.getElementById('form-backrest').textContent = config.backrest.label;
+        document.getElementById('form-pattern').textContent = config.pattern.label;
+        document.getElementById('form-material').textContent = config.material.label;
+        
+        // Show bottom sheet
+        bottomSheet.classList.add('active');
+        bottomSheetOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeBottomSheet() {
+        bottomSheet.classList.remove('active');
+        bottomSheetOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        orderForm.reset();
+    }
+    
+    // Order button handler - opens bottom sheet
+    const orderBtn = document.getElementById('config-order-btn');
+    if (orderBtn) {
+        orderBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openBottomSheet();
+        });
+    }
+    
+    // Close bottom sheet handlers
+    if (closeBottomSheetBtn) {
+        closeBottomSheetBtn.addEventListener('click', closeBottomSheet);
+    }
+    
+    if (bottomSheetOverlay) {
+        bottomSheetOverlay.addEventListener('click', closeBottomSheet);
+    }
+    
+    // Form submit handler
+    if (orderForm) {
+        orderForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('order-name').value.trim();
+            const phone = document.getElementById('order-phone').value.trim();
+            const message = document.getElementById('order-message').value.trim();
+            
+            if (!name || !phone) {
+                alert('{% if lang == "ru" %}Пожалуйста, заполните все обязательные поля{% elif lang == "en" %}Please fill in all required fields{% else %}Iltimos, barcha majburiy maydonlarni to\'ldiring{% endif %}');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submit-order-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '{% if lang == "ru" %}Отправка...{% elif lang == "en" %}Sending...{% else %}Yuborilmoqda...{% endif %}';
+            submitBtn.disabled = true;
+            
+            // API'ga yuborish
+            fetch('/api/custom-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    legs: config.legs.label,
+                    seat: config.seat.label,
+                    backrest: config.backrest.label,
+                    pattern: config.pattern.label,
+                    material: config.material.label,
+                    name: name,
+                    phone: phone,
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('{% if lang == "ru" %}Спасибо! Ваш заказ принят. Мы свяжемся с вами в ближайшее время.{% elif lang == "en" %}Thank you! Your order has been received. We will contact you soon.{% else %}Rahmat! Buyurtmangiz qabul qilindi. Tez orada siz bilan bog\'lanamiz.{% endif %}');
+                    closeBottomSheet();
+                } else {
+                    alert(data.message || '{% if lang == "ru" %}Произошла ошибка. Попробуйте еще раз.{% elif lang == "en" %}An error occurred. Please try again.{% else %}Xatolik yuz berdi. Qayta urinib ko\'ring.{% endif %}');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('{% if lang == "ru" %}Произошла ошибка. Попробуйте еще раз.{% elif lang == "en" %}An error occurred. Please try again.{% else %}Xatolik yuz berdi. Qayta urinib ko\'ring.{% endif %}');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

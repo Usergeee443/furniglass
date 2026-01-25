@@ -114,12 +114,12 @@
             <a href="/portfolio?room_type=Ofis" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
                 {% if lang == 'ru' %}Офис{% elif lang == 'en' %}Office{% else %}Ofis{% endif %}
             </a>
-        </div>
-        
+    </div>
+    
         <!-- Portfolio Grid -->
-        {% if portfolios %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for portfolio in portfolios %}
+    {% if portfolios %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for portfolio in portfolios %}
             <div class="portfolio-card aspect-[4/3]">
                 {% if portfolio.after_image %}
                 <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.title_uz }}" class="absolute inset-0 w-full h-full object-cover">
@@ -127,11 +127,11 @@
                 <div class="absolute inset-0 bg-gradient-to-br from-[#2a2a3e] to-[#1a1a2e]"></div>
                 {% endif %}
                 <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
-                    {% if portfolio.room_type_uz %}
+                            {% if portfolio.room_type_uz %}
                     <span class="text-[#f59e0b] text-xs tracking-wider uppercase mb-2">{{ portfolio.room_type_uz }}</span>
-                    {% endif %}
+                            {% endif %}
                     <h3 class="text-white text-xl font-bold">{{ portfolio.title_uz }}</h3>
-                    {% if portfolio.description_uz %}
+                {% if portfolio.description_uz %}
                     <p class="text-white/50 text-sm mt-2 line-clamp-2">{{ portfolio.description_uz[:100] }}...</p>
                     {% endif %}
                 </div>
@@ -171,7 +171,7 @@
                 </div>
                 <h3 class="text-white font-bold mb-2">{% if lang == 'ru' %}3D Дизайн{% elif lang == 'en' %}3D Design{% else %}3D Dizayn{% endif %}</h3>
                 <p class="text-white/50 text-sm">{% if lang == 'ru' %}Визуализация проекта{% elif lang == 'en' %}Project visualization{% else %}Loyiha vizualizatsiyasi{% endif %}</p>
-            </div>
+                        </div>
             <div class="text-center">
                 <div class="w-16 h-16 mx-auto mb-5 border border-[#f59e0b]/40 flex items-center justify-center">
                     <span class="text-2xl font-bold text-[#f59e0b]">03</span>
@@ -209,7 +209,7 @@
                 </a>
             </div>
         </div>
-    </div>
+</div>
 </section>
 
 <script>

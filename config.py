@@ -19,4 +19,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = 'static/uploads'
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
+    
+    # Telegram Bot Configuration
+    TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN') or ''
+    TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID') or ''
 

@@ -12,6 +12,7 @@ import os
 import json
 import urllib.request
 import urllib.parse
+import requests
 
 # ============ AUTO-TRANSLATE FUNCTION (FREE) ============
 def auto_translate(text, target_lang='ru'):
@@ -464,6 +465,7 @@ def sitemap():
     static_pages = [
         {'loc': base_url, 'changefreq': 'daily', 'priority': '1.0'},
         {'loc': f'{base_url}/products', 'changefreq': 'daily', 'priority': '0.9'},
+        {'loc': f'{base_url}/custom', 'changefreq': 'weekly', 'priority': '0.9'},
         {'loc': f'{base_url}/portfolio', 'changefreq': 'weekly', 'priority': '0.8'},
         {'loc': f'{base_url}/about', 'changefreq': 'monthly', 'priority': '0.7'},
         {'loc': f'{base_url}/contact', 'changefreq': 'monthly', 'priority': '0.7'},
@@ -622,6 +624,105 @@ def order():
     
     categories = Category.query.all()
     return render_template('order.html', categories=categories)
+
+def send_telegram_message(message):
+    """Telegram botga xabar yuborish"""
+    try:
+        token = app.config.get('TELEGRAM_BOT_TOKEN')
+        chat_id = app.config.get('TELEGRAM_CHAT_ID')
+        
+        if not token or not chat_id:
+            print("Telegram bot token yoki chat_id topilmadi")
+            return False
+        
+        url = f"https://api.telegram.org/bot{token}/sendMessage"
+        data = {
+            'chat_id': chat_id,
+            'text': message,
+            'parse_mode': 'HTML'
+        }
+        
+        response = requests.post(url, data=data, timeout=10)
+        return response.status_code == 200
+    except Exception as e:
+        print(f"Telegram xabar yuborishda xatolik: {e}")
+        return False
+
+@app.route('/custom')
+def custom():
+    """Individual mebel buyurtmasi sahifasi"""
+    return render_template('custom.html')
+
+@app.route('/api/custom-order', methods=['POST'])
+def custom_order():
+    """Individual mebel buyurtmasini qabul qilish va Telegram'ga yuborish"""
+    try:
+        data = request.get_json()
+        
+        legs = data.get('legs', '')
+        seat = data.get('seat', '')
+        backrest = data.get('backrest', '')
+        pattern = data.get('pattern', '')
+        material = data.get('material', '')
+        phone = data.get('phone', '')
+        name = data.get('name', '')
+        message = data.get('message', '')
+        
+        # Default qiymatlar
+        name_display = name if name else "Ko'rsatilmagan"
+        phone_display = phone if phone else "Ko'rsatilmagan"
+        message_display = message if message else "Qo'shimcha xabar yo'q"
+        
+        # Telegram xabari
+        telegram_message = f"""
+<b>🪑 Yangi Individual Mebel Buyurtmasi</b>
+
+<b>Mijoz ma'lumotlari:</b>
+👤 Ism: {name_display}
+📞 Telefon: {phone_display}
+
+<b>Konfiguratsiya:</b>
+🦵 Oyoqlar: {legs}
+🪑 O'rindiq: {seat}
+🧱 Suyanchiq: {backrest}
+✨ Naqsh: {pattern}
+🎨 Rang: {material}
+
+<b>Qo'shimcha xabar:</b>
+{message_display}
+"""
+        
+        # Telegram'ga yuborish
+        telegram_sent = send_telegram_message(telegram_message)
+        
+        # Database'ga saqlash (ixtiyoriy)
+        try:
+            order = Order(
+                furniture_type=f'Individual: {legs}, {seat}, {backrest}',
+                size='',
+                color=material,
+                material=seat,
+                phone=phone,
+                name=name,
+                address=message
+            )
+            db.session.add(order)
+            db.session.commit()
+        except Exception as e:
+            print(f"Database'ga saqlashda xatolik: {e}")
+            db.session.rollback()
+        
+        return jsonify({
+            'success': True,
+            'telegram_sent': telegram_sent,
+            'message': 'Buyurtmangiz qabul qilindi! Tez orada siz bilan bog\'lanamiz.'
+        })
+    except Exception as e:
+        print(f"Xatolik: {e}")
+        return jsonify({
+            'success': False,
+            'message': 'Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.'
+        }), 500
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
