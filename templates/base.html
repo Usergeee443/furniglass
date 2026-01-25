@@ -3,7 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Furniglass - Premium Mebel{% endblock %}</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>{% block title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло в Узбекистане{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass in Uzbekistan{% else %}Furniglass - Premium Mebel va Shisha Tashkilot{% endif %}{% endblock %}</title>
+    <meta name="title" content="{% block meta_title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло в Узбекистане{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass in Uzbekistan{% else %}Furniglass - Premium Mebel va Shisha Tashkilot{% endif %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% if lang == 'ru' %}Furniglass - ведущий производитель премиум мебели и стеклянных изделий в Узбекистане. Индивидуальный дизайн, 25 лет гарантии. Мебель для дома, кафе, ресторанов, клиник.{% elif lang == 'en' %}Furniglass - leading manufacturer of premium furniture and glass products in Uzbekistan. Custom design, 25 years warranty. Furniture for home, cafes, restaurants, clinics.{% else %}Furniglass - O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya. Individual dizayn, 25 yillik kafolat. Uy, kafe, restoran, klinika uchun mebel.{% endif %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{% if lang == 'ru' %}мебель, премиум мебель, стеклянная мебель, мебель на заказ, мебель для кафе, мебель для ресторанов, мебель для клиник, мебель для дома, Furniglass, Узбекистан{% elif lang == 'en' %}furniture, premium furniture, glass furniture, custom furniture, cafe furniture, restaurant furniture, clinic furniture, home furniture, Furniglass, Uzbekistan{% else %}mebel, premium mebel, shisha mebel, individual mebel, kafe mebel, restoran mebel, klinika mebel, uy mebel, Furniglass, O'zbekiston{% endif %}{% endblock %}">
+    <meta name="author" content="Furniglass">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="{{ lang }}">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical %}{{ request.url }}{% endblock %}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{% block og_url %}{{ request.url }}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass{% else %}Furniglass - Premium Mebel va Shisha{% endif %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% if lang == 'ru' %}Ведущий производитель премиум мебели и стеклянных изделий в Узбекистане. Индивидуальный дизайн, 25 лет гарантии.{% elif lang == 'en' %}Leading manufacturer of premium furniture and glass products in Uzbekistan. Custom design, 25 years warranty.{% else %}O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya. Individual dizayn, 25 yillik kafolat.{% endif %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.url_root }}uploads/designs/logo.png{% endblock %}">
+    <meta property="og:site_name" content="Furniglass">
+    <meta property="og:locale" content="{% if lang == 'ru' %}ru_RU{% elif lang == 'en' %}en_US{% else %}uz_UZ{% endif %}">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{% block twitter_url %}{{ request.url }}{% endblock %}">
+    <meta property="twitter:title" content="{% block twitter_title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass{% else %}Furniglass - Premium Mebel va Shisha{% endif %}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{% if lang == 'ru' %}Ведущий производитель премиум мебели и стеклянных изделий в Узбекистане.{% elif lang == 'en' %}Leading manufacturer of premium furniture and glass products in Uzbekistan.{% else %}O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya.{% endif %}{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{{ request.url_root }}uploads/designs/logo.png{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/uploads/designs/logo.png">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "{% block schema_type %}Organization{% endblock %}",
+        "name": "Furniglass",
+        "url": "{{ request.url_root.rstrip('/') }}",
+        "logo": "{{ request.url_root.rstrip('/') }}/uploads/designs/logo.png",
+        "description": "{% if lang == 'ru' %}Ведущий производитель премиум мебели и стеклянных изделий в Узбекистане{% elif lang == 'en' %}Leading manufacturer of premium furniture and glass products in Uzbekistan{% else %}O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya{% endif %}",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "UZ"
+        },
+        "sameAs": []
+    }
+    </script>
+    {% block extra_meta %}{% endblock %}
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>

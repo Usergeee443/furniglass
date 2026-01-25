@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}{{ main_category.get_name(lang) }} - Furniglass{% endblock %}
+{% block title %}{{ main_category.get_name(lang) }} - {% if lang == 'ru' %}Furniglass | Мebel, Furniglass{% elif lang == 'en' %}Furniglass | Mebel, Furniglass{% else %}Furniglass | Mebel, Furniglass{% endif %}{% endblock %}
+
+{% block meta_title %}{{ main_category.get_name(lang) }} - Furniglass | {% if lang == 'ru' %}Мebel, Furniglass{% elif lang == 'en' %}Mebel, Furniglass{% else %}Mebel, Furniglass{% endif %}{% endblock %}
+
+{% block meta_description %}{{ main_category.get_description(lang) or main_category.get_name(lang) }} - {% if lang == 'ru' %}премиум мебель от Furniglass. Мebel, Furniglass - индивидуальный дизайн, 25 лет гарантии.{% elif lang == 'en' %}premium furniture from Furniglass. Mebel, Furniglass - custom design, 25 years warranty.{% else %}Furniglass premium mebel. Mebel, Furniglass - individual dizayn, 25 yillik kafolat.{% endif %}{% endblock %}
+
+{% block meta_keywords %}{{ main_category.get_name(lang) }}, {% if lang == 'ru' %}мебель, премиум мебель, Furniglass, Мebel, купить мебель{% elif lang == 'en' %}furniture, premium furniture, Furniglass, Mebel, buy furniture{% else %}mebel, premium mebel, Furniglass, Mebel, mebel sotib olish{% endif %}{% endblock %}
+
+{% block canonical %}{{ request.url_root.rstrip('/') }}/main-category/{{ main_category.slug }}{% endblock %}
 
 {% block extra_css %}
 <style>

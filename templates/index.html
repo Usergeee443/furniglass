@@ -1,6 +1,47 @@
 {% extends "base.html" %}
 
-{% block title %}Furniglass - {% if lang == 'ru' %}Премиум Мебель{% elif lang == 'en' %}Premium Furniture{% else %}Premium Mebel{% endif %}{% endblock %}
+{% block title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло в Узбекистане | Мebel, Furniglass{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass in Uzbekistan | Mebel, Furniglass{% else %}Furniglass - Premium Mebel va Shisha Tashkilot | Mebel, Furniglass{% endif %}{% endblock %}
+
+{% block meta_title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло | Мebel, Furniglass{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass | Mebel, Furniglass{% else %}Furniglass - Premium Mebel va Shisha | Mebel, Furniglass{% endif %}{% endblock %}
+
+{% block meta_description %}{% if lang == 'ru' %}Furniglass - ведущий производитель премиум мебели и стеклянных изделий в Узбекистане. Мebel, Furniglass - индивидуальный дизайн, 25 лет гарантии. Мебель для дома, кафе, ресторанов, клиник. Купить мебель в Ташкенте.{% elif lang == 'en' %}Furniglass - leading manufacturer of premium furniture and glass products in Uzbekistan. Mebel, Furniglass - custom design, 25 years warranty. Furniture for home, cafes, restaurants, clinics. Buy furniture in Tashkent.{% else %}Furniglass - O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya. Mebel, Furniglass - individual dizayn, 25 yillik kafolat. Uy, kafe, restoran, klinika uchun mebel. Toshkentda mebel sotib olish.{% endif %}{% endblock %}
+
+{% block meta_keywords %}{% if lang == 'ru' %}мебель, премиум мебель, стеклянная мебель, мебель на заказ, мебель для кафе, мебель для ресторанов, мебель для клиник, мебель для дома, Furniglass, Мebel, Узбекистан, Ташкент, купить мебель{% elif lang == 'en' %}furniture, premium furniture, glass furniture, custom furniture, cafe furniture, restaurant furniture, clinic furniture, home furniture, Furniglass, Mebel, Uzbekistan, Tashkent, buy furniture{% else %}mebel, premium mebel, shisha mebel, individual mebel, kafe mebel, restoran mebel, klinika mebel, uy mebel, Furniglass, Mebel, O'zbekiston, Toshkent, mebel sotib olish{% endif %}{% endblock %}
+
+{% block canonical %}{{ request.url_root.rstrip('/') }}{% endblock %}
+
+{% block schema_type %}Organization{% endblock %}
+
+{% block extra_meta %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FurnitureStore",
+    "name": "Furniglass",
+    "image": "{{ request.url_root.rstrip('/') }}/uploads/designs/logo.png",
+    "description": "{% if lang == 'ru' %}Ведущий производитель премиум мебели и стеклянных изделий в Узбекистане{% elif lang == 'en' %}Leading manufacturer of premium furniture and glass products in Uzbekistan{% else %}O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya{% endif %}",
+    "url": "{{ request.url_root.rstrip('/') }}",
+    "telephone": "+998901234567",
+    "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "UZ",
+        "addressLocality": "Tashkent"
+    },
+    "priceRange": "$$",
+    "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "09:00",
+        "closes": "18:00"
+    },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "{{ reviews|length }}"
+    }
+}
+</script>
+{% endblock %}
 
 {% block extra_css %}
 <style>

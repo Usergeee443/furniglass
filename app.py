@@ -454,6 +454,102 @@ def google_verification():
     """Google Search Console verification file"""
     return 'google-site-verification: google9029ae48d4d9d006.html', 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route('/sitemap.xml')
+def sitemap():
+    """Generate sitemap.xml for SEO"""
+    from datetime import datetime
+    base_url = request.url_root.rstrip('/')
+    
+    # Static pages
+    static_pages = [
+        {'loc': base_url, 'changefreq': 'daily', 'priority': '1.0'},
+        {'loc': f'{base_url}/products', 'changefreq': 'daily', 'priority': '0.9'},
+        {'loc': f'{base_url}/portfolio', 'changefreq': 'weekly', 'priority': '0.8'},
+        {'loc': f'{base_url}/about', 'changefreq': 'monthly', 'priority': '0.7'},
+        {'loc': f'{base_url}/contact', 'changefreq': 'monthly', 'priority': '0.7'},
+        {'loc': f'{base_url}/faq', 'changefreq': 'monthly', 'priority': '0.6'},
+        {'loc': f'{base_url}/services', 'changefreq': 'monthly', 'priority': '0.7'},
+        {'loc': f'{base_url}/stores', 'changefreq': 'weekly', 'priority': '0.7'},
+    ]
+    
+    # Main categories
+    main_categories = MainCategory.query.all()
+    for mc in main_categories:
+        static_pages.append({
+            'loc': f'{base_url}/main-category/{mc.slug}',
+            'changefreq': 'weekly',
+            'priority': '0.8'
+        })
+    
+    # Products
+    products = Product.query.filter_by(is_active=True).all()
+    product_pages = []
+    for product in products:
+        lastmod = product.created_at.strftime('%Y-%m-%d') if product.created_at else datetime.now().strftime('%Y-%m-%d')
+        if hasattr(product, 'updated_at') and product.updated_at:
+            lastmod = product.updated_at.strftime('%Y-%m-%d')
+        product_pages.append({
+            'loc': f'{base_url}/product/{product.id}',
+            'changefreq': 'weekly',
+            'priority': '0.9',
+            'lastmod': lastmod
+        })
+    
+    # Categories
+    categories = Category.query.all()
+    category_pages = []
+    for category in categories:
+        category_pages.append({
+            'loc': f'{base_url}/products?category={category.id}',
+            'changefreq': 'weekly',
+            'priority': '0.8'
+        })
+    
+    # Portfolio items
+    portfolios = Portfolio.query.all()
+    portfolio_pages = []
+    for portfolio in portfolios:
+        portfolio_pages.append({
+            'loc': f'{base_url}/portfolio',
+            'changefreq': 'monthly',
+            'priority': '0.7'
+        })
+    
+    # Generate XML
+    xml = ['<?xml version="1.0" encoding="UTF-8"?>']
+    xml.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+    
+    # Add all pages
+    all_pages = static_pages + product_pages + category_pages
+    
+    for page in all_pages:
+        xml.append('  <url>')
+        xml.append(f'    <loc>{page["loc"]}</loc>')
+        xml.append(f'    <changefreq>{page["changefreq"]}</changefreq>')
+        xml.append(f'    <priority>{page["priority"]}</priority>')
+        if 'lastmod' in page:
+            xml.append(f'    <lastmod>{page["lastmod"]}</lastmod>')
+        xml.append('  </url>')
+    
+    xml.append('</urlset>')
+    
+    return '\n'.join(xml), 200, {'Content-Type': 'application/xml; charset=utf-8'}
+
+@app.route('/robots.txt')
+def robots():
+    """Generate robots.txt for SEO"""
+    base_url = request.url_root.rstrip('/')
+    robots_txt = f"""User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /api/
+
+Sitemap: {base_url}/sitemap.xml
+"""
+    return robots_txt, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+
 @app.route('/portfolio')
 def portfolio():
     room_type = request.args.get('room_type')

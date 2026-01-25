@@ -1,6 +1,43 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.get_name(lang) }} - Furniglass{% endblock %}
+{% block title %}{{ product.get_name(lang) }} - {% if lang == 'ru' %}Купить в Furniglass | Мebel, Furniglass{% elif lang == 'en' %}Buy at Furniglass | Mebel, Furniglass{% else %}Furniglass'da sotib olish | Mebel, Furniglass{% endif %}{% endblock %}
+
+{% block meta_title %}{{ product.get_name(lang) }} - Furniglass | {% if lang == 'ru' %}Мebel, Furniglass{% elif lang == 'en' %}Mebel, Furniglass{% else %}Mebel, Furniglass{% endif %}{% endblock %}
+
+{% block meta_description %}{% if product.get_description(lang) %}{{ product.get_description(lang)[:160] }}{% else %}{% if lang == 'ru' %}{{ product.get_name(lang) }} - премиум мебель от Furniglass. Мebel, Furniglass - индивидуальный дизайн, 25 лет гарантии.{% elif lang == 'en' %}{{ product.get_name(lang) }} - premium furniture from Furniglass. Mebel, Furniglass - custom design, 25 years warranty.{% else %}{{ product.get_name(lang) }} - Furniglass premium mebel. Mebel, Furniglass - individual dizayn, 25 yillik kafolat.{% endif %}{% endif %}{% endblock %}
+
+{% block meta_keywords %}{{ product.get_name(lang) }}, {% if lang == 'ru' %}мебель, премиум мебель, Furniglass, Мebel, купить мебель{% elif lang == 'en' %}furniture, premium furniture, Furniglass, Mebel, buy furniture{% else %}mebel, premium mebel, Furniglass, Mebel, mebel sotib olish{% endif %}{% endblock %}
+
+{% block canonical %}{{ request.url_root.rstrip('/') }}/product/{{ product.id }}{% endblock %}
+
+{% block schema_type %}Product{% endblock %}
+
+{% block extra_meta %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ product.get_name(lang) }}",
+    "description": "{{ product.get_description(lang) or product.get_name(lang) }}",
+    "image": "{{ request.url_root.rstrip('/') }}/uploads/products/{{ product.image or 'default.jpg' }}",
+    "brand": {
+        "@type": "Brand",
+        "name": "Furniglass"
+    },
+    "offers": {
+        "@type": "Offer",
+        "url": "{{ request.url_root.rstrip('/') }}/product/{{ product.id }}",
+        "priceCurrency": "UZS",
+        "price": "{{ product.price }}",
+        "availability": "https://schema.org/{% if product.is_active %}InStock{% else %}OutOfStock{% endif %}",
+        "seller": {
+            "@type": "Organization",
+            "name": "Furniglass"
+        }
+    }
+}
+</script>
+{% endblock %}
 
 {% block extra_css %}
 <style>

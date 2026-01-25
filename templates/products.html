@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}{{ T.nav.products[lang] }} - Furniglass{% endblock %}
+{% block title %}{% if lang == 'ru' %}Каталог Мебели - Furniglass | Мebel, Furniglass{% elif lang == 'en' %}Furniture Catalog - Furniglass | Mebel, Furniglass{% else %}Mebel Katalogi - Furniglass | Mebel, Furniglass{% endif %}{% endblock %}
+
+{% block meta_title %}{% if lang == 'ru' %}Каталог Премиум Мебели - Furniglass | Мebel, Furniglass{% elif lang == 'en' %}Premium Furniture Catalog - Furniglass | Mebel, Furniglass{% else %}Premium Mebel Katalogi - Furniglass | Mebel, Furniglass{% endif %}{% endblock %}
+
+{% block meta_description %}{% if lang == 'ru' %}Каталог премиум мебели Furniglass. Мebel, Furniglass - широкий выбор мебели для дома, кафе, ресторанов, клиник. Индивидуальный дизайн, 25 лет гарантии.{% elif lang == 'en' %}Furniglass premium furniture catalog. Mebel, Furniglass - wide selection of furniture for home, cafes, restaurants, clinics. Custom design, 25 years warranty.{% else %}Furniglass premium mebel katalogi. Mebel, Furniglass - uy, kafe, restoran, klinika uchun keng mebel tanlovi. Individual dizayn, 25 yillik kafolat.{% endif %}{% endblock %}
+
+{% block meta_keywords %}{% if lang == 'ru' %}каталог мебели, премиум мебель, мебель на заказ, Furniglass, Мebel, купить мебель, мебель для дома, мебель для кафе{% elif lang == 'en' %}furniture catalog, premium furniture, custom furniture, Furniglass, Mebel, buy furniture, home furniture, cafe furniture{% else %}mebel katalogi, premium mebel, individual mebel, Furniglass, Mebel, mebel sotib olish, uy mebel, kafe mebel{% endif %}{% endblock %}
+
+{% block canonical %}{{ request.url_root.rstrip('/') }}/products{% endblock %}
 
 {% block extra_css %}
 <style>
