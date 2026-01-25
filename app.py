@@ -473,37 +473,55 @@ def sitemap():
     ]
     
     # Main categories
-    main_categories = MainCategory.query.all()
-    for mc in main_categories:
-        static_pages.append({
-            'loc': f'{base_url}/main-category/{mc.slug}',
-            'changefreq': 'weekly',
-            'priority': '0.8'
-        })
+    try:
+        main_categories = MainCategory.query.all()
+        for mc in main_categories:
+            if mc and mc.slug:
+                static_pages.append({
+                    'loc': f'{base_url}/main-category/{mc.slug}',
+                    'changefreq': 'weekly',
+                    'priority': '0.8'
+                })
+    except Exception as e:
+        # Agar main categories'da muammo bo'lsa, o'tkazib yuboramiz
+        pass
     
     # Products
-    products = Product.query.filter_by(is_active=True).all()
-    product_pages = []
-    for product in products:
-        lastmod = product.created_at.strftime('%Y-%m-%d') if product.created_at else datetime.now().strftime('%Y-%m-%d')
-        if hasattr(product, 'updated_at') and product.updated_at:
-            lastmod = product.updated_at.strftime('%Y-%m-%d')
-        product_pages.append({
-            'loc': f'{base_url}/product/{product.id}',
-            'changefreq': 'weekly',
-            'priority': '0.9',
-            'lastmod': lastmod
-        })
+    try:
+        products = Product.query.all()  # is_active maydoni yo'q, barcha mahsulotlarni olamiz
+        product_pages = []
+        for product in products:
+            try:
+                lastmod = product.created_at.strftime('%Y-%m-%d') if product.created_at else datetime.now().strftime('%Y-%m-%d')
+                if hasattr(product, 'updated_at') and product.updated_at:
+                    lastmod = product.updated_at.strftime('%Y-%m-%d')
+                product_pages.append({
+                    'loc': f'{base_url}/product/{product.id}',
+                    'changefreq': 'weekly',
+                    'priority': '0.9',
+                    'lastmod': lastmod
+                })
+            except Exception as e:
+                # Agar biror mahsulotda muammo bo'lsa, o'tkazib yuboramiz
+                continue
+    except Exception as e:
+        # Agar products query'da muammo bo'lsa, bo'sh ro'yxat qaytaramiz
+        product_pages = []
     
     # Categories
-    categories = Category.query.all()
-    category_pages = []
-    for category in categories:
-        category_pages.append({
-            'loc': f'{base_url}/products?category={category.id}',
-            'changefreq': 'weekly',
-            'priority': '0.8'
-        })
+    try:
+        categories = Category.query.all()
+        category_pages = []
+        for category in categories:
+            if category and category.id:
+                category_pages.append({
+                    'loc': f'{base_url}/products?category={category.id}',
+                    'changefreq': 'weekly',
+                    'priority': '0.8'
+                })
+    except Exception as e:
+        # Agar categories'da muammo bo'lsa, bo'sh ro'yxat qaytaramiz
+        category_pages = []
     
     # Portfolio items
     portfolios = Portfolio.query.all()
