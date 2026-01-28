@@ -220,32 +220,38 @@
     .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     
-    /* Configurator Styles */
+    /* Configurator Styles - Compact & Mobile Optimized */
     .config-hotspot {
-        width: 48px;
-        height: 48px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
-        background: #fff;
+        background: rgba(255, 255, 255, 0.95);
         border: 2px solid var(--accent);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+        transition: all 0.2s ease;
         z-index: 10;
     }
     
+    @media (min-width: 768px) {
+        .config-hotspot {
+            width: 36px;
+            height: 36px;
+        }
+    }
+    
     .config-hotspot:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 24px rgba(245, 158, 11, 0.4);
-        border-color: var(--accent-hover);
+        transform: scale(1.05);
+        box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);
     }
     
     .config-hotspot.active {
         background: var(--accent);
         border-color: var(--accent);
-        box-shadow: 0 6px 24px rgba(245, 158, 11, 0.5);
+        box-shadow: 0 3px 10px rgba(245, 158, 11, 0.4);
     }
     
     .config-hotspot.active .hotspot-icon svg {
@@ -263,84 +269,118 @@
     }
     
     @keyframes hotspotPulse {
-        0% { transform: scale(1); opacity: 0.6; }
-        100% { transform: scale(1.8); opacity: 0; }
+        0% { transform: scale(1); opacity: 0.4; }
+        100% { transform: scale(1.5); opacity: 0; }
     }
     
     .hotspot-icon {
         position: relative;
         z-index: 1;
-        width: 20px;
-        height: 20px;
     }
     
     .hotspot-icon svg {
-        width: 100%;
-        height: 100%;
         stroke: var(--accent);
-        transition: stroke 0.3s ease;
+        transition: stroke 0.2s ease;
+        width: 14px;
+        height: 14px;
     }
     
-    /* Config Buttons */
+    @media (min-width: 768px) {
+        .hotspot-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+    
+    /* Config Buttons - Compact */
     .config-btn {
-        padding: 10px 20px;
-        border: 2px solid #e5e5e5;
+        padding: 6px 12px;
+        border: 1px solid #e5e7eb;
         background: #fff;
         border-radius: 0;
-        font-size: 13px;
-        font-weight: 500;
-        color: #666;
+        font-size: 12px;
+        font-weight: 400;
+        color: #4b5563;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.2s ease;
+    }
+    
+    @media (min-width: 768px) {
+        .config-btn {
+            padding: 7px 14px;
+            font-size: 13px;
+        }
     }
     
     .config-btn:hover {
         border-color: var(--accent);
         color: var(--accent);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+        background: #fff;
     }
     
     .config-btn.active {
         background: var(--accent);
         border-color: var(--accent);
         color: #fff;
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
     
-    /* Config Color Swatches */
+    /* Config Color Swatches - Compact */
     .config-color {
-        width: 40px;
-        height: 40px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
-        border: 3px solid #e5e5e5;
+        border: 2px solid #e5e7eb;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.2s ease;
         position: relative;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    @media (min-width: 768px) {
+        .config-color {
+            width: 32px;
+            height: 32px;
+        }
     }
     
     .config-color:hover {
-        transform: scale(1.15);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        transform: scale(1.1);
+        border-color: var(--accent);
     }
     
     .config-color.active {
         border-color: var(--accent);
-        box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--accent), 0 4px 16px rgba(245, 158, 11, 0.4);
-        transform: scale(1.1);
+        border-width: 3px;
+        transform: scale(1.05);
     }
     
-    /* Config Option */
+    /* Config Option - Minimalistic */
     .config-option {
-        padding: 16px;
-        border-radius: 0;
-        background: #fafafa;
-        transition: all 0.3s ease;
+        padding: 0;
+        transition: all 0.2s ease;
     }
     
-    .config-option:hover {
-        background: #f5f5f5;
+    .config-select {
+        width: 100%;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        padding: 6px 10px;
+        font-size: 12px;
+        color: #4b5563;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 8L10 13L15 8' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.6rem center;
+        background-size: 14px 14px;
+    }
+    
+    @media (min-width: 768px) {
+        .config-select {
+            font-size: 13px;
+            padding: 7px 12px;
+        }
     }
     
     /* Bottom Sheet */
@@ -658,7 +698,7 @@
                     <img src="/uploads/designs/2.jpg" alt="Furniglass" class="w-full h-full object-cover">
                     </div>
                 </div>
-            
+        
             <!-- Content -->
             <div>
                 <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">{% if lang == 'ru' %}О компании{% elif lang == 'en' %}About Us{% else %}Biz haqimizda{% endif %}</p>
@@ -751,7 +791,7 @@
             <!-- Steps Container -->
             <div class="relative grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 z-10">
                 <!-- Step 1: Consultation -->
-                <div class="relative">
+        <div class="relative">
                     <div class="bg-white p-5 lg:p-6 border border-gray-200 hover:border-[#f59e0b] transition-colors">
                         <!-- Step Number Badge -->
                         <div class="absolute -top-3 left-0 w-8 h-8 bg-[#f59e0b] flex items-center justify-center z-20">
@@ -767,7 +807,7 @@
                         <p class="text-gray-600 text-sm leading-relaxed">
                             {% if lang == 'ru' %}Бесплатная консультация, помощь в выборе стиля и дизайна мебели{% elif lang == 'en' %}Free consultation, help with choosing style and furniture design{% else %}Bepul maslahat, uslub va mebel dizaynini tanlashda yordam{% endif %}
                         </p>
-                    </div>
+                                        </div>
             </div>
             
                 <!-- Step 2: Production -->
@@ -781,22 +821,22 @@
                         <!-- Title -->
                         <h3 class="text-lg lg:text-xl font-bold text-[#1a1a2e] mb-2">
                             {% if lang == 'ru' %}Производство{% elif lang == 'en' %}Production{% else %}Ishlab chiqarish{% endif %}
-                        </h3>
+                                    </h3>
                         
                         <!-- Description -->
                         <p class="text-gray-600 text-sm leading-relaxed">
                             {% if lang == 'ru' %}Профессиональное изготовление мебели по вашим размерам и требованиям{% elif lang == 'en' %}Professional furniture manufacturing according to your dimensions and requirements{% else %}Sizning o'lchamlaringiz va talablaringiz bo'yicha professional mebel yasash{% endif %}
                         </p>
-            </div>
-        </div>
-                
+                </div>
+                        </div>
+                                
                 <!-- Step 3: Delivery -->
                 <div class="relative">
                     <div class="bg-white p-5 lg:p-6 border border-gray-200 hover:border-[#f59e0b] transition-colors">
                         <!-- Step Number Badge -->
                         <div class="absolute -top-3 left-0 w-8 h-8 bg-[#f59e0b] flex items-center justify-center z-20">
                             <span class="text-white font-bold text-sm">3</span>
-    </div>
+                        </div>
                         
                         <!-- Title -->
                         <h3 class="text-lg lg:text-xl font-bold text-[#1a1a2e] mb-2">
@@ -809,7 +849,7 @@
                         </p>
         </div>
                     </div>
-                    </div>
+            </div>
         </div>
     </div>
 </section>
@@ -837,7 +877,7 @@
                                     {% if images %}
                                         <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
                                  class="product-img w-full h-full object-cover">
-                                    {% endif %}
+                    {% endif %}
                                 {% endif %}
                     </div>
                     <div class="p-3">
@@ -864,205 +904,181 @@
 {% endif %}
 
 <!-- Individual Configurator Section -->
-<section class="py-16 lg:py-24 bg-[#f8f8f8] reveal-section" id="configurator">
-    <div class="container mx-auto px-6 lg:px-16">
+<section class="py-8 md:py-10 lg:py-14 bg-white reveal-section" id="configurator">
+    <div class="container mx-auto px-4 lg:px-16">
         <!-- Header -->
-        <div class="max-w-3xl mb-12 lg:mb-16">
-            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">
+        <div class="max-w-3xl mb-6 lg:mb-8">
+            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-2">
                 {% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Individual buyurtma{% endif %}
             </p>
-            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] leading-tight mb-6">
+            <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#1a1a2e] leading-tight mb-4">
                 {% if lang == 'ru' %}Furniglass — создаёт мебель в вашем стиле{% elif lang == 'en' %}Furniglass — creates furniture in your style{% else %}Furniglass — mebelni siz istagan uslubda yaratadi{% endif %}
             </h2>
-            <p class="text-gray-600 text-base lg:text-lg leading-relaxed">
+            <p class="text-gray-600 text-sm md:text-base leading-relaxed">
                 {% if lang == 'ru' %}Вы выбираете каждую деталь: тип ножек, материал, цвет, узор и стиль. Furniglass производит мебель не стандартную, а по вашему вкусу.{% elif lang == 'en' %}You choose every detail: leg type, material, color, pattern and style. Furniglass produces furniture not standard, but according to your taste.{% else %}Siz har bir detalni o'zingiz tanlaysiz: oyoq turi, material, rang, naqsh va stil. Furniglass mebellarni standart emas, sizning didingizga moslab ishlab chiqaradi.{% endif %}
             </p>
-        </div>
+                        </div>
         
-        <!-- Configurator Card -->
-        <div class="bg-white shadow-2xl overflow-hidden border border-gray-100">
-            <div class="grid grid-cols-1 lg:grid-cols-2">
-                <!-- Left: Product Image with Interactive Points -->
-                <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 p-8 lg:p-12 min-h-[400px] lg:min-h-[600px]">
-                    <!-- Main Product Image -->
+        <!-- Configurator - Compact Design (product_detail uslubida) -->
+        <div class="flex items-start gap-4 md:gap-6 lg:gap-8">
+            <!-- Left: Product Image -->
+            <div class="space-y-4 w-1/2 min-w-[50%]">
+                <div class="relative bg-[#fafafa] p-4 lg:p-6 min-h-[220px] md:min-h-[260px] lg:min-h-[320px] flex items-center justify-center">
                     <div class="relative w-full h-full flex items-center justify-center">
-                        <img src="/uploads/designs/chair-config.png" alt="Configurable Chair" class="max-w-full max-h-[500px] object-contain" id="config-main-image" onerror="this.src='/uploads/products/default.jpg'">
+                        <img src="/uploads/designs/chair-config.png" alt="Configurable Chair" class="max-w-full max-h-[220px] md:max-h-[260px] lg:max-h-[320px] object-contain" id="config-main-image" onerror="this.src='/uploads/products/default.jpg'">
                         
                         <!-- Interactive Hotspots -->
-                        <!-- Legs -->
                         <button class="config-hotspot absolute bottom-[15%] left-[35%]" data-config="legs" aria-label="Oyoqlar">
                             <span class="hotspot-pulse"></span>
                             <span class="hotspot-icon">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                                 </svg>
                             </span>
-                        </button>
+                </button>
                         
-                        <!-- Seat -->
                         <button class="config-hotspot absolute top-[45%] left-[50%]" data-config="seat" aria-label="O'rindiq">
                             <span class="hotspot-pulse"></span>
                             <span class="hotspot-icon">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                                 </svg>
                             </span>
-                        </button>
+                </button>
                         
-                        <!-- Backrest -->
                         <button class="config-hotspot absolute top-[20%] left-[45%]" data-config="backrest" aria-label="Suyanchiq">
                             <span class="hotspot-pulse"></span>
                             <span class="hotspot-icon">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                                 </svg>
                             </span>
-                        </button>
+            </button>
                         
-                        <!-- Pattern -->
                         <button class="config-hotspot absolute top-[35%] right-[30%]" data-config="pattern" aria-label="Naqsh">
                             <span class="hotspot-pulse"></span>
                             <span class="hotspot-icon">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                                 </svg>
                             </span>
-                        </button>
-                        
-                        <!-- Color/Material -->
+            </button>
+            
                         <button class="config-hotspot absolute bottom-[35%] right-[25%]" data-config="material" aria-label="Material">
                             <span class="hotspot-pulse"></span>
                             <span class="hotspot-icon">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
                                 </svg>
                             </span>
                         </button>
-                </div>
+                                        </div>
+                        </div>
             </div>
+            
+            <!-- Right: Configuration Options (product_detail uslubida info panel, ixcham selectlar) -->
+            <div class="lg:sticky lg:top-24 lg:self-start space-y-4 lg:space-y-5 w-1/2 min-w-[50%]">
+                <!-- Options grid: bir qatorga bir nechta joylashishi uchun -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <!-- Legs Option -->
+                    <div class="config-option" data-option="legs">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-xs md:text-sm font-medium text-gray-700">
+                                {% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}
+                            </span>
+                            <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Classic</span>
+                        </div>
+                        <select class="config-select" data-option="legs">
+                            <option value="classic" selected>Classic</option>
+                            <option value="modern">Modern</option>
+                            <option value="vintage">Vintage</option>
+                            <option value="minimalist">Minimalist</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Seat Option -->
+                    <div class="config-option" data-option="seat">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-xs md:text-sm font-medium text-gray-700">
+                                {% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}
+                            </span>
+                            <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Ko'ja</span>
+                        </div>
+                        <select class="config-select" data-option="seat">
+                            <option value="koja" selected>Ko'ja</option>
+                            <option value="mato">Mato</option>
+                            <option value="velvet">Velvet</option>
+                            <option value="eko">Eko-ko'ja</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Backrest Option -->
+                    <div class="config-option" data-option="backrest">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-xs md:text-sm font-medium text-gray-700">
+                                {% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}
+                            </span>
+                            <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Yumshoq</span>
+                        </div>
+                        <select class="config-select" data-option="backrest">
+                            <option value="soft" selected>Yumshoq</option>
+                            <option value="firm">Qattiq</option>
+                            <option value="ergonomic">Ergonomik</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Pattern Option -->
+                    <div class="config-option" data-option="pattern">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-xs md:text-sm font-medium text-gray-700">
+                                {% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}
+                            </span>
+                            <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Oddiy</span>
+                        </div>
+                        <select class="config-select" data-option="pattern">
+                            <option value="plain" selected>Oddiy</option>
+                            <option value="quilted">Tikuv</option>
+                            <option value="tufted">Tugmali</option>
+                            <option value="modern">Modern Line</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Color Option -->
+                    <div class="config-option" data-option="material">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-xs md:text-sm font-medium text-gray-700">
+                                {% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}
+                            </span>
+                            <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Qora</span>
+                        </div>
+                        <select class="config-select" data-option="material">
+                            <option value="black" data-label="Qora" selected>Qora</option>
+                            <option value="brown" data-label="Jigarrang">Jigarrang</option>
+                            <option value="beige" data-label="Bej">Bej</option>
+                            <option value="gray" data-label="Kulrang">Kulrang</option>
+                            <option value="white" data-label="Oq">Oq</option>
+                            <option value="green" data-label="Yashil">Yashil</option>
+                            <option value="blue" data-label="Ko'k">Ko'k</option>
+                            <option value="gold" data-label="Oltin">Oltin</option>
+                        </select>
+                    </div>
+                </div>
                 
-                <!-- Right: Configuration Options -->
-                <div class="p-6 lg:p-10">
-                    <h3 class="text-xl lg:text-2xl font-bold text-[#1a1a2e] mb-6">
-                        {% if lang == 'ru' %}Настройте под себя{% elif lang == 'en' %}Customize for yourself{% else %}O'zingizga moslab sozlang{% endif %}
-                    </h3>
-                    
-                    <!-- Config Options -->
-                    <div class="space-y-6">
-                        <!-- Legs Option -->
-                        <div class="config-option" data-option="legs">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                    {% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}
-                                </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Classic</span>
-        </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="config-btn active" data-value="classic">Classic</button>
-                                <button class="config-btn" data-value="modern">Modern</button>
-                                <button class="config-btn" data-value="vintage">Vintage</button>
-                                <button class="config-btn" data-value="minimalist">Minimalist</button>
-                    </div>
-                    </div>
-                        
-                        <!-- Seat Option -->
-                        <div class="config-option" data-option="seat">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                    {% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}
-                                </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Ko'ja</span>
-                </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="config-btn active" data-value="koja">Ko'ja</button>
-                                <button class="config-btn" data-value="mato">Mato</button>
-                                <button class="config-btn" data-value="velvet">Velvet</button>
-                                <button class="config-btn" data-value="eko">Eko-ko'ja</button>
+                <!-- CTA Buttons -->
+                <div class="pt-3 lg:pt-4 space-y-2">
+                    <a href="/custom" class="block w-full bg-[#1a1a2e] hover:bg-[#2a2a3e] text-white text-center py-2.5 md:py-3 text-sm md:text-base font-medium transition-colors">
+                        {% if lang == 'ru' %}Полный конфигуратор{% elif lang == 'en' %}Full Configurator{% else %}To'liq konfigurator{% endif %}
+                    </a>
+                    <button type="button" id="config-order-btn" class="block w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-2.5 md:py-3 text-sm md:text-base font-medium transition-colors">
+                        {% if lang == 'ru' %}Заказать эту конфигурацию{% elif lang == 'en' %}Order this configuration{% else %}Shu variantda buyurtma berish{% endif %}
+                    </button>
+                    <p class="text-center text-xs text-gray-400 mt-1.5">
+                        {% if lang == 'ru' %}Мы свяжемся с вами для уточнения деталей{% elif lang == 'en' %}We will contact you to clarify details{% else %}Tafsilotlarni aniqlashtirish uchun siz bilan bog'lanamiz{% endif %}
+                </p>
+            </div>
+            </div>
         </div>
     </div>
-                        
-                        <!-- Backrest Option -->
-                        <div class="config-option" data-option="backrest">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                    {% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}
-                                </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Yumshoq</span>
-                        </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="config-btn active" data-value="soft">Yumshoq</button>
-                                <button class="config-btn" data-value="firm">Qattiq</button>
-                                <button class="config-btn" data-value="ergonomic">Ergonomik</button>
-                    </div>
-                    </div>
-                        
-                        <!-- Pattern Option -->
-                        <div class="config-option" data-option="pattern">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                    {% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}
-                                </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Oddiy</span>
-                </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="config-btn active" data-value="plain">Oddiy</button>
-                                <button class="config-btn" data-value="quilted">Tikuv</button>
-                                <button class="config-btn" data-value="tufted">Tugmali</button>
-                                <button class="config-btn" data-value="modern">Modern Line</button>
-        </div>
-    </div>
-                        
-                        <!-- Color Option -->
-                        <div class="config-option" data-option="material">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                    {% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}
-                                </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Qora</span>
-        </div>
-                            <div class="flex flex-wrap gap-3">
-                                <button class="config-color active" data-value="black" data-label="Qora" style="background: #1a1a2e;" title="Qora"></button>
-                                <button class="config-color" data-value="brown" data-label="Jigarrang" style="background: #8B4513;" title="Jigarrang"></button>
-                                <button class="config-color" data-value="beige" data-label="Bej" style="background: #D4B896;" title="Bej"></button>
-                                <button class="config-color" data-value="gray" data-label="Kulrang" style="background: #6B7280;" title="Kulrang"></button>
-                                <button class="config-color" data-value="white" data-label="Oq" style="background: #F5F5F5; border: 1px solid #ddd;" title="Oq"></button>
-                                <button class="config-color" data-value="green" data-label="Yashil" style="background: #2D5A3D;" title="Yashil"></button>
-                                <button class="config-color" data-value="blue" data-label="Ko'k" style="background: #1E3A5F;" title="Ko'k"></button>
-                                <button class="config-color" data-value="gold" data-label="Oltin" style="background: linear-gradient(135deg, #D4AF37, #F5D061);" title="Oltin"></button>
-                </div>
-            </div>
-                        </div>
-                    
-                    <!-- Summary -->
-                    <div class="mt-8 pt-6 border-t border-gray-100">
-                        <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
-                            {% if lang == 'ru' %}Ваша конфигурация{% elif lang == 'en' %}Your Configuration{% else %}Sizning konfiguratsiyangiz{% endif %}
-                        </h4>
-                        <div id="config-summary" class="bg-[#f8f8f8] p-4 text-sm space-y-2">
-                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-legs">Classic</span></div>
-                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-seat">Ko'ja</span></div>
-                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-backrest">Yumshoq</span></div>
-                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-pattern">Oddiy</span></div>
-                            <div class="flex justify-between"><span class="text-gray-500">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span> <span class="font-medium text-[#1a1a2e]" id="summary-material">Qora</span></div>
-                    </div>
-                        </div>
-        
-                    <!-- CTA Buttons -->
-                    <div class="mt-6 space-y-3">
-                        <a href="/custom" class="block w-full bg-[#1a1a2e] hover:bg-[#2a2a3e] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
-                            {% if lang == 'ru' %}Полный конфигуратор{% elif lang == 'en' %}Full Configurator{% else %}To'liq konfigurator{% endif %}
-                        </a>
-                        <button type="button" id="config-order-btn" class="block w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
-                            {% if lang == 'ru' %}Заказать эту конфигурацию{% elif lang == 'en' %}Order this configuration{% else %}Shu variantda buyurtma berish{% endif %}
-                        </button>
-                        <p class="text-center text-xs text-gray-400 mt-3">
-                            {% if lang == 'ru' %}Мы свяжемся с вами для уточнения деталей{% elif lang == 'en' %}We will contact you to clarify details{% else %}Tafsilotlarni aniqlashtirish uchun siz bilan bog'lanamiz{% endif %}
-                        </p>
-                    </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 </section>
 
 <!-- Bottom Sheet for Order Form -->
@@ -1072,13 +1088,13 @@
     <div class="bottom-sheet-header">
         <h3 class="text-xl font-bold text-[#1a1a2e]">
             {% if lang == 'ru' %}Оформить заказ{% elif lang == 'en' %}Place Order{% else %}Buyurtma berish{% endif %}
-        </h3>
+                                    </h3>
         <button type="button" id="close-bottom-sheet" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#1a1a2e] transition">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
         </button>
-                </div>
+        </div>
     <div class="bottom-sheet-content">
         <form id="order-form">
             <!-- Configuration Summary -->
@@ -1090,24 +1106,24 @@
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}:</span>
                         <span class="font-medium text-[#1a1a2e]" id="form-legs">Classic</span>
-            </div>
+                        </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}:</span>
                         <span class="font-medium text-[#1a1a2e]" id="form-seat">Ko'ja</span>
-        </div>
+                    </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span>
                         <span class="font-medium text-[#1a1a2e]" id="form-backrest">Yumshoq</span>
-    </div>
+                </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span>
                         <span class="font-medium text-[#1a1a2e]" id="form-pattern">Oddiy</span>
-            </div>
+        </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span>
                         <span class="font-medium text-[#1a1a2e]" id="form-material">Qora</span>
-            </div>
         </div>
+    </div>
     </div>
             
             <!-- Form Fields -->
@@ -1119,8 +1135,8 @@
                     <input type="text" id="order-name" name="name" required
                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
                            placeholder="{% if lang == 'ru' %}Введите ваше имя{% elif lang == 'en' %}Enter your name{% else %}Ismingizni kiriting{% endif %}">
-        </div>
-        
+                        </div>
+                                
                 <div>
                     <label for="order-phone" class="block text-sm font-medium text-[#1a1a2e] mb-2">
                         {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} <span class="text-red-500">*</span>
@@ -1130,7 +1146,7 @@
                            placeholder="+998901234567">
                         </div>
                 
-                <div>
+                    <div>
                     <label for="order-message" class="block text-sm font-medium text-[#1a1a2e] mb-2">
                         {% if lang == 'ru' %}Дополнительное сообщение{% elif lang == 'en' %}Additional message{% else %}Qo'shimcha xabar{% endif %}
                     </label>
@@ -1138,17 +1154,17 @@
                               class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition resize-none"
                               placeholder="{% if lang == 'ru' %}Ваши пожелания или вопросы...{% elif lang == 'en' %}Your wishes or questions...{% else %}Istaklaringiz yoki savollaringiz...{% endif %}"></textarea>
                     </div>
-        </div>
+                </div>
         
             <!-- Submit Button -->
             <div class="mt-6">
                 <button type="submit" id="submit-order-btn" class="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
                     {% if lang == 'ru' %}Отправить заказ{% elif lang == 'en' %}Send Order{% else %}Buyurtmani yuborish{% endif %}
-                </button>
-        </div>
+                                    </button>
+                        </div>
         </form>
-    </div>
-</div>
+                    </div>
+                        </div>
 
 <!-- Testimonials -->
 <section class="py-16 lg:py-24 bg-white reveal-section">
@@ -1158,9 +1174,9 @@
                 <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">{% if lang == 'ru' %}Отзывы{% elif lang == 'en' %}Testimonials{% else %}Fikrlar{% endif %}</p>
                 <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e]">
                     {% if lang == 'ru' %}Что говорят клиенты{% elif lang == 'en' %}What clients say{% else %}Mijozlar fikri{% endif %}
-            </h2>
-        </div>
-        </div>
+                </h2>
+                    </div>
+                </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-[#f8f8f8] p-8 border-l-4 border-[#f59e0b]">
@@ -1169,11 +1185,11 @@
                 </p>
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-[#1a1a2e] flex items-center justify-center text-white font-bold">AK</div>
-                    <div>
+                        <div>
                         <p class="font-bold text-[#1a1a2e]">Alisher Karimov</p>
                         <p class="text-sm text-gray-400">{% if lang == 'ru' %}Ресторатор{% elif lang == 'en' %}Restaurateur{% else %}Restorator{% endif %}</p>
-                    </div>
-                </div>
+                        </div>
+                        </div>
             </div>
         
             <div class="bg-[#f8f8f8] p-8 border-l-4 border-[#f59e0b]">
@@ -1304,7 +1320,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Color swatch handlers
+    // Color swatch handlers (agar boshqa joylarda ishlatilsa)
     const colorBtns = document.querySelectorAll('.config-color');
     colorBtns.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -1321,7 +1337,32 @@ document.addEventListener('DOMContentLoaded', function() {
             config[optionType] = { value, label };
             
             // Update label
-            option.querySelector('.config-selected-label').textContent = label;
+            const labelSpan = option.querySelector('.config-selected-label');
+            if (labelSpan) labelSpan.textContent = label;
+            
+            // Update summary
+            updateSummary();
+        });
+    });
+    
+    // Select (til tanlashga o'xshash) handlerlar
+    const selectInputs = document.querySelectorAll('.config-select');
+    selectInputs.forEach(select => {
+        select.addEventListener('change', function() {
+            const option = this.closest('.config-option');
+            const optionType = this.dataset.option;
+            const value = this.value;
+            const selectedOption = this.options[this.selectedIndex];
+            const label = (selectedOption.dataset.label || selectedOption.textContent).trim();
+            
+            // Update config
+            config[optionType] = { value, label };
+            
+            // Update label span
+            if (option) {
+                const labelSpan = option.querySelector('.config-selected-label');
+                if (labelSpan) labelSpan.textContent = label;
+            }
             
             // Update summary
             updateSummary();
@@ -1456,7 +1497,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 formData.append('quantity', '1');
                 
                 const response = await fetch(`/cart/add/${productId}`, {
-                    method: 'POST',
+                method: 'POST',
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
                     body: formData
                 });
