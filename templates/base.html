@@ -98,11 +98,17 @@
             top: 0;
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
-            will-change: transform;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            /* Remove contain property on mobile to allow scrolling */
+            /* Optimize for mobile - remove will-change and backface-visibility */
             contain: layout style;
+        }
+        
+        @media (max-width: 768px) {
+            .site-header {
+                /* Remove expensive properties on mobile */
+                will-change: auto;
+                backface-visibility: visible;
+                -webkit-backface-visibility: visible;
+            }
         }
         
         @media (max-width: 768px) {
@@ -356,35 +362,51 @@
         /* Prevent body scroll bounce on iOS - Mobile only */
         html {
             overflow-x: hidden;
+            /* Disable smooth scroll on mobile for better performance */
+            scroll-behavior: auto;
         }
         
         body {
             overflow-x: hidden;
-            /* Enable smooth scrolling on all devices */
-            scroll-behavior: smooth;
+            /* Disable smooth scroll on mobile for better performance */
+            scroll-behavior: auto;
             /* Ensure body is scrollable by default */
             overflow-y: auto;
         }
         
-        /* Mobile-specific scroll behavior */
+        /* Desktop smooth scroll */
+        @media (min-width: 769px) {
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                scroll-behavior: smooth;
+            }
+        }
+        
+        /* Mobile-specific scroll behavior - Optimized for performance */
         @media (max-width: 768px) {
             html {
                 /* Only prevent horizontal overscroll bounce */
                 overscroll-behavior-x: none;
+                overscroll-behavior-y: none;
                 /* Ensure scrolling works - remove overflow restrictions */
                 overflow-y: scroll !important;
                 -webkit-overflow-scrolling: touch;
                 height: 100%;
                 /* Force scroll to work */
                 position: relative;
+                /* Disable smooth scroll for better performance */
+                scroll-behavior: auto;
             }
             
             body {
                 /* Allow vertical scroll, only prevent bounce effect */
                 overscroll-behavior-y: none;
+                overscroll-behavior-x: none;
                 -webkit-overflow-scrolling: touch;
                 /* Ensure touch scrolling works */
-                touch-action: pan-y pan-x;
+                touch-action: pan-y;
                 /* Ensure body can scroll - use scroll instead of auto */
                 overflow-y: scroll !important;
                 overflow-x: hidden;
@@ -394,12 +416,30 @@
                 min-height: 100vh;
                 /* Force scroll to work on mobile */
                 -webkit-overflow-scrolling: touch;
+                /* Disable smooth scroll for better performance */
+                scroll-behavior: auto;
             }
             
             /* Ensure main content is scrollable */
             main, .container, [class*="container"] {
                 position: relative;
                 z-index: 1;
+            }
+            
+            /* Reduce backdrop-filter on mobile for better performance */
+            .site-header {
+                backdrop-filter: blur(20px) saturate(150%);
+                -webkit-backdrop-filter: blur(20px) saturate(150%);
+            }
+            
+            .warranty-badge {
+                backdrop-filter: blur(20px) saturate(150%);
+                -webkit-backdrop-filter: blur(20px) saturate(150%);
+            }
+            
+            .bottom-nav-inner {
+                backdrop-filter: blur(20px) saturate(150%);
+                -webkit-backdrop-filter: blur(20px) saturate(150%);
             }
         }
         
@@ -850,7 +890,17 @@
             ticking = false;
         }
         
+        // Throttle scroll events for better performance
+        let lastScrollTime = 0;
+        const SCROLL_THROTTLE = 16; // ~60fps
+        
         function onScroll() {
+            const now = Date.now();
+            if (now - lastScrollTime < SCROLL_THROTTLE) {
+                return;
+            }
+            lastScrollTime = now;
+            
             if (!ticking) {
                 if (rafId) {
                     cancelAnimationFrame(rafId);

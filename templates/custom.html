@@ -119,15 +119,22 @@
     
     /* Config Buttons */
     .config-btn {
-        padding: 10px 20px;
+        padding: 6px 12px;
         border: 2px solid #e5e5e5;
         background: #fff;
         border-radius: 0;
-        font-size: 13px;
+        font-size: 11px;
         font-weight: 500;
         color: #666;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    @media (min-width: 768px) {
+        .config-btn {
+            padding: 10px 20px;
+            font-size: 13px;
+        }
     }
     
     .config-btn:hover {
@@ -146,14 +153,21 @@
     
     /* Config Color Swatches */
     .config-color {
-        width: 40px;
-        height: 40px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         border: 3px solid #e5e5e5;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    @media (min-width: 768px) {
+        .config-color {
+            width: 40px;
+            height: 40px;
+        }
     }
     
     .config-color:hover {
@@ -167,16 +181,34 @@
         transform: scale(1.1);
     }
     
-    /* Config Option */
+    /* Config Option - Minimalistic (asosiy sahifadagidek) */
     .config-option {
-        padding: 16px;
-        border-radius: 0;
-        background: #fafafa;
-        transition: all 0.3s ease;
+        padding: 0;
+        transition: all 0.2s ease;
     }
     
-    .config-option:hover {
-        background: #f5f5f5;
+    .config-select {
+        width: 100%;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        padding: 6px 10px;
+        font-size: 12px;
+        color: #4b5563;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 8L10 13L15 8' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.6rem center;
+        background-size: 14px 14px;
+    }
+    
+    @media (min-width: 768px) {
+        .config-select {
+            font-size: 13px;
+            padding: 7px 12px;
+        }
     }
     
     /* Configurator Card */
@@ -385,89 +417,89 @@
                         {% if lang == 'ru' %}Настройте под себя{% elif lang == 'en' %}Customize for yourself{% else %}O'zingizga moslab sozlang{% endif %}
                     </h3>
                     
-                    <!-- Config Options -->
-                    <div class="space-y-6">
+                    <!-- Config Options - Grid layout (asosiy sahifadagidek) -->
+                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
                         <!-- Legs Option -->
                         <div class="config-option" data-option="legs">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs md:text-sm font-medium text-gray-700">
                                     {% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}
                                 </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Classic</span>
+                                <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Classic</span>
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="config-btn active" data-value="classic">Classic</button>
-                                <button class="config-btn" data-value="modern">Modern</button>
-                                <button class="config-btn" data-value="vintage">Vintage</button>
-                                <button class="config-btn" data-value="minimalist">Minimalist</button>
-                            </div>
+                            <select class="config-select" data-option="legs">
+                                <option value="classic" selected>Classic</option>
+                                <option value="modern">Modern</option>
+                                <option value="vintage">Vintage</option>
+                                <option value="minimalist">Minimalist</option>
+                            </select>
                         </div>
                         
                         <!-- Seat Option -->
                         <div class="config-option" data-option="seat">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs md:text-sm font-medium text-gray-700">
                                     {% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}
                                 </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Ko'ja</span>
+                                <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Ko'ja</span>
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="config-btn active" data-value="koja">Ko'ja</button>
-                                <button class="config-btn" data-value="mato">Mato</button>
-                                <button class="config-btn" data-value="velvet">Velvet</button>
-                                <button class="config-btn" data-value="eko">Eko-ko'ja</button>
-                            </div>
+                            <select class="config-select" data-option="seat">
+                                <option value="koja" selected>Ko'ja</option>
+                                <option value="mato">Mato</option>
+                                <option value="velvet">Velvet</option>
+                                <option value="eko">Eko-ko'ja</option>
+                            </select>
                         </div>
                         
                         <!-- Backrest Option -->
                         <div class="config-option" data-option="backrest">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs md:text-sm font-medium text-gray-700">
                                     {% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}
                                 </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Yumshoq</span>
+                                <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Yumshoq</span>
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="config-btn active" data-value="soft">Yumshoq</button>
-                                <button class="config-btn" data-value="firm">Qattiq</button>
-                                <button class="config-btn" data-value="ergonomic">Ergonomik</button>
-                            </div>
+                            <select class="config-select" data-option="backrest">
+                                <option value="soft" selected>Yumshoq</option>
+                                <option value="firm">Qattiq</option>
+                                <option value="ergonomic">Ergonomik</option>
+                            </select>
                         </div>
                         
                         <!-- Pattern Option -->
                         <div class="config-option" data-option="pattern">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs md:text-sm font-medium text-gray-700">
                                     {% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}
                                 </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Oddiy</span>
+                                <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Oddiy</span>
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button class="config-btn active" data-value="plain">Oddiy</button>
-                                <button class="config-btn" data-value="quilted">Tikuv</button>
-                                <button class="config-btn" data-value="tufted">Tugmali</button>
-                                <button class="config-btn" data-value="modern">Modern Line</button>
-                            </div>
+                            <select class="config-select" data-option="pattern">
+                                <option value="plain" selected>Oddiy</option>
+                                <option value="quilted">Tikuv</option>
+                                <option value="tufted">Tugmali</option>
+                                <option value="modern">Modern Line</option>
+                            </select>
                         </div>
                         
                         <!-- Color Option -->
                         <div class="config-option" data-option="material">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-xs md:text-sm font-medium text-gray-700">
                                     {% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}
                                 </span>
-                                <span class="config-selected-label text-sm font-semibold text-[#1a1a2e]">Qora</span>
+                                <span class="config-selected-label text-xs md:text-sm font-semibold text-[#1a1a2e]">Qora</span>
                             </div>
-                            <div class="flex flex-wrap gap-3">
-                                <button class="config-color active" data-value="black" data-label="Qora" style="background: #1a1a2e;" title="Qora"></button>
-                                <button class="config-color" data-value="brown" data-label="Jigarrang" style="background: #8B4513;" title="Jigarrang"></button>
-                                <button class="config-color" data-value="beige" data-label="Bej" style="background: #D4B896;" title="Bej"></button>
-                                <button class="config-color" data-value="gray" data-label="Kulrang" style="background: #6B7280;" title="Kulrang"></button>
-                                <button class="config-color" data-value="white" data-label="Oq" style="background: #F5F5F5; border: 1px solid #ddd;" title="Oq"></button>
-                                <button class="config-color" data-value="green" data-label="Yashil" style="background: #2D5A3D;" title="Yashil"></button>
-                                <button class="config-color" data-value="blue" data-label="Ko'k" style="background: #1E3A5F;" title="Ko'k"></button>
-                                <button class="config-color" data-value="gold" data-label="Oltin" style="background: linear-gradient(135deg, #D4AF37, #F5D061);" title="Oltin"></button>
-                            </div>
+                            <select class="config-select" data-option="material">
+                                <option value="black" data-label="Qora" selected>Qora</option>
+                                <option value="brown" data-label="Jigarrang">Jigarrang</option>
+                                <option value="beige" data-label="Bej">Bej</option>
+                                <option value="gray" data-label="Kulrang">Kulrang</option>
+                                <option value="white" data-label="Oq">Oq</option>
+                                <option value="green" data-label="Yashil">Yashil</option>
+                                <option value="blue" data-label="Ko'k">Ko'k</option>
+                                <option value="gold" data-label="Oltin">Oltin</option>
+                            </select>
                         </div>
                     </div>
                     
@@ -790,7 +822,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Config button handlers
+    // Config button handlers (agar boshqa joylarda ishlatilsa)
     const configBtns = document.querySelectorAll('.config-btn');
     configBtns.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -807,14 +839,15 @@ document.addEventListener('DOMContentLoaded', function() {
             config[optionType] = { value, label };
             
             // Update label
-            option.querySelector('.config-selected-label').textContent = label;
+            const labelSpan = option.querySelector('.config-selected-label');
+            if (labelSpan) labelSpan.textContent = label;
             
             // Update summary
             updateSummary();
         });
     });
     
-    // Color swatch handlers
+    // Color swatch handlers (agar boshqa joylarda ishlatilsa)
     const colorBtns = document.querySelectorAll('.config-color');
     colorBtns.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -831,7 +864,32 @@ document.addEventListener('DOMContentLoaded', function() {
             config[optionType] = { value, label };
             
             // Update label
-            option.querySelector('.config-selected-label').textContent = label;
+            const labelSpan = option.querySelector('.config-selected-label');
+            if (labelSpan) labelSpan.textContent = label;
+            
+            // Update summary
+            updateSummary();
+        });
+    });
+    
+    // Select (dropdown) handlerlar - asosiy sahifadagidek
+    const selectInputs = document.querySelectorAll('.config-select');
+    selectInputs.forEach(select => {
+        select.addEventListener('change', function() {
+            const option = this.closest('.config-option');
+            const optionType = this.dataset.option;
+            const value = this.value;
+            const selectedOption = this.options[this.selectedIndex];
+            const label = (selectedOption.dataset.label || selectedOption.textContent).trim();
+            
+            // Update config
+            config[optionType] = { value, label };
+            
+            // Update label span
+            if (option) {
+                const labelSpan = option.querySelector('.config-selected-label');
+                if (labelSpan) labelSpan.textContent = label;
+            }
             
             // Update summary
             updateSummary();

@@ -52,8 +52,12 @@
         --light: #fafafa;
     }
     
-    /* Smooth scrolling */
-    html { scroll-behavior: smooth; }
+    /* Smooth scrolling - disabled on mobile for better performance */
+    html { scroll-behavior: auto; }
+    
+    @media (min-width: 769px) {
+        html { scroll-behavior: smooth; }
+    }
     
     /* Hero - Premium Minimalist */
     .hero-section {
@@ -73,7 +77,8 @@
     
     @media (min-width: 768px) {
         .hero-bg-image {
-            background-attachment: fixed;
+            /* Disable fixed attachment for better scroll performance */
+            background-attachment: scroll;
         }
     }
     
@@ -920,9 +925,9 @@
                         </div>
         
         <!-- Configurator - Compact Design (product_detail uslubida) -->
-        <div class="flex items-start gap-4 md:gap-6 lg:gap-8">
+        <div class="flex flex-col lg:flex-row items-start gap-4 md:gap-6 lg:gap-8">
             <!-- Left: Product Image -->
-            <div class="space-y-4 w-1/2 min-w-[50%]">
+            <div class="space-y-4 w-full lg:w-1/2 lg:min-w-[50%]">
                 <div class="relative bg-[#fafafa] p-4 lg:p-6 min-h-[220px] md:min-h-[260px] lg:min-h-[320px] flex items-center justify-center">
                     <div class="relative w-full h-full flex items-center justify-center">
                         <img src="/uploads/designs/chair-config.png" alt="Configurable Chair" class="max-w-full max-h-[220px] md:max-h-[260px] lg:max-h-[320px] object-contain" id="config-main-image" onerror="this.src='/uploads/products/default.jpg'">
@@ -977,9 +982,9 @@
             </div>
             
             <!-- Right: Configuration Options (product_detail uslubida info panel, ixcham selectlar) -->
-            <div class="lg:sticky lg:top-24 lg:self-start space-y-4 lg:space-y-5 w-1/2 min-w-[50%]">
-                <!-- Options grid: bir qatorga bir nechta joylashishi uchun -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div class="lg:sticky lg:top-24 lg:self-start space-y-3 md:space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:min-w-[50%]">
+                <!-- Options grid: 2-3 tadan bir qatorga joylashishi uchun, mobil uchun optimallashtirilgan -->
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-3">
                     <!-- Legs Option -->
                     <div class="config-option" data-option="legs">
                         <div class="flex items-center justify-between mb-1.5">
