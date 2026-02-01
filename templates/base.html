@@ -98,8 +98,8 @@
             top: 0;
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
-            /* Optimize for mobile - remove will-change and backface-visibility */
-            contain: layout style;
+            /* Remove contain to prevent scroll blocking */
+            contain: none;
         }
         
         @media (max-width: 768px) {
@@ -108,21 +108,26 @@
                 will-change: auto;
                 backface-visibility: visible;
                 -webkit-backface-visibility: visible;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .site-header {
                 /* Remove contain on mobile to prevent scroll blocking */
                 contain: none;
-                /* Ensure touch events pass through for scrolling */
-                touch-action: auto;
+                /* Allow touch events to pass through for scrolling - critical fix */
+                touch-action: pan-y;
                 /* Ensure header doesn't block scroll events */
-                pointer-events: auto;
+                pointer-events: none;
                 /* Make sure header doesn't cover entire screen */
                 height: auto;
-                /* Ensure header doesn't interfere with body scroll */
-                will-change: transform;
+                /* Ensure header content is clickable */
+                overflow: visible;
+            }
+            
+            /* Ensure header inner content is clickable */
+            .site-header > *,
+            .site-header a,
+            .site-header button,
+            .site-header input,
+            .site-header select,
+            .site-header textarea {
+                pointer-events: auto;
             }
             
             /* Ensure body content is scrollable on mobile */
@@ -292,6 +297,17 @@
             -webkit-backface-visibility: hidden;
         }
         
+        /* Ensure bottom nav is always visible on mobile */
+        @media (max-width: 768px) {
+            .bottom-nav {
+                padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+                /* Remove expensive properties on mobile */
+                will-change: auto;
+                backface-visibility: visible;
+                -webkit-backface-visibility: visible;
+            }
+        }
+        
         .bottom-nav-inner {
             background: rgba(255, 255, 255, 0.72);
             backdrop-filter: blur(40px) saturate(180%);
@@ -405,8 +421,8 @@
                 overscroll-behavior-y: none;
                 overscroll-behavior-x: none;
                 -webkit-overflow-scrolling: touch;
-                /* Ensure touch scrolling works */
-                touch-action: pan-y;
+                /* Ensure touch scrolling works - critical for mobile scroll */
+                touch-action: pan-y pan-x;
                 /* Ensure body can scroll - use scroll instead of auto */
                 overflow-y: scroll !important;
                 overflow-x: hidden;
@@ -418,6 +434,10 @@
                 -webkit-overflow-scrolling: touch;
                 /* Disable smooth scroll for better performance */
                 scroll-behavior: auto;
+                /* Add padding for bottom nav and safe area */
+                padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)) !important;
+                /* Ensure body can receive touch events */
+                pointer-events: auto;
             }
             
             /* Ensure main content is scrollable */
@@ -441,6 +461,11 @@
                 backdrop-filter: blur(20px) saturate(150%);
                 -webkit-backdrop-filter: blur(20px) saturate(150%);
             }
+            
+            /* Footer margin for bottom nav */
+            footer {
+                margin-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)) !important;
+            }
         }
         
         @supports (-webkit-touch-callout: none) {
@@ -454,6 +479,31 @@
         /* Search Modal */
         .search-modal {
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        /* Mobile search modal optimization */
+        @media (max-width: 768px) {
+            #search-modal {
+                z-index: 9999 !important;
+            }
+            
+            #search-modal .absolute.top-0 {
+                max-height: 100vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            #search-input {
+                font-size: 16px !important; /* Prevents zoom on iOS */
+                padding: 12px 40px 12px 0 !important;
+            }
+            
+            #search-results {
+                max-height: calc(100vh - 200px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
         }
         
         /* Animations */
@@ -685,29 +735,30 @@
     </div>
 
     <!-- Search Modal -->
-    <div id="search-modal" class="fixed inset-0 z-[70] hidden search-modal">
+    <div id="search-modal" class="fixed inset-0 z-[9999] hidden search-modal">
         <div class="absolute inset-0 bg-black/30" id="search-overlay"></div>
         <div class="absolute top-0 left-0 right-0 bg-white shadow-xl">
-            <div class="container mx-auto px-4 lg:px-8 py-6">
+            <div class="container mx-auto px-4 lg:px-8 py-4 md:py-6">
                 <div class="relative">
                     <input type="text" 
                            id="search-input" 
                            placeholder="{% if lang == 'ru' %}Что вы ищете?{% elif lang == 'en' %}What are you looking for?{% else %}Nima qidiryapsiz?{% endif %}" 
-                           class="w-full py-4 text-xl font-light border-b-2 border-gray-200 focus:border-[#1a1a2e] outline-none bg-transparent pr-12"
+                           class="w-full py-3 md:py-4 text-lg md:text-xl font-light border-b-2 border-gray-200 focus:border-[#1a1a2e] outline-none bg-transparent pr-12"
                            style="font-family: var(--font-display);"
-                           autocomplete="off">
-                    <button id="close-search" class="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                           autocomplete="off"
+                           inputmode="search">
+                    <button id="close-search" class="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 touch-manipulation" aria-label="{% if lang == 'ru' %}Закрыть{% elif lang == 'en' %}Close{% else %}Yopish{% endif %}">
+                        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                             <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
                 
-                <div id="search-results" class="mt-6 max-h-[60vh] overflow-y-auto">
+                <div id="search-results" class="mt-4 md:mt-6 max-h-[60vh] md:max-h-[60vh] overflow-y-auto -webkit-overflow-scrolling-touch">
                     <div id="search-loading" class="hidden text-center py-8">
                         <div class="inline-block w-6 h-6 border-2 border-[#1a1a2e] border-t-transparent rounded-full animate-spin"></div>
                     </div>
-                    <div id="search-empty" class="hidden text-center py-8 text-gray-500">
+                    <div id="search-empty" class="hidden text-center py-8 text-gray-500 text-sm md:text-base">
                         {% if lang == 'ru' %}Ничего не найдено{% elif lang == 'en' %}Nothing found{% else %}Hech narsa topilmadi{% endif %}
                         </div>
                     <div id="search-content"></div>
@@ -978,9 +1029,20 @@
         
         let searchTimeout = null;
         
-        searchBtn?.addEventListener('click', () => {
+        searchBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             searchModal.classList.remove('hidden');
-            setTimeout(() => searchInput.focus(), 100);
+            // Prevent body scroll when search is open
+            document.body.style.overflow = 'hidden';
+            // Focus input after modal is shown
+            setTimeout(() => {
+                searchInput.focus();
+                // For mobile, ensure keyboard opens
+                if (window.innerWidth <= 768) {
+                    searchInput.click();
+                }
+            }, 150);
         });
         
         const closeSearchModal = () => {
@@ -989,6 +1051,10 @@
             searchContent.innerHTML = '';
             searchLoading.classList.add('hidden');
             searchEmpty.classList.add('hidden');
+            // Restore body scroll
+            document.body.style.overflow = '';
+            // Blur input to close mobile keyboard
+            searchInput.blur();
         };
         
         closeSearch?.addEventListener('click', closeSearchModal);
