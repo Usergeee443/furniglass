@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло в Узбекистане | Мebel, Furniglass{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass in Uzbekistan | Mebel, Furniglass{% else %}Furniglass - Premium Mebel va Shisha Tashkilot | Mebel, Furniglass{% endif %}{% endblock %}
+{% block title %}{% if lang == 'ru' %}Furni Glass - Премиум Мебель в Узбекистане | Мebel, Furni Glass{% elif lang == 'en' %}Furni Glass - Premium Furniture in Uzbekistan | Mebel, Furni Glass{% else %}Furni Glass - Premium Mebel ishlab chiqaruvchi kompaniya | Mebel, Furni Glass{% endif %}{% endblock %}
 
-{% block meta_title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло | Мebel, Furniglass{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass | Mebel, Furniglass{% else %}Furniglass - Premium Mebel va Shisha | Mebel, Furniglass{% endif %}{% endblock %}
+{% block meta_title %}{% if lang == 'ru' %}Furni Glass - Премиум Мебель | Мebel, Furni Glass{% elif lang == 'en' %}Furni Glass - Premium Furniture | Mebel, Furni Glass{% else %}Furni Glass - Premium Mebel | Mebel, Furni Glass{% endif %}{% endblock %}
 
-{% block meta_description %}{% if lang == 'ru' %}Furniglass - ведущий производитель премиум мебели и стеклянных изделий в Узбекистане. Мebel, Furniglass - индивидуальный дизайн, 25 лет гарантии. Мебель для дома, кафе, ресторанов, клиник. Купить мебель в Ташкенте.{% elif lang == 'en' %}Furniglass - leading manufacturer of premium furniture and glass products in Uzbekistan. Mebel, Furniglass - custom design, 25 years warranty. Furniture for home, cafes, restaurants, clinics. Buy furniture in Tashkent.{% else %}Furniglass - O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya. Mebel, Furniglass - individual dizayn, 25 yillik kafolat. Uy, kafe, restoran, klinika uchun mebel. Toshkentda mebel sotib olish.{% endif %}{% endblock %}
+{% block meta_description %}{% if lang == 'ru' %}Furni Glass - ведущий производитель премиум мебели в Узбекистане с 2001 года. Индивидуальный дизайн, 25 лет гарантии. Мебель для дома, кафе, ресторанов, клиник. Купить мебель в Ташкенте.{% elif lang == 'en' %}Furni Glass - leading manufacturer of premium furniture in Uzbekistan since 2001. Custom design, 25 years warranty. Furniture for home, cafes, restaurants, clinics. Buy furniture in Tashkent.{% else %}Furni Glass - 2001 yildan beri O'zbekistondagi premium mebel ishlab chiqaruvchi yetakchi kompaniya. Individual dizayn, 25 yillik kafolat. Uy, kafe, restoran, klinika uchun mebel. Toshkentda mebel sotib olish.{% endif %}{% endblock %}
 
-{% block meta_keywords %}{% if lang == 'ru' %}мебель, премиум мебель, стеклянная мебель, мебель на заказ, мебель для кафе, мебель для ресторанов, мебель для клиник, мебель для дома, Furniglass, Мebel, Узбекистан, Ташкент, купить мебель{% elif lang == 'en' %}furniture, premium furniture, glass furniture, custom furniture, cafe furniture, restaurant furniture, clinic furniture, home furniture, Furniglass, Mebel, Uzbekistan, Tashkent, buy furniture{% else %}mebel, premium mebel, shisha mebel, individual mebel, kafe mebel, restoran mebel, klinika mebel, uy mebel, Furniglass, Mebel, O'zbekiston, Toshkent, mebel sotib olish{% endif %}{% endblock %}
+{% block meta_keywords %}{% if lang == 'ru' %}мебель, премиум мебель, мебель на заказ, мебель для кафе, мебель для ресторанов, мебель для клиник, мебель для дома, Furni Glass, Мebel, Узбекистан, Ташкент, купить мебель{% elif lang == 'en' %}furniture, premium furniture, custom furniture, cafe furniture, restaurant furniture, clinic furniture, home furniture, Furni Glass, Mebel, Uzbekistan, Tashkent, buy furniture{% else %}mebel, premium mebel, individual mebel, kafe mebel, restoran mebel, klinika mebel, uy mebel, Furni Glass, Mebel, O'zbekiston, Toshkent, mebel sotib olish{% endif %}{% endblock %}
 
 {% block canonical %}{{ request.url_root.rstrip('/') }}{% endblock %}
 
@@ -17,9 +17,9 @@
 {
     "@context": "https://schema.org",
     "@type": "FurnitureStore",
-    "name": "Furniglass",
+    "name": "Furni Glass",
     "image": "{{ request.url_root.rstrip('/') }}/uploads/designs/logo.png",
-    "description": "{% if lang == 'ru' %}Ведущий производитель премиум мебели и стеклянных изделий в Узбекистане{% elif lang == 'en' %}Leading manufacturer of premium furniture and glass products in Uzbekistan{% else %}O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya{% endif %}",
+    "description": "{% if lang == 'ru' %}Ведущий производитель премиум мебели в Узбекистане с 2001 года{% elif lang == 'en' %}Leading manufacturer of premium furniture in Uzbekistan since 2001{% else %}2001 yildan beri O'zbekistondagi premium mebel ishlab chiqaruvchi yetakchi kompaniya{% endif %}",
     "url": "{{ request.url_root.rstrip('/') }}",
     "telephone": "+998901234567",
     "address": {
@@ -64,7 +64,16 @@
         position: relative;
         height: 100vh;
         min-height: 700px;
+        max-height: 100vh;
         overflow: hidden;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section {
+            height: auto;
+            min-height: 60vh;
+            max-height: none;
+        }
     }
     
     .hero-bg-image {
@@ -475,7 +484,7 @@
             
                 <!-- Tagline -->
                 <p class="animate-reveal animate-reveal-delay-2 text-white/70 text-base md:text-lg max-w-xl mb-10 leading-relaxed">
-                    {% if lang == 'ru' %}Создаём уникальную мебель для кафе, ресторанов, клиник и домов с 1999 года{% elif lang == 'en' %}Creating unique furniture for cafes, restaurants, clinics and homes since 1999{% else %}1999 yildan beri kafe, restoran, klinika va uylar uchun noyob mebellar yaratamiz{% endif %}
+                    {% if lang == 'ru' %}Создаём уникальную мебель для кафе, ресторанов, клиник и домов с 2001 года{% elif lang == 'en' %}Creating unique furniture for cafes, restaurants, clinics and homes since 2001{% else %}2001 yildan beri kafe, restoran, klinika va uylar uchun noyob mebellar yaratamiz{% endif %}
                 </p>
                 
                 <!-- CTA Buttons -->
@@ -712,11 +721,11 @@
             </h2>
                 <p class="text-white/60 leading-relaxed mb-8">
                     {% if lang == 'ru' %}
-                    С 1999 года мы производим премиальную мебель для кафе, ресторанов, клиник и частных домов. Каждое изделие создаётся с любовью к деталям и стремлением к совершенству.
+                    С 2001 года мы производим премиальную мебель для кафе, ресторанов, клиник и частных домов. Каждое изделие создаётся с любовью к деталям и стремлением к совершенству.
                     {% elif lang == 'en' %}
-                    Since 1999, we have been producing premium furniture for cafes, restaurants, clinics and private homes. Each piece is created with love for details and striving for perfection.
+                    Since 2001, we have been producing premium furniture for cafes, restaurants, clinics and private homes. Each piece is created with love for details and striving for perfection.
                     {% else %}
-                    1999 yildan beri biz kafe, restoran, klinika va xususiy uylar uchun premium mebellar ishlab chiqaramiz. Har bir buyum tafsilotlarga muhabbat va mukammallikka intilish bilan yaratilgan.
+                    2001 yildan beri biz kafe, restoran, klinika va xususiy uylar uchun premium mebellar ishlab chiqaramiz. Har bir buyum tafsilotlarga muhabbat va mukammallikka intilish bilan yaratilgan.
                     {% endif %}
                 </p>
                 
@@ -917,10 +926,10 @@
                 {% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Individual buyurtma{% endif %}
             </p>
             <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#1a1a2e] leading-tight mb-4">
-                {% if lang == 'ru' %}Furniglass — создаёт мебель в вашем стиле{% elif lang == 'en' %}Furniglass — creates furniture in your style{% else %}Furniglass — mebelni siz istagan uslubda yaratadi{% endif %}
+                {% if lang == 'ru' %}Furni Glass — создаёт мебель в вашем стиле{% elif lang == 'en' %}Furni Glass — creates furniture in your style{% else %}Furni Glass — mebelni siz istagan uslubda yaratadi{% endif %}
             </h2>
             <p class="text-gray-600 text-sm md:text-base leading-relaxed">
-                {% if lang == 'ru' %}Вы выбираете каждую деталь: тип ножек, материал, цвет, узор и стиль. Furniglass производит мебель не стандартную, а по вашему вкусу.{% elif lang == 'en' %}You choose every detail: leg type, material, color, pattern and style. Furniglass produces furniture not standard, but according to your taste.{% else %}Siz har bir detalni o'zingiz tanlaysiz: oyoq turi, material, rang, naqsh va stil. Furniglass mebellarni standart emas, sizning didingizga moslab ishlab chiqaradi.{% endif %}
+                {% if lang == 'ru' %}Вы выбираете каждую деталь: тип ножек, материал, цвет, узор и стиль. Furni Glass производит мебель не стандартную, а по вашему вкусу.{% elif lang == 'en' %}You choose every detail: leg type, material, color, pattern and style. Furni Glass produces furniture not standard, but according to your taste.{% else %}Siz har bir detalni o'zingiz tanlaysiz: oyoq turi, material, rang, naqsh va stil. Furni Glass mebellarni standart emas, sizning didingizga moslab ishlab chiqaradi.{% endif %}
             </p>
                         </div>
         

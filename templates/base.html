@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Primary Meta Tags -->
-    <title>{% block title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло в Узбекистане{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass in Uzbekistan{% else %}Furniglass - Premium Mebel va Shisha Tashkilot{% endif %}{% endblock %}</title>
-    <meta name="title" content="{% block meta_title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло в Узбекистане{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass in Uzbekistan{% else %}Furniglass - Premium Mebel va Shisha Tashkilot{% endif %}{% endblock %}">
-    <meta name="description" content="{% block meta_description %}{% if lang == 'ru' %}Furniglass - ведущий производитель премиум мебели и стеклянных изделий в Узбекистане. Индивидуальный дизайн, 25 лет гарантии. Мебель для дома, кафе, ресторанов, клиник.{% elif lang == 'en' %}Furniglass - leading manufacturer of premium furniture and glass products in Uzbekistan. Custom design, 25 years warranty. Furniture for home, cafes, restaurants, clinics.{% else %}Furniglass - O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya. Individual dizayn, 25 yillik kafolat. Uy, kafe, restoran, klinika uchun mebel.{% endif %}{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}{% if lang == 'ru' %}мебель, премиум мебель, стеклянная мебель, мебель на заказ, мебель для кафе, мебель для ресторанов, мебель для клиник, мебель для дома, Furniglass, Узбекистан{% elif lang == 'en' %}furniture, premium furniture, glass furniture, custom furniture, cafe furniture, restaurant furniture, clinic furniture, home furniture, Furniglass, Uzbekistan{% else %}mebel, premium mebel, shisha mebel, individual mebel, kafe mebel, restoran mebel, klinika mebel, uy mebel, Furniglass, O'zbekiston{% endif %}{% endblock %}">
-    <meta name="author" content="Furniglass">
+    <title>{% block title %}{% if lang == 'ru' %}Furni Glass - Премиум Мебель в Узбекистане{% elif lang == 'en' %}Furni Glass - Premium Furniture in Uzbekistan{% else %}Furni Glass - Premium Mebel ishlab chiqaruvchi kompaniya{% endif %}{% endblock %}</title>
+    <meta name="title" content="{% block meta_title %}{% if lang == 'ru' %}Furni Glass - Премиум Мебель в Узбекистане{% elif lang == 'en' %}Furni Glass - Premium Furniture in Uzbekistan{% else %}Furni Glass - Premium Mebel ishlab chiqaruvchi kompaniya{% endif %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% if lang == 'ru' %}Furni Glass - ведущий производитель премиум мебели в Узбекистане с 2001 года. Индивидуальный дизайн, 25 лет гарантии. Мебель для дома, кафе, ресторанов, клиник.{% elif lang == 'en' %}Furni Glass - leading manufacturer of premium furniture in Uzbekistan since 2001. Custom design, 25 years warranty. Furniture for home, cafes, restaurants, clinics.{% else %}Furni Glass - 2001 yildan beri O'zbekistondagi premium mebel ishlab chiqaruvchi yetakchi kompaniya. Individual dizayn, 25 yillik kafolat. Uy, kafe, restoran, klinika uchun mebel.{% endif %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{% if lang == 'ru' %}мебель, премиум мебель, мебель на заказ, мебель для кафе, мебель для ресторанов, мебель для клиник, мебель для дома, Furni Glass, Узбекистан, Ташкент{% elif lang == 'en' %}furniture, premium furniture, custom furniture, cafe furniture, restaurant furniture, clinic furniture, home furniture, Furni Glass, Uzbekistan, Tashkent{% else %}mebel, premium mebel, individual mebel, kafe mebel, restoran mebel, klinika mebel, uy mebel, Furni Glass, O'zbekiston, Toshkent{% endif %}{% endblock %}">
+    <meta name="author" content="Furni Glass">
     <meta name="robots" content="index, follow">
     <meta name="language" content="{{ lang }}">
     <meta name="revisit-after" content="7 days">
@@ -20,17 +20,17 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{% block og_url %}{{ request.url }}{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass{% else %}Furniglass - Premium Mebel va Shisha{% endif %}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}{% if lang == 'ru' %}Ведущий производитель премиум мебели и стеклянных изделий в Узбекистане. Индивидуальный дизайн, 25 лет гарантии.{% elif lang == 'en' %}Leading manufacturer of premium furniture and glass products in Uzbekistan. Custom design, 25 years warranty.{% else %}O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya. Individual dizayn, 25 yillik kafolat.{% endif %}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{% if lang == 'ru' %}Furni Glass - Премиум Мебель{% elif lang == 'en' %}Furni Glass - Premium Furniture{% else %}Furni Glass - Premium Mebel{% endif %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% if lang == 'ru' %}Ведущий производитель премиум мебели в Узбекистане с 2001 года. Индивидуальный дизайн, 25 лет гарантии.{% elif lang == 'en' %}Leading manufacturer of premium furniture in Uzbekistan since 2001. Custom design, 25 years warranty.{% else %}2001 yildan beri O'zbekistondagi premium mebel ishlab chiqaruvchi yetakchi kompaniya. Individual dizayn, 25 yillik kafolat.{% endif %}{% endblock %}">
     <meta property="og:image" content="{% block og_image %}{{ request.url_root }}uploads/designs/logo.png{% endblock %}">
-    <meta property="og:site_name" content="Furniglass">
+    <meta property="og:site_name" content="Furni Glass">
     <meta property="og:locale" content="{% if lang == 'ru' %}ru_RU{% elif lang == 'en' %}en_US{% else %}uz_UZ{% endif %}">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{% block twitter_url %}{{ request.url }}{% endblock %}">
-    <meta property="twitter:title" content="{% block twitter_title %}{% if lang == 'ru' %}Furniglass - Премиум Мебель и Стекло{% elif lang == 'en' %}Furniglass - Premium Furniture & Glass{% else %}Furniglass - Premium Mebel va Shisha{% endif %}{% endblock %}">
-    <meta property="twitter:description" content="{% block twitter_description %}{% if lang == 'ru' %}Ведущий производитель премиум мебели и стеклянных изделий в Узбекистане.{% elif lang == 'en' %}Leading manufacturer of premium furniture and glass products in Uzbekistan.{% else %}O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya.{% endif %}{% endblock %}">
+    <meta property="twitter:title" content="{% block twitter_title %}{% if lang == 'ru' %}Furni Glass - Премиум Мебель{% elif lang == 'en' %}Furni Glass - Premium Furniture{% else %}Furni Glass - Premium Mebel{% endif %}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{% if lang == 'ru' %}Ведущий производитель премиум мебели в Узбекистане с 2001 года.{% elif lang == 'en' %}Leading manufacturer of premium furniture in Uzbekistan since 2001.{% else %}2001 yildan beri O'zbekistondagi premium mebel ishlab chiqaruvchi yetakchi kompaniya.{% endif %}{% endblock %}">
     <meta property="twitter:image" content="{% block twitter_image %}{{ request.url_root }}uploads/designs/logo.png{% endblock %}">
     
     <!-- Favicon -->
@@ -41,10 +41,10 @@
     {
         "@context": "https://schema.org",
         "@type": "{% block schema_type %}Organization{% endblock %}",
-        "name": "Furniglass",
+        "name": "Furni Glass",
         "url": "{{ request.url_root.rstrip('/') }}",
         "logo": "{{ request.url_root.rstrip('/') }}/uploads/designs/logo.png",
-        "description": "{% if lang == 'ru' %}Ведущий производитель премиум мебели и стеклянных изделий в Узбекистане{% elif lang == 'en' %}Leading manufacturer of premium furniture and glass products in Uzbekistan{% else %}O'zbekistondagi premium mebel va shisha mahsulotlar ishlab chiqaruvchi yetakchi kompaniya{% endif %}",
+        "description": "{% if lang == 'ru' %}Ведущий производитель премиум мебели в Узбекистане с 2001 года{% elif lang == 'en' %}Leading manufacturer of premium furniture in Uzbekistan since 2001{% else %}2001 yildan beri O'zbekistondagi premium mebel ishlab chiqaruvchi yetakchi kompaniya{% endif %}",
         "address": {
             "@type": "PostalAddress",
             "addressCountry": "UZ"
@@ -380,6 +380,8 @@
             overflow-x: hidden;
             /* Disable smooth scroll on mobile for better performance */
             scroll-behavior: auto;
+            margin: 0;
+            padding: 0;
         }
         
         body {
@@ -388,6 +390,8 @@
             scroll-behavior: auto;
             /* Ensure body is scrollable by default */
             overflow-y: auto;
+            margin: 0;
+            padding: 0;
         }
         
         /* Desktop smooth scroll */
@@ -414,6 +418,9 @@
                 position: relative;
                 /* Disable smooth scroll for better performance */
                 scroll-behavior: auto;
+                margin: 0;
+                padding: 0;
+                padding-bottom: 0 !important;
             }
             
             body {
@@ -428,14 +435,15 @@
                 overflow-x: hidden;
                 position: relative;
                 height: auto;
-                /* Ensure body is scrollable */
-                min-height: 100vh;
+                /* Ensure body is scrollable - use auto instead of 100vh to prevent blank spaces */
+                min-height: auto;
                 /* Force scroll to work on mobile */
                 -webkit-overflow-scrolling: touch;
                 /* Disable smooth scroll for better performance */
                 scroll-behavior: auto;
-                /* Add padding for bottom nav and safe area */
-                padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)) !important;
+                /* Add padding for bottom nav and safe area - minimal to prevent extra space */
+                padding-bottom: calc(0rem + env(safe-area-inset-bottom, 0px)) !important;
+                margin-bottom: 0 !important;
                 /* Ensure body can receive touch events */
                 pointer-events: auto;
             }
@@ -462,9 +470,32 @@
                 -webkit-backdrop-filter: blur(20px) saturate(150%);
             }
             
-            /* Footer margin for bottom nav */
+            /* Footer margin for bottom nav - remove duplicate margin and extra padding */
             footer {
-                margin-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)) !important;
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
+            
+            /* Remove any extra space after footer */
+            footer::after {
+                display: none !important;
+            }
+            
+            /* Remove any extra space from footer's last child */
+            footer > *:last-child {
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
+            
+            /* Ensure no extra space in footer container */
+            footer .container {
+                padding-bottom: 0 !important;
+                margin-bottom: 0 !important;
+            }
+            
+            /* Remove extra space from footer's bottom bar */
+            footer .border-t {
+                margin-bottom: 0 !important;
             }
         }
         
@@ -536,7 +567,7 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-white pt-[90px] md:pt-[100px] pb-24 md:pb-0">
+<body class="bg-white pt-[90px] md:pt-[100px] pb-0 md:pb-0">
     <!-- Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center loading-screen">
         <img src="/uploads/designs/Frame 3.png" alt="Loading" class="w-32 h-32 md:w-40 md:h-40 object-contain">
@@ -547,7 +578,7 @@
             <div class="flex items-center justify-between h-[70px] md:h-[80px]">
                 <!-- Left: Logo -->
                 <a href="/" class="flex-shrink-0">
-                    <img src="/uploads/designs/logo.png" alt="Furniglass" class="h-8 md:h-9">
+                    <img src="/uploads/designs/logo.png" alt="Furni Glass" class="h-8 md:h-9">
                 </a>
                 
                 <!-- Center: Main Navigation (Desktop) -->
@@ -636,7 +667,7 @@
             <!-- Menu Header -->
             <div class="flex items-center justify-between px-4 lg:px-8 h-[70px] md:h-[80px] border-b border-gray-100">
                 <a href="/" class="flex-shrink-0">
-                    <img src="/uploads/designs/logo.png" alt="Furniglass" class="h-8 md:h-9">
+                    <img src="/uploads/designs/logo.png" alt="Furni Glass" class="h-8 md:h-9">
                 </a>
                 <button class="p-2 text-[#1a1a2e] hover:text-[#c9a96e] transition" id="close-menu">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -784,13 +815,13 @@
     {% block content %}{% endblock %}
 
     <!-- Footer -->
-    <footer class="bg-[#1a1a2e] text-white mt-0 mb-20 md:mb-0">
+    <footer class="bg-[#1a1a2e] text-white mt-0 mb-0 md:mb-0 pb-0">
         <div class="container mx-auto px-4 lg:px-8">
             <!-- Main Footer -->
-            <div class="py-16 lg:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+            <div class="py-8 md:py-16 lg:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 lg:gap-12">
                 <!-- Brand -->
                 <div>
-                    <img src="/uploads/designs/Logo-white.png" alt="Furniglass" class="h-8 mb-6">
+                    <img src="/uploads/designs/Logo-white.png" alt="Furni Glass" class="h-8 mb-6">
                     <p class="text-white/50 text-sm leading-relaxed mb-6">
                         {{ T.footer.description[lang] }}
                     </p>
@@ -859,9 +890,9 @@
             </div>
             
             <!-- Bottom Bar -->
-            <div class="border-t border-white/10 py-6">
+            <div class="border-t border-white/10 py-2 md:py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p class="text-white/30 text-sm">© 2025 Furniglass. {{ T.footer.copyright[lang] }}</p>
+                    <p class="text-white/30 text-sm mb-0 pb-0">© 2025 Furni Glass. {{ T.footer.copyright[lang] }}</p>
                 </div>
             </div>
         </div>
