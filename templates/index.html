@@ -410,10 +410,19 @@
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         max-height: 90vh;
         overflow-y: auto;
+        /* Hide when not active to prevent blank space */
+        visibility: hidden;
+        pointer-events: none;
+        height: 0;
+        opacity: 0;
     }
     
     .bottom-sheet.active {
         transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+        height: auto;
+        opacity: 1;
     }
     
     .bottom-sheet-overlay {
@@ -918,8 +927,8 @@
 {% endif %}
 
 <!-- Individual Configurator Section -->
-<section class="py-8 md:py-10 lg:py-14 bg-white reveal-section" id="configurator">
-    <div class="container mx-auto px-4 lg:px-16">
+<section class="pt-6 md:pt-8 lg:pt-12 pb-0 md:pb-2 lg:pb-4 bg-white reveal-section" id="configurator">
+    <div class="container mx-auto px-4 lg:px-16 pb-0">
         <!-- Header -->
         <div class="max-w-3xl mb-6 lg:mb-8">
             <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-2">
@@ -1086,7 +1095,7 @@
                     <button type="button" id="config-order-btn" class="block w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-2.5 md:py-3 text-sm md:text-base font-medium transition-colors">
                         {% if lang == 'ru' %}Заказать эту конфигурацию{% elif lang == 'en' %}Order this configuration{% else %}Shu variantda buyurtma berish{% endif %}
                     </button>
-                    <p class="text-center text-xs text-gray-400 mt-1.5">
+                    <p class="text-center text-xs text-gray-400 mt-1.5 mb-0 pb-0">
                         {% if lang == 'ru' %}Мы свяжемся с вами для уточнения деталей{% elif lang == 'en' %}We will contact you to clarify details{% else %}Tafsilotlarni aniqlashtirish uchun siz bilan bog'lanamiz{% endif %}
                 </p>
             </div>
@@ -1181,7 +1190,7 @@
                         </div>
 
 <!-- Testimonials -->
-<section class="py-16 lg:py-24 bg-white reveal-section">
+<section class="pt-4 md:pt-8 lg:pt-16 pb-8 md:pb-12 lg:pb-16 bg-white reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div>
