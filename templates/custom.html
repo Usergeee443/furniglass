@@ -267,56 +267,53 @@
     }
     
     /* Bottom Sheet */
+    /* Bottom Sheet */
     .bottom-sheet {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: auto !important;
         background: white;
+        border-radius: 16px 16px 0 0;
         box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-        z-index: 1000;
-        transform: translateY(100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        max-height: 90vh;
+        z-index: 99999 !important;
+        max-height: 85vh;
         overflow-y: auto;
+        display: none;
     }
     
     .bottom-sheet.active {
-        transform: translateY(0);
+        display: block !important;
     }
     
     .bottom-sheet-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 99998 !important;
+        display: none;
     }
     
     .bottom-sheet-overlay.active {
-        opacity: 1;
-        visibility: visible;
+        display: block !important;
     }
     
     .bottom-sheet-header {
-        padding: 20px;
+        padding: 16px;
         border-bottom: 1px solid #e5e7eb;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        position: sticky;
-        top: 0;
         background: white;
-        z-index: 1;
+        border-radius: 16px 16px 0 0;
     }
     
     .bottom-sheet-content {
-        padding: 20px;
+        padding: 16px;
     }
     
     .bottom-sheet-handle {
@@ -324,7 +321,7 @@
         height: 4px;
         background: #d1d5db;
         border-radius: 2px;
-        margin: 0 auto 20px;
+        margin: 8px auto;
     }
 </style>
 {% endblock %}
@@ -682,91 +679,6 @@
     </div>
 </section>
 
-<!-- Bottom Sheet for Order Form -->
-<div class="bottom-sheet-overlay" id="bottom-sheet-overlay"></div>
-<div class="bottom-sheet" id="bottom-sheet">
-    <div class="bottom-sheet-handle"></div>
-    <div class="bottom-sheet-header">
-        <h3 class="text-xl font-bold text-[#1a1a2e]">
-            {% if lang == 'ru' %}Оформить заказ{% elif lang == 'en' %}Place Order{% else %}Buyurtma berish{% endif %}
-        </h3>
-        <button type="button" id="close-bottom-sheet" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#1a1a2e] transition">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-    </div>
-    <div class="bottom-sheet-content">
-        <form id="order-form">
-            <!-- Configuration Summary -->
-            <div class="bg-[#f8f8f8] p-4 mb-6">
-                <h4 class="font-semibold text-[#1a1a2e] mb-3">
-                    {% if lang == 'ru' %}Ваша конфигурация{% elif lang == 'en' %}Your Configuration{% else %}Sizning konfiguratsiyangiz{% endif %}
-                </h4>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">{% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}:</span>
-                        <span class="font-medium text-[#1a1a2e]" id="form-legs">Classic</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">{% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}:</span>
-                        <span class="font-medium text-[#1a1a2e]" id="form-seat">Ko'ja</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span>
-                        <span class="font-medium text-[#1a1a2e]" id="form-backrest">Yumshoq</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span>
-                        <span class="font-medium text-[#1a1a2e]" id="form-pattern">Oddiy</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span>
-                        <span class="font-medium text-[#1a1a2e]" id="form-material">Qora</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Form Fields -->
-            <div class="space-y-4">
-                <div>
-                    <label for="order-name" class="block text-sm font-medium text-[#1a1a2e] mb-2">
-                        {% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your name{% else %}Ismingiz{% endif %} <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" id="order-name" name="name" required
-                           class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
-                           placeholder="{% if lang == 'ru' %}Введите ваше имя{% elif lang == 'en' %}Enter your name{% else %}Ismingizni kiriting{% endif %}">
-                </div>
-                
-                <div>
-                    <label for="order-phone" class="block text-sm font-medium text-[#1a1a2e] mb-2">
-                        {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} <span class="text-red-500">*</span>
-                    </label>
-                    <input type="tel" id="order-phone" name="phone" required pattern="^(\+998|998)?[0-9]{9}$"
-                           class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
-                           placeholder="+998901234567">
-                    <p class="text-xs text-red-500 mt-1 hidden" id="order-phone-error">{% if lang == 'ru' %}Введите правильный номер телефона (например: +998901234567){% elif lang == 'en' %}Enter a valid phone number (e.g., +998901234567){% else %}To'g'ri telefon raqam kiriting (masalan: +998901234567){% endif %}</p>
-                </div>
-                
-                <div>
-                    <label for="order-message" class="block text-sm font-medium text-[#1a1a2e] mb-2">
-                        {% if lang == 'ru' %}Дополнительное сообщение{% elif lang == 'en' %}Additional message{% else %}Qo'shimcha xabar{% endif %}
-                    </label>
-                    <textarea id="order-message" name="message" rows="4"
-                              class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition resize-none"
-                              placeholder="{% if lang == 'ru' %}Ваши пожелания или вопросы...{% elif lang == 'en' %}Your wishes or questions...{% else %}Istaklaringiz yoki savollaringiz...{% endif %}"></textarea>
-                </div>
-            </div>
-            
-            <!-- Submit Button -->
-            <div class="mt-6">
-                <button type="submit" id="submit-order-btn" class="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
-                    {% if lang == 'ru' %}Отправить заказ{% elif lang == 'en' %}Send Order{% else %}Buyurtmani yuborish{% endif %}
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -944,13 +856,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show bottom sheet
         bottomSheet.classList.add('active');
         bottomSheetOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
     }
     
     function closeBottomSheet() {
         bottomSheet.classList.remove('active');
         bottomSheetOverlay.classList.remove('active');
-        document.body.style.overflow = '';
         orderForm.reset();
     }
     
@@ -1058,4 +968,92 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+{% endblock %}
+
+{% block modals %}
+<!-- Bottom Sheet for Order Form -->
+<div class="bottom-sheet-overlay" id="bottom-sheet-overlay"></div>
+<div class="bottom-sheet" id="bottom-sheet">
+    <div class="bottom-sheet-handle"></div>
+    <div class="bottom-sheet-header">
+        <h3 class="text-xl font-bold text-[#1a1a2e]">
+            {% if lang == 'ru' %}Оформить заказ{% elif lang == 'en' %}Place Order{% else %}Buyurtma berish{% endif %}
+        </h3>
+        <button type="button" id="close-bottom-sheet" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#1a1a2e] transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <div class="bottom-sheet-content">
+        <form id="order-form">
+            <!-- Configuration Summary -->
+            <div class="bg-[#f8f8f8] p-4 mb-6">
+                <h4 class="font-semibold text-[#1a1a2e] mb-3">
+                    {% if lang == 'ru' %}Ваша конфигурация{% elif lang == 'en' %}Your Configuration{% else %}Sizning konfiguratsiyangiz{% endif %}
+                </h4>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Ножки{% elif lang == 'en' %}Legs{% else %}Oyoqlar{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-legs">Classic</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Сиденье{% elif lang == 'en' %}Seat{% else %}O'rindiq{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-seat">Ko'ja</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-backrest">Yumshoq</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-pattern">Oddiy</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span>
+                        <span class="font-medium text-[#1a1a2e]" id="form-material">Qora</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Fields -->
+            <div class="space-y-4">
+                <div>
+                    <label for="order-name" class="block text-sm font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your name{% else %}Ismingiz{% endif %} <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="order-name" name="name" required
+                           class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
+                           placeholder="{% if lang == 'ru' %}Введите ваше имя{% elif lang == 'en' %}Enter your name{% else %}Ismingizni kiriting{% endif %}">
+                </div>
+                
+                <div>
+                    <label for="order-phone" class="block text-sm font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} <span class="text-red-500">*</span>
+                    </label>
+                    <input type="tel" id="order-phone" name="phone" required pattern="^(\+998|998)?[0-9]{9}$"
+                           class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
+                           placeholder="+998901234567">
+                    <p class="text-xs text-red-500 mt-1 hidden" id="order-phone-error">{% if lang == 'ru' %}Введите правильный номер телефона (например: +998901234567){% elif lang == 'en' %}Enter a valid phone number (e.g., +998901234567){% else %}To'g'ri telefon raqam kiriting (masalan: +998901234567){% endif %}</p>
+                </div>
+                
+                <div>
+                    <label for="order-message" class="block text-sm font-medium text-[#1a1a2e] mb-2">
+                        {% if lang == 'ru' %}Дополнительное сообщение{% elif lang == 'en' %}Additional message{% else %}Qo'shimcha xabar{% endif %}
+                    </label>
+                    <textarea id="order-message" name="message" rows="4"
+                              class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition resize-none"
+                              placeholder="{% if lang == 'ru' %}Ваши пожелания или вопросы...{% elif lang == 'en' %}Your wishes or questions...{% else %}Istaklaringiz yoki savollaringiz...{% endif %}"></textarea>
+                </div>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="mt-6">
+                <button type="submit" id="submit-order-btn" class="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
+                    {% if lang == 'ru' %}Отправить заказ{% elif lang == 'en' %}Send Order{% else %}Buyurtmani yuborish{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
