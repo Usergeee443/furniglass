@@ -10,6 +10,7 @@ from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, Exch
 from translations import TRANSLATIONS, get_translation, t
 import os
 import json
+import re
 import urllib.request
 import urllib.parse
 import requests
@@ -668,6 +669,14 @@ def custom_order():
         name = data.get('name', '')
         message = data.get('message', '')
         
+        # Telefon raqam validatsiyasi
+        phone_cleaned = phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+        if not re.match(r'^(\+998|998)?[0-9]{9}$', phone_cleaned):
+            return jsonify({
+                'success': False,
+                'message': 'To\'g\'ri telefon raqam kiriting (masalan: +998901234567)'
+            }), 400
+        
         # Default qiymatlar
         name_display = name if name else "Ko'rsatilmagan"
         phone_display = phone if phone else "Ko'rsatilmagan"
@@ -727,20 +736,51 @@ def custom_order():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        # Quick order form
+        # Contact form
         phone = request.form.get('phone')
         name = request.form.get('name')
-        message = request.form.get('message')
+        subject = request.form.get('subject', '')
+        message = request.form.get('message', '')
         
+        # Telefon raqam validatsiyasi
+        phone_cleaned = phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+        if not re.match(r'^(\+998|998)?[0-9]{9}$', phone_cleaned):
+            flash('To\'g\'ri telefon raqam kiriting (masalan: +998901234567)', 'error')
+            return redirect(url_for('contact'))
+        
+        # Telegram xabari
+        subject_display = {
+            'order': 'Yangi buyurtma',
+            'consultation': 'Maslahat',
+            'price': 'Narx so\'rovi'
+        }.get(subject, 'Umumiy so\'rov')
+        
+        telegram_message = f"""
+<b>📧 Yangi Aloqa Formasi</b>
+
+<b>Mijoz ma'lumotlari:</b>
+👤 Ism: {name if name else "Ko'rsatilmagan"}
+📞 Telefon: {phone if phone else "Ko'rsatilmagan"}
+📋 Mavzu: {subject_display}
+
+<b>Xabar:</b>
+{message if message else "Qo'shimcha xabar yo'q"}
+"""
+        
+        # Telegram'ga yuborish
+        telegram_sent = send_telegram_message(telegram_message)
+        
+        # Database'ga saqlash
         order = Order(
-            furniture_type='Tezkor buyurtma',
+            furniture_type=f'Aloqa: {subject_display}',
             phone=phone,
             name=name,
             address=message
         )
         db.session.add(order)
         db.session.commit()
-        flash('Buyurtmangiz qabul qilindi!', 'success')
+        
+        flash('Xabaringiz yuborildi! Tez orada siz bilan bog\'lanamiz.', 'success')
         return redirect(url_for('contact'))
     
     return render_template('contact.html')
@@ -1036,6 +1076,13 @@ def checkout():
         phone = request.form.get('phone')
         address = request.form.get('address')
         comment = request.form.get('comment', '')
+        payment = request.form.get('payment', 'cash')
+        
+        # Telefon raqam validatsiyasi
+        phone_cleaned = phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+        if not re.match(r'^(\+998|998)?[0-9]{9}$', phone_cleaned):
+            flash('To\'g\'ri telefon raqam kiriting (masalan: +998901234567)', 'error')
+            return redirect(url_for('checkout'))
         
         # Get cart products for order
         products_list = []
@@ -1046,6 +1093,35 @@ def checkout():
             if product:
                 products_list.append(f"{product.name_uz} x{item['quantity']}")
                 total += product.price * rate * item['quantity']
+        
+        # Telegram xabari
+        payment_display = {
+            'cash': 'Naqd pul',
+            'card': 'Plastik karta'
+        }.get(payment, 'Naqd pul')
+        
+        products_text = '\n'.join([f"  • {p}" for p in products_list])
+        
+        telegram_message = f"""
+<b>🛒 Yangi Savatcha Buyurtmasi</b>
+
+<b>Mijoz ma'lumotlari:</b>
+👤 Ism: {name if name else "Ko'rsatilmagan"}
+📞 Telefon: {phone if phone else "Ko'rsatilmagan"}
+📍 Manzil: {address if address else "Ko'rsatilmagan"}
+💳 To'lov usuli: {payment_display}
+
+<b>Mahsulotlar:</b>
+{products_text}
+
+<b>Jami:</b> {total:,.0f} so'm
+
+<b>Qo'shimcha izoh:</b>
+{comment if comment else "Qo'shimcha izoh yo'q"}
+"""
+        
+        # Telegram'ga yuborish
+        telegram_sent = send_telegram_message(telegram_message)
         
         # Create order
         order = Order(
@@ -1578,8 +1654,6 @@ def admin_category_edit(category_id):
         except Exception as e:
             db.session.rollback()
             flash(f'Xatolik: {str(e)}', 'error')
-            main_categories = MainCategory.query.all()
-            return render_template('admin/category_form.html', category=category, main_categories=main_categories)
     
     main_categories = MainCategory.query.all()
     return render_template('admin/category_form.html', category=category, main_categories=main_categories)
@@ -2219,7 +2293,7 @@ if __name__ == '__main__':
                 # Table doesn't exist, create it
                 db.create_all()
                 print("Created main_category table")
-            
+                
             # Check and add main_category_id to category table
             try:
                 category_columns = [col['name'] for col in inspector.get_columns('category')]

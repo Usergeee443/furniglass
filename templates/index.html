@@ -1164,9 +1164,10 @@
                     <label for="order-phone" class="block text-sm font-medium text-[#1a1a2e] mb-2">
                         {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} <span class="text-red-500">*</span>
                     </label>
-                    <input type="tel" id="order-phone" name="phone" required
+                    <input type="tel" id="order-phone" name="phone" required pattern="^(\+998|998)?[0-9]{9}$"
                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
                            placeholder="+998901234567">
+                    <p class="text-xs text-red-500 mt-1 hidden" id="order-phone-error">{% if lang == 'ru' %}Введите правильный номер телефона (например: +998901234567){% elif lang == 'en' %}Enter a valid phone number (e.g., +998901234567){% else %}To'g'ri telefon raqam kiriting (masalan: +998901234567){% endif %}</p>
                         </div>
                 
                     <div>
@@ -1392,6 +1393,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Telefon raqam validatsiyasi (real-time)
+    const orderPhoneInput = document.getElementById('order-phone');
+    const orderPhoneError = document.getElementById('order-phone-error');
+    if (orderPhoneInput && orderPhoneError) {
+        function validateUzbekPhone(phone) {
+            const cleaned = phone.replace(/\s+/g, '').replace(/[-\s()]/g, '');
+            const pattern = /^(\+998|998)?[0-9]{9}$/;
+            return pattern.test(cleaned);
+        }
+        
+        orderPhoneInput.addEventListener('input', function() {
+            const value = this.value.trim();
+            if (value && !validateUzbekPhone(value)) {
+                this.classList.add('border-red-500');
+                orderPhoneError.classList.remove('hidden');
+                    } else {
+                this.classList.remove('border-red-500');
+                orderPhoneError.classList.add('hidden');
+            }
+        });
+    }
+    
     function updateSummary() {
         document.getElementById('summary-legs').textContent = config.legs.label;
         document.getElementById('summary-seat').textContent = config.seat.label;
@@ -1453,9 +1476,37 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = document.getElementById('order-name').value.trim();
             const phone = document.getElementById('order-phone').value.trim();
             const message = document.getElementById('order-message').value.trim();
+            const phoneError = document.getElementById('order-phone-error');
             
-            if (!name || !phone) {
-                alert('{% if lang == "ru" %}Пожалуйста, заполните все обязательные поля{% elif lang == "en" %}Please fill in all required fields{% else %}Iltimos, barcha majburiy maydonlarni to\'ldiring{% endif %}');
+            // Telefon raqam validatsiyasi
+            function validateUzbekPhone(phone) {
+                const cleaned = phone.replace(/\s+/g, '').replace(/[-\s()]/g, '');
+                const pattern = /^(\+998|998)?[0-9]{9}$/;
+                return pattern.test(cleaned);
+            }
+            
+            if (!name) {
+                alert('{% if lang == "ru" %}Пожалуйста, введите ваше имя{% elif lang == "en" %}Please enter your name{% else %}Iltimos, ismingizni kiriting{% endif %}');
+                return;
+            }
+            
+            if (!phone) {
+                const phoneInput = document.getElementById('order-phone');
+                phoneInput.classList.add('border-red-500');
+                phoneError.textContent = '{% if lang == "ru" %}Пожалуйста, введите номер телефона{% elif lang == "en" %}Please enter phone number{% else %}Iltimos, telefon raqam kiriting{% endif %}';
+                phoneError.classList.remove('hidden');
+                phoneInput.focus();
+                alert('{% if lang == "ru" %}Пожалуйста, введите номер телефона{% elif lang == "en" %}Please enter phone number{% else %}Iltimos, telefon raqam kiriting{% endif %}');
+                return;
+            }
+            
+            if (!validateUzbekPhone(phone)) {
+                const phoneInput = document.getElementById('order-phone');
+                phoneInput.classList.add('border-red-500');
+                phoneError.textContent = '{% if lang == "ru" %}Введите правильный номер телефона (например: +998901234567){% elif lang == "en" %}Enter a valid phone number (e.g., +998901234567){% else %}To\'g\'ri telefon raqam kiriting (masalan: +998901234567){% endif %}';
+                phoneError.classList.remove('hidden');
+                phoneInput.focus();
+                alert('{% if lang == "ru" %}Введите правильный номер телефона (например: +998901234567){% elif lang == "en" %}Enter a valid phone number (e.g., +998901234567){% else %}To\'g\'ri telefon raqam kiriting (masalan: +998901234567){% endif %}');
                 return;
             }
             

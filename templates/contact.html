@@ -99,7 +99,8 @@
                         </div>
                         <div>
                             <label class="block text-xs uppercase tracking-wider text-gray-500 mb-2 font-medium">{% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} *</label>
-                            <input type="tel" name="phone" required class="w-full bg-[#f8f8f8] border-0 px-4 py-4 text-[#1a1a2e] outline-none">
+                            <input type="tel" name="phone" id="contact-phone" required pattern="^(\+998|998)?[0-9]{9}$" class="w-full bg-[#f8f8f8] border-0 px-4 py-4 text-[#1a1a2e] outline-none" placeholder="+998901234567">
+                            <p class="text-xs text-red-500 mt-1 hidden" id="contact-phone-error">{% if lang == 'ru' %}Введите правильный номер телефона (например: +998901234567){% elif lang == 'en' %}Enter a valid phone number (e.g., +998901234567){% else %}To'g'ri telefon raqam kiriting (masalan: +998901234567){% endif %}</p>
                         </div>
                     </div>
                     
@@ -203,6 +204,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, { threshold: 0.1 });
     revealSections.forEach(section => observer.observe(section));
+    
+    // Telefon raqam validatsiyasi
+    function validateUzbekPhone(phone) {
+        // Barcha bo'sh joylar va belgilarni olib tashlash
+        const cleaned = phone.replace(/\s+/g, '').replace(/[-\s()]/g, '');
+        // +998, 998 yoki 9 bilan boshlanadigan 9-12 raqamli format
+        const pattern = /^(\+998|998)?[0-9]{9}$/;
+        return pattern.test(cleaned);
+    }
+    
+    const phoneInput = document.getElementById('contact-phone');
+    const phoneError = document.getElementById('contact-phone-error');
+    const contactForm = document.querySelector('form[method="POST"]');
+    
+    if (phoneInput && contactForm) {
+        phoneInput.addEventListener('input', function() {
+            const value = this.value.trim();
+            if (value && !validateUzbekPhone(value)) {
+                this.classList.add('border-red-500');
+                phoneError.classList.remove('hidden');
+            } else {
+                this.classList.remove('border-red-500');
+                phoneError.classList.add('hidden');
+            }
+        });
+        
+        contactForm.addEventListener('submit', function(e) {
+            const phoneValue = phoneInput.value.trim();
+            if (!phoneValue) {
+                e.preventDefault();
+                phoneInput.classList.add('border-red-500');
+                phoneError.textContent = '{% if lang == "ru" %}Пожалуйста, введите номер телефона{% elif lang == "en" %}Please enter phone number{% else %}Iltimos, telefon raqam kiriting{% endif %}';
+                phoneError.classList.remove('hidden');
+                phoneInput.focus();
+                return false;
+            }
+            if (!validateUzbekPhone(phoneValue)) {
+                e.preventDefault();
+                phoneInput.classList.add('border-red-500');
+                phoneError.textContent = '{% if lang == "ru" %}Введите правильный номер телефона (например: +998901234567){% elif lang == "en" %}Enter a valid phone number (e.g., +998901234567){% else %}To\'g\'ri telefon raqam kiriting (masalan: +998901234567){% endif %}';
+                phoneError.classList.remove('hidden');
+                phoneInput.focus();
+                return false;
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

@@ -21,6 +21,6 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
     
     # Telegram Bot Configuration
-    TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN') or ''
-    TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID') or ''
+    TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN') or '7560593714:AAHCom1Nv_hzfIVzlxRPjON-4blYZoofY6o'
+    TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID') or '6429299277'
 
