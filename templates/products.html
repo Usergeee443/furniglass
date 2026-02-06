@@ -207,8 +207,13 @@
                         </h3>
                     </a>
                     <div class="flex items-baseline gap-2">
-                        <span class="text-xl font-light text-[#1a1a2e]">${{ "%.0f"|format(product.price) }}</span>
-                        <span class="text-sm text-gray-400 line-through">${{ "%.0f"|format(product.price * 1.2) }}</span>
+                        {% if product.discount and product.discount > 0 %}
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.get_discounted_price() * usd_rate).replace(",", " ") }} so'm</span>
+                        <span class="text-sm text-gray-400 line-through">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }}</span>
+                        <span class="bg-[#f59e0b]/10 text-[#f59e0b] px-2 py-0.5 text-xs font-medium">-{{ product.discount }}%</span>
+                        {% else %}
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }} so'm</span>
+                        {% endif %}
                     </div>
                 </div>
             </article>
@@ -257,7 +262,7 @@
             </p>
             <div class="flex flex-wrap justify-center gap-4">
                 <a href="/contact" class="bg-[#1a1a2e] text-white px-10 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#f59e0b] transition-colors">
-                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
+                    {% if lang == 'ru' %}Оставить номер{% elif lang == 'en' %}Leave a number{% else %}Raqam qoldirish{% endif %}
                 </a>
                 <a href="tel:+998712000262" class="border border-[#1a1a2e] text-[#1a1a2e] px-10 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#1a1a2e] hover:text-white transition-all">
                     71 200 02 62
@@ -315,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
                     button.classList.add('!bg-green-500');
                     
-                    showToast(data.message);
+                    showToastWithCart(data.message);
                     
                     setTimeout(() => {
                         button.innerHTML = originalHTML;
@@ -328,12 +333,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    function showToast(message) {
+    function showToastWithCart(message) {
         const toast = document.createElement('div');
-        toast.className = 'fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-[#1a1a2e] text-white px-8 py-4 z-50 flex items-center gap-3 shadow-2xl';
-        toast.innerHTML = `<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> <span class="font-medium">${message}</span>`;
+        toast.className = 'fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-[#1a1a2e] text-white px-6 py-4 z-50 flex items-center gap-4 shadow-2xl rounded-lg';
+        toast.innerHTML = `
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="font-medium">${message}</span>
+            </div>
+            <a href="/cart" class="bg-[#f59e0b] text-white px-4 py-2 text-xs font-medium tracking-wider uppercase hover:bg-[#d97706] transition-colors whitespace-nowrap rounded">
+                {% if lang == 'ru' %}Корзина{% elif lang == 'en' %}Cart{% else %}Savatga o'tish{% endif %}
+            </a>
+        `;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
+        setTimeout(() => toast.remove(), 4000);
     }
 });
 </script>

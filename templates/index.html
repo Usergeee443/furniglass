@@ -230,6 +230,258 @@
         transform: translateY(0);
     }
     
+    /* Brands Carousel */
+    .brands-carousel-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .brands-carousel {
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .brands-track {
+        display: flex;
+        gap: 3rem;
+        animation: scroll-brands 30s linear infinite;
+        will-change: transform;
+    }
+    
+    .brands-track:hover {
+        animation-play-state: paused;
+    }
+    
+    @keyframes scroll-brands {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+    
+    .brand-item {
+        flex-shrink: 0;
+    }
+    
+    .brand-logo-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease;
+    }
+    
+    .brand-logo-wrapper img {
+        max-width: 150px;
+        max-height: 100%;
+        object-fit: contain;
+        transition: opacity 0.3s ease;
+    }
+    
+    .brand-logo-wrapper:hover img {
+        opacity: 0.8;
+    }
+    
+    /* Clients Carousel - Premium Design */
+    .clients-carousel-wrapper {
+        position: relative;
+        padding: 0 2rem;
+    }
+    
+    @media (max-width: 768px) {
+        .clients-carousel-wrapper {
+            padding: 0 1rem;
+        }
+    }
+    
+    .clients-carousel {
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .clients-track {
+        display: flex;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        gap: 1.5rem;
+    }
+    
+    @media (min-width: 1024px) {
+        .clients-track {
+            gap: 2rem;
+        }
+    }
+    
+    /* Client Card - Premium Product Card Style */
+    .client-card {
+        position: relative;
+        overflow: hidden;
+        background: #fff;
+        border-radius: 1.5rem;
+        box-shadow: 0 2px 8px rgba(26, 26, 46, 0.08);
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: transform;
+    }
+    
+    .client-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(26, 26, 46, 0.15);
+    }
+    
+    .client-card .client-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 4/5;
+        background: #f5f5f5;
+    }
+    
+    .client-card .client-image-wrapper::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(26,26,46,0.7) 0%, rgba(26,26,46,0.3) 50%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        z-index: 1;
+        pointer-events: none;
+    }
+    
+    .client-card:hover .client-image-wrapper::before {
+        opacity: 1;
+    }
+    
+    .client-card .client-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .client-card:hover .client-image-wrapper img {
+        transform: scale(1.1);
+    }
+    
+    .client-card .client-image-wrapper .client-initial {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1a1a2e 0%, #2a2a3e 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .client-card:hover .client-image-wrapper .client-initial {
+        transform: scale(1.05);
+    }
+    
+    .client-card .client-content {
+        padding: 1.5rem;
+        background: #fff;
+        position: relative;
+    }
+    
+    @media (min-width: 1024px) {
+        .client-card .client-content {
+            padding: 2rem;
+        }
+    }
+    
+    .client-card .client-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin-bottom: 0.75rem;
+        transition: color 0.3s ease;
+    }
+    
+    .client-card:hover .client-name {
+        color: #f59e0b;
+    }
+    
+    .client-card .client-description {
+        color: #6b7280;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        letter-spacing: 0.01em;
+    }
+    
+    /* Navigation Arrows */
+    .clients-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3rem;
+        height: 3rem;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(26, 26, 46, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(26, 26, 46, 0.1);
+    }
+    
+    .clients-nav-btn:hover {
+        background: #1a1a2e;
+        border-color: #1a1a2e;
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .clients-nav-btn:hover svg {
+        color: #fff;
+    }
+    
+    .clients-nav-btn svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: #1a1a2e;
+        transition: color 0.3s ease;
+    }
+    
+    .clients-nav-btn.prev {
+        left: -1rem;
+    }
+    
+    .clients-nav-btn.next {
+        right: -1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .clients-nav-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        
+        .clients-nav-btn.prev {
+            left: -0.5rem;
+        }
+        
+        .clients-nav-btn.next {
+            right: -0.5rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .brands-track {
+            gap: 2rem;
+            animation-duration: 20s;
+        }
+        
+        .brand-logo-wrapper {
+            height: 3rem;
+            padding: 0 1rem;
+        }
+        
+        .brand-logo-wrapper img {
+            max-width: 100px;
+        }
+    }
+    
     /* Line clamp */
     .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -497,6 +749,92 @@
     </div>
 </section>
 
+<!-- Brands Carousel -->
+{% if brands %}
+<section class="py-12 lg:py-16 bg-[#f8f8f8] reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="brands-carousel-wrapper relative">
+            <div class="brands-carousel overflow-hidden">
+                <div class="brands-track flex gap-8 lg:gap-12 animate-scroll">
+                    <!-- First set of brands -->
+                    {% for brand in brands %}
+                    <div class="brand-item flex-shrink-0 flex items-center justify-center">
+                        <div class="brand-logo-wrapper h-16 md:h-20 lg:h-24 w-auto px-4 md:px-6 lg:px-8 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
+                            {% if brand.website %}
+                            <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
+                                <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
+                            </a>
+                    {% else %}
+                            <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
+                    {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <!-- Duplicate for seamless loop -->
+                    {% for brand in brands %}
+                    <div class="brand-item flex-shrink-0 flex items-center justify-center">
+                        <div class="brand-logo-wrapper h-16 md:h-20 lg:h-24 w-auto px-4 md:px-6 lg:px-8 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
+                            {% if brand.website %}
+                            <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
+                                <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
+                            </a>
+                            {% else %}
+                            <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
+                            {% endif %}
+                        </div>
+                    </div>
+            {% endfor %}
+                </div>
+            </div>
+        </div>
+                        </div>
+</section>
+{% endif %}
+
+<!-- Clients Carousel -->
+{% if clients %}
+<section class="py-16 lg:py-24 bg-white reveal-section">
+    <div class="container mx-auto px-6 lg:px-16">
+        <!-- Section Header - Premium Style -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-4 font-medium">{% if lang == 'ru' %}Наши клиенты{% elif lang == 'en' %}Our Clients{% else %}Bizning mijozlar{% endif %}</p>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] mb-4 leading-tight">
+                {% if lang == 'ru' %}Они нам доверяют{% elif lang == 'en' %}They trust us{% else %}Ular bizga ishonadi{% endif %}
+            </h2>
+            <p class="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+                {% if lang == 'ru' %}Более 20 лет мы создаем мебель, которая радует наших клиентов{% elif lang == 'en' %}For over 20 years, we've been creating furniture that delights our clients{% else %}20 yildan ortiq vaqt davomida mijozlarimizni mamnun qiladigan mebellar yaratamiz{% endif %}
+            </p>
+                        </div>
+        
+        <!-- Clients Grid - Category Card Style -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+            {% for client in clients %}
+            <div class="category-card group relative aspect-[3/4] md:aspect-[2/3]">
+                {% if client.photo %}
+                <img src="/uploads/{{ client.photo }}" alt="{{ client.get_name(lang) }}"
+                     class="absolute inset-0 w-full h-full object-cover">
+                {% else %}
+                <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#2d2d44]"></div>
+                {% endif %}
+                
+                <div class="category-content absolute inset-0 z-10 flex flex-col justify-end p-6 lg:p-8">
+                    <span class="text-[#f59e0b] text-xs tracking-wider uppercase mb-2">0{{ loop.index }}</span>
+                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">
+                        {{ client.get_name(lang) }}
+                    </h3>
+                    {% if client.get_description(lang) %}
+                    <p class="text-white/80 text-sm mb-3 leading-relaxed">
+                        {{ client.get_description(lang) }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <!-- Main Categories -->
 {% if main_categories %}
 <section class="py-16 lg:py-24 bg-white reveal-section">
@@ -507,8 +845,8 @@
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] leading-tight">
                 {% if lang == 'ru' %}Мебель для каждого пространства{% elif lang == 'en' %}Furniture for every space{% else %}Har bir makon uchun mebel{% endif %}
             </h2>
-                        </div>
-        
+            </div>
+            
         <!-- Categories Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
             {% for main_cat in main_categories %}
@@ -534,8 +872,8 @@
                 </div>
             </a>
             {% endfor %}
-        </div>
-                        </div>
+                    </div>
+                </div>
 </section>
 {% endif %}
 
@@ -548,34 +886,34 @@
                     <svg class="w-5 h-5 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                     </svg>
-                        </div>
-                <p class="text-white text-sm font-medium">25 {% if lang == 'ru' %}лет гарантии{% elif lang == 'en' %}years warranty{% else %}yil kafolat{% endif %}</p>
                     </div>
+                <p class="text-white text-sm font-medium">25 {% if lang == 'ru' %}лет гарантии{% elif lang == 'en' %}years warranty{% else %}yil kafolat{% endif %}</p>
+                </div>
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 border border-[#f59e0b]/40 flex items-center justify-center flex-shrink-0">
                     <svg class="w-5 h-5 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
                     </svg>
-                </div>
+                    </div>
                 <p class="text-white text-sm font-medium">{% if lang == 'ru' %}Бесплатная доставка{% elif lang == 'en' %}Free delivery{% else %}Bepul yetkazish{% endif %}</p>
-                        </div>
+                </div>
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 border border-[#f59e0b]/40 flex items-center justify-center flex-shrink-0">
                     <svg class="w-5 h-5 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/>
                     </svg>
-                        </div>
-                <p class="text-white text-sm font-medium">{% if lang == 'ru' %}Индивидуальный дизайн{% elif lang == 'en' %}Custom design{% else %}Individual dizayn{% endif %}</p>
                     </div>
+                <p class="text-white text-sm font-medium">{% if lang == 'ru' %}Индивидуальный дизайн{% elif lang == 'en' %}Custom design{% else %}Individual dizayn{% endif %}</p>
+                </div>
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 border border-[#f59e0b]/40 flex items-center justify-center flex-shrink-0">
                     <svg class="w-5 h-5 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                     </svg>
-                </div>
+                    </div>
                 <p class="text-white text-sm font-medium">{% if lang == 'ru' %}Премиум качество{% elif lang == 'en' %}Premium quality{% else %}Premium sifat{% endif %}</p>
-            </div>
+                </div>
         </div>
     </div>
 </section>
@@ -590,7 +928,7 @@
                 <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3">{% if lang == 'ru' %}Коллекция{% elif lang == 'en' %}Collection{% else %}Kolleksiya{% endif %}</p>
                 <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e]">
                     {% if lang == 'ru' %}Популярные товары{% elif lang == 'en' %}Popular Products{% else %}Mashhur mahsulotlar{% endif %}
-            </h2>
+                </h2>
                     </div>
             <a href="/products" class="group flex items-center gap-3 text-[#1a1a2e] hover:text-[#f59e0b] transition-colors">
                 <span class="text-sm font-medium">{% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}</span>
@@ -598,7 +936,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
             </a>
-                </div>
+        </div>
         
         <!-- Products Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
@@ -629,8 +967,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
                             </svg>
                                     </button>
-                        </div>
-                        </div>
+                    </div>
+                </div>
                 
                 <div class="card-content">
                     <p class="text-[11px] text-[#f59e0b] tracking-widest uppercase mb-2">
@@ -642,20 +980,25 @@
                         </h3>
                     </a>
                     <div class="flex items-baseline gap-2">
-                        <span class="text-xl font-light text-[#1a1a2e]">${{ "%.0f"|format(product.price) }}</span>
-                        <span class="text-sm text-gray-400 line-through">${{ "%.0f"|format(product.price * 1.2) }}</span>
+                        {% if product.discount and product.discount > 0 %}
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.get_discounted_price() * usd_rate).replace(",", " ") }} so'm</span>
+                        <span class="text-sm text-gray-400 line-through">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }}</span>
+                        <span class="bg-[#f59e0b]/10 text-[#f59e0b] px-2 py-0.5 text-xs font-medium">-{{ product.discount }}%</span>
+                        {% else %}
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }} so'm</span>
+                        {% endif %}
+            </div>
                     </div>
-                </div>
             </article>
             {% endfor %}
-                    </div>
+                </div>
         
         <!-- View All Button (Mobile) -->
         <div class="mt-10 text-center lg:hidden">
             <a href="/products" class="inline-block border-2 border-[#1a1a2e] text-[#1a1a2e] px-8 py-4 text-sm tracking-wider uppercase font-medium hover:bg-[#1a1a2e] hover:text-white transition-all">
                 {% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}
-            </a>
-        </div>
+                </a>
+            </div>
     </div>
 </section>
 {% endif %}
@@ -693,8 +1036,8 @@
                 </div>
             </a>
             {% endfor %}
-                    </div>
-                </div>
+        </div>
+    </div>
 </section>
 {% endif %}
 
@@ -787,11 +1130,11 @@
         <div class="text-center max-w-3xl mx-auto mb-8 lg:mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-3">
                 {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlaymiz{% endif %}
-                </h2>
+            </h2>
             <p class="text-gray-600 text-sm lg:text-base">
                 {% if lang == 'ru' %}3 этапа: Консультация → Производство → Доставка{% elif lang == 'en' %}3 steps: Consultation → Production → Delivery{% else %}3 bosqich: Konsultatsiya → Ishlab chiqarish → Yetkazish{% endif %}
             </p>
-        </div>
+                        </div>
         
         <!-- Steps with connecting line -->
         <div class="relative max-w-4xl mx-auto">
@@ -817,9 +1160,9 @@
                         <p class="text-gray-600 text-sm leading-relaxed">
                             {% if lang == 'ru' %}Бесплатная консультация, помощь в выборе стиля и дизайна мебели{% elif lang == 'en' %}Free consultation, help with choosing style and furniture design{% else %}Bepul maslahat, uslub va mebel dizaynini tanlashda yordam{% endif %}
                         </p>
-                                        </div>
-            </div>
-            
+                        </div>
+                    </div>
+        
                 <!-- Step 2: Production -->
                 <div class="relative lg:mt-12">
                     <div class="bg-white p-5 lg:p-6 border border-gray-200 hover:border-[#f59e0b] transition-colors">
@@ -837,16 +1180,16 @@
                         <p class="text-gray-600 text-sm leading-relaxed">
                             {% if lang == 'ru' %}Профессиональное изготовление мебели по вашим размерам и требованиям{% elif lang == 'en' %}Professional furniture manufacturing according to your dimensions and requirements{% else %}Sizning o'lchamlaringiz va talablaringiz bo'yicha professional mebel yasash{% endif %}
                         </p>
-                </div>
-                        </div>
+            </div>
+        </div>
                                 
                 <!-- Step 3: Delivery -->
-                <div class="relative">
+        <div class="relative">
                     <div class="bg-white p-5 lg:p-6 border border-gray-200 hover:border-[#f59e0b] transition-colors">
                         <!-- Step Number Badge -->
                         <div class="absolute -top-3 left-0 w-8 h-8 bg-[#f59e0b] flex items-center justify-center z-20">
                             <span class="text-white font-bold text-sm">3</span>
-                        </div>
+    </div>
                         
                         <!-- Title -->
                         <h3 class="text-lg lg:text-xl font-bold text-[#1a1a2e] mb-2">
@@ -887,14 +1230,18 @@
                                     {% if images %}
                                         <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" 
                                  class="product-img w-full h-full object-cover">
-                    {% endif %}
+                                    {% endif %}
                                 {% endif %}
-                    </div>
+                        </div>
                     <div class="p-3">
                         <h3 class="font-semibold text-[#1a1a2e] text-sm mb-1 line-clamp-1 group-hover:text-[#f59e0b] transition-colors">
                                         {{ product.get_name(lang) }}
                                     </h3>
-                        <p class="font-bold text-[#1a1a2e]">${{ "%.0f"|format(product.price) }}</p>
+                        {% if product.discount and product.discount > 0 %}
+                        <p class="font-bold text-[#1a1a2e] text-sm">{{ "{:,.0f}".format(product.get_discounted_price() * usd_rate).replace(",", " ") }} <span class="text-xs text-gray-400 line-through">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }}</span></p>
+                        {% else %}
+                        <p class="font-bold text-[#1a1a2e] text-sm">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }} so'm</p>
+                                {% endif %}
                 </div>
             </a>
             </article>
@@ -984,8 +1331,8 @@
                         </button>
                                         </div>
                         </div>
-            </div>
-            
+                        </div>
+                                
             <!-- Right: Configuration Options (product_detail uslubida info panel, ixcham selectlar) -->
             <div class="lg:sticky lg:top-24 lg:self-start space-y-3 md:space-y-4 lg:space-y-5 w-full lg:w-1/2 lg:min-w-[50%]">
                 <!-- Options grid: 2-3 tadan bir qatorga joylashishi uchun, mobil uchun optimallashtirilgan -->
@@ -1035,8 +1382,8 @@
                             <option value="firm">Qattiq</option>
                             <option value="ergonomic">Ergonomik</option>
                         </select>
-                    </div>
-                    
+                        </div>
+                                
                     <!-- Pattern Option -->
                     <div class="config-option" data-option="pattern">
                         <div class="flex items-center justify-between mb-1.5">
@@ -1081,14 +1428,14 @@
                     </a>
                     <button type="button" id="config-order-btn" class="block w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-2.5 md:py-3 text-sm md:text-base font-medium transition-colors">
                         {% if lang == 'ru' %}Заказать эту конфигурацию{% elif lang == 'en' %}Order this configuration{% else %}Shu variantda buyurtma berish{% endif %}
-                    </button>
+                                    </button>
                     <p class="text-center text-xs text-gray-400 mt-1.5 mb-0 pb-0">
                         {% if lang == 'ru' %}Мы свяжемся с вами для уточнения деталей{% elif lang == 'en' %}We will contact you to clarify details{% else %}Tafsilotlarni aniqlashtirish uchun siz bilan bog'lanamiz{% endif %}
                 </p>
-            </div>
-            </div>
-        </div>
-    </div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
 </section>
 
 <!-- Testimonials -->
@@ -1100,7 +1447,7 @@
                 <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e]">
                     {% if lang == 'ru' %}Что говорят клиенты{% elif lang == 'en' %}What clients say{% else %}Mijozlar fikri{% endif %}
                 </h2>
-                    </div>
+                </div>
                 </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1505,9 +1852,57 @@ document.addEventListener('DOMContentLoaded', function() {
                 button.disabled = false;
                 alert('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.');
             }
+            });
         });
     });
-});
+
+// Clients Carousel
+let clientsPosition = 0;
+function slideClients(direction) {
+    const track = document.getElementById('clients-track');
+    const carousel = document.getElementById('clients-carousel');
+    if (!track || !carousel) return;
+    
+    const cards = track.querySelectorAll('.client-card');
+    if (cards.length === 0) return;
+    
+    const cardWidth = cards[0].offsetWidth + (window.innerWidth >= 1024 ? 32 : 24); // gap included (responsive)
+    const maxScroll = track.scrollWidth - carousel.offsetWidth;
+    
+    clientsPosition += direction * cardWidth;
+    clientsPosition = Math.max(0, Math.min(clientsPosition, maxScroll));
+    
+    track.style.transform = `translateX(-${clientsPosition}px)`;
+}
+
+// Touch swipe for clients carousel
+(function() {
+    const carousel = document.getElementById('clients-carousel');
+    if (!carousel) return;
+    
+    let startX = 0;
+    let isDragging = false;
+    
+    carousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+    });
+    
+    carousel.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+    });
+    
+    carousel.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > 50) {
+            slideClients(diff > 0 ? 1 : -1);
+        }
+    });
+})();
 </script>
 {% endblock %}
 
@@ -1525,7 +1920,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
         </button>
-    </div>
+                </div>
     <div class="bottom-sheet-content">
         <form id="order-form">
             <!-- Configuration Summary -->
@@ -1545,30 +1940,30 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% if lang == 'ru' %}Спинка{% elif lang == 'en' %}Backrest{% else %}Suyanchiq{% endif %}:</span>
                         <span class="font-medium text-[#1a1a2e]" id="form-backrest">Yumshoq</span>
-                    </div>
+                </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% if lang == 'ru' %}Узор{% elif lang == 'en' %}Pattern{% else %}Naqsh{% endif %}:</span>
                         <span class="font-medium text-[#1a1a2e]" id="form-pattern">Oddiy</span>
-                    </div>
+            </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">{% if lang == 'ru' %}Цвет{% elif lang == 'en' %}Color{% else %}Rang{% endif %}:</span>
                         <span class="font-medium text-[#1a1a2e]" id="form-material">Qora</span>
+        </div>
+    </div>
                     </div>
-                </div>
-            </div>
             
             <!-- Form Fields -->
             <div class="space-y-4">
-                <div>
+            <div>
                     <label for="order-name" class="block text-sm font-medium text-[#1a1a2e] mb-2">
                         {% if lang == 'ru' %}Ваше имя{% elif lang == 'en' %}Your name{% else %}Ismingiz{% endif %} <span class="text-red-500">*</span>
                     </label>
                     <input type="text" id="order-name" name="name" required
                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
                            placeholder="{% if lang == 'ru' %}Введите ваше имя{% elif lang == 'en' %}Enter your name{% else %}Ismingizni kiriting{% endif %}">
-                </div>
-                
-                <div>
+                        </div>
+        
+                        <div>
                     <label for="order-phone" class="block text-sm font-medium text-[#1a1a2e] mb-2">
                         {% if lang == 'ru' %}Телефон{% elif lang == 'en' %}Phone{% else %}Telefon{% endif %} <span class="text-red-500">*</span>
                     </label>
@@ -1576,9 +1971,9 @@ document.addEventListener('DOMContentLoaded', function() {
                            class="w-full px-4 py-3 border border-gray-300 focus:border-[#f59e0b] focus:outline-none transition"
                            placeholder="+998901234567">
                     <p class="text-xs text-red-500 mt-1 hidden" id="order-phone-error">{% if lang == 'ru' %}Введите правильный номер телефона (например: +998901234567){% elif lang == 'en' %}Enter a valid phone number (e.g., +998901234567){% else %}To'g'ri telefon raqam kiriting (masalan: +998901234567){% endif %}</p>
-                </div>
+                        </div>
                 
-                <div>
+                        <div>
                     <label for="order-message" class="block text-sm font-medium text-[#1a1a2e] mb-2">
                         {% if lang == 'ru' %}Дополнительное сообщение{% elif lang == 'en' %}Additional message{% else %}Qo'shimcha xabar{% endif %}
                     </label>
@@ -1592,9 +1987,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="mt-6">
                 <button type="submit" id="submit-order-btn" class="w-full bg-[#f59e0b] hover:bg-[#d97706] text-white text-center py-4 font-bold tracking-wider uppercase transition-colors">
                     {% if lang == 'ru' %}Отправить заказ{% elif lang == 'en' %}Send Order{% else %}Buyurtmani yuborish{% endif %}
-                </button>
+                    </button>
             </div>
-        </form>
-    </div>
-</div>
+                </form>
+            </div>
+        </div>
 {% endblock %}

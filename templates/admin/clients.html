@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Mijozlar - Admin Panel{% endblock %}
+{% block page_title %}Mijozlar{% endblock %}
+{% block page_subtitle %}Bizning mijozlar ro'yxati{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <h3 class="text-lg font-semibold text-[#232339]">Jami: {{ clients|length }} ta mijoz</h3>
+    <a href="/admin/client/add" class="px-5 py-2.5 bg-[#232339] text-white rounded-xl hover:bg-black transition flex items-center gap-2">
+        <i class="fas fa-plus"></i> Yangi mijoz
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for client in clients %}
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="p-6">
+            <div class="flex items-center gap-4 mb-4">
+                {% if client.photo %}
+                <img src="/uploads/{{ client.photo }}" alt="{{ client.name_uz }}" class="w-16 h-16 rounded-full object-cover">
+                {% else %}
+                <div class="w-16 h-16 rounded-full bg-[#F5F5F5] flex items-center justify-center">
+                    <i class="fas fa-user text-gray-400 text-2xl"></i>
+                </div>
+                {% endif %}
+                <div>
+                    <h4 class="font-semibold text-[#232339]">{{ client.name_uz }}</h4>
+                    <p class="text-sm text-gray-500">Tartib: {{ client.order }}</p>
+                </div>
+            </div>
+            {% if client.description_uz %}
+            <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ client.description_uz }}</p>
+            {% endif %}
+            <div class="flex items-center justify-between">
+                <span class="text-xs px-3 py-1 rounded-full {% if client.is_active %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-500{% endif %}">
+                    {% if client.is_active %}Faol{% else %}Nofaol{% endif %}
+                </span>
+                <div class="flex gap-2">
+                    <a href="/admin/client/{{ client.id }}/edit" class="p-2 hover:bg-[#F5F5F5] rounded-lg transition text-gray-500">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form method="POST" action="/admin/client/{{ client.id }}/delete" onsubmit="return confirm('Haqiqatan o\'chirmoqchimisiz?')">
+                        <button type="submit" class="p-2 hover:bg-red-50 rounded-lg transition text-red-500">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not clients %}
+<div class="text-center py-16">
+    <div class="w-16 h-16 bg-[#F5F5F5] rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-users text-gray-400 text-2xl"></i>
+    </div>
+    <p class="text-gray-500 mb-4">Hali mijozlar qo'shilmagan</p>
+    <a href="/admin/client/add" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#232339] text-white rounded-xl hover:bg-black transition">
+        <i class="fas fa-plus"></i> Birinchi mijozni qo'shish
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -212,14 +212,17 @@
                 
                 <!-- Price -->
                 <div class="mb-8 pb-8 border-b border-gray-100">
+                    {% if product.discount and product.discount > 0 %}
                     <div class="flex items-baseline gap-4">
-                        <span class="text-4xl font-light text-[#1a1a2e]">${{ "%.0f"|format(product.price) }}</span>
-                        <span class="text-xl text-gray-400 line-through">${{ "%.0f"|format(product.price * 1.2) }}</span>
-                        <span class="bg-[#f59e0b]/10 text-[#f59e0b] px-3 py-1 text-sm font-medium">-20%</span>
+                        <span class="text-4xl font-light text-[#1a1a2e]" id="display-price">{{ "{:,.0f}".format(product.get_discounted_price() * usd_rate).replace(",", " ") }} so'm</span>
+                        <span class="text-xl text-gray-400 line-through" id="display-old-price">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }} so'm</span>
+                        <span class="bg-[#f59e0b]/10 text-[#f59e0b] px-3 py-1 text-sm font-medium">-{{ product.discount }}%</span>
                     </div>
-                    <p class="text-sm text-gray-400 mt-2">
-                        ≈ {{ "{:,.0f}".format(product.price * usd_rate) }} so'm
-                    </p>
+                    {% else %}
+                    <div class="flex items-baseline gap-4">
+                        <span class="text-4xl font-light text-[#1a1a2e]" id="display-price">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }} so'm</span>
+                </div>
+                    {% endif %}
                 </div>
                 
                 <!-- Description -->
@@ -248,6 +251,12 @@
                             {% if lang == 'ru' %}Добавить в корзину{% elif lang == 'en' %}Add to Cart{% else %}Savatchaga qo'shish{% endif %}
                         </button>
                 </form>
+                
+                <!-- Savatga o'tish tugmasi (savatga qo'shgandan keyin ko'rinadi) -->
+                <a href="/cart" id="go-to-cart-btn" class="hidden w-full bg-[#f59e0b] text-white py-4 text-sm tracking-widest uppercase font-medium hover:bg-[#d97706] transition-colors flex items-center justify-center gap-3 mb-8">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                    {% if lang == 'ru' %}Перейти в корзину{% elif lang == 'en' %}Go to Cart{% else %}Savatga o'tish{% endif %}
+                </a>
                 
                 <!-- Quick Info -->
                 <div class="grid grid-cols-2 gap-4 mb-8">
@@ -413,7 +422,14 @@
                         {{ related_product.get_name(lang) }}
                     </h3>
                 </a>
-                <p class="text-lg font-light text-[#1a1a2e]">${{ "%.0f"|format(related_product.price) }}</p>
+                {% if related_product.discount and related_product.discount > 0 %}
+                <div class="flex items-baseline gap-2">
+                    <p class="text-lg font-light text-[#1a1a2e]">{{ "{:,.0f}".format(related_product.get_discounted_price() * usd_rate).replace(",", " ") }} so'm</p>
+                    <p class="text-sm text-gray-400 line-through">{{ "{:,.0f}".format(related_product.price * usd_rate).replace(",", " ") }}</p>
+                </div>
+                {% else %}
+                <p class="text-lg font-light text-[#1a1a2e]">{{ "{:,.0f}".format(related_product.price * usd_rate).replace(",", " ") }} so'm</p>
+                {% endif %}
             </article>
             {% endfor %}
         </div>
@@ -475,6 +491,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Narx hisoblash uchun o'zgaruvchilar
+const unitPrice = {{ product.get_discounted_price() * usd_rate }};
+const originalPrice = {{ product.price * usd_rate }};
+const hasDiscount = {{ 'true' if product.discount and product.discount > 0 else 'false' }};
+
+function formatPrice(num) {
+    return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+function updatePriceDisplay() {
+    const qty = parseInt(document.getElementById('quantity').value) || 1;
+    const priceEl = document.getElementById('display-price');
+    const oldPriceEl = document.getElementById('display-old-price');
+    
+    if (priceEl) {
+        priceEl.textContent = formatPrice(unitPrice * qty) + " so'm";
+    }
+    if (oldPriceEl && hasDiscount) {
+        oldPriceEl.textContent = formatPrice(originalPrice * qty) + " so'm";
+    }
+}
+
 function changeImage(thumbnail, src) {
     document.getElementById('main-image').src = src;
     document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
@@ -485,14 +523,19 @@ function changeImage(thumbnail, src) {
         const input = document.getElementById('quantity');
         if (parseInt(input.value) > 1) {
             input.value = parseInt(input.value) - 1;
+        updatePriceDisplay();
         }
     }
     
     function increaseQty() {
         const input = document.getElementById('quantity');
         input.value = parseInt(input.value) + 1;
+    updatePriceDisplay();
     }
     
+// Quantity input manual o'zgarganda
+document.getElementById('quantity').addEventListener('input', updatePriceDisplay);
+
     document.getElementById('add-to-cart-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         const btn = this.querySelector('button[type="submit"]');
@@ -516,6 +559,12 @@ function changeImage(thumbnail, src) {
                     badge.textContent = data.cart_count;
                 });
                 
+            // "Savatga o'tish" tugmasini ko'rsatish
+            const cartBtnContainer = document.getElementById('go-to-cart-btn');
+            if (cartBtnContainer) {
+                cartBtnContainer.classList.remove('hidden');
+            }
+            
             btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> {% if lang == "ru" %}Добавлено{% elif lang == "en" %}Added{% else %}Qo\'shildi{% endif %}';
             btn.classList.remove('bg-[#1a1a2e]');
                 btn.classList.add('bg-green-600');

@@ -86,6 +86,16 @@
                     <span class="text-sm">Kategoriyalar</span>
                 </a>
                 
+                <a href="/admin/brands" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_brands', 'admin_brand_add', 'admin_brand_edit'] %}active{% endif %}">
+                    <i class="fas fa-tags w-5 text-center"></i>
+                    <span class="text-sm">Brendlar</span>
+                </a>
+                
+                <a href="/admin/clients" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_clients', 'admin_client_add', 'admin_client_edit'] %}active{% endif %}">
+                    <i class="fas fa-users w-5 text-center"></i>
+                    <span class="text-sm">Mijozlar</span>
+                </a>
+                
                 <a href="/admin/orders" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint == 'admin_orders' %}active{% endif %}">
                     <i class="fas fa-shopping-bag w-5 text-center"></i>
                     <span class="text-sm">Buyurtmalar</span>
@@ -104,6 +114,11 @@
                 <a href="/admin/user-activity" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint == 'admin_user_activity' %}active{% endif %}">
                     <i class="fas fa-chart-line w-5 text-center"></i>
                     <span class="text-sm">Foydalanuvchi faolligi</span>
+                </a>
+                
+                <a href="/admin/first-visits" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint == 'admin_first_visits' %}active{% endif %}">
+                    <i class="fas fa-user-clock w-5 text-center"></i>
+                    <span class="text-sm">Tashrifchilar</span>
                 </a>
                 
                 <p class="text-xs text-gray-400 uppercase tracking-wider px-3 mb-3 mt-6">Sozlamalar</p>
@@ -177,6 +192,14 @@
                     <a href="/admin/categories" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_categories', 'admin_category_add', 'admin_category_edit'] %}active{% endif %}">
                         <i class="fas fa-folder w-5 text-center"></i>
                         <span class="text-sm">Kategoriyalar</span>
+                    </a>
+                    <a href="/admin/brands" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_brands', 'admin_brand_add', 'admin_brand_edit'] %}active{% endif %}">
+                        <i class="fas fa-tags w-5 text-center"></i>
+                        <span class="text-sm">Brendlar</span>
+                    </a>
+                    <a href="/admin/clients" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_clients', 'admin_client_add', 'admin_client_edit'] %}active{% endif %}">
+                        <i class="fas fa-users w-5 text-center"></i>
+                        <span class="text-sm">Mijozlar</span>
                     </a>
                     <a href="/admin/orders" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint == 'admin_orders' %}active{% endif %}">
                         <i class="fas fa-shopping-bag w-5 text-center"></i>

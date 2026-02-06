@@ -1,0 +1,92 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if brand %}Brendni tahrirlash{% else %}Yangi brend{% endif %} - Admin Panel{% endblock %}
+{% block page_title %}{% if brand %}Brendni tahrirlash{% else %}Yangi brend{% endif %}{% endblock %}
+{% block page_subtitle %}{% if brand %}Brend ma'lumotlarini yangilash{% else %}Yangi brend qo'shish{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+    <form method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl border border-gray-200 p-6 space-y-6">
+        <!-- Name UZ -->
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">
+                Nomi (O'zbek) <span class="text-red-500">*</span>
+            </label>
+            <input type="text" name="name_uz" value="{% if brand %}{{ brand.name_uz }}{% endif %}" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-[#232339] focus:ring-2 focus:ring-[#232339]/20 outline-none transition">
+        </div>
+        
+        <!-- Name RU -->
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">
+                Nomi (Rus)
+            </label>
+            <input type="text" name="name_ru" value="{% if brand %}{{ brand.name_ru }}{% endif %}"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-[#232339] focus:ring-2 focus:ring-[#232339]/20 outline-none transition">
+        </div>
+        
+        <!-- Name EN -->
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">
+                Nomi (Ingliz)
+            </label>
+            <input type="text" name="name_en" value="{% if brand %}{{ brand.name_en }}{% endif %}"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-[#232339] focus:ring-2 focus:ring-[#232339]/20 outline-none transition">
+        </div>
+        
+        <!-- Logo -->
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">
+                Logo <span class="text-red-500">*</span>
+            </label>
+            {% if brand and brand.logo %}
+            <div class="mb-3">
+                <img src="/uploads/{{ brand.logo }}" alt="{{ brand.name_uz }}" class="max-w-xs max-h-32 object-contain border border-gray-200 rounded-lg p-2">
+                <p class="text-xs text-gray-500 mt-1">Joriy logo</p>
+            </div>
+            {% endif %}
+            <input type="file" name="logo" accept="image/*" {% if not brand %}required{% endif %}
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-[#232339] focus:ring-2 focus:ring-[#232339]/20 outline-none transition">
+            <p class="text-xs text-gray-500 mt-1">PNG, JPG yoki SVG formatida (maksimal 2MB)</p>
+        </div>
+        
+        <!-- Website -->
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">
+                Veb-sayt (ixtiyoriy)
+            </label>
+            <input type="url" name="website" value="{% if brand %}{{ brand.website }}{% endif %}" placeholder="https://example.com"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-[#232339] focus:ring-2 focus:ring-[#232339]/20 outline-none transition">
+        </div>
+        
+        <!-- Order -->
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">
+                Tartib raqami
+            </label>
+            <input type="number" name="order" value="{% if brand %}{{ brand.order }}{% else %}0{% endif %}" min="0"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:border-[#232339] focus:ring-2 focus:ring-[#232339]/20 outline-none transition">
+            <p class="text-xs text-gray-500 mt-1">Kichik raqamlar avval ko'rinadi</p>
+        </div>
+        
+        <!-- Is Active -->
+        <div class="flex items-center gap-3">
+            <input type="checkbox" name="is_active" id="is_active" {% if not brand or brand.is_active %}checked{% endif %}
+                   class="w-5 h-5 text-[#232339] border-gray-300 rounded focus:ring-[#232339]">
+            <label for="is_active" class="text-sm font-medium text-[#232339]">
+                Faol (carousel'da ko'rinadi)
+            </label>
+        </div>
+        
+        <!-- Actions -->
+        <div class="flex gap-3 pt-4 border-t border-gray-200">
+            <button type="submit" class="flex-1 bg-[#232339] hover:bg-black text-white px-6 py-3 rounded-xl font-medium transition">
+                <i class="fas fa-save"></i> Saqlash
+            </button>
+            <a href="/admin/brands" class="px-6 py-3 border border-gray-300 text-[#232339] rounded-xl font-medium hover:bg-gray-50 transition">
+                Bekor qilish
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

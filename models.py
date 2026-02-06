@@ -73,6 +73,7 @@ class Product(db.Model):
     description_ru = db.Column(db.Text)  # Avtomatik tarjima
     description_en = db.Column(db.Text)  # Avtomatik tarjima
     price = db.Column(db.Float, nullable=False)
+    discount = db.Column(db.Integer, default=0)  # Chegirma foizi (0-100)
     size = db.Column(db.String(100))
     material = db.Column(db.String(100))
     material_uz = db.Column(db.String(100))
@@ -109,6 +110,12 @@ class Product(db.Model):
         elif lang == 'en' and self.material_en:
             return self.material_en
         return self.material_uz or self.material or ''
+
+    def get_discounted_price(self):
+        """Chegirmali narxni hisoblash"""
+        if self.discount and self.discount > 0:
+            return self.price * (1 - self.discount / 100)
+        return self.price
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -328,3 +335,62 @@ class UserActivity(db.Model):
     product = db.relationship('Product', backref='views', lazy=True)
 
 
+class Brand(db.Model):
+    """Brend logolari carousel uchun"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    name_uz = db.Column(db.String(200), nullable=False)
+    name_ru = db.Column(db.String(200))
+    name_en = db.Column(db.String(200))
+    logo = db.Column(db.String(200), nullable=False)  # Logo fayl path
+    website = db.Column(db.String(200))  # Ixtiyoriy: brend veb-sayti
+    order = db.Column(db.Integer, default=0)  # Tartib
+    is_active = db.Column(db.Boolean, default=True)  # Faol yoki yo'q
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_name(self, lang='uz'):
+        """Get brand name in specified language"""
+        if lang == 'ru' and self.name_ru:
+            return self.name_ru
+        elif lang == 'en' and self.name_en:
+            return self.name_en
+        return self.name_uz or self.name
+
+
+class Client(db.Model):
+    """Bizning mijozlar - testimonial carousel uchun"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    name_uz = db.Column(db.String(200), nullable=False)
+    name_ru = db.Column(db.String(200))
+    name_en = db.Column(db.String(200))
+    description_uz = db.Column(db.Text)
+    description_ru = db.Column(db.Text)
+    description_en = db.Column(db.Text)
+    photo = db.Column(db.String(200))  # Mijoz rasmi
+    order = db.Column(db.Integer, default=0)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def get_name(self, lang='uz'):
+        if lang == 'ru' and self.name_ru:
+            return self.name_ru
+        elif lang == 'en' and self.name_en:
+            return self.name_en
+        return self.name_uz or self.name
+
+    def get_description(self, lang='uz'):
+        if lang == 'ru' and self.description_ru:
+            return self.description_ru
+        elif lang == 'en' and self.description_en:
+            return self.description_en
+        return self.description_uz or ''
+
+
+class FirstVisit(db.Model):
+    """Birinchi tashrif malumotlari"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200))
+    phone = db.Column(db.String(20), nullable=False)
+    interest = db.Column(db.String(50))  # clinic, restaurant, home
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

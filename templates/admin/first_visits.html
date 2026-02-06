@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Birinchi tashrifchilar - Admin Panel{% endblock %}
+{% block page_title %}Birinchi tashrifchilar{% endblock %}
+{% block page_subtitle %}Saytga birinchi kirganda ma'lumot qoldirganlart{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h3 class="text-lg font-semibold text-[#232339]">Jami: {{ visits|length }} ta tashrifchi</h3>
+</div>
+
+<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-[#F5F5F5]">
+                <tr>
+                    <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
+                    <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Ism</th>
+                    <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Telefon</th>
+                    <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Qiziqish</th>
+                    <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Sana</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for visit in visits %}
+                <tr class="hover:bg-[#FAF9F6] transition">
+                    <td class="px-6 py-4 text-sm text-gray-500">{{ loop.index }}</td>
+                    <td class="px-6 py-4">
+                        <span class="font-medium text-[#232339]">{{ visit.name or 'Noma\'lum' }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="tel:{{ visit.phone }}" class="text-blue-600 hover:underline">{{ visit.phone }}</a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs px-3 py-1.5 rounded-full 
+                            {% if visit.interest == 'clinic' %}bg-blue-100 text-blue-700
+                            {% elif visit.interest == 'restaurant' %}bg-orange-100 text-orange-700
+                            {% else %}bg-green-100 text-green-700{% endif %}">
+                            {{ interest_names.get(visit.interest, visit.interest) }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        {{ visit.created_at.strftime('%d.%m.%Y %H:%M') if visit.created_at else '' }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if not visits %}
+<div class="text-center py-16">
+    <div class="w-16 h-16 bg-[#F5F5F5] rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-user-clock text-gray-400 text-2xl"></i>
+    </div>
+    <p class="text-gray-500">Hali tashrifchilar yo'q</p>
+</div>
+{% endif %}
+{% endblock %}

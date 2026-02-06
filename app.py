@@ -6,7 +6,7 @@ from sqlalchemy import or_
 from sqlalchemy.exc import OperationalError
 from config import Config
 from db import db
-from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity, MainCategory
+from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity, MainCategory, Brand, Client, FirstVisit
 from translations import TRANSLATIONS, get_translation, t
 import os
 import json
@@ -120,6 +120,7 @@ def ensure_upload_dirs():
     os.makedirs(os.path.join(upload_folder, 'portfolio'), exist_ok=True)
     os.makedirs(os.path.join(upload_folder, 'designs'), exist_ok=True)
     os.makedirs(os.path.join(upload_folder, 'icons'), exist_ok=True)
+    os.makedirs(os.path.join(upload_folder, 'brands'), exist_ok=True)
 
 # Initialize upload directories
 ensure_upload_dirs()
@@ -190,10 +191,16 @@ def track_user_activity():
         
         # Agar bir xil sahifaga qayta kirilgan bo'lsa (refresh), kuzatmaymiz
         if last_page == current_page and last_page_time:
-            time_diff = (current_time - last_page_time).total_seconds()
-            # 60 soniya ichida refresh bo'lsa, hisobga olmaymiz
-            if time_diff < 60:
-                return
+            try:
+                # Session'dan kelgan vaqt offset-aware bo'lishi mumkin
+                if hasattr(last_page_time, 'tzinfo') and last_page_time.tzinfo is not None:
+                    last_page_time = last_page_time.replace(tzinfo=None)
+                time_diff = (current_time - last_page_time).total_seconds()
+                # 60 soniya ichida refresh bo'lsa, hisobga olmaymiz
+                if time_diff < 60:
+                    return
+            except (TypeError, AttributeError):
+                pass
         
         # Yangi sahifa yoki vaqt o'tgan - kuzatamiz
         session['last_page'] = current_page
@@ -285,8 +292,10 @@ def index():
     portfolios = Portfolio.query.order_by(Portfolio.created_at.desc()).limit(3).all()
     collections = Collection.query.limit(3).all()
     articles = Article.query.filter_by(featured=True).limit(2).all()
+    brands = Brand.query.filter_by(is_active=True).order_by(Brand.order).all()  # Faol brendlar
+    clients = Client.query.filter_by(is_active=True).order_by(Client.order).all()  # Faol mijozlar
     return render_template('index.html', main_categories=main_categories, categories=categories, bestsellers=bestsellers, 
-                         reviews=reviews, portfolios=portfolios, collections=collections, articles=articles)
+                         reviews=reviews, portfolios=portfolios, collections=collections, articles=articles, brands=brands, clients=clients)
 
 @app.route('/search')
 def search():
@@ -403,7 +412,8 @@ def products():
     return render_template('products.html', products=products, categories=categories,
                          materials=[m[0] for m in materials if m[0]], 
                          sizes=[s[0] for s in sizes if s[0]],
-                         search_query=search_query)
+                         search_query=search_query,
+                         usd_rate=rate)
 
 @app.route('/main-category/<slug>')
 def main_category_detail(slug):
@@ -725,6 +735,73 @@ def custom_order():
             'success': True,
             'telegram_sent': telegram_sent,
             'message': 'Buyurtmangiz qabul qilindi! Tez orada siz bilan bog\'lanamiz.'
+        })
+    except Exception as e:
+        print(f"Xatolik: {e}")
+        return jsonify({
+            'success': False,
+            'message': 'Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.'
+        }), 500
+
+@app.route('/api/first-visit', methods=['POST'])
+def first_visit():
+    """Birinchi marta kirgan foydalanuvchi ma'lumotlarini qabul qilish"""
+    try:
+        from datetime import datetime
+        data = request.get_json()
+        
+        name = data.get('name', '')
+        phone = data.get('phone', '')
+        interest = data.get('interest', '')
+        
+        # Telefon raqam validatsiyasi
+        phone_cleaned = phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+        if not re.match(r'^(\+998|998)?[0-9]{9}$', phone_cleaned):
+            return jsonify({
+                'success': False,
+                'message': 'To\'g\'ri telefon raqam kiriting (masalan: +998901234567)'
+            }), 400
+        
+        # Interest nomlarini o'zbek tiliga o'girish
+        interest_names = {
+            'clinic': 'Klinika uchun mebel',
+            'restaurant': 'Restoran/kafe uchun mebel',
+            'home': 'Uy uchun mebel'
+        }
+        interest_display = interest_names.get(interest, interest)
+        
+        # Telegram xabari
+        telegram_message = f"""
+<b>👋 Yangi Sayt Tashrifchisi</b>
+
+<b>Ma'lumotlar:</b>
+👤 Ism: {name if name else "Ko'rsatilmagan"}
+📞 Telefon: {phone if phone else "Ko'rsatilmagan"}
+🎯 Qiziqish: {interest_display}
+
+<b>Vaqt:</b> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+        
+        # Telegram'ga yuborish
+        telegram_sent = send_telegram_message(telegram_message)
+        
+        # DB ga saqlash
+        try:
+            first_visit_record = FirstVisit(
+                name=name,
+                phone=phone,
+                interest=interest
+            )
+            db.session.add(first_visit_record)
+            db.session.commit()
+        except Exception as db_error:
+            print(f"DB saqlash xatolik: {db_error}")
+            db.session.rollback()
+        
+        return jsonify({
+            'success': True,
+            'telegram_sent': telegram_sent,
+            'message': 'Rahmat! Ma\'lumotlaringiz qabul qilindi.'
         })
     except Exception as e:
         print(f"Xatolik: {e}")
@@ -1256,6 +1333,7 @@ def admin_product_add():
         material_en = auto_translate(material_uz, 'en') if material_uz else None
         
         price = float(request.form.get('price'))
+        discount = int(request.form.get('discount', 0))
         size = request.form.get('size')
         category_id = int(request.form.get('category_id'))
         is_bestseller = request.form.get('is_bestseller') == 'on'
@@ -1326,6 +1404,7 @@ def admin_product_add():
             material_en=material_en,
             category_id=category_id,
             is_bestseller=is_bestseller,
+            discount=discount,
             warranty=warranty_uz,
             warranty_uz=warranty_uz,
             images=json.dumps(images),
@@ -1363,6 +1442,7 @@ def admin_product_edit(product_id):
         product.material_en = auto_translate(product.material_uz, 'en') if product.material_uz else None
         
         product.price = float(request.form.get('price'))
+        product.discount = int(request.form.get('discount', 0))
         product.size = request.form.get('size')
         product.category_id = int(request.form.get('category_id'))
         product.is_bestseller = request.form.get('is_bestseller') == 'on'
@@ -1561,6 +1641,200 @@ def admin_categories():
     categories = Category.query.all()
     main_categories = MainCategory.query.all()
     return render_template('admin/categories.html', categories=categories, main_categories=main_categories)
+
+@app.route('/admin/brands')
+@login_required
+def admin_brands():
+    brands = Brand.query.order_by(Brand.order).all()
+    return render_template('admin/brands.html', brands=brands)
+
+@app.route('/admin/brand/add', methods=['GET', 'POST'])
+@login_required
+def admin_brand_add():
+    if request.method == 'POST':
+        name_uz = request.form.get('name_uz')
+        name_ru = request.form.get('name_ru')
+        name_en = request.form.get('name_en')
+        website = request.form.get('website', '')
+        order = int(request.form.get('order', 0))
+        is_active = request.form.get('is_active') == 'on'
+        
+        # Logo fayl yuklash
+        logo_file = request.files.get('logo')
+        if not logo_file or not logo_file.filename:
+            flash('Logo fayl yuklash majburiy!', 'error')
+            return redirect(url_for('admin_brand_add'))
+        
+        filename = secure_filename(logo_file.filename)
+        from datetime import datetime
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"{timestamp}_{filename}"
+        filepath = os.path.join('brands', filename)
+        os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'brands'), exist_ok=True)
+        logo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+        
+        brand = Brand(
+            name=name_uz,
+            name_uz=name_uz,
+            name_ru=name_ru,
+            name_en=name_en,
+            logo=filepath,
+            website=website,
+            order=order,
+            is_active=is_active
+        )
+        db.session.add(brand)
+        db.session.commit()
+        flash('Brend qo\'shildi!', 'success')
+        return redirect(url_for('admin_brands'))
+    
+    return render_template('admin/brand_form.html', brand=None)
+
+@app.route('/admin/brand/<int:brand_id>/edit', methods=['GET', 'POST'])
+@login_required
+def admin_brand_edit(brand_id):
+    brand = Brand.query.get_or_404(brand_id)
+    
+    if request.method == 'POST':
+        brand.name_uz = request.form.get('name_uz')
+        brand.name_ru = request.form.get('name_ru')
+        brand.name_en = request.form.get('name_en')
+        brand.name = brand.name_uz
+        brand.website = request.form.get('website', '')
+        brand.order = int(request.form.get('order', 0))
+        brand.is_active = request.form.get('is_active') == 'on'
+        
+        # Logo fayl yangilash
+        logo_file = request.files.get('logo')
+        if logo_file and logo_file.filename:
+            filename = secure_filename(logo_file.filename)
+            from datetime import datetime
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"{timestamp}_{filename}"
+            filepath = os.path.join('brands', filename)
+            os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'brands'), exist_ok=True)
+            logo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+            brand.logo = filepath
+        
+        db.session.commit()
+        flash('Brend yangilandi!', 'success')
+        return redirect(url_for('admin_brands'))
+    
+    return render_template('admin/brand_form.html', brand=brand)
+
+@app.route('/admin/brand/<int:brand_id>/delete', methods=['POST'])
+@login_required
+def admin_brand_delete(brand_id):
+    brand = Brand.query.get_or_404(brand_id)
+    db.session.delete(brand)
+    db.session.commit()
+    flash('Brend o\'chirildi!', 'success')
+    return redirect(url_for('admin_brands'))
+
+# ==================== Mijozlar CRUD ====================
+@app.route('/admin/clients')
+@login_required
+def admin_clients():
+    clients = Client.query.order_by(Client.order).all()
+    return render_template('admin/clients.html', clients=clients)
+
+@app.route('/admin/client/add', methods=['GET', 'POST'])
+@login_required
+def admin_client_add():
+    if request.method == 'POST':
+        name_uz = request.form.get('name_uz')
+        name_ru = request.form.get('name_ru') or auto_translate(name_uz, 'ru')
+        name_en = request.form.get('name_en') or auto_translate(name_uz, 'en')
+        description_uz = request.form.get('description_uz')
+        description_ru = request.form.get('description_ru') or (auto_translate(description_uz, 'ru') if description_uz else '')
+        description_en = request.form.get('description_en') or (auto_translate(description_uz, 'en') if description_uz else '')
+        order = int(request.form.get('order', 0))
+        is_active = request.form.get('is_active') == 'on'
+        
+        # Rasm yuklash
+        photo_file = request.files.get('photo')
+        filepath = None
+        if photo_file and photo_file.filename:
+            filename = secure_filename(photo_file.filename)
+            from datetime import datetime
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"{timestamp}_{filename}"
+            filepath = os.path.join('clients', filename)
+            os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'clients'), exist_ok=True)
+            photo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+        
+        client = Client(
+            name=name_uz,
+            name_uz=name_uz,
+            name_ru=name_ru,
+            name_en=name_en,
+            description_uz=description_uz,
+            description_ru=description_ru,
+            description_en=description_en,
+            photo=filepath,
+            order=order,
+            is_active=is_active
+        )
+        db.session.add(client)
+        db.session.commit()
+        flash('Mijoz qo\'shildi!', 'success')
+        return redirect(url_for('admin_clients'))
+    
+    return render_template('admin/client_form.html', client=None)
+
+@app.route('/admin/client/<int:client_id>/edit', methods=['GET', 'POST'])
+@login_required
+def admin_client_edit(client_id):
+    client = Client.query.get_or_404(client_id)
+    
+    if request.method == 'POST':
+        client.name_uz = request.form.get('name_uz')
+        client.name = client.name_uz
+        client.name_ru = request.form.get('name_ru') or auto_translate(client.name_uz, 'ru')
+        client.name_en = request.form.get('name_en') or auto_translate(client.name_uz, 'en')
+        client.description_uz = request.form.get('description_uz')
+        client.description_ru = request.form.get('description_ru') or (auto_translate(client.description_uz, 'ru') if client.description_uz else '')
+        client.description_en = request.form.get('description_en') or (auto_translate(client.description_uz, 'en') if client.description_uz else '')
+        client.order = int(request.form.get('order', 0))
+        client.is_active = request.form.get('is_active') == 'on'
+        
+        photo_file = request.files.get('photo')
+        if photo_file and photo_file.filename:
+            filename = secure_filename(photo_file.filename)
+            from datetime import datetime
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"{timestamp}_{filename}"
+            filepath = os.path.join('clients', filename)
+            os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'clients'), exist_ok=True)
+            photo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+            client.photo = filepath
+        
+        db.session.commit()
+        flash('Mijoz yangilandi!', 'success')
+        return redirect(url_for('admin_clients'))
+    
+    return render_template('admin/client_form.html', client=client)
+
+@app.route('/admin/client/<int:client_id>/delete', methods=['POST'])
+@login_required
+def admin_client_delete(client_id):
+    client = Client.query.get_or_404(client_id)
+    db.session.delete(client)
+    db.session.commit()
+    flash('Mijoz o\'chirildi!', 'success')
+    return redirect(url_for('admin_clients'))
+
+# ==================== Birinchi tashrifchilar ====================
+@app.route('/admin/first-visits')
+@login_required
+def admin_first_visits():
+    visits = FirstVisit.query.order_by(FirstVisit.created_at.desc()).all()
+    interest_names = {
+        'clinic': 'Klinika uchun mebel',
+        'restaurant': 'Restoran/kafe uchun mebel',
+        'home': 'Uy uchun mebel'
+    }
+    return render_template('admin/first_visits.html', visits=visits, interest_names=interest_names)
 
 @app.route('/admin/category/add', methods=['GET', 'POST'])
 @login_required
@@ -2162,13 +2436,6 @@ def admin_user_activity():
     }
     
     return render_template('admin/user_activity.html', stats=stats)
-@login_required
-def admin_portfolio_delete(portfolio_id):
-    portfolio = Portfolio.query.get_or_404(portfolio_id)
-    db.session.delete(portfolio)
-    db.session.commit()
-    flash('Portfolio o\'chirildi!', 'success')
-    return redirect(url_for('admin_portfolios'))
 
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
@@ -2217,6 +2484,12 @@ if __name__ == '__main__':
                 db.session.execute(text('ALTER TABLE product ADD COLUMN colors TEXT'))
                 db.session.commit()
                 print("Added colors column to product table")
+            
+            # Check and add discount column to Product table
+            if 'discount' not in product_columns:
+                db.session.execute(text('ALTER TABLE product ADD COLUMN discount INTEGER DEFAULT 0'))
+                db.session.commit()
+                print("Added discount column to product table")
             
             # Check and create store table
             try:
@@ -2403,6 +2676,6 @@ if __name__ == '__main__':
         pass
     else:
         # Local development
-        port = int(os.environ.get('PORT', 5002))
+        port = int(os.environ.get('PORT', 5003))
         app.run(host='0.0.0.0', port=port, debug=True)
 
