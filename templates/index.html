@@ -759,7 +759,7 @@
                     <!-- First set of brands -->
                     {% for brand in brands %}
                     <div class="brand-item flex-shrink-0 flex items-center justify-center">
-                        <div class="brand-logo-wrapper h-16 md:h-20 lg:h-24 w-auto px-4 md:px-6 lg:px-8 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
+                        <div class="brand-logo-wrapper h-16 md:h-20 lg:h-24 w-auto px-4 md:px-6 lg:px-8 flex items-center justify-center opacity-100 transition-opacity">
                             {% if brand.website %}
                             <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
                                 <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
@@ -773,7 +773,7 @@
                     <!-- Duplicate for seamless loop -->
                     {% for brand in brands %}
                     <div class="brand-item flex-shrink-0 flex items-center justify-center">
-                        <div class="brand-logo-wrapper h-16 md:h-20 lg:h-24 w-auto px-4 md:px-6 lg:px-8 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
+                        <div class="brand-logo-wrapper h-16 md:h-20 lg:h-24 w-auto px-4 md:px-6 lg:px-8 flex items-center justify-center opacity-100 transition-opacity">
                             {% if brand.website %}
                             <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
                                 <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
@@ -787,7 +787,7 @@
                 </div>
             </div>
         </div>
-                        </div>
+    </div>
 </section>
 {% endif %}
 
@@ -813,7 +813,7 @@
                 {% if client.photo %}
                 <img src="/uploads/{{ client.photo }}" alt="{{ client.get_name(lang) }}"
                      class="absolute inset-0 w-full h-full object-cover">
-                {% else %}
+                    {% else %}
                 <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#2d2d44]"></div>
                 {% endif %}
                 
@@ -827,13 +827,13 @@
                         {{ client.get_description(lang) }}
                     </p>
                     {% endif %}
-                </div>
+                    </div>
             </div>
             {% endfor %}
         </div>
     </div>
 </section>
-{% endif %}
+                    {% endif %}
 
 <!-- Main Categories -->
 {% if main_categories %}
@@ -845,7 +845,7 @@
             <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1a1a2e] leading-tight">
                 {% if lang == 'ru' %}Мебель для каждого пространства{% elif lang == 'en' %}Furniture for every space{% else %}Har bir makon uchun mebel{% endif %}
             </h2>
-            </div>
+                        </div>
             
         <!-- Categories Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
@@ -872,8 +872,8 @@
                 </div>
             </a>
             {% endfor %}
-                    </div>
-                </div>
+        </div>
+                        </div>
 </section>
 {% endif %}
 
@@ -886,7 +886,7 @@
                     <svg class="w-5 h-5 text-[#f59e0b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                     </svg>
-                    </div>
+                        </div>
                 <p class="text-white text-sm font-medium">25 {% if lang == 'ru' %}лет гарантии{% elif lang == 'en' %}years warranty{% else %}yil kafolat{% endif %}</p>
                 </div>
             <div class="flex items-center gap-4">
@@ -936,7 +936,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
             </a>
-        </div>
+                </div>
         
         <!-- Products Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
@@ -967,8 +967,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
                             </svg>
                                     </button>
-                    </div>
-                </div>
+                        </div>
+                        </div>
                 
                 <div class="card-content">
                     <p class="text-[11px] text-[#f59e0b] tracking-widest uppercase mb-2">
@@ -987,8 +987,8 @@
                         {% else %}
                         <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }} so'm</span>
                         {% endif %}
-            </div>
                     </div>
+                </div>
             </article>
             {% endfor %}
                 </div>
@@ -997,8 +997,8 @@
         <div class="mt-10 text-center lg:hidden">
             <a href="/products" class="inline-block border-2 border-[#1a1a2e] text-[#1a1a2e] px-8 py-4 text-sm tracking-wider uppercase font-medium hover:bg-[#1a1a2e] hover:text-white transition-all">
                 {% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}
-                </a>
-            </div>
+            </a>
+        </div>
     </div>
 </section>
 {% endif %}
@@ -1036,8 +1036,8 @@
                 </div>
             </a>
             {% endfor %}
-        </div>
-    </div>
+                    </div>
+                </div>
 </section>
 {% endif %}
 
@@ -1130,11 +1130,11 @@
         <div class="text-center max-w-3xl mx-auto mb-8 lg:mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-3">
                 {% if lang == 'ru' %}Как мы работаем{% elif lang == 'en' %}How we work{% else %}Qanday ishlaymiz{% endif %}
-            </h2>
+                </h2>
             <p class="text-gray-600 text-sm lg:text-base">
                 {% if lang == 'ru' %}3 этапа: Консультация → Производство → Доставка{% elif lang == 'en' %}3 steps: Consultation → Production → Delivery{% else %}3 bosqich: Konsultatsiya → Ishlab chiqarish → Yetkazish{% endif %}
             </p>
-                        </div>
+        </div>
         
         <!-- Steps with connecting line -->
         <div class="relative max-w-4xl mx-auto">
@@ -1161,8 +1161,8 @@
                             {% if lang == 'ru' %}Бесплатная консультация, помощь в выборе стиля и дизайна мебели{% elif lang == 'en' %}Free consultation, help with choosing style and furniture design{% else %}Bepul maslahat, uslub va mebel dizaynini tanlashda yordam{% endif %}
                         </p>
                         </div>
-                    </div>
-        
+            </div>
+            
                 <!-- Step 2: Production -->
                 <div class="relative lg:mt-12">
                     <div class="bg-white p-5 lg:p-6 border border-gray-200 hover:border-[#f59e0b] transition-colors">
