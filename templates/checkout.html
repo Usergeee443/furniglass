@@ -45,7 +45,7 @@
         </div>
     </div>
 </section>
-
+        
 <section class="bg-[#f8f8f8] min-h-screen py-8 lg:py-12 reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
         <form method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
@@ -95,30 +95,30 @@
                     <h3 class="text-lg font-bold text-[#1a1a2e] mb-6 flex items-center gap-3">
                         <div class="w-8 h-8 bg-[#1a1a2e] text-white flex items-center justify-center text-sm font-bold">2</div>
                         {% if lang == 'ru' %}Способ оплаты{% elif lang == 'en' %}Payment Method{% else %}To'lov usuli{% endif %}
-                    </h3>
-                    
-                    <div class="space-y-3">
+                        </h3>
+                        
+                        <div class="space-y-3">
                         <label class="payment-option flex items-center gap-4 p-4 border-2 border-[#1a1a2e] cursor-pointer">
                             <input type="radio" name="payment" value="cash" checked class="w-5 h-5 accent-[#1a1a2e]">
-                            <div class="flex-1">
+                                <div class="flex-1">
                                 <p class="font-bold text-[#1a1a2e]">{% if lang == 'ru' %}Наличные{% elif lang == 'en' %}Cash{% else %}Naqd pul{% endif %}</p>
                                 <p class="text-sm text-gray-500">{% if lang == 'ru' %}Оплата при доставке{% elif lang == 'en' %}Pay on delivery{% else %}Yetkazib berishda to'lash{% endif %}</p>
-                            </div>
+                                </div>
                             <svg class="w-6 h-6 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                             </svg>
-                        </label>
-                        
+                            </label>
+                            
                         <label class="payment-option flex items-center gap-4 p-4 border-2 border-gray-200 cursor-pointer hover:border-gray-300 transition">
                             <input type="radio" name="payment" value="card" class="w-5 h-5 accent-[#1a1a2e]">
-                            <div class="flex-1">
+                                <div class="flex-1">
                                 <p class="font-bold text-[#1a1a2e]">{% if lang == 'ru' %}Банковская карта{% elif lang == 'en' %}Bank Card{% else %}Plastik karta{% endif %}</p>
-                                <p class="text-sm text-gray-500">Payme, Click, Uzum Bank</p>
-                            </div>
+                                    <p class="text-sm text-gray-500">Payme, Click, Uzum Bank</p>
+                                </div>
                             <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                             </svg>
-                        </label>
+                            </label>
                     </div>
                 </div>
             </div>
@@ -136,7 +136,7 @@
                                 {% if item.product.images %}
                                     {% set images = item.product.images|from_json %}
                                     {% if images %}
-                                    <img src="/uploads/{{ images[0] }}" alt="{{ item.product.get_name(lang) }}" class="w-full h-full object-contain">
+                                        <img src="/uploads/{{ images[0] }}" alt="{{ item.product.get_name(lang) }}" class="w-full h-full object-contain">
                                     {% endif %}
                                 {% endif %}
                             </div>

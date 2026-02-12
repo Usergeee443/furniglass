@@ -264,7 +264,7 @@
             </a>
             <a href="/contact" class="inline-flex items-center justify-center gap-2 border-2 border-white text-white px-8 py-4  font-medium hover:bg-white hover:text-[#232339] transition">
                 <i class="fas fa-phone"></i>
-                Bog'lanish
+                {% if lang == 'ru' %}Оставить номер{% elif lang == 'en' %}Leave number{% else %}Raqam qoldirish{% endif %}
             </a>
         </div>
     </div>

@@ -590,6 +590,28 @@ def portfolio():
     portfolios = query.order_by(Portfolio.created_at.desc()).all()
     return render_template('portfolio.html', portfolios=portfolios)
 
+
+@app.route('/api/portfolio')
+def api_portfolio():
+    """Portfolio ro'yxati JSON (filtr refresh siz ishlashi uchun)."""
+    room_type = request.args.get('room_type')
+    lang = get_locale()
+    query = Portfolio.query
+    if room_type:
+        query = query.filter_by(room_type_uz=room_type)
+    portfolios = query.order_by(Portfolio.created_at.desc()).all()
+    items = []
+    for p in portfolios:
+        items.append({
+            'id': p.id,
+            'title': p.get_title(lang),
+            'description': p.get_description(lang) or '',
+            'room_type_uz': p.room_type_uz or '',
+            'before_image': p.before_image,
+            'after_image': p.after_image,
+        })
+    return jsonify(ok=True, portfolios=items)
+
 @app.route('/about')
 def about():
     return render_template('about.html')

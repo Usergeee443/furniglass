@@ -62,6 +62,30 @@
         color: white;
     }
     
+    .portfolio-card .before-after-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        height: 100%;
+    }
+    .portfolio-card .before-after-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .portfolio-card .before-label, .portfolio-card .after-label {
+        position: absolute;
+        bottom: 8px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 2px 6px;
+        background: rgba(26,26,46,0.85);
+        color: #f59e0b;
+    }
+    .portfolio-card .before-label { left: 8px; }
+    .portfolio-card .after-label { right: 8px; }
+    
     .reveal-section {
         opacity: 0;
         transform: translateY(40px);
@@ -97,53 +121,82 @@
 <!-- Filters & Grid -->
 <section class="py-16 lg:py-24 bg-white reveal-section">
     <div class="container mx-auto px-6 lg:px-16">
-        <!-- Filters -->
-        <div class="flex flex-wrap justify-center gap-2 mb-12">
-            <a href="/portfolio" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if not request.args.get('room_type') %}active{% endif %}">
+        <!-- Filters (AJAX, sahifa yangilanmasdan) -->
+        <div class="flex flex-wrap justify-center gap-2 mb-12" id="portfolio-filters">
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if not request.args.get('room_type') %}active{% endif %}" data-room-type="">
                 {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
-            </a>
-            <a href="/portfolio?room_type=Oshxona" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}">
+            </button>
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}" data-room-type="Oshxona">
                 {% if lang == 'ru' %}Кухня{% elif lang == 'en' %}Kitchen{% else %}Oshxona{% endif %}
-            </a>
-            <a href="/portfolio?room_type=Yotoqxona" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}">
+            </button>
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}" data-room-type="Yotoqxona">
                 {% if lang == 'ru' %}Спальня{% elif lang == 'en' %}Bedroom{% else %}Yotoqxona{% endif %}
-            </a>
-            <a href="/portfolio?room_type=Zal" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Zal' %}active{% endif %}">
+            </button>
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Zal' %}active{% endif %}" data-room-type="Zal">
                 {% if lang == 'ru' %}Гостиная{% elif lang == 'en' %}Living Room{% else %}Zal{% endif %}
-            </a>
-            <a href="/portfolio?room_type=Ofis" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}">
+            </button>
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}" data-room-type="Ofis">
                 {% if lang == 'ru' %}Офис{% elif lang == 'en' %}Office{% else %}Ofis{% endif %}
-            </a>
-    </div>
+            </button>
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Kabinet' %}active{% endif %}" data-room-type="Kabinet">
+                {% if lang == 'ru' %}Кабинет{% elif lang == 'en' %}Cabinet{% else %}Kabinet{% endif %}
+            </button>
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Bolalar xonasi' %}active{% endif %}" data-room-type="Bolalar xonasi">
+                {% if lang == 'ru' %}Детская{% elif lang == 'en' %}Kids room{% else %}Bolalar xonasi{% endif %}
+            </button>
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Boshqa' %}active{% endif %}" data-room-type="Boshqa">
+                {% if lang == 'ru' %}Другое{% elif lang == 'en' %}Other{% else %}Boshqa{% endif %}
+            </button>
+        </div>
     
         <!-- Portfolio Grid -->
+        <div id="portfolio-grid-wrap">
     {% if portfolios %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolio-grid">
         {% for portfolio in portfolios %}
-            <div class="portfolio-card aspect-[4/3]">
-                {% if portfolio.after_image %}
-                <img src="/uploads/{{ portfolio.after_image }}" alt="{{ portfolio.title_uz }}" class="absolute inset-0 w-full h-full object-cover">
-                {% else %}
-                <div class="absolute inset-0 bg-gradient-to-br from-[#2a2a3e] to-[#1a1a2e]"></div>
-                {% endif %}
-                <div class="absolute inset-0 z-10 flex flex-col justify-end p-6">
-                            {% if portfolio.room_type_uz %}
-                    <span class="text-[#f59e0b] text-xs tracking-wider uppercase mb-2">{{ portfolio.room_type_uz }}</span>
+            <div class="portfolio-card group">
+                <div class="aspect-[4/3] relative overflow-hidden bg-[#1a1a2e]">
+                    {% if portfolio.before_image or portfolio.after_image %}
+                    <div class="before-after-wrap absolute inset-0">
+                        <div class="relative">
+                            {% if portfolio.before_image %}
+                            <img src="/uploads/{{ portfolio.before_image }}" alt="Oldin">
+                            <span class="before-label">{% if lang == 'ru' %}До{% elif lang == 'en' %}Before{% else %}Oldin{% endif %}</span>
+                            {% else %}
+                            <div class="w-full h-full min-h-[180px] bg-[#2a2a3e] flex items-center justify-center text-white/40 text-sm">—</div>
                             {% endif %}
-                    <h3 class="text-white text-xl font-bold">{{ portfolio.title_uz }}</h3>
-                {% if portfolio.description_uz %}
-                    <p class="text-white/50 text-sm mt-2 line-clamp-2">{{ portfolio.description_uz[:100] }}...</p>
+                        </div>
+                        <div class="relative">
+                            {% if portfolio.after_image %}
+                            <img src="/uploads/{{ portfolio.after_image }}" alt="Keyin">
+                            <span class="after-label">{% if lang == 'ru' %}После{% elif lang == 'en' %}After{% else %}Keyin{% endif %}</span>
+                            {% else %}
+                            <div class="w-full h-full min-h-[180px] bg-[#2a2a3e] flex items-center justify-center text-white/40 text-sm">—</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#2a2a3e] to-[#1a1a2e] flex items-center justify-center text-white/50 text-sm">Rasm yo'q</div>
+                    {% endif %}
+                </div>
+                <div class="p-5 bg-white border border-t-0 border-gray-200">
+                    {% if portfolio.room_type_uz %}
+                    <span class="block text-[#f59e0b] text-xs tracking-wider uppercase mb-1">{{ portfolio.room_type_uz }}</span>
+                    {% endif %}
+                    <h3 class="text-[#1a1a2e] text-lg font-bold">{{ portfolio.get_title(lang) }}</h3>
+                    {% if portfolio.get_description(lang) %}
+                    <p class="text-gray-500 text-sm mt-2 line-clamp-3">{{ portfolio.get_description(lang) }}</p>
                     {% endif %}
                 </div>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <div class="text-center py-16">
+        <div class="text-center py-16" id="portfolio-empty">
             <p class="text-gray-500">{% if lang == 'ru' %}Проекты не найдены{% elif lang == 'en' %}No projects found{% else %}Loyihalar topilmadi{% endif %}</p>
-            <a href="/portfolio" class="inline-block mt-4 text-[#f59e0b] hover:underline font-medium">{% if lang == 'ru' %}Все проекты{% elif lang == 'en' %}All projects{% else %}Barcha loyihalar{% endif %}</a>
         </div>
         {% endif %}
+        </div>
     </div>
 </section>
 
@@ -202,7 +255,7 @@
             </p>
             <div class="flex flex-wrap justify-center gap-4">
                 <a href="/contact" class="bg-[#1a1a2e] text-white px-8 py-4 text-sm tracking-wider uppercase font-medium hover:bg-[#f59e0b] transition-colors">
-                    {% if lang == 'ru' %}Связаться{% elif lang == 'en' %}Contact{% else %}Bog'lanish{% endif %}
+                    {% if lang == 'ru' %}Оставить номер{% elif lang == 'en' %}Leave number{% else %}Raqam qoldirish{% endif %}
                 </a>
                 <a href="tel:+998712000262" class="border-2 border-[#1a1a2e] px-8 py-4 text-sm tracking-wider uppercase font-medium hover:bg-[#1a1a2e] hover:text-white transition-all">
                     71 200 02 62
@@ -213,17 +266,72 @@
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const revealSections = document.querySelectorAll('.reveal-section');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('revealed');
-                observer.unobserve(entry.target);
-            }
+(function() {
+    var labels = {
+        oldin: "{% if lang == 'ru' %}До{% elif lang == 'en' %}Before{% else %}Oldin{% endif %}",
+        keyin: "{% if lang == 'ru' %}После{% elif lang == 'en' %}After{% else %}Keyin{% endif %}",
+        empty: "{% if lang == 'ru' %}Проекты не найдены{% elif lang == 'en' %}No projects found{% else %}Loyihalar topilmadi{% endif %}"
+    };
+    
+    function renderCards(portfolios) {
+        if (!portfolios || portfolios.length === 0) {
+            return '<div class="text-center py-16" id="portfolio-empty"><p class="text-gray-500">' + labels.empty + '</p></div>';
+        }
+        var html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolio-grid">';
+        portfolios.forEach(function(p) {
+            var beforeImg = p.before_image ? '<img src="/uploads/' + p.before_image + '" alt="Oldin">' : '<div class="w-full h-full min-h-[180px] bg-[#2a2a3e] flex items-center justify-center text-white/40 text-sm">—</div>';
+            var afterImg = p.after_image ? '<img src="/uploads/' + p.after_image + '" alt="Keyin">' : '<div class="w-full h-full min-h-[180px] bg-[#2a2a3e] flex items-center justify-center text-white/40 text-sm">—</div>';
+            var roomSpan = p.room_type_uz ? '<span class="block text-[#f59e0b] text-xs tracking-wider uppercase mb-1">' + escapeHtml(p.room_type_uz) + '</span>' : '';
+            var desc = p.description ? '<p class="text-gray-500 text-sm mt-2 line-clamp-3">' + escapeHtml(p.description) + '</p>' : '';
+            html += '<div class="portfolio-card group">';
+            html += '<div class="aspect-[4/3] relative overflow-hidden bg-[#1a1a2e]"><div class="before-after-wrap absolute inset-0">';
+            html += '<div class="relative">' + beforeImg + '<span class="before-label">' + labels.oldin + '</span></div>';
+            html += '<div class="relative">' + afterImg + '<span class="after-label">' + labels.keyin + '</span></div>';
+            html += '</div></div>';
+            html += '<div class="p-5 bg-white border border-t-0 border-gray-200">' + roomSpan + '<h3 class="text-[#1a1a2e] text-lg font-bold mt-1">' + escapeHtml(p.title) + '</h3>' + desc + '</div></div>';
         });
-    }, { threshold: 0.1 });
-    revealSections.forEach(section => observer.observe(section));
-});
+        html += '</div>';
+        return html;
+    }
+    function escapeHtml(s) {
+        if (!s) return '';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var wrap = document.getElementById('portfolio-grid-wrap');
+        var filters = document.getElementById('portfolio-filters');
+        if (!wrap || !filters) return;
+        
+        filters.querySelectorAll('.filter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var roomType = this.getAttribute('data-room-type') || '';
+                filters.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+                this.classList.add('active');
+                var url = '/api/portfolio' + (roomType ? '?room_type=' + encodeURIComponent(roomType) : '');
+                fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+                    if (data.ok && data.portfolios !== undefined) {
+                        wrap.innerHTML = renderCards(data.portfolios);
+                    }
+                }).catch(function() {
+                    wrap.innerHTML = '<div class="text-center py-16"><p class="text-gray-500">' + labels.empty + '</p></div>';
+                });
+            });
+        });
+        
+        var revealSections = document.querySelectorAll('.reveal-section');
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        revealSections.forEach(function(section) { observer.observe(section); });
+    });
+})();
 </script>
 {% endblock %}
