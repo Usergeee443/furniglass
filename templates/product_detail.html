@@ -167,19 +167,42 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             <!-- Gallery -->
             <div class="space-y-4">
+                {% set color_list = product.colors|from_json %}
+                {% set colors_with_images = color_list|selectattr('image')|list %}
                 <div class="main-image-container aspect-square flex items-center justify-center p-8">
-                        {% if product.images %}
+                        {% if colors_with_images %}
+                        <img id="main-image" src="/uploads/{{ colors_with_images[0].image }}" alt="{{ product.get_name(lang) }}" class="max-w-full max-h-full object-contain">
+                        {% elif product.images %}
                             {% set images = product.images|from_json %}
                             {% if images %}
                         <img id="main-image" src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" class="max-w-full max-h-full object-contain">
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
                 </div>
+                {% if colors_with_images %}
+                <div class="mt-4">
+                    <p class="text-sm font-medium text-[#1a1a2e] mb-3">
+                        {% if lang == 'ru' %}Выберите цвет{% elif lang == 'en' %}Choose color{% else %}Rangni tanlang{% endif %}
+                    </p>
+                    <div class="grid grid-cols-3 gap-3" id="color-thumbnails">
+                        {% for color in color_list %}
+                        {% if color.image %}
+                        <button type="button" class="color-thumb border-2 rounded-lg overflow-hidden transition-all hover:border-[#f59e0b] aspect-square w-full {% if loop.first %}border-[#f59e0b] ring-2 ring-[#f59e0b]{% else %}border-gray-200{% endif %} focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
+                                data-image="/uploads/{{ color.image }}"
+                                data-color-name="{{ color.name }}"
+                                onclick="selectColor(this)">
+                            <img src="/uploads/{{ color.image }}" alt="{{ color.name }}" class="w-full h-full object-cover">
+                        </button>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
                 
                 {% if product.images %}
                     {% set images = product.images|from_json %}
                     {% if images|length > 1 %}
-                    <div class="grid grid-cols-4 gap-3">
+                    <div class="grid grid-cols-4 gap-3 mt-4">
                         {% for image in images %}
                         <div class="thumbnail bg-[#f5f5f5] aspect-square p-2 {% if loop.first %}active{% endif %}"
                              onclick="changeImage(this, '/uploads/{{ image }}')">
@@ -232,8 +255,11 @@
                 </p>
                 {% endif %}
                 
-                <!-- Add to Cart Form -->
+                <!-- Add to Cart Form (tanlangan rang yuboriladi) -->
                 <form id="add-to-cart-form" action="/cart/add/{{ product.id }}" method="POST" class="mb-8">
+                    {% if colors_with_images %}
+                    <input type="hidden" name="color" id="selected-color" value="{{ colors_with_images[0].name }}">
+                    {% endif %}
                     <div class="flex items-center gap-4 mb-6">
                         <div class="flex items-center border border-gray-200">
                             <button type="button" onclick="decreaseQty()" class="w-12 h-12 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">
@@ -517,7 +543,24 @@ function changeImage(thumbnail, src) {
     document.getElementById('main-image').src = src;
     document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
     thumbnail.classList.add('active');
+}
+
+function selectColor(btn) {
+    const mainImg = document.getElementById('main-image');
+    if (mainImg && btn.dataset.image) {
+        mainImg.src = btn.dataset.image;
     }
+    var colorInput = document.getElementById('selected-color');
+    if (colorInput && btn.dataset.colorName) {
+        colorInput.value = btn.dataset.colorName;
+    }
+    document.querySelectorAll('#color-thumbnails .color-thumb').forEach(t => {
+        t.classList.remove('border-[#f59e0b]', 'ring-2', 'ring-[#f59e0b]');
+        t.classList.add('border-gray-200');
+    });
+    btn.classList.remove('border-gray-200');
+    btn.classList.add('border-[#f59e0b]', 'ring-2', 'ring-[#f59e0b]');
+}
     
     function decreaseQty() {
         const input = document.getElementById('quantity');

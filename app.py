@@ -417,27 +417,32 @@ def products():
 
 @app.route('/main-category/<slug>')
 def main_category_detail(slug):
-    """Asosiy kategoriya sahifasi - kategoriyalar, mahsulotlar, sharhlar"""
+    """Asosiy kategoriya sahifasi - kategoriyalar, mahsulotlar, sharhlar. Mahsulotlar bo'limi /products sahifasi bilan 1:1."""
     main_category = MainCategory.query.filter_by(slug=slug).first_or_404()
     lang = get_locale()
     
     # O'sha asosiy kategoriyaga tegishli kategoriyalar
     categories = Category.query.filter_by(main_category_id=main_category.id).all()
-    
-    # O'sha asosiy kategoriyaga tegishli mahsulotlar (kategoriyalar orqali)
     category_ids = [c.id for c in categories]
-    all_products = Product.query.filter(Product.category_id.in_(category_ids)).all() if category_ids else []
     
-    # O'sha asosiy kategoriyaga tegishli sharhlar
+    # Mahsulotlar: category query param bo'lsa shu kategoriyadagilar, yo'q bo'lsa barchasi
+    category_id = request.args.get('category', type=int)
+    if category_id and category_id in category_ids:
+        products = Product.query.filter_by(category_id=category_id).order_by(Product.created_at.desc()).all()
+    else:
+        products = Product.query.filter(Product.category_id.in_(category_ids)).order_by(Product.created_at.desc()).all() if category_ids else []
+    
+    all_products = products  # soni va boshqa uchun
     reviews = Review.query.filter_by(main_category_id=main_category.id).order_by(Review.created_at.desc()).all()
-    
     rate = get_exchange_rate()
     
     return render_template('main_category.html', 
                          main_category=main_category,
                          categories=categories,
+                         products=products,
                          all_products=all_products,
                          reviews=reviews,
+                         usd_rate=rate,
                          rate=rate,
                          lang=lang)
 
@@ -1081,10 +1086,23 @@ def cart():
         if product:
             subtotal = product.price * get_exchange_rate() * item['quantity']
             total += subtotal
+            color = item.get('color', '')
+            color_image = None
+            if color and product.colors:
+                try:
+                    colors_list = json.loads(product.colors)
+                    for c in colors_list:
+                        if c.get('name') == color and c.get('image'):
+                            color_image = c['image']
+                            break
+                except Exception:
+                    pass
             products.append({
                 'product': product,
                 'quantity': item['quantity'],
-                'subtotal': subtotal
+                'subtotal': subtotal,
+                'color': color,
+                'color_image': color_image
             })
     
     return render_template('cart.html', cart_items=products, total=total)
@@ -1099,7 +1117,7 @@ def cart_add(product_id):
     
     # Check if product with same color already in cart
     for item in cart:
-        if item['product_id'] == product_id and item.get('color') == selected_color:
+        if item['product_id'] == product_id and (item.get('color') or '') == (selected_color or ''):
             item['quantity'] += quantity
             session.modified = True
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -1125,10 +1143,11 @@ def cart_add(product_id):
 @app.route('/cart/update/<int:product_id>', methods=['POST'])
 def cart_update(product_id):
     quantity = int(request.form.get('quantity', 1))
+    color = request.form.get('color', '')
     cart = get_cart()
     
     for item in cart:
-        if item['product_id'] == product_id:
+        if item['product_id'] == product_id and (item.get('color') or '') == (color or ''):
             if quantity > 0:
                 item['quantity'] = quantity
             else:
@@ -1145,8 +1164,9 @@ def cart_update(product_id):
 
 @app.route('/cart/remove/<int:product_id>', methods=['POST'])
 def cart_remove(product_id):
+    color = request.form.get('color', '')
     cart = get_cart()
-    cart = [item for item in cart if item['product_id'] != product_id]
+    cart = [item for item in cart if not (item['product_id'] == product_id and (item.get('color') or '') == (color or ''))]
     session['cart'] = cart
     session.modified = True
     
@@ -1190,7 +1210,8 @@ def checkout():
         for item in cart_items:
             product = Product.query.get(item['product_id'])
             if product:
-                products_list.append(f"{product.name_uz} x{item['quantity']}")
+                color_part = f" ({item.get('color')})" if item.get('color') else ""
+                products_list.append(f"{product.name_uz}{color_part} x{item['quantity']}")
                 total += product.price * rate * item['quantity']
         
         # Telegram xabari
@@ -1249,10 +1270,23 @@ def checkout():
         if product:
             subtotal = product.price * rate * item['quantity']
             total += subtotal
+            color = item.get('color', '')
+            color_image = None
+            if color and product.colors:
+                try:
+                    colors_list = json.loads(product.colors)
+                    for c in colors_list:
+                        if c.get('name') == color and c.get('image'):
+                            color_image = c['image']
+                            break
+                except Exception:
+                    pass
             products.append({
                 'product': product,
                 'quantity': item['quantity'],
-                'subtotal': subtotal
+                'subtotal': subtotal,
+                'color': color,
+                'color_image': color_image
             })
     
     return render_template('checkout.html', cart_items=products, total=total)
@@ -1361,14 +1395,24 @@ def admin_product_add():
         is_bestseller = request.form.get('is_bestseller') == 'on'
         colors = request.form.get('colors', '').strip()
         
-        # Validate colors JSON
+        # Validate colors JSON va har bir rang uchun rasm yuklash (IKEA uslubi)
         colors_json = None
         if colors:
             try:
                 colors_data = json.loads(colors)
                 if isinstance(colors_data, list):
-                    colors_json = colors
-            except:
+                    for i in range(len(colors_data)):
+                        if 'color_image_' + str(i) in request.files:
+                            f = request.files.get('color_image_' + str(i))
+                            if f and f.filename and allowed_file(f.filename):
+                                import uuid
+                                filename = secure_filename(f.filename)
+                                unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
+                                filepath = os.path.join('products', unique_filename)
+                                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                                colors_data[i]['image'] = filepath
+                    colors_json = json.dumps(colors_data)
+            except Exception as e:
                 flash('Ranglar formati noto\'g\'ri! JSON formatida kiriting.', 'error')
         
         images = []
@@ -1438,7 +1482,8 @@ def admin_product_add():
         return redirect(url_for('admin_products'))
     
     categories = Category.query.all()
-    return render_template('admin/product_form.html', categories=categories)
+    main_categories = MainCategory.query.order_by(MainCategory.order).all()
+    return render_template('admin/product_form.html', categories=categories, main_categories=main_categories)
 
 @app.route('/admin/product/<int:product_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -1469,15 +1514,25 @@ def admin_product_edit(product_id):
         product.category_id = int(request.form.get('category_id'))
         product.is_bestseller = request.form.get('is_bestseller') == 'on'
         
-        # Colors
+        # Colors va har bir rang uchun yangi rasm (IKEA uslubi)
         colors = request.form.get('colors', '').strip()
-        colors_json = None
+        colors_json = '[]'
         if colors:
             try:
                 colors_data = json.loads(colors)
                 if isinstance(colors_data, list):
-                    colors_json = colors
-            except:
+                    for i in range(len(colors_data)):
+                        if 'color_image_' + str(i) in request.files:
+                            f = request.files.get('color_image_' + str(i))
+                            if f and f.filename and allowed_file(f.filename):
+                                import uuid
+                                filename = secure_filename(f.filename)
+                                unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
+                                filepath = os.path.join('products', unique_filename)
+                                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                                colors_data[i]['image'] = filepath
+                    colors_json = json.dumps(colors_data)
+            except Exception as e:
                 flash('Ranglar formati noto\'g\'ri! JSON formatida kiriting.', 'error')
         product.colors = colors_json
         
@@ -1532,7 +1587,8 @@ def admin_product_edit(product_id):
         return redirect(url_for('admin_products'))
     
     categories = Category.query.all()
-    return render_template('admin/product_form.html', product=product, categories=categories)
+    main_categories = MainCategory.query.order_by(MainCategory.order).all()
+    return render_template('admin/product_form.html', product=product, categories=categories, main_categories=main_categories)
 
 @app.route('/admin/product/<int:product_id>/delete', methods=['POST'])
 @login_required

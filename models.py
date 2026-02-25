@@ -355,8 +355,6 @@ class Brand(db.Model):
         elif lang == 'en' and self.name_en:
             return self.name_en
         return self.name_uz or self.name
-
-
 class Client(db.Model):
     """Bizning mijozlar - testimonial carousel uchun"""
     id = db.Column(db.Integer, primary_key=True)

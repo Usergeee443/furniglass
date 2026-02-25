@@ -133,7 +133,9 @@
                         {% for item in cart_items %}
                         <div class="flex gap-3">
                             <div class="w-16 h-16 bg-[#f8f8f8] overflow-hidden flex-shrink-0">
-                                {% if item.product.images %}
+                                {% if item.color_image %}
+                                <img src="/uploads/{{ item.color_image }}" alt="{{ item.product.get_name(lang) }}" class="w-full h-full object-contain">
+                                {% elif item.product.images %}
                                     {% set images = item.product.images|from_json %}
                                     {% if images %}
                                         <img src="/uploads/{{ images[0] }}" alt="{{ item.product.get_name(lang) }}" class="w-full h-full object-contain">
@@ -141,7 +143,7 @@
                                 {% endif %}
                             </div>
                             <div class="flex-1">
-                                <p class="text-sm font-bold text-[#1a1a2e] line-clamp-1">{{ item.product.get_name(lang) }}</p>
+                                <p class="text-sm font-bold text-[#1a1a2e] line-clamp-1">{{ item.product.get_name(lang) }}{% if item.color %} ({{ item.color }}){% endif %}</p>
                                 <p class="text-xs text-gray-400">{{ item.quantity }} {% if lang == 'ru' %}шт{% elif lang == 'en' %}pcs{% else %}dona{% endif %}</p>
                                 <p class="text-sm font-bold text-[#1a1a2e]">{{ "{:,.0f}".format(item.subtotal) }} {{ T.common.sum[lang] }}</p>
                             </div>

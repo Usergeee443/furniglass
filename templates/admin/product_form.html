@@ -112,18 +112,39 @@
                         placeholder="Masalan: Shkaf MODERN">
                 </div>
                 
+                {% if main_categories is defined and main_categories %}
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Asosiy kategoriya *</label>
+                    <select id="main_category_id" required class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                        <option value="">Tanlang</option>
+                        {% for mc in main_categories %}
+                        <option value="{{ mc.id }}" {% if product and product.category and product.category.main_category_id == mc.id %}selected{% endif %}>{{ mc.name_uz }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Avval 3 ta asosiy kategoriyadan birini tanlang</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Kategoriya *</label>
+                    <select name="category_id" id="category_id" required class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                        <option value="">Avval asosiy kategoriyani tanlang</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.id }}" data-main="{{ cat.main_category_id or '' }}" {% if product and product.category_id == cat.id %}selected{% endif %}>{{ cat.name_uz }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Asosiy kategoriyadagi qaysi kategoriyaga tegishli</p>
+                </div>
+                {% else %}
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Kategoriya *</label>
+                    <select name="category_id" id="category_id" required class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
+                        <option value="">Tanlang</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if product and product.category_id == cat.id %}selected{% endif %}>{{ cat.name_uz }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-[#232339] mb-2">Kategoriya *</label>
-                        <select name="category_id" required class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
-                            <option value="">Tanlang</option>
-                            {% for cat in categories %}
-                                <option value="{{ cat.id }}" {% if product and product.category_id == cat.id %}selected{% endif %}>
-                                    {{ cat.name_uz }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
                     <div>
                         <label class="block text-sm font-medium text-[#232339] mb-2">Narx (USD) *</label>
                         <div class="relative">
@@ -173,11 +194,12 @@
                         placeholder="Masalan: 2 yil">
                 </div>
                 
-                <!-- Colors -->
+                <!-- Colors (har bir rang uchun alohida rasm, IKEA uslubi) -->
                 <div>
                     <label class="block text-sm font-medium text-[#232339] mb-2">
                         Ranglar
                     </label>
+                    <p class="text-xs text-gray-500 mb-2">Har bir rang uchun rasm yuklang — mahsulot sahifasida rang tanlaganda shu rasm ko'rsatiladi.</p>
                     <div id="colors-container" class="space-y-3 mb-3">
                         <!-- Colors will be added here dynamically -->
                     </div>
@@ -295,7 +317,7 @@ function initColors() {
     try {
         const colors = JSON.parse(colorsInput.value || '[]');
         colors.forEach((color, index) => {
-            addColorField(color.name, color.hex, index);
+            addColorField(color.name, color.hex || '#1a1a2e', index, color.image || '');
         });
     } catch (e) {
         console.error('Error parsing colors:', e);
@@ -307,68 +329,113 @@ function initColors() {
     }
 }
 
-function addColorField(name = '', hex = '#1a1a2e', index = null) {
+function addColorField(name = '', hex = '#1a1a2e', index = null, imagePath = '') {
     const container = document.getElementById('colors-container');
     const fieldIndex = index !== null ? index : colorFields.length;
     
     const colorField = document.createElement('div');
-    colorField.className = 'flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200';
+    colorField.className = 'color-row flex flex-wrap items-center gap-3 p-3 bg-white rounded-lg border border-gray-200';
     colorField.dataset.index = fieldIndex;
     
+    const imgPreview = imagePath 
+        ? `<div class="w-14 h-14 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0"><img src="/uploads/${imagePath}" alt="" class="w-full h-full object-cover"></div>` 
+        : '';
     colorField.innerHTML = `
         <input type="color" value="${hex}" onchange="updateColor(${fieldIndex})" 
-               class="w-12 h-12 rounded-lg border border-gray-300 cursor-pointer">
+               class="w-12 h-12 rounded-lg border border-gray-300 cursor-pointer flex-shrink-0">
         <input type="text" placeholder="Rang nomi (masalan: Qora)" value="${name}" 
                onchange="updateColor(${fieldIndex})" 
-               class="flex-1 bg-[#F5F5F5] border-0 rounded-lg px-3 py-2 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none">
+               class="flex-1 min-w-[120px] bg-[#F5F5F5] border-0 rounded-lg px-3 py-2 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none">
+        <input type="hidden" class="color-image-path" name="color_image_path_${fieldIndex}" value="${imagePath || ''}">
+        <div class="color-image-cell flex items-center gap-2">
+            ${imgPreview}
+            <label class="cursor-pointer flex-shrink-0">
+                <span class="text-xs bg-[#232339] text-white px-3 py-2 rounded-lg hover:bg-[#c9a96e] transition">Rasm</span>
+                <input type="file" name="color_image_${fieldIndex}" accept="image/*" class="hidden color-image-input" data-index="${fieldIndex}" onchange="previewColorImage(this)">
+            </label>
+        </div>
         <button type="button" onclick="removeColorField(${fieldIndex})" 
-                class="text-red-500 hover:text-red-700 transition">
+                class="text-red-500 hover:text-red-700 transition flex-shrink-0">
             <i class="fas fa-trash"></i>
         </button>
     `;
     
     container.appendChild(colorField);
-    colorFields.push({name: name, hex: hex});
+    colorFields.push({name: name, hex: hex, image: imagePath});
     updateColorsJSON();
 }
 
+function previewColorImage(input) {
+    const index = parseInt(input.dataset.index, 10);
+    const row = input.closest('.color-row');
+    const cell = row.querySelector('.color-image-cell');
+    const existingImg = cell.querySelector('.w-14.h-14 img');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (existingImg) {
+                existingImg.src = e.target.result;
+            } else {
+                const div = document.createElement('div');
+                div.className = 'w-14 h-14 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0';
+                div.innerHTML = '<img src="' + e.target.result + '" alt="" class="w-full h-full object-cover">';
+                cell.insertBefore(div, cell.querySelector('label'));
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 function updateColor(index) {
-    const field = document.querySelector(`[data-index="${index}"]`);
+    const field = document.querySelector(`.color-row[data-index="${index}"]`);
     if (!field) return;
     
     const nameInput = field.querySelector('input[type="text"]');
     const colorInput = field.querySelector('input[type="color"]');
+    const pathInput = field.querySelector('.color-image-path');
     
-    colorFields[index] = {
-        name: nameInput.value,
-        hex: colorInput.value
-    };
+    if (colorFields[index]) colorFields[index].name = nameInput.value;
+    if (colorFields[index]) colorFields[index].hex = colorInput.value;
     updateColorsJSON();
 }
 
 function removeColorField(index) {
-    const field = document.querySelector(`[data-index="${index}"]`);
+    const field = document.querySelector(`.color-row[data-index="${index}"]`);
     if (field) {
         field.remove();
         colorFields.splice(index, 1);
         
-        // Re-index all fields
-        const fields = document.querySelectorAll('#colors-container > div');
+        // Re-index all rows and file input names
+        const fields = document.querySelectorAll('#colors-container > .color-row');
         fields.forEach((f, i) => {
             f.dataset.index = i;
-            const inputs = f.querySelectorAll('input');
-            inputs[0].setAttribute('onchange', `updateColor(${i})`);
-            inputs[1].setAttribute('onchange', `updateColor(${i})`);
-            inputs[2].setAttribute('onclick', `removeColorField(${i})`);
+            const colorInput = f.querySelector('input[type="color"]');
+            const textInput = f.querySelector('input[type="text"]');
+            const pathInput = f.querySelector('.color-image-path');
+            const fileInput = f.querySelector('.color-image-input');
+            if (colorInput) colorInput.setAttribute('onchange', `updateColor(${i})`);
+            if (textInput) textInput.setAttribute('onchange', `updateColor(${i})`);
+            f.querySelector('button')?.setAttribute('onclick', `removeColorField(${i})`);
+            if (pathInput) pathInput.name = 'color_image_path_' + i;
+            if (fileInput) { fileInput.name = 'color_image_' + i; fileInput.dataset.index = i; }
         });
         
+        colorFields = colorFields.slice(0, fields.length);
         updateColorsJSON();
     }
 }
 
 function updateColorsJSON() {
     const colorsInput = document.getElementById('colors-input');
-    const colors = colorFields.filter(c => c.name.trim() !== '');
+    const rows = document.querySelectorAll('#colors-container > .color-row');
+    const colors = [];
+    rows.forEach((row, i) => {
+        const name = row.querySelector('input[type="text"]')?.value?.trim() || '';
+        const hex = row.querySelector('input[type="color"]')?.value || '#1a1a2e';
+        const pathInput = row.querySelector('.color-image-path');
+        const image = pathInput ? pathInput.value : (colorFields[i]?.image || '');
+        if (name) colors.push({ name, hex, image: image || undefined });
+    });
     colorsInput.value = JSON.stringify(colors);
 }
 
@@ -504,9 +571,34 @@ document.getElementById('product-form')?.addEventListener('submit', function(e) 
     showLoading();
 });
 
-// Sayt yuklanganda ranglarni yuklash
+// Asosiy kategoriya tanlanganda kategoriyalarni filtrlash
+function filterCategoriesByMain() {
+    const mainSelect = document.getElementById('main_category_id');
+    const catSelect = document.getElementById('category_id');
+    if (!mainSelect || !catSelect) return;
+    const mainId = mainSelect.value;
+    const options = catSelect.querySelectorAll('option[data-main]');
+    const firstOpt = catSelect.querySelector('option[value=""]');
+    if (firstOpt) firstOpt.textContent = mainId ? 'Kategoriyani tanlang' : 'Avval asosiy kategoriyani tanlang';
+    options.forEach(function(opt) {
+        const show = mainId && opt.getAttribute('data-main') === mainId;
+        opt.style.display = show ? '' : 'none';
+        opt.disabled = !show;
+    });
+    if (!mainId) catSelect.value = '';
+    else if (catSelect.value) {
+        const selected = catSelect.querySelector('option:checked');
+        if (selected && selected.getAttribute('data-main') !== mainId) catSelect.value = '';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     initColors();
+    var mainCat = document.getElementById('main_category_id');
+    if (mainCat) {
+        filterCategoriesByMain();
+        mainCat.addEventListener('change', filterCategoriesByMain);
+    }
 });
 </script>
 {% endblock %}

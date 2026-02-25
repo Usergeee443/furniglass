@@ -60,54 +60,88 @@
     .delay-2 { animation-delay: 0.2s; }
     .delay-3 { animation-delay: 0.3s; }
     
-    /* Product card */
+    /* Product card — Mahsulotlar sahifasi bilan 1:1 */
     .product-card {
         position: relative;
-        overflow: hidden;
         background: #fff;
-        transition: all 0.3s ease;
-        border: 1px solid #eee;
+        overflow: hidden;
     }
-    
-    .product-card:hover {
-        border-color: var(--accent);
-        box-shadow: 0 8px 30px rgba(26,26,46,0.1);
+    .product-card .card-image {
+        position: relative;
+        overflow: hidden;
     }
-    
-    .product-card:hover .product-img {
-        transform: scale(1.08);
-    }
-    
-    .product-card:hover .product-overlay {
-        opacity: 1;
-    }
-    
-    .product-img {
-        transition: transform 0.6s ease;
-    }
-    
-    .product-overlay {
+    .product-card .card-image::before {
+        content: '';
         position: absolute;
         inset: 0;
-        background: rgba(26,26,46,0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background: linear-gradient(to top, rgba(26,26,46,0.6) 0%, transparent 50%);
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.4s ease;
+        z-index: 1;
     }
-    
-    .product-badge {
+    .product-card:hover .card-image::before {
+        opacity: 1;
+    }
+    .product-card .card-image img {
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .product-card:hover .card-image img {
+        transform: scale(1.08);
+    }
+    .product-card .card-actions {
         position: absolute;
-        top: 12px;
-        left: 12px;
-        background: var(--accent);
-        color: white;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        padding: 4px 10px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        display: flex;
+        gap: 8px;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: all 0.4s ease;
+        z-index: 2;
+    }
+    .product-card:hover .card-actions {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    .product-card .card-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 2;
+    }
+    .product-card .card-content {
+        padding: 20px;
+        background: #fff;
+        position: relative;
+    }
+    .product-card .card-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 20px;
+        right: 20px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+    }
+    .category-tab {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    .category-tab::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #f59e0b;
+        transition: width 0.3s ease;
+    }
+    .category-tab.active::after,
+    .category-tab:hover::after {
+        width: 100%;
     }
     
     /* Category card */
@@ -240,74 +274,100 @@
 {% endif %}
 
 
-<!-- Products Section -->
-<section class="py-12 lg:py-16 bg-[#f8f8f8] reveal-section" id="products-section">
+<!-- Products Section — Mahsulotlar sahifasi bilan 1:1 -->
+<section class="py-12 lg:py-20 bg-white reveal-section" id="products-section">
     <div class="container mx-auto px-6 lg:px-16">
-        <!-- Header with Search & Filters -->
-        <div class="mb-10">
-            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
-                <div>
-                    <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-2">{% if lang == 'ru' %}Коллекция{% elif lang == 'en' %}Collection{% else %}Kolleksiya{% endif %}</p>
-                    <h2 class="text-2xl md:text-3xl font-bold text-[#1a1a2e]">
-                        {% if lang == 'ru' %}Наши товары{% elif lang == 'en' %}Our Products{% else %}Bizning mahsulotlar{% endif %}
-                    </h2>
-                </div>
-                
-                <div class="relative w-full lg:w-80">
-                    <input type="text" id="product-search" 
-                           placeholder="{% if lang == 'ru' %}Поиск...{% elif lang == 'en' %}Search...{% else %}Qidirish...{% endif %}"
-                           class="w-full px-4 py-3 pr-12 border border-gray-200 bg-white focus:border-[#f59e0b] outline-none text-sm transition">
-                    <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </div>
-            </div>
-            
-            <!-- Filters Row -->
-            <div class="flex flex-wrap items-center gap-4 pb-6 border-b border-gray-200">
-                <select id="category-filter" class="px-4 py-2 border border-gray-200 bg-white focus:border-[#f59e0b] outline-none text-sm font-medium">
-                    <option value="">{% if lang == 'ru' %}Все категории{% elif lang == 'en' %}All categories{% else %}Barcha kategoriyalar{% endif %}</option>
-                    {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.get_name(lang) }}</option>
-                    {% endfor %}
-                </select>
-                
-                <div class="flex items-center gap-2">
-                    <input type="number" id="min-price" placeholder="{% if lang == 'ru' %}От{% elif lang == 'en' %}From{% else %}Dan{% endif %}"
-                           class="w-24 px-3 py-2 border border-gray-200 bg-white focus:border-[#f59e0b] outline-none text-sm">
-                    <span class="text-gray-400">—</span>
-                    <input type="number" id="max-price" placeholder="{% if lang == 'ru' %}До{% elif lang == 'en' %}To{% else %}Gacha{% endif %}"
-                           class="w-24 px-3 py-2 border border-gray-200 bg-white focus:border-[#f59e0b] outline-none text-sm">
-                </div>
-                
-                <select id="sort-filter" class="px-4 py-2 border border-gray-200 bg-white focus:border-[#f59e0b] outline-none text-sm font-medium">
-                    <option value="default">{% if lang == 'ru' %}По умолчанию{% elif lang == 'en' %}Default{% else %}Standart{% endif %}</option>
-                    <option value="price_asc">{% if lang == 'ru' %}Цена ↑{% elif lang == 'en' %}Price ↑{% else %}Narx ↑{% endif %}</option>
-                    <option value="price_desc">{% if lang == 'ru' %}Цена ↓{% elif lang == 'en' %}Price ↓{% else %}Narx ↓{% endif %}</option>
-                    <option value="name_asc">{% if lang == 'ru' %}Название{% elif lang == 'en' %}Name{% else %}Nomi{% endif %}</option>
-                </select>
-                
-                <button id="clear-filters" class="text-sm text-gray-500 hover:text-[#f59e0b] transition font-medium">
-                    {% if lang == 'ru' %}Сбросить{% elif lang == 'en' %}Clear{% else %}Tozalash{% endif %}
-                </button>
-                
-                <span class="ml-auto text-sm text-gray-500 font-medium">
-                    <span id="products-count">0</span> {% if lang == 'ru' %}товаров{% elif lang == 'en' %}products{% else %}mahsulot{% endif %}
-                </span>
+        <!-- Category Tabs (Mahsulotlar sahifasidagi kabi) -->
+        <div class="border-b border-gray-100 mb-12 overflow-x-auto">
+            <div class="flex gap-8 min-w-max justify-center">
+                <a href="/main-category/{{ main_category.slug }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if not request.args.get('category') %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
+                    {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
+                </a>
+                {% for cat in categories %}
+                <a href="/main-category/{{ main_category.slug }}?category={{ cat.id }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if request.args.get('category', '')|string == cat.id|string %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
+                    {{ cat.get_name(lang) }}
+                </a>
+                {% endfor %}
             </div>
         </div>
         
-        <!-- Products Grid -->
-        <div id="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
+        <!-- Products Grid (Mahsulotlar sahifasidagi kartalar bilan bir xil) -->
+        {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {% for product in products %}
+            <article class="product-card group">
+                <div class="card-image aspect-[4/5] bg-[#f5f5f5]">
+                    {% if product.images %}
+                        {% set images = product.images|from_json %}
+                        {% if images %}
+                    <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" class="w-full h-full object-cover">
+                        {% endif %}
+                    {% endif %}
+                    {% if product.is_bestseller %}
+                    <div class="card-badge">
+                        <span class="inline-block bg-[#f59e0b] text-white text-[10px] px-3 py-1.5 font-medium tracking-widest uppercase">
+                            {% if lang == 'ru' %}Хит{% elif lang == 'en' %}Best{% else %}Top{% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="card-actions">
+                        <a href="/product/{{ product.id }}" class="flex-1 bg-white text-[#1a1a2e] text-center py-3 text-xs font-medium tracking-wider uppercase hover:bg-[#f59e0b] hover:text-white transition">
+                            {% if lang == 'ru' %}Подробнее{% elif lang == 'en' %}Details{% else %}Batafsil{% endif %}
+                        </a>
+                        <button class="add-to-cart-btn w-12 bg-[#1a1a2e] text-white flex items-center justify-center hover:bg-[#f59e0b] transition" data-product-id="{{ product.id }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <p class="text-[11px] text-[#f59e0b] tracking-widest uppercase mb-2">
+                        {{ product.category.get_name(lang) if product.category else 'Mebel' }}
+                    </p>
+                    <a href="/product/{{ product.id }}" class="block">
+                        <h3 class="text-[#1a1a2e] font-medium mb-3 line-clamp-1 group-hover:text-[#f59e0b] transition-colors">
+                            {{ product.get_name(lang) }}
+                        </h3>
+                    </a>
+                    <div class="flex items-baseline gap-2">
+                        {% if product.discount and product.discount > 0 %}
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.get_discounted_price() * usd_rate).replace(",", " ") }} so'm</span>
+                        <span class="text-sm text-gray-400 line-through">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }}</span>
+                        <span class="bg-[#f59e0b]/10 text-[#f59e0b] px-2 py-0.5 text-xs font-medium">-{{ product.discount }}%</span>
+                        {% else %}
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }} so'm</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
         </div>
-        
-        <div id="empty-state" class="hidden text-center py-16">
-            <p class="text-gray-500 font-medium">{% if lang == 'ru' %}Товары не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulotlar topilmadi{% endif %}</p>
+        {% if products|length >= 12 %}
+        <div class="text-center mt-16">
+            <a href="/products" class="inline-flex items-center gap-3 border border-[#1a1a2e] text-[#1a1a2e] px-12 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#1a1a2e] hover:text-white transition-all">
+                {% if lang == 'ru' %}Загрузить ещё{% elif lang == 'en' %}Load more{% else %}Ko'proq ko'rish{% endif %}
+            </a>
         </div>
-        
-        <div id="loading-state" class="hidden text-center py-16">
-            <div class="inline-block w-8 h-8 border-2 border-[#f59e0b] border-t-transparent rounded-full animate-spin"></div>
+        {% endif %}
+        {% else %}
+        <div class="py-24 text-center max-w-md mx-auto">
+            <div class="w-24 h-24 border border-gray-200 flex items-center justify-center mx-auto mb-8">
+                <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-light text-[#1a1a2e] mb-3">
+                {% if lang == 'ru' %}Товары не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulot topilmadi{% endif %}
+            </h3>
+            <p class="text-gray-400 mb-8">
+                {% if lang == 'ru' %}В этой категории пока нет товаров{% elif lang == 'en' %}No products in this category{% else %}Bu kategoriyada mahsulot yo'q{% endif %}
+            </p>
+            <a href="/products" class="inline-flex items-center gap-2 border border-[#1a1a2e] text-[#1a1a2e] px-8 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#1a1a2e] hover:text-white transition-all">
+                {% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}
+            </a>
         </div>
+        {% endif %}
     </div>
 </section>
 
@@ -368,44 +428,12 @@
     </div>
 </section>
 
-<!-- Product Modal -->
-<div id="product-modal" class="fixed inset-0 bg-[#1a1a2e]/90 backdrop-blur-sm z-50 hidden overflow-y-auto">
-    <div class="min-h-screen px-4 py-8 flex items-center justify-center">
-        <div class="bg-white max-w-5xl w-full relative shadow-2xl">
-            <button id="close-modal" class="absolute top-4 right-4 z-10 w-12 h-12 flex items-center justify-center bg-[#1a1a2e] text-white hover:bg-[#f59e0b] transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-            <div id="modal-content" class="p-6 md:p-10"></div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const mainCategorySlug = '{{ main_category.slug }}';
-    const lang = '{{ lang }}';
-    
-    const searchInput = document.getElementById('product-search');
-    const categoryFilter = document.getElementById('category-filter');
-    const minPriceInput = document.getElementById('min-price');
-    const maxPriceInput = document.getElementById('max-price');
-    const sortFilter = document.getElementById('sort-filter');
-    const clearFiltersBtn = document.getElementById('clear-filters');
-    const productsContainer = document.getElementById('products-container');
-    const emptyState = document.getElementById('empty-state');
-    const loadingState = document.getElementById('loading-state');
-    const resultsCount = document.getElementById('products-count');
-    const productModal = document.getElementById('product-modal');
-    const closeModalBtn = document.getElementById('close-modal');
-    const modalContent = document.getElementById('modal-content');
-    
-    let debounceTimer;
-    
-    // Reveal sections
+    // Reveal sections (Mahsulotlar sahifasidagi kabi)
     const revealSections = document.querySelectorAll('.reveal-section');
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -416,21 +444,42 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, { threshold: 0.1 });
     revealSections.forEach(section => revealObserver.observe(section));
-    
-    loadProducts();
-    
-    searchInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(loadProducts, 300); });
-    categoryFilter.addEventListener('change', loadProducts);
-    minPriceInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(loadProducts, 500); });
-    maxPriceInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(loadProducts, 500); });
-    sortFilter.addEventListener('change', loadProducts);
-    clearFiltersBtn.addEventListener('click', clearFilters);
-    closeModalBtn.addEventListener('click', closeModal);
-    productModal.addEventListener('click', e => { if (e.target === productModal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-    
-    function loadProducts() {
-        loadingState.classList.remove('hidden');
+
+    // Add to cart (Mahsulotlar sahifasidagi kabi)
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const productId = this.dataset.productId;
+            const button = this;
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="32" stroke-dashoffset="32"/></svg>';
+            try {
+                const formData = new FormData();
+                formData.append('quantity', 1);
+                const response = await fetch('/cart/add/' + productId, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: formData });
+                const data = await response.json();
+                if (data.success) {
+                    document.querySelectorAll('.cart-badge').forEach(b => { b.textContent = data.cart_count; });
+                    button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                    button.classList.add('!bg-green-500');
+                    showToastWithCart(data.message);
+                    setTimeout(() => { button.innerHTML = originalHTML; button.classList.remove('!bg-green-500'); }, 2000);
+                }
+            } catch (err) { button.innerHTML = originalHTML; }
+        });
+    });
+    function showToastWithCart(message) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-[#1a1a2e] text-white px-6 py-4 z-50 flex items-center gap-4 shadow-2xl rounded-lg';
+        toast.innerHTML = '<div class="flex items-center gap-3"><svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="font-medium">' + message + '</span></div><a href="/cart" class="bg-[#f59e0b] text-white px-4 py-2 text-xs font-medium tracking-wider uppercase hover:bg-[#d97706] transition-colors whitespace-nowrap rounded">Savatga o\'tish</a>';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
+
+    if (false) {
+    function _removed_loadProducts() {
+        typeof loadingState !== 'undefined' && loadingState.classList.remove('hidden');
         emptyState.classList.add('hidden');
         productsContainer.innerHTML = '';
         
@@ -523,28 +572,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `;
-        productModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
     };
-    
-    window.changeModalImage = function(thumb, imageUrl) {
-        document.getElementById('modal-main-image').src = imageUrl;
-        document.querySelectorAll('#modal-content .cursor-pointer').forEach(t => t.classList.remove('border-[#f59e0b]'));
-        thumb.classList.add('border-[#f59e0b]');
-    };
-    
-    function closeModal() {
-        productModal.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-    
-    function clearFilters() {
-        searchInput.value = '';
-        categoryFilter.value = '';
-        minPriceInput.value = '';
-        maxPriceInput.value = '';
-        sortFilter.value = 'default';
-        loadProducts();
     }
 });
 </script>
