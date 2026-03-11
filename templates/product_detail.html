@@ -179,25 +179,7 @@
                             {% endif %}
                         {% endif %}
                 </div>
-                {% if colors_with_images %}
-                <div class="mt-4">
-                    <p class="text-sm font-medium text-[#1a1a2e] mb-3">
-                        {% if lang == 'ru' %}Выберите цвет{% elif lang == 'en' %}Choose color{% else %}Rangni tanlang{% endif %}
-                    </p>
-                    <div class="grid grid-cols-3 gap-3" id="color-thumbnails">
-                        {% for color in color_list %}
-                        {% if color.image %}
-                        <button type="button" class="color-thumb border-2 rounded-lg overflow-hidden transition-all hover:border-[#f59e0b] aspect-square w-full {% if loop.first %}border-[#f59e0b] ring-2 ring-[#f59e0b]{% else %}border-gray-200{% endif %} focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
-                                data-image="/uploads/{{ color.image }}"
-                                data-color-name="{{ color.name }}"
-                                onclick="selectColor(this)">
-                            <img src="/uploads/{{ color.image }}" alt="{{ color.name }}" class="w-full h-full object-cover">
-                        </button>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
+                
                 
                 {% if product.images %}
                     {% set images = product.images|from_json %}
@@ -259,6 +241,24 @@
                 <form id="add-to-cart-form" action="/cart/add/{{ product.id }}" method="POST" class="mb-8">
                     {% if colors_with_images %}
                     <input type="hidden" name="color" id="selected-color" value="{{ colors_with_images[0].name }}">
+                    <div class="mb-4">
+                        <p class="text-sm font-medium text-[#1a1a2e] mb-2 text-left">
+                            {% if lang == 'ru' %}Выберите цвет{% elif lang == 'en' %}Choose color{% else %}Rangni tanlang{% endif %}
+                        </p>
+                        <div class="flex flex-wrap justify-start gap-2" id="color-thumbnails">
+                            {% for color in color_list %}
+                            {% if color.image %}
+                            <button type="button"
+                                    class="color-thumb border-2 rounded-md overflow-hidden transition-all hover:border-[#f59e0b] w-12 h-12 {% if loop.first %}border-[#f59e0b] ring-2 ring-[#f59e0b]{% else %}border-gray-200{% endif %} focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
+                                    data-image="/uploads/{{ color.image }}"
+                                    data-color-name="{{ color.name }}"
+                                    onclick="selectColor(this)">
+                                <img src="/uploads/{{ color.image }}" alt="{{ color.name }}" class="w-full h-full object-cover">
+                            </button>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
                     {% endif %}
                     <div class="flex items-center gap-4 mb-6">
                         <div class="flex items-center border border-gray-200">
