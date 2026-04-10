@@ -79,7 +79,6 @@
     .hero-bg-image {
         position: absolute;
         inset: 0;
-        background-image: url('/uploads/designs/3.jpg');
         background-size: cover;
         background-position: center;
     }
@@ -711,7 +710,7 @@
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-section -mt-[70px] md:-mt-[80px]">
-    <div class="hero-bg-image"></div>
+    <div class="hero-bg-image" style="background-image: url('{{ hero_background_url }}');"></div>
     
     <div class="relative h-full flex items-center pt-[90px] md:pt-[100px]">
         <div class="container mx-auto px-6 lg:px-16">

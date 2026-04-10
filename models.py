@@ -200,6 +200,14 @@ class ExchangeRate(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
+class SiteSettings(db.Model):
+    """Yagona qator — bosh sahifa va umumiy ko‘rinish sozlamalari."""
+    id = db.Column(db.Integer, primary_key=True)
+    # uploads/ papkasiga nisbatan yo‘l, masalan: designs/hero_20260101.jpg
+    hero_background_image = db.Column(db.String(300))
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
 class Collection(db.Model):
     """Collections - Sofa collections, Table collections, etc."""
     id = db.Column(db.Integer, primary_key=True)

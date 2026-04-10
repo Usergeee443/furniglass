@@ -18,9 +18,11 @@ class Config:
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = 'static/uploads'
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
+    # Yuklash (Hero fon, mahsulot rasmlari va h.k.); MAX_UPLOAD_MB orqali muhitdan boshqariladi
+    _max_upload_mb = int(os.environ.get('MAX_UPLOAD_MB', '32'))
+    MAX_CONTENT_LENGTH = max(1, _max_upload_mb) * 1024 * 1024
     
     # Telegram Bot Configuration
-    TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN') or '7560593714:AAHCom1Nv_hzfIVzlxRPjON-4blYZoofY6o'
+    TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN') or '8349902292:AAGwzN-WHJEB291Gv8lPoRWEbdusDFuDrt4'
     TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID') or '6429299277'
 

@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Bosh sahifa Hero foni - Admin{% endblock %}
+{% block page_title %}Bosh sahifa Hero foni{% endblock %}
+{% block page_subtitle %}Asosiy sahifadagi hero qism orqa fon rasmini almashtirish{% endblock %}
+
+{% block content %}
+<div class="max-w-xl">
+    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#232339] rounded-xl flex items-center justify-center">
+                    <i class="fas fa-image text-white"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-[#232339]">Orqa fon rasmi</h3>
+                    <p class="text-sm text-gray-500">Tavsiya: keng format (masalan 1920×1080), yengil siqilgan JPG yoki WEBP. Maksimal yuklash: <strong>{{ max_upload_mb }} MB</strong> (muhitda <code>MAX_UPLOAD_MB</code>).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 space-y-5">
+            <div class="rounded-xl overflow-hidden border border-gray-200 bg-gray-100 aspect-video flex items-center justify-center">
+                <img src="{{ current_hero_url }}" alt="Hero fon" class="max-h-64 w-full object-cover">
+            </div>
+            <p class="text-xs text-gray-500">
+                <i class="fas fa-link mr-1"></i> Joriy URL: <code class="bg-gray-100 px-1 rounded">{{ current_hero_url }}</code>
+            </p>
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Yangi rasm yuklash</label>
+                    <input type="file" name="hero_image" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                        class="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-[#232339] file:text-white hover:file:bg-black cursor-pointer">
+                </div>
+                <div class="flex flex-wrap justify-end gap-3 pt-2">
+                    <a href="/admin" class="px-5 py-3 rounded-xl border border-gray-300 text-gray-700 text-sm font-medium hover:bg-[#F5F5F5] transition">
+                        Orqaga
+                    </a>
+                    <button type="submit" class="px-6 py-3 rounded-xl bg-[#232339] hover:bg-black text-white text-sm font-medium transition flex items-center gap-2">
+                        <i class="fas fa-upload"></i>
+                        Yuklash va saqlash
+                    </button>
+                </div>
+            </form>
+
+            {% if settings.hero_background_image %}
+            <form method="POST" class="pt-2 border-t border-gray-100" onsubmit="return confirm('Standart fon rasmi (o‘rnatilgan) qayta tiklansinmi?');">
+                <input type="hidden" name="action" value="reset_default">
+                <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium">
+                    <i class="fas fa-undo mr-1"></i> Standart fonni tiklash
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

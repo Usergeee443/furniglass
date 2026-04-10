@@ -2,11 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from werkzeug.exceptions import RequestEntityTooLarge
 from sqlalchemy import or_
 from sqlalchemy.exc import OperationalError
 from config import Config
 from db import db
-from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity, MainCategory, Brand, Client, FirstVisit
+from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, SiteSettings, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity, MainCategory, Brand, Client, FirstVisit
 from translations import TRANSLATIONS, get_translation, t
 import os
 import json
@@ -61,6 +62,19 @@ login_manager.login_view = 'admin_login'
 @login_manager.user_loader
 def load_user(user_id):
     return Admin.query.get(int(user_id))
+
+
+@app.errorhandler(RequestEntityTooLarge)
+def handle_request_entity_too_large(_e):
+    """413 — yuklangan fayl MAX_CONTENT_LENGTH dan katta."""
+    mb = max(1, app.config.get('MAX_CONTENT_LENGTH', 32 * 1024 * 1024) // (1024 * 1024))
+    flash(f'Fayl juda katta. Maksimal {mb} MB. Rasmni siqiqing yoki kichikroq fayl tanlang.', 'error')
+    if request.referrer:
+        return redirect(request.referrer)
+    if request.path.startswith('/admin'):
+        return redirect(url_for('admin_home_hero_settings'))
+    return redirect(url_for('index'))
+
 
 # Jinja2 filter for JSON parsing
 @app.template_filter('from_json')
@@ -156,6 +170,27 @@ def get_exchange_rate() -> float:
         db.session.add(rate)
         db.session.commit()
     return rate.value
+
+
+DEFAULT_HERO_BACKGROUND = '/uploads/designs/3.jpg'
+
+
+def get_site_settings() -> SiteSettings:
+    """Yagona SiteSettings yozuvi (birinchi qator)."""
+    s = SiteSettings.query.first()
+    if not s:
+        s = SiteSettings()
+        db.session.add(s)
+        db.session.commit()
+    return s
+
+
+def get_hero_background_url() -> str:
+    """Bosh sahifa Hero fon rasmi URL (default — designs/3.jpg)."""
+    s = get_site_settings()
+    if s.hero_background_image and s.hero_background_image.strip():
+        return f"/uploads/{s.hero_background_image.lstrip('/')}"
+    return DEFAULT_HERO_BACKGROUND
 
 # ============ USER ACTIVITY TRACKING ============
 
@@ -294,8 +329,10 @@ def index():
     articles = Article.query.filter_by(featured=True).limit(2).all()
     brands = Brand.query.filter_by(is_active=True).order_by(Brand.order).all()  # Faol brendlar
     clients = Client.query.filter_by(is_active=True).order_by(Client.order).all()  # Faol mijozlar
+    hero_background_url = get_hero_background_url()
     return render_template('index.html', main_categories=main_categories, categories=categories, bestsellers=bestsellers, 
-                         reviews=reviews, portfolios=portfolios, collections=collections, articles=articles, brands=brands, clients=clients)
+                         reviews=reviews, portfolios=portfolios, collections=collections, articles=articles, brands=brands, clients=clients,
+                         hero_background_url=hero_background_url)
 
 @app.route('/search')
 def search():
@@ -1333,6 +1370,46 @@ def admin_dashboard():
     recent_orders = Order.query.order_by(Order.created_at.desc()).limit(5).all()
     rate = get_exchange_rate()
     return render_template('admin/dashboard.html', stats=stats, recent_orders=recent_orders, usd_rate=rate)
+
+
+@app.route('/admin/settings/home-hero', methods=['GET', 'POST'])
+@login_required
+def admin_home_hero_settings():
+    """Bosh sahifa Hero fon rasmini yuklash va boshqarish."""
+    settings = get_site_settings()
+    if request.method == 'POST':
+        if request.form.get('action') == 'reset_default':
+            settings.hero_background_image = None
+            db.session.commit()
+            flash('Standart fon rasmi tiklandi.', 'success')
+            return redirect(url_for('admin_home_hero_settings'))
+
+        file = request.files.get('hero_image')
+        if file and file.filename and allowed_file(file.filename):
+            from datetime import datetime
+            filename = secure_filename(file.filename)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"hero_{timestamp}_{filename}"
+            filepath = os.path.join('designs', filename)
+            os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'designs'), exist_ok=True)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+            settings.hero_background_image = filepath.replace('\\', '/')
+            db.session.commit()
+            flash('Bosh sahifa Hero fon rasmi yangilandi.', 'success')
+        elif file and file.filename:
+            flash('Faqat rasm fayli yuklang (PNG, JPG, JPEG, GIF, WEBP).', 'error')
+        else:
+            flash('Rasm tanlang.', 'error')
+        return redirect(url_for('admin_home_hero_settings'))
+
+    current_url = get_hero_background_url()
+    max_upload_mb = max(1, app.config.get('MAX_CONTENT_LENGTH', 32 * 1024 * 1024) // (1024 * 1024))
+    return render_template(
+        'admin/home_hero_settings.html',
+        settings=settings,
+        current_hero_url=current_url,
+        max_upload_mb=max_upload_mb,
+    )
 
 
 @app.route('/admin/settings/currency', methods=['GET', 'POST'])
