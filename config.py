@@ -87,3 +87,14 @@ class Config:
     # Telegram — faqat .env dan (kodda token qolmadi)
     TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
     TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+
+    # Supabase Storage — rasmlar/fayllar bucketda (USE_SUPABASE_STORAGE=0 bo'lsa mahalliy disk)
+    SUPABASE_URL = (os.environ.get("SUPABASE_URL") or "").strip() or None
+    _supabase_key = (
+        (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or "").strip()
+        or (os.environ.get("SUPABASE_KEY") or "").strip()
+    )
+    SUPABASE_KEY = _supabase_key or None
+    SUPABASE_STORAGE_BUCKET = (os.environ.get("SUPABASE_STORAGE_BUCKET") or "media").strip() or "media"
+    _sb_off = os.environ.get("USE_SUPABASE_STORAGE", "").strip().lower() in ("0", "false", "no")
+    USE_SUPABASE_STORAGE = bool(SUPABASE_URL and SUPABASE_KEY) and not _sb_off

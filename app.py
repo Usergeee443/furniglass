@@ -18,6 +18,8 @@ import urllib.request
 import urllib.parse
 import requests
 
+from storage_utils import delete_uploaded_file, public_storage_url, save_uploaded_file
+
 # ============ AUTO-TRANSLATE FUNCTION (FREE) ============
 def auto_translate(text, target_lang='ru'):
     """
@@ -128,6 +130,8 @@ def translate_filter(obj, field_base):
 # Ensure upload directories exist
 def ensure_upload_dirs():
     """Create upload directories if they don't exist"""
+    if app.config.get("USE_SUPABASE_STORAGE"):
+        return
     upload_folder = app.config['UPLOAD_FOLDER']
     os.makedirs(upload_folder, exist_ok=True)
     os.makedirs(os.path.join(upload_folder, 'products'), exist_ok=True)
@@ -733,7 +737,7 @@ def order():
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('designs', filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 design_image = filepath
         
         order = Order(
@@ -1445,8 +1449,7 @@ def admin_home_hero_settings():
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             filename = f"hero_{timestamp}_{filename}"
             filepath = os.path.join('designs', filename)
-            os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'designs'), exist_ok=True)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+            save_uploaded_file(app, file, filepath)
             settings.hero_background_image = filepath.replace('\\', '/')
             db.session.commit()
             flash('Bosh sahifa Hero fon rasmi yangilandi.', 'success')
@@ -1541,7 +1544,7 @@ def admin_product_add():
                                 filename = secure_filename(f.filename)
                                 unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
                                 filepath = os.path.join('products', unique_filename)
-                                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                                save_uploaded_file(app, f, filepath)
                                 colors_data[i]['image'] = filepath
                     colors_json = json.dumps(colors_data)
             except Exception as e:
@@ -1574,7 +1577,7 @@ def admin_product_add():
                     import uuid
                     unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
                     filepath = os.path.join('products', unique_filename)
-                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                    save_uploaded_file(app, file, filepath)
                     images.append(filepath)
                     print(f"DEBUG: Saved image {idx+1}: {filepath}")
             
@@ -1667,7 +1670,7 @@ def admin_product_edit(product_id):
                                 filename = secure_filename(f.filename)
                                 unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
                                 filepath = os.path.join('products', unique_filename)
-                                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                                save_uploaded_file(app, f, filepath)
                                 colors_data[i]['image'] = filepath
                     colors_json = json.dumps(colors_data)
             except Exception as e:
@@ -1704,7 +1707,7 @@ def admin_product_edit(product_id):
                         import uuid
                         unique_filename = f"{uuid.uuid4().hex[:8]}_{filename}"
                         filepath = os.path.join('products', unique_filename)
-                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                        save_uploaded_file(app, file, filepath)
                         new_images.append(filepath)
                 
                 # Yangi rasmlarda asosiy rasmni birinchi o'ringa qo'yish
@@ -1773,7 +1776,7 @@ def admin_main_category_add():
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('main_categories', filename)
                 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'main_categories'), exist_ok=True)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 image = filepath
         
         main_category = MainCategory(
@@ -1834,7 +1837,7 @@ def admin_main_category_edit(main_category_id):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('main_categories', filename)
                 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'main_categories'), exist_ok=True)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 main_category.image = filepath
         
         db.session.commit()
@@ -1894,7 +1897,7 @@ def admin_brand_add():
         filename = f"{timestamp}_{filename}"
         filepath = os.path.join('brands', filename)
         os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'brands'), exist_ok=True)
-        logo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+        save_uploaded_file(app, logo_file, filepath)
         
         brand = Brand(
             name=name_uz,
@@ -1936,7 +1939,7 @@ def admin_brand_edit(brand_id):
             filename = f"{timestamp}_{filename}"
             filepath = os.path.join('brands', filename)
             os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'brands'), exist_ok=True)
-            logo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+            save_uploaded_file(app, logo_file, filepath)
             brand.logo = filepath
         
         db.session.commit()
@@ -1984,7 +1987,7 @@ def admin_client_add():
             filename = f"{timestamp}_{filename}"
             filepath = os.path.join('clients', filename)
             os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'clients'), exist_ok=True)
-            photo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+            save_uploaded_file(app, photo_file, filepath)
         
         client = Client(
             name=name_uz,
@@ -2029,7 +2032,7 @@ def admin_client_edit(client_id):
             filename = f"{timestamp}_{filename}"
             filepath = os.path.join('clients', filename)
             os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'clients'), exist_ok=True)
-            photo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+            save_uploaded_file(app, photo_file, filepath)
             client.photo = filepath
         
         db.session.commit()
@@ -2084,7 +2087,7 @@ def admin_category_add():
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('categories', filename)
                 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'categories'), exist_ok=True)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 image = filepath
         
         main_category_id = request.form.get('main_category_id', type=int) or None
@@ -2141,7 +2144,7 @@ def admin_category_edit(category_id):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('categories', filename)
                 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'categories'), exist_ok=True)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 category.image = filepath
         
         try:
@@ -2213,7 +2216,7 @@ def admin_portfolio_add():
             if file and file.filename and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('portfolio', filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 before_image = filepath
         
         if 'after_image' in request.files:
@@ -2221,7 +2224,7 @@ def admin_portfolio_add():
             if file and file.filename and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('portfolio', filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 after_image = filepath
         
         portfolio = Portfolio(
@@ -2265,7 +2268,7 @@ def admin_portfolio_edit(portfolio_id):
             if file and file.filename and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('portfolio', filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 portfolio.before_image = filepath
         
         if 'after_image' in request.files:
@@ -2273,7 +2276,7 @@ def admin_portfolio_edit(portfolio_id):
             if file and file.filename and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join('portfolio', filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filepath))
+                save_uploaded_file(app, file, filepath)
                 portfolio.after_image = filepath
         
         db.session.commit()
@@ -2287,15 +2290,9 @@ def admin_portfolio_edit(portfolio_id):
 def admin_portfolio_delete(portfolio_id):
     portfolio = Portfolio.query.get_or_404(portfolio_id)
     if portfolio.after_image:
-        try:
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], portfolio.after_image))
-        except:
-            pass
+        delete_uploaded_file(app, portfolio.after_image)
     if portfolio.before_image:
-        try:
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], portfolio.before_image))
-        except:
-            pass
+        delete_uploaded_file(app, portfolio.before_image)
     db.session.delete(portfolio)
     db.session.commit()
     flash('Portfolio o\'chirildi!', 'success')
@@ -2662,6 +2659,8 @@ def admin_user_activity():
 
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
+    if app.config.get('USE_SUPABASE_STORAGE'):
+        return redirect(public_storage_url(app, filename), code=302)
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
