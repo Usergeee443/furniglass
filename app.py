@@ -2659,9 +2659,14 @@ def admin_user_activity():
 
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
+    # Mahalliy fayl bo'lsa diskdan; aks holda Supabase public URLga
+    norm = filename.replace('\\', '/')
+    local_path = os.path.join(app.config['UPLOAD_FOLDER'], norm)
+    if os.path.isfile(local_path):
+        return send_from_directory(app.config['UPLOAD_FOLDER'], norm)
     if app.config.get('USE_SUPABASE_STORAGE'):
         return redirect(public_storage_url(app, filename), code=302)
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], norm)
 
 if __name__ == '__main__':
     with app.app_context():
