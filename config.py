@@ -61,6 +61,11 @@ class Config:
                 "Lokal: External Database URL (hostname ...postgres.render.com) yoki USE_SQLITE=1. "
                 "Render serverda: Internal yoki External URL to'liq bo'lishi kerak."
             )
+        # SQLAlchemy: psycopg (v3) drayver — Python 3.13 / Render muvofiqligi
+        if database_url.startswith("postgresql://"):
+            database_url = database_url.replace(
+                "postgresql://", "postgresql+psycopg://", 1
+            )
         SQLALCHEMY_DATABASE_URI = database_url
         # PostgreSQL: ulanish havzasi — uzoq masofali PG uchun sekinlikni kamaytiradi
         if database_url.startswith("postgresql"):

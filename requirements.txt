@@ -4,6 +4,7 @@ Flask-SQLAlchemy==3.1.1
 Flask-Login==0.6.3
 Werkzeug==3.0.1
 gunicorn==21.2.0
-psycopg2-binary==2.9.9
+# psycopg2-binary Python 3.13 bilan Renderda xato berishi mumkin; psycopg 3 ishlatamiz
+psycopg[binary]==3.2.4
 requests==2.31.0
 
