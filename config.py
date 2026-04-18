@@ -2,14 +2,22 @@ import os
 from pathlib import Path
 from urllib.parse import urlparse
 
-from dotenv import load_dotenv
+# Lokal: pip install python-dotenv — .env yuklanadi.
+# Render: o'zgaruvchilar dashboard Environment da; dotenv bo'lmasa ham ishlaydi.
+try:
+    from dotenv import load_dotenv
 
-# Loyiha ildizidagi .env — Gitga kiritilmaydi
-load_dotenv(Path(__file__).resolve().parent / ".env")
+    load_dotenv(Path(__file__).resolve().parent / ".env")
+except ImportError:
+    pass
 
 
 def _postgres_host_valid(url: str) -> bool:
-    """Render/PostgreSQL uchun hostname to'liq bo'lishi kerak (nuqta bilan domen)."""
+    """
+    Tashqi URL: hostname odatda ...postgres.render.com (nuqta bilan).
+    Render **Internal** PostgreSQL: hostname nuqtasiz bo'lishi mumkin (masalan dpg-xxxxx-a) —
+    bu faqat Render tarmog'ida ishlaydi; Render RENDER=true muhit o'zgaruvchisini qo'yadi.
+    """
     try:
         u = urlparse(url.replace("postgres://", "postgresql://", 1))
         host = (u.hostname or "").strip().lower()
@@ -17,8 +25,13 @@ def _postgres_host_valid(url: str) -> bool:
             return False
         if host in ("localhost", "127.0.0.1", "::1"):
             return True
-        # dpg-xxxxx-a yolg'iz — odatda nusxa yarmidan kesilgan
-        return "." in host
+        if "." in host:
+            return True
+        # Render.com Web Service: ichki DNS (Internal Database URL)
+        if (os.environ.get("RENDER") or "").lower() in ("true", "1", "yes"):
+            if host.startswith("dpg-") and len(host) >= 10:
+                return True
+        return False
     except Exception:
         return False
 
@@ -44,10 +57,9 @@ class Config:
             database_url = database_url.replace("postgres://", "postgresql://", 1)
         if database_url.startswith("postgresql") and not _postgres_host_valid(database_url):
             raise ValueError(
-                "DATABASE_URL dagi hostname noto'liq (faqat 'dpg-...-a' ko'rinishida, domen yo'q). "
-                "Render dashboard → PostgreSQL → Connections → **External Database URL** "
-                "maydonidan BUTUN satrni nusxalang — hostname odatda "
-                "'....-postgres.render.com' bilan tugaydi. Oxiriga kerak bo'lsa ?sslmode=require qo'shing."
+                "DATABASE_URL hostname noto'liq yoki lokal muhitda ichki URL ishlatilmoqda. "
+                "Lokal: External Database URL (hostname ...postgres.render.com) yoki USE_SQLITE=1. "
+                "Render serverda: Internal yoki External URL to'liq bo'lishi kerak."
             )
         SQLALCHEMY_DATABASE_URI = database_url
         # PostgreSQL: ulanish havzasi — uzoq masofali PG uchun sekinlikni kamaytiradi
