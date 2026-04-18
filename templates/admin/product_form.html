@@ -144,18 +144,30 @@
                     </select>
                 </div>
                 {% endif %}
-                <div class="grid grid-cols-2 gap-4">
+                <div id="price-sync-root" class="space-y-4" data-usd-rate="{{ usd_rate }}">
                     <div>
-                        <label class="block text-sm font-medium text-[#232339] mb-2">Narx (USD) *</label>
+                        <label class="block text-sm font-medium text-[#232339] mb-2" for="price_som">Narx (so'm) *</label>
+                        <div class="relative">
+                            <input type="text" id="price_som" inputmode="numeric" autocomplete="off"
+                                value="{% if product %}{{ '{:,.0f}'.format(product.price * usd_rate) }}{% endif %}"
+                                class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition"
+                                placeholder="Masalan: 12,100,000">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">so'm</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-[#232339] mb-2" for="price_usd">Narx (USD) *</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                            <input type="number" step="0.01" name="price" value="{{ product.price if product else '' }}" required 
-                                class="w-full bg-[#F5F5F5] border-0 rounded-xl pl-8 pr-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition" 
+                            <input type="number" id="price_usd" step="0.01" name="price"
+                                value="{{ '%.2f' % product.price if product else '' }}"
+                                required
+                                class="w-full bg-[#F5F5F5] border-0 rounded-xl pl-8 pr-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition"
                                 placeholder="0">
                         </div>
                         <p class="text-xs text-gray-500 mt-1.5">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Saytda avtomatik so'mga o'giriladi
+                            Bazada USD saqlanadi; yuqoridagi so'm va pastdagi dollar joriy kurs bo'yicha bog'langan (1 USD = {{ "{:,.0f}".format(usd_rate) }} so'm). Foydalanuvchi sahifasida o'zgarish yo'q.
                         </p>
                     </div>
                 </div>
@@ -552,6 +564,18 @@ function setAsMain(index, type) {
 
 // Form submit qilganda loading ko'rsatish
 document.getElementById('product-form')?.addEventListener('submit', function(e) {
+    const priceRoot = document.getElementById('price-sync-root');
+    const priceUsdEl = document.getElementById('price_usd');
+    const priceSomEl = document.getElementById('price_som');
+    if (priceRoot && priceUsdEl && priceSomEl) {
+        const rate = parseFloat(priceRoot.getAttribute('data-usd-rate')) || 12000;
+        const somDigits = String(priceSomEl.value).replace(/\D/g, '');
+        const somInt = somDigits ? parseInt(somDigits, 10) : 0;
+        const usd = parseFloat(priceUsdEl.value);
+        if (somInt > 0 && (isNaN(usd) || usd <= 0)) {
+            priceUsdEl.value = (Math.round((somInt / rate) * 100) / 100).toFixed(2);
+        }
+    }
     updateColorsJSON(); // Submit oldidan ranglarni yangilash
     
     // Debug: form submit oldidan rasmlarni tekshirish
@@ -591,6 +615,82 @@ function filterCategoriesByMain() {
         if (selected && selected.getAttribute('data-main') !== mainId) catSelect.value = '';
     }
 }
+
+(function initPriceSomUsd() {
+    const root = document.getElementById('price-sync-root');
+    const priceSom = document.getElementById('price_som');
+    const priceUsd = document.getElementById('price_usd');
+    if (!root || !priceSom || !priceUsd) return;
+
+    const USD_RATE = parseFloat(root.getAttribute('data-usd-rate')) || 12000;
+    let usdSyncLock = false;
+    let somFocused = false;
+
+    function formatSomInt(n) {
+        if (n === null || n === undefined || n === '' || isNaN(n)) return '';
+        const num = Math.round(Number(n));
+        if (num <= 0) return '';
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    function parseSom(str) {
+        const d = String(str || '').replace(/\D/g, '');
+        return d ? parseInt(d, 10) : 0;
+    }
+    function setUsdFromSom(somInt) {
+        if (!somInt || somInt <= 0) {
+            priceUsd.value = '';
+            return;
+        }
+        const usd = somInt / USD_RATE;
+        priceUsd.value = (Math.round(usd * 100) / 100).toFixed(2);
+    }
+    function setSomFromUsd(usdVal) {
+        const usd = parseFloat(usdVal);
+        if (isNaN(usd) || usd < 0) {
+            priceSom.value = '';
+            return;
+        }
+        const som = Math.round(usd * USD_RATE);
+        if (somFocused) {
+            priceSom.value = som ? String(som) : '';
+        } else {
+            priceSom.value = som ? formatSomInt(som) : '';
+        }
+    }
+
+    priceSom.addEventListener('focus', function() {
+        somFocused = true;
+        const n = parseSom(this.value);
+        this.value = n ? String(n) : '';
+    });
+    priceSom.addEventListener('blur', function() {
+        somFocused = false;
+        usdSyncLock = true;
+        const n = parseSom(this.value);
+        this.value = n ? formatSomInt(n) : '';
+        setUsdFromSom(n);
+        usdSyncLock = false;
+    });
+    priceSom.addEventListener('input', function() {
+        if (usdSyncLock) return;
+        const n = parseSom(this.value);
+        setUsdFromSom(n);
+    });
+
+    priceUsd.addEventListener('input', function() {
+        if (usdSyncLock) return;
+        const raw = String(this.value).trim();
+        if (raw === '') {
+            usdSyncLock = true;
+            priceSom.value = '';
+            usdSyncLock = false;
+            return;
+        }
+        usdSyncLock = true;
+        setSomFromUsd(this.value);
+        usdSyncLock = false;
+    });
+})();
 
 document.addEventListener('DOMContentLoaded', function() {
     initColors();

@@ -12,6 +12,8 @@ from translations import TRANSLATIONS, get_translation, t
 import os
 import json
 import re
+import threading
+import time
 import urllib.request
 import urllib.parse
 import requests
@@ -159,17 +161,40 @@ def allowed_file(filename):
 
 # ============ CURRENCY / EXCHANGE RATE HELPERS ============
 
+_EXCHANGE_RATE_CACHE = {"value": None, "expires_mono": 0.0}
+
+
+def invalidate_exchange_rate_cache() -> None:
+    """Admin kursni o'zgartirganda chaqiriladi."""
+    _EXCHANGE_RATE_CACHE["value"] = None
+    _EXCHANGE_RATE_CACHE["expires_mono"] = 0.0
+
+
 def get_exchange_rate() -> float:
     """
     Joriy dollar kursini olish (1 USD = N so'm).
     Agar bazada yo'q bo'lsa, default qiymat yaratadi.
+    Natija qisqa vaqt keshlanadi — har so'rovda PG ga urishni kamaytiradi.
     """
+    ttl = int(os.environ.get("EXCHANGE_RATE_CACHE_SECONDS", "120"))
+    now = time.monotonic()
+    if (
+        ttl > 0
+        and _EXCHANGE_RATE_CACHE["value"] is not None
+        and now < _EXCHANGE_RATE_CACHE["expires_mono"]
+    ):
+        return _EXCHANGE_RATE_CACHE["value"]
+
     rate = ExchangeRate.query.first()
     if not rate:
         rate = ExchangeRate(value=12000.0)
         db.session.add(rate)
         db.session.commit()
-    return rate.value
+    v = float(rate.value)
+    if ttl > 0:
+        _EXCHANGE_RATE_CACHE["value"] = v
+        _EXCHANGE_RATE_CACHE["expires_mono"] = now + ttl
+    return v
 
 
 DEFAULT_HERO_BACKGROUND = '/uploads/designs/3.jpg'
@@ -193,6 +218,42 @@ def get_hero_background_url() -> str:
     return DEFAULT_HERO_BACKGROUND
 
 # ============ USER ACTIVITY TRACKING ============
+
+def _save_user_activity_background(flask_app, payload):
+    """PG ga yozishni so'rovdan ajratadi — sahifa tezroq ochiladi."""
+    with flask_app.app_context():
+        try:
+            product_id = payload.get("product_id")
+            page_name = payload.get("page_name") or "Bosh sahifa"
+            activity_type = payload.get("activity_type") or "page_view"
+            product_name = payload.get("product_name")
+            if product_id:
+                product = Product.query.get(product_id)
+                if product:
+                    activity_type = "product_view"
+                    product_name = product.name_uz or product.name
+                    page_name = f"Mahsulot: {product_name}"
+            page_url = (payload.get("page_url") or "")[:500]
+            activity = UserActivity(
+                session_id=payload.get("session_id"),
+                ip_address=payload.get("ip_address"),
+                user_agent=(payload.get("user_agent") or "")[:500],
+                activity_type=activity_type,
+                page_url=page_url,
+                page_name=(page_name or "Sahifa")[:200],
+                product_id=product_id,
+                product_name=(product_name[:200] if product_name else None),
+                referrer=(payload.get("referrer") or "")[:500],
+            )
+            db.session.add(activity)
+            db.session.commit()
+        except Exception as e:
+            print(f"Activity tracking error: {e}")
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
+
 
 @app.before_request
 def track_user_activity():
@@ -246,7 +307,7 @@ def track_user_activity():
         page_url = request.url
         referrer = request.headers.get('Referer', '')
         
-        # Sahifa nomini aniqlash
+        # Sahifa nomini aniqlash (mahsulot nomi — fon threadida DB dan)
         page_name = 'Bosh sahifa'
         activity_type = 'page_view'
         product_id = None
@@ -257,17 +318,13 @@ def track_user_activity():
         elif request.path.startswith('/products'):
             page_name = 'Mahsulotlar'
         elif request.path.startswith('/product/'):
-            # Mahsulot ko'rish
             try:
                 product_id_str = request.path.split('/product/')[1].split('/')[0]
                 product_id = int(product_id_str)
-                product = Product.query.get(product_id)
-                if product:
-                    activity_type = 'product_view'
-                    product_name = product.name_uz or product.name
-                    page_name = f'Mahsulot: {product_name}'
-            except:
-                pass
+                activity_type = 'product_view'
+                page_name = 'Mahsulot'
+            except Exception:
+                product_id = None
         elif request.path.startswith('/portfolio'):
             page_name = 'Portfolio'
         elif request.path.startswith('/collections'):
@@ -289,27 +346,24 @@ def track_user_activity():
         elif request.path.startswith('/cart'):
             page_name = 'Savatcha'
         
-        # Activity yozish
-        activity = UserActivity(
-            session_id=session_id,
-            ip_address=ip_address,
-            user_agent=user_agent,
-            activity_type=activity_type,
-            page_url=page_url,
-            page_name=page_name,
-            product_id=product_id,
-            product_name=product_name,
-            referrer=referrer[:500]
-        )
-        db.session.add(activity)
-        db.session.commit()
+        payload = {
+            "session_id": session_id,
+            "ip_address": ip_address,
+            "user_agent": user_agent,
+            "activity_type": activity_type,
+            "page_url": page_url,
+            "page_name": page_name,
+            "product_id": product_id,
+            "product_name": product_name,
+            "referrer": referrer[:500],
+        }
+        threading.Thread(
+            target=_save_user_activity_background,
+            args=(app, payload),
+            daemon=True,
+        ).start()
     except Exception as e:
-        # Xatolarni log qilish, lekin sayt ishlashini to'xtatmaslik
         print(f"Activity tracking error: {e}")
-        try:
-            db.session.rollback()
-        except:
-            pass
 
 # ============ FRONTEND ROUTES ============
 
@@ -1436,6 +1490,7 @@ def admin_currency_settings():
 
         rate.value = value
         db.session.commit()
+        invalidate_exchange_rate_cache()
         flash("Dollar kursi yangilandi.", 'success')
         return redirect(url_for('admin_currency_settings'))
 
@@ -1560,7 +1615,13 @@ def admin_product_add():
     
     categories = Category.query.all()
     main_categories = MainCategory.query.order_by(MainCategory.order).all()
-    return render_template('admin/product_form.html', categories=categories, main_categories=main_categories)
+    rate = get_exchange_rate()
+    return render_template(
+        'admin/product_form.html',
+        categories=categories,
+        main_categories=main_categories,
+        usd_rate=rate,
+    )
 
 @app.route('/admin/product/<int:product_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -1665,7 +1726,14 @@ def admin_product_edit(product_id):
     
     categories = Category.query.all()
     main_categories = MainCategory.query.order_by(MainCategory.order).all()
-    return render_template('admin/product_form.html', product=product, categories=categories, main_categories=main_categories)
+    rate = get_exchange_rate()
+    return render_template(
+        'admin/product_form.html',
+        product=product,
+        categories=categories,
+        main_categories=main_categories,
+        usd_rate=rate,
+    )
 
 @app.route('/admin/product/<int:product_id>/delete', methods=['POST'])
 @login_required
@@ -2769,60 +2837,68 @@ if __name__ == '__main__':
             print(f"Create all tables error: {e}")
         
         # Create default admin user if not exists
-        if not Admin.query.first():
-            admin = Admin(
-                username='admin',
-                password=generate_password_hash('admin123')
-            )
-            db.session.add(admin)
-            db.session.commit()
-            print("Default admin created: username='admin', password='admin123'")
-
-        # Create default exchange rate if not exists
-        if not ExchangeRate.query.first():
-            rate = ExchangeRate(value=12000.0)
-            db.session.add(rate)
-            db.session.commit()
-            print("Default exchange rate created: 1 USD = 12000 UZS")
-        
-        # Create default main categories if not exists
-        if not MainCategory.query.first():
-            main_categories = [
-                MainCategory(
-                    name_uz='Cafe & Restaurant',
-                    name_ru='Кафе и Ресторан',
-                    name_en='Cafe & Restaurant',
-                    slug='cafe-restaurant',
-                    description_uz='Cafe va Restaurantlar uchun maxsus mebellar',
-                    description_ru='Специальная мебель для кафе и ресторанов',
-                    description_en='Special furniture for cafes and restaurants',
-                    order=1
-                ),
-                MainCategory(
-                    name_uz='Xonadon',
-                    name_ru='Дом',
-                    name_en='Home',
-                    slug='home',
-                    description_uz='Uy va xonadonlar uchun mebellar',
-                    description_ru='Мебель для дома',
-                    description_en='Furniture for home',
-                    order=2
-                ),
-                MainCategory(
-                    name_uz='Clinika',
-                    name_ru='Клиника',
-                    name_en='Clinic',
-                    slug='clinic',
-                    description_uz='Tibbiy muassasalar uchun mebellar',
-                    description_ru='Мебель для медицинских учреждений',
-                    description_en='Furniture for medical facilities',
-                    order=3
+        try:
+            if not Admin.query.first():
+                admin = Admin(
+                    username='admin',
+                    password=generate_password_hash('admin123')
                 )
-            ]
-            for mc in main_categories:
-                db.session.add(mc)
-            db.session.commit()
-            print("Created default main categories: Cafe & Restaurant, Xonadon, Clinika")
+                db.session.add(admin)
+                db.session.commit()
+                print("Default admin created: username='admin', password='admin123'")
+
+            # Create default exchange rate if not exists
+            if not ExchangeRate.query.first():
+                rate = ExchangeRate(value=12000.0)
+                db.session.add(rate)
+                db.session.commit()
+                print("Default exchange rate created: 1 USD = 12000 UZS")
+            
+            # Create default main categories if not exists
+            if not MainCategory.query.first():
+                main_categories = [
+                    MainCategory(
+                        name_uz='Cafe & Restaurant',
+                        name_ru='Кафе и Ресторан',
+                        name_en='Cafe & Restaurant',
+                        slug='cafe-restaurant',
+                        description_uz='Cafe va Restaurantlar uchun maxsus mebellar',
+                        description_ru='Специальная мебель для кафе и ресторанов',
+                        description_en='Special furniture for cafes and restaurants',
+                        order=1
+                    ),
+                    MainCategory(
+                        name_uz='Xonadon',
+                        name_ru='Дом',
+                        name_en='Home',
+                        slug='home',
+                        description_uz='Uy va xonadonlar uchun mebellar',
+                        description_ru='Мебель для дома',
+                        description_en='Furniture for home',
+                        order=2
+                    ),
+                    MainCategory(
+                        name_uz='Clinika',
+                        name_ru='Клиника',
+                        name_en='Clinic',
+                        slug='clinic',
+                        description_uz='Tibbiy muassasalar uchun mebellar',
+                        description_ru='Мебель для медицинских учреждений',
+                        description_en='Furniture for medical facilities',
+                        order=3
+                    )
+                ]
+                for mc in main_categories:
+                    db.session.add(mc)
+                db.session.commit()
+                print("Created default main categories: Cafe & Restaurant, Xonadon, Clinika")
+        except OperationalError as e:
+            print(
+                "DB ulanmadi yoki jadval yo'q — default admin/kurs/kategoriyalar yaratilmadi.\n"
+                "  • Lokal: .env da USE_SQLITE=1 qilib SQLite ishlating, yoki\n"
+                "  • Renderdan to'liq External Database URL ni DATABASE_URL ga qo'ying (hostname .render.com bilan)."
+            )
+            print(f"  Sabab: {e}")
     
     # Production mode - Render.com will use gunicorn
     if os.environ.get('RENDER') or os.environ.get('PORT'):
