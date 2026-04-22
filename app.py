@@ -125,6 +125,37 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'admin_login'
 
+
+def ensure_schema():
+    """
+    Lightweight schema migration on startup.
+    Render/Gunicorn'da __main__ bloki ishlamasligi mumkin, shuning uchun kerakli ustunlarni
+    app import bo'lganda ham tekshirib qo'yamiz.
+    """
+    try:
+        with app.app_context():
+            from sqlalchemy import inspect, text
+
+            inspector = inspect(db.engine)
+            try:
+                product_cols = [c["name"] for c in inspector.get_columns("product")]
+            except Exception:
+                # Table hali yo'q bo'lsa, create_all qilamiz
+                db.create_all()
+                product_cols = [c["name"] for c in inspector.get_columns("product")]
+
+            if "price_som" not in product_cols:
+                db.session.execute(text("ALTER TABLE product ADD COLUMN price_som INTEGER"))
+                db.session.commit()
+                print("Added price_som column to product table (startup)")
+    except Exception as e:
+        # Bu joyda servis yiqilmasin; logga chiqib qoladi.
+        print(f"Schema ensure error: {e}")
+
+
+# Run on startup (important for Render/gunicorn)
+ensure_schema()
+
 @login_manager.user_loader
 def load_user(user_id):
     return Admin.query.get(int(user_id))
