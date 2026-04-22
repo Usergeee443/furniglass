@@ -208,11 +208,11 @@
                     </a>
                     <div class="flex items-baseline gap-2">
                         {% if product.discount and product.discount > 0 %}
-                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.get_discounted_price() * usd_rate).replace(",", " ") }} so'm</span>
-                        <span class="text-sm text-gray-400 line-through">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }}</span>
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ product.get_discounted_price()|format_som(usd_rate) }} so'm</span>
+                        <span class="text-sm text-gray-400 line-through">{{ product.price|format_som(usd_rate) }}</span>
                         <span class="bg-[#f59e0b]/10 text-[#f59e0b] px-2 py-0.5 text-xs font-medium">-{{ product.discount }}%</span>
                         {% else %}
-                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,.0f}".format(product.price * usd_rate).replace(",", " ") }} so'm</span>
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ product.price|format_som(usd_rate) }} so'm</span>
                         {% endif %}
                     </div>
                 </div>

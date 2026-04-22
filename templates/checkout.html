@@ -145,7 +145,7 @@
                             <div class="flex-1">
                                 <p class="text-sm font-bold text-[#1a1a2e] line-clamp-1">{{ item.product.get_name(lang) }}{% if item.color %} ({{ item.color }}){% endif %}</p>
                                 <p class="text-xs text-gray-400">{{ item.quantity }} {% if lang == 'ru' %}шт{% elif lang == 'en' %}pcs{% else %}dona{% endif %}</p>
-                                <p class="text-sm font-bold text-[#1a1a2e]">{{ "{:,.0f}".format(item.subtotal) }} {{ T.common.sum[lang] }}</p>
+                                <p class="text-sm font-bold text-[#1a1a2e]">{{ "{:,.0f}".format(item.subtotal).replace(",", " ") }} {{ T.common.sum[lang] }}</p>
                             </div>
                         </div>
                         {% endfor %}
@@ -154,7 +154,7 @@
                     <div class="space-y-3 mb-6 border-t border-gray-100 pt-4">
                         <div class="flex justify-between text-gray-600">
                             <span>{{ T.nav.products[lang] }}</span>
-                            <span class="font-medium">{{ "{:,.0f}".format(total) }} {{ T.common.sum[lang] }}</span>
+                            <span class="font-medium">{{ "{:,.0f}".format(total).replace(",", " ") }} {{ T.common.sum[lang] }}</span>
                         </div>
                         <div class="flex justify-between text-gray-600">
                             <span>{% if lang == 'ru' %}Доставка{% elif lang == 'en' %}Delivery{% else %}Yetkazib berish{% endif %}</span>
@@ -165,7 +165,7 @@
                     <div class="border-t border-gray-100 pt-4 mb-6">
                         <div class="flex justify-between">
                             <span class="text-lg font-bold text-[#1a1a2e]">{% if lang == 'ru' %}Итого:{% elif lang == 'en' %}Total:{% else %}Jami:{% endif %}</span>
-                            <span class="text-xl font-bold text-[#1a1a2e]">{{ "{:,.0f}".format(total) }} {{ T.common.sum[lang] }}</span>
+                            <span class="text-xl font-bold text-[#1a1a2e]">{{ "{:,.0f}".format(total).replace(",", " ") }} {{ T.common.sum[lang] }}</span>
                         </div>
                     </div>
                     

@@ -17,8 +17,40 @@ import time
 import urllib.request
 import urllib.parse
 import requests
+from decimal import Decimal, ROUND_HALF_UP
 
 from storage_utils import delete_uploaded_file, public_storage_url, save_uploaded_file
+
+# ============ MONEY HELPERS (avoid float drift) ============
+def _to_decimal(value) -> Decimal:
+    if value is None:
+        return Decimal("0")
+    # str(float) returns a short decimal representation; good enough for currency conversion here.
+    return Decimal(str(value))
+
+
+def usd_to_som(usd_amount, usd_rate) -> int:
+    """
+    Convert USD amount to UZS (so'm) as integer with stable rounding.
+    This avoids float artifacts like 1,050,038 when 1,050,000 is expected.
+    """
+    som = (_to_decimal(usd_amount) * _to_decimal(usd_rate)).quantize(
+        Decimal("1"), rounding=ROUND_HALF_UP
+    )
+    return int(som)
+
+
+def format_som(usd_amount, usd_rate, sep: str = " ") -> str:
+    n = usd_to_som(usd_amount, usd_rate)
+    return f"{n:,}".replace(",", sep)
+
+
+def to_som_filter(usd_amount, usd_rate):
+    return usd_to_som(usd_amount, usd_rate)
+
+
+def format_som_filter(usd_amount, usd_rate, sep: str = " "):
+    return format_som(usd_amount, usd_rate, sep=sep)
 
 # ============ AUTO-TRANSLATE FUNCTION (FREE) ============
 def auto_translate(text, target_lang='ru'):
@@ -57,6 +89,10 @@ def auto_translate(text, target_lang='ru'):
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Register money filters (app must exist first)
+app.jinja_env.filters["to_som"] = to_som_filter
+app.jinja_env.filters["format_som"] = format_som_filter
 
 db.init_app(app)
 login_manager = LoginManager()
@@ -442,7 +478,7 @@ def search():
         'products': [{
             'id': p.id,
             'name': p.name_uz,
-            'price': round(p.price * rate) if p.price is not None else None,
+            'price': usd_to_som(p.price, rate) if p.price is not None else None,
             'image': json.loads(p.images)[0] if p.images else None,
             'category': p.category.name_uz if p.category else None,
             'url': f'/product/{p.id}'
@@ -1116,7 +1152,7 @@ def get_cart_total():
     for item in cart:
         product = Product.query.get(item['product_id'])
         if product:
-            total += product.price * rate * item['quantity']
+            total += usd_to_som(product.price, rate) * int(item['quantity'])
     return total
 
 @app.context_processor
@@ -1175,11 +1211,12 @@ def cart():
     cart_items = get_cart()
     products = []
     total = 0
+    rate = get_exchange_rate()
     
     for item in cart_items:
         product = Product.query.get(item['product_id'])
         if product:
-            subtotal = product.price * get_exchange_rate() * item['quantity']
+            subtotal = usd_to_som(product.price, rate) * int(item['quantity'])
             total += subtotal
             color = item.get('color', '')
             color_image = None
@@ -1307,7 +1344,7 @@ def checkout():
             if product:
                 color_part = f" ({item.get('color')})" if item.get('color') else ""
                 products_list.append(f"{product.name_uz}{color_part} x{item['quantity']}")
-                total += product.price * rate * item['quantity']
+                total += usd_to_som(product.price, rate) * int(item['quantity'])
         
         # Telegram xabari
         payment_display = {
@@ -1317,6 +1354,7 @@ def checkout():
         
         products_text = '\n'.join([f"  • {p}" for p in products_list])
         
+        total_str = f"{total:,}".replace(",", " ")
         telegram_message = f"""
 <b>🛒 Yangi Savatcha Buyurtmasi</b>
 
@@ -1329,7 +1367,7 @@ def checkout():
 <b>Mahsulotlar:</b>
 {products_text}
 
-<b>Jami:</b> {total:,.0f} so'm
+<b>Jami:</b> {total_str} so'm
 
 <b>Qo'shimcha izoh:</b>
 {comment if comment else "Qo'shimcha izoh yo'q"}
@@ -1363,7 +1401,7 @@ def checkout():
     for item in cart_items:
         product = Product.query.get(item['product_id'])
         if product:
-            subtotal = product.price * rate * item['quantity']
+            subtotal = usd_to_som(product.price, rate) * int(item['quantity'])
             total += subtotal
             color = item.get('color', '')
             color_image = None
@@ -2387,8 +2425,8 @@ def api_main_category_products(slug):
             'id': product.id,
             'name': product.get_name(lang),
             'description': product.get_description(lang),
-            'price': product.price * rate,
-            'price_formatted': f"{product.price * rate:,.0f}",
+            'price': usd_to_som(product.price, rate),
+            'price_formatted': f"{usd_to_som(product.price, rate):,}".replace(",", " "),
             'material': product.get_material(lang),
             'size': product.size,
             'images': images,
