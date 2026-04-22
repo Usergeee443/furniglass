@@ -40,6 +40,32 @@ def usd_to_som(usd_amount, usd_rate) -> int:
     return int(som)
 
 
+def parse_som_text(value) -> int | None:
+    if value is None:
+        return None
+    digits = re.sub(r"\D", "", str(value))
+    if not digits:
+        return None
+    try:
+        n = int(digits)
+    except Exception:
+        return None
+    return n if n > 0 else None
+
+
+def som_to_usd_2dp(som_amount, usd_rate) -> float | None:
+    """
+    Convert integer so'm to USD rounded to 2dp for legacy column compatibility.
+    Note: this is lossy; display should prefer price_som.
+    """
+    som_int = parse_som_text(som_amount) if not isinstance(som_amount, int) else som_amount
+    if som_int is None:
+        return None
+    usd = (_to_decimal(som_int) / _to_decimal(usd_rate)).quantize(
+        Decimal("0.01"), rounding=ROUND_HALF_UP
+    )
+    return float(usd)
+
 def format_som(usd_amount, usd_rate, sep: str = " ") -> str:
     n = usd_to_som(usd_amount, usd_rate)
     return f"{n:,}".replace(",", sep)
@@ -1152,7 +1178,8 @@ def get_cart_total():
     for item in cart:
         product = Product.query.get(item['product_id'])
         if product:
-            total += usd_to_som(product.price, rate) * int(item['quantity'])
+            unit = int(product.price_som) if getattr(product, "price_som", None) is not None else usd_to_som(product.price, rate)
+            total += unit * int(item['quantity'])
     return total
 
 @app.context_processor
@@ -1216,7 +1243,8 @@ def cart():
     for item in cart_items:
         product = Product.query.get(item['product_id'])
         if product:
-            subtotal = usd_to_som(product.price, rate) * int(item['quantity'])
+            unit = int(product.price_som) if getattr(product, "price_som", None) is not None else usd_to_som(product.price, rate)
+            subtotal = unit * int(item['quantity'])
             total += subtotal
             color = item.get('color', '')
             color_image = None
@@ -1344,7 +1372,8 @@ def checkout():
             if product:
                 color_part = f" ({item.get('color')})" if item.get('color') else ""
                 products_list.append(f"{product.name_uz}{color_part} x{item['quantity']}")
-                total += usd_to_som(product.price, rate) * int(item['quantity'])
+                unit = int(product.price_som) if getattr(product, "price_som", None) is not None else usd_to_som(product.price, rate)
+                total += unit * int(item['quantity'])
         
         # Telegram xabari
         payment_display = {
@@ -1401,7 +1430,8 @@ def checkout():
     for item in cart_items:
         product = Product.query.get(item['product_id'])
         if product:
-            subtotal = usd_to_som(product.price, rate) * int(item['quantity'])
+            unit = int(product.price_som) if getattr(product, "price_som", None) is not None else usd_to_som(product.price, rate)
+            subtotal = unit * int(item['quantity'])
             total += subtotal
             color = item.get('color', '')
             color_image = None
@@ -1561,7 +1591,13 @@ def admin_product_add():
         material_ru = auto_translate(material_uz, 'ru') if material_uz else None
         material_en = auto_translate(material_uz, 'en') if material_uz else None
         
-        price = float(request.form.get('price'))
+        rate = get_exchange_rate()
+        price_som = parse_som_text(request.form.get('price_som'))
+        if price_som is not None:
+            price = som_to_usd_2dp(price_som, rate) or 0.0
+        else:
+            price = float(request.form.get('price'))
+            price_som = usd_to_som(price, rate)
         discount = int(request.form.get('discount', 0))
         size = request.form.get('size')
         category_id = int(request.form.get('category_id'))
@@ -1636,6 +1672,7 @@ def admin_product_add():
             description_ru=description_ru,
             description_en=description_en,
             price=price,
+            price_som=price_som,
             size=size,
             material=material_uz,
             material_uz=material_uz,
@@ -1687,7 +1724,14 @@ def admin_product_edit(product_id):
         product.material_ru = auto_translate(product.material_uz, 'ru') if product.material_uz else None
         product.material_en = auto_translate(product.material_uz, 'en') if product.material_uz else None
         
-        product.price = float(request.form.get('price'))
+        rate = get_exchange_rate()
+        price_som = parse_som_text(request.form.get('price_som'))
+        if price_som is not None:
+            product.price = som_to_usd_2dp(price_som, rate) or 0.0
+            product.price_som = price_som
+        else:
+            product.price = float(request.form.get('price'))
+            product.price_som = usd_to_som(product.price, rate)
         product.discount = int(request.form.get('discount', 0))
         product.size = request.form.get('size')
         product.category_id = int(request.form.get('category_id'))
@@ -2749,6 +2793,12 @@ if __name__ == '__main__':
                 db.session.execute(text('ALTER TABLE product ADD COLUMN colors TEXT'))
                 db.session.commit()
                 print("Added colors column to product table")
+
+            # Store exact so'm price to avoid float drift
+            if 'price_som' not in product_columns:
+                db.session.execute(text('ALTER TABLE product ADD COLUMN price_som INTEGER'))
+                db.session.commit()
+                print("Added price_som column to product table")
             
             # Check and add discount column to Product table
             if 'discount' not in product_columns:

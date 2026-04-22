@@ -980,11 +980,11 @@
                     </a>
                     <div class="flex items-baseline gap-2">
                         {% if product.discount and product.discount > 0 %}
-                        <span class="text-xl font-light text-[#1a1a2e]">{{ product.get_discounted_price()|format_som(usd_rate) }} so'm</span>
-                        <span class="text-sm text-gray-400 line-through">{{ product.price|format_som(usd_rate) }}</span>
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,}".format(product.get_discounted_price_som() if product.get_discounted_price_som() is not none else (product.get_discounted_price()|to_som(usd_rate))).replace(",", " ") }} so'm</span>
+                        <span class="text-sm text-gray-400 line-through">{{ "{:,}".format(product.price_som if product.price_som is not none else (product.price|to_som(usd_rate))).replace(",", " ") }}</span>
                         <span class="bg-[#f59e0b]/10 text-[#f59e0b] px-2 py-0.5 text-xs font-medium">-{{ product.discount }}%</span>
                         {% else %}
-                        <span class="text-xl font-light text-[#1a1a2e]">{{ product.price|format_som(usd_rate) }} so'm</span>
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,}".format(product.price_som if product.price_som is not none else (product.price|to_som(usd_rate))).replace(",", " ") }} so'm</span>
                         {% endif %}
                     </div>
                 </div>
@@ -1237,9 +1237,9 @@
                                         {{ product.get_name(lang) }}
                                     </h3>
                         {% if product.discount and product.discount > 0 %}
-                        <p class="font-bold text-[#1a1a2e] text-sm">{{ product.get_discounted_price()|format_som(usd_rate) }} <span class="text-xs text-gray-400 line-through">{{ product.price|format_som(usd_rate) }}</span></p>
+                        <p class="font-bold text-[#1a1a2e] text-sm">{{ "{:,}".format(product.get_discounted_price_som() if product.get_discounted_price_som() is not none else (product.get_discounted_price()|to_som(usd_rate))).replace(",", " ") }} <span class="text-xs text-gray-400 line-through">{{ "{:,}".format(product.price_som if product.price_som is not none else (product.price|to_som(usd_rate))).replace(",", " ") }}</span></p>
                         {% else %}
-                        <p class="font-bold text-[#1a1a2e] text-sm">{{ product.price|format_som(usd_rate) }} so'm</p>
+                        <p class="font-bold text-[#1a1a2e] text-sm">{{ "{:,}".format(product.price_som if product.price_som is not none else (product.price|to_som(usd_rate))).replace(",", " ") }} so'm</p>
                                 {% endif %}
                 </div>
             </a>

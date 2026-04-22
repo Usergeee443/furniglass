@@ -72,7 +72,9 @@ class Product(db.Model):
     description_uz = db.Column(db.Text)
     description_ru = db.Column(db.Text)  # Avtomatik tarjima
     description_en = db.Column(db.Text)  # Avtomatik tarjima
+    # price: legacy USD (float). New: store exact UZS in price_som to avoid float drift.
     price = db.Column(db.Float, nullable=False)
+    price_som = db.Column(db.Integer)  # exact so'm, preferred for display/calculation
     discount = db.Column(db.Integer, default=0)  # Chegirma foizi (0-100)
     size = db.Column(db.String(100))
     material = db.Column(db.String(100))
@@ -116,6 +118,14 @@ class Product(db.Model):
         if self.discount and self.discount > 0:
             return self.price * (1 - self.discount / 100)
         return self.price
+
+    def get_discounted_price_som(self):
+        """Chegirmali narx (so'mda) — price_som bo'lsa aniq ishlaydi."""
+        if self.price_som is None:
+            return None
+        if self.discount and self.discount > 0:
+            return int(round(self.price_som * (1 - self.discount / 100)))
+        return int(self.price_som)
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
