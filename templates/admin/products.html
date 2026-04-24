@@ -73,10 +73,14 @@
                     <td class="py-4 px-5">
                         <div class="flex flex-col">
                             <span class="font-semibold text-[#232339]">
-                                {{ "{:,.0f}".format(product.price * usd_rate) }} so'm
+                                {{ "{:,}".format(product.price_som if product.price_som is not none else (product.price|to_som(usd_rate))).replace(",", " ") }} so'm
                             </span>
                             <span class="text-xs text-gray-400">
-                                ${{ "%.2f" % product.price }}
+                                ${{
+                                  "%.2f" % (
+                                    (product.price_som / usd_rate) if (product.price_som is not none and usd_rate) else product.price
+                                  )
+                                }}
                             </span>
                         </div>
                     </td>
