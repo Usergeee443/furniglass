@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.get_name(lang) }} - {% if lang == 'ru' %}Furniglass | Категория{% elif lang == 'en' %}Furniglass | Category{% else %}Furniglass | Kategoriya{% endif %}{% endblock %}
+
+{% block meta_title %}{{ category.get_name(lang) }} - Furniglass{% endblock %}
+
+{% block meta_description %}{{ category.get_name(lang) }} - {% if lang == 'ru' %}товары Furniglass в этой категории.{% elif lang == 'en' %}Furniglass products in this category.{% else %}Ushbu kategoriyadagi Furniglass mahsulotlari.{% endif %}{% endblock %}
+
+{% block canonical %}{{ request.url_root.rstrip('/') }}/category/{{ category.slug }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .category-tab { position: relative; transition: all 0.3s ease; }
+    .category-tab::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #f59e0b; transition: width 0.3s ease; }
+    .category-tab.active::after, .category-tab:hover::after { width: 100%; }
+
+    .product-card { position: relative; background: #fff; overflow: hidden; }
+    .product-card .card-image { position: relative; overflow: hidden; }
+    .product-card .card-image::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,46,0.6) 0%, transparent 50%); opacity: 0; transition: opacity 0.4s ease; z-index: 1; }
+    .product-card:hover .card-image::before { opacity: 1; }
+    .product-card .card-image img { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .product-card:hover .card-image img { transform: scale(1.08); }
+    .product-card .card-actions { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; display: flex; gap: 8px; transform: translateY(100%); opacity: 0; transition: all 0.4s ease; z-index: 2; }
+    .product-card:hover .card-actions { transform: translateY(0); opacity: 1; }
+    .product-card .card-badge { position: absolute; top: 16px; left: 16px; z-index: 2; }
+    .product-card .card-content { padding: 20px; background: #fff; position: relative; }
+    .product-card .card-content::before { content: ''; position: absolute; top: 0; left: 20px; right: 20px; height: 1px; background: linear-gradient(to right, transparent, #e5e7eb, transparent); }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-[#1a1a2e] py-16 lg:py-20">
+    <div class="container mx-auto px-6 lg:px-16">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-block h-[2px] w-16 bg-[#f59e0b] mb-6"></div>
+            <p class="text-white/50 text-sm tracking-wider mb-4">
+                <a href="/" class="hover:text-white transition">{% if lang == 'ru' %}Главная{% elif lang == 'en' %}Home{% else %}Bosh sahifa{% endif %}</a>
+                {% if main_category %}
+                    <span class="mx-2">/</span>
+                    <a href="/main-category/{{ main_category.slug }}" class="hover:text-white transition">{{ main_category.get_name(lang) }}</a>
+                {% endif %}
+                <span class="mx-2">/</span>
+                <span class="text-[#f59e0b]">{{ category.get_name(lang) }}</span>
+            </p>
+            <h1 class="text-white text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3">
+                {{ category.get_name(lang) }}
+            </h1>
+            <p class="text-white/50">
+                {{ products|length }} {% if lang == 'ru' %}товаров{% elif lang == 'en' %}products{% else %}ta mahsulot{% endif %}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Tabs + Products -->
+<section class="bg-white py-10 lg:py-16">
+    <div class="container mx-auto px-6 lg:px-16">
+        {% if sibling_categories and main_category %}
+        <div class="border-b border-gray-100 mb-10 overflow-x-auto">
+            <div class="flex gap-8 min-w-max justify-center">
+                <a href="/main-category/{{ main_category.slug }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase text-gray-400 hover:text-[#1a1a2e] transition whitespace-nowrap">
+                    {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
+                </a>
+                {% for cat in sibling_categories %}
+                <a href="/category/{{ cat.slug }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if cat.id == category.id %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
+                    {{ cat.get_name(lang) }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {% for product in products %}
+            <article class="product-card group">
+                <div class="card-image aspect-[4/5] bg-[#f5f5f5]">
+                    {% if product.images %}
+                        {% set images = product.images|from_json %}
+                        {% if images %}
+                    <img src="/uploads/{{ images[0] }}" alt="{{ product.get_name(lang) }}" class="w-full h-full object-cover">
+                        {% endif %}
+                    {% endif %}
+
+                    {% if product.is_bestseller %}
+                    <div class="card-badge">
+                        <span class="inline-block bg-[#f59e0b] text-white text-[10px] px-3 py-1.5 font-medium tracking-widest uppercase">
+                            {% if lang == 'ru' %}Хит{% elif lang == 'en' %}Best{% else %}Top{% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+
+                    <div class="card-actions">
+                        <a href="/product/{{ product.id }}" class="flex-1 bg-white text-[#1a1a2e] text-center py-3 text-xs font-medium tracking-wider uppercase hover:bg-[#f59e0b] hover:text-white transition">
+                            {% if lang == 'ru' %}Подробнее{% elif lang == 'en' %}Details{% else %}Batafsil{% endif %}
+                        </a>
+                        <button class="add-to-cart-btn w-12 bg-[#1a1a2e] text-white flex items-center justify-center hover:bg-[#f59e0b] transition" data-product-id="{{ product.id }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-content">
+                    <p class="text-[11px] text-[#f59e0b] tracking-widest uppercase mb-2">
+                        {{ product.category.get_name(lang) if product.category else 'Mebel' }}
+                    </p>
+                    <a href="/product/{{ product.id }}" class="block">
+                        <h3 class="text-[#1a1a2e] font-medium mb-3 line-clamp-1 group-hover:text-[#f59e0b] transition-colors">
+                            {{ product.get_name(lang) }}
+                        </h3>
+                    </a>
+                    <div class="flex items-baseline gap-2">
+                        {% if product.discount and product.discount > 0 %}
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,}".format(product.get_discounted_price_som() if product.get_discounted_price_som() is not none else (product.get_discounted_price()|to_som(usd_rate))).replace(",", " ") }} so'm</span>
+                        <span class="text-sm text-gray-400 line-through">{{ "{:,}".format(product.price_som if product.price_som is not none else (product.price|to_som(usd_rate))).replace(",", " ") }}</span>
+                        <span class="bg-[#f59e0b]/10 text-[#f59e0b] px-2 py-0.5 text-xs font-medium">-{{ product.discount }}%</span>
+                        {% else %}
+                        <span class="text-xl font-light text-[#1a1a2e]">{{ "{:,}".format(product.price_som if product.price_som is not none else (product.price|to_som(usd_rate))).replace(",", " ") }} so'm</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="py-20 text-center max-w-md mx-auto">
+            <div class="w-24 h-24 border border-gray-200 flex items-center justify-center mx-auto mb-8">
+                <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-light text-[#1a1a2e] mb-3">
+                {% if lang == 'ru' %}Товары не найдены{% elif lang == 'en' %}No products found{% else %}Mahsulot topilmadi{% endif %}
+            </h3>
+            <p class="text-gray-400 mb-8">
+                {% if lang == 'ru' %}В этой категории пока нет товаров{% elif lang == 'en' %}No products in this category{% else %}Bu kategoriyada mahsulot yo'q{% endif %}
+            </p>
+            {% if main_category %}
+            <a href="/main-category/{{ main_category.slug }}" class="inline-flex items-center gap-2 border border-[#1a1a2e] text-[#1a1a2e] px-8 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#1a1a2e] hover:text-white transition-all">
+                {% if lang == 'ru' %}Назад{% elif lang == 'en' %}Back{% else %}Orqaga{% endif %}
+            </a>
+            {% else %}
+            <a href="/products" class="inline-flex items-center gap-2 border border-[#1a1a2e] text-[#1a1a2e] px-8 py-4 text-sm font-medium tracking-wider uppercase hover:bg-[#1a1a2e] hover:text-white transition-all">
+                {% if lang == 'ru' %}Все товары{% elif lang == 'en' %}All products{% else %}Barcha mahsulotlar{% endif %}
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const productId = this.dataset.productId;
+            const button = this;
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="32" stroke-dashoffset="32"/></svg>';
+            try {
+                const formData = new FormData();
+                formData.append('quantity', 1);
+                const response = await fetch('/cart/add/' + productId, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' }, body: formData });
+                const data = await response.json();
+                if (data.success) {
+                    document.querySelectorAll('.cart-badge').forEach(b => { b.textContent = data.cart_count; });
+                    button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                    button.classList.add('!bg-green-500');
+                    setTimeout(() => { button.innerHTML = originalHTML; button.classList.remove('!bg-green-500'); }, 2000);
+                } else {
+                    button.innerHTML = originalHTML;
+                }
+            } catch (err) {
+                button.innerHTML = originalHTML;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+

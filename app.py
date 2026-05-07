@@ -422,6 +422,8 @@ def track_user_activity():
                 page_name = 'Mahsulot'
             except Exception:
                 product_id = None
+        elif request.path.startswith('/category/'):
+            page_name = 'Kategoriya'
         elif request.path.startswith('/portfolio'):
             page_name = 'Portfolio'
         elif request.path.startswith('/collections'):
@@ -634,6 +636,32 @@ def main_category_detail(slug):
                          rate=rate,
                          lang=lang)
 
+
+@app.route('/category/<slug>')
+def category_detail(slug):
+    """Kategoriya sahifasi — faqat shu kategoriyadagi mahsulotlar."""
+    category = Category.query.filter_by(slug=slug).first_or_404()
+    lang = get_locale()
+    rate = get_exchange_rate()
+
+    products = Product.query.filter_by(category_id=category.id).order_by(Product.created_at.desc()).all()
+
+    main_category = category.main_category
+    sibling_categories = []
+    if category.main_category_id:
+        sibling_categories = Category.query.filter_by(main_category_id=category.main_category_id).order_by(Category.id.desc()).all()
+
+    return render_template(
+        'category_detail.html',
+        category=category,
+        main_category=main_category,
+        sibling_categories=sibling_categories,
+        products=products,
+        usd_rate=rate,
+        rate=rate,
+        lang=lang,
+    )
+
 @app.route('/product/<int:product_id>')
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
@@ -725,6 +753,13 @@ def sitemap():
                     'changefreq': 'weekly',
                     'priority': '0.8'
                 })
+                # Yangi kategoriya sahifasi (SEO-friendly)
+                if getattr(category, 'slug', None):
+                    category_pages.append({
+                        'loc': f'{base_url}/category/{category.slug}',
+                        'changefreq': 'weekly',
+                        'priority': '0.85'
+                    })
     except Exception as e:
         # Agar categories'da muammo bo'lsa, bo'sh ro'yxat qaytaramiz
         category_pages = []
