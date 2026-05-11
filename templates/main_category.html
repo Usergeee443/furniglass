@@ -280,11 +280,11 @@
         <!-- Category Tabs (Mahsulotlar sahifasidagi kabi) -->
         <div class="border-b border-gray-100 mb-12 overflow-x-auto">
             <div class="flex gap-8 min-w-max justify-center">
-                <a href="/main-category/{{ main_category.slug }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if not request.args.get('category') %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
+                <a href="/main-category/{{ main_category.slug }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase active text-[#1a1a2e] transition whitespace-nowrap">
                     {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
                 </a>
                 {% for cat in categories %}
-                <a href="/main-category/{{ main_category.slug }}?category={{ cat.id }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if request.args.get('category', '')|string == cat.id|string %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
+                <a href="/category/{{ cat.slug }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase text-gray-400 hover:text-[#1a1a2e] transition whitespace-nowrap">
                     {{ cat.get_name(lang) }}
                 </a>
                 {% endfor %}

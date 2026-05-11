@@ -1019,7 +1019,7 @@
         <!-- Categories Grid -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
             {% for category in categories[:12] %}
-            <a href="/products?category={{ category.id }}" class="category-card group relative aspect-[4/3]">
+            <a href="/category/{{ category.slug }}" class="category-card group relative aspect-[4/3]">
                         {% if category.image %}
                     <img src="/uploads/{{ category.image }}" alt="{{ category.get_name(lang) }}" 
                      class="absolute inset-0 w-full h-full object-cover">

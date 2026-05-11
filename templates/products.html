@@ -39,6 +39,29 @@
     .category-tab:hover::after {
         width: 100%;
     }
+
+    /* Asosiy kategoriya kartalari (bosh sahifa bilan mos) */
+    .category-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s ease;
+    }
+    .category-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(26,26,46,0.9) 0%, rgba(26,26,46,0.3) 50%, transparent 100%);
+        transition: all 0.4s;
+    }
+    .category-card:hover::after {
+        background: linear-gradient(to top, rgba(26,26,46,0.95) 0%, rgba(26,26,46,0.5) 60%, rgba(26,26,46,0.2) 100%);
+    }
+    .category-card:hover img {
+        transform: scale(1.08);
+    }
+    .category-card img {
+        transition: transform 1.5s ease;
+    }
     
     /* Premium Product Card */
     .product-card {
@@ -145,22 +168,56 @@
     </div>
 </section>
 
-<!-- Category Tabs & Products (doim ko‘rinadi — reveal faqat scroll bilan emas) -->
-<section class="bg-white py-12 lg:py-20 reveal-section revealed">
+{% if main_categories %}
+<section class="bg-white pt-4 pb-8 lg:pb-12 reveal-section revealed border-b border-gray-100">
     <div class="container mx-auto px-6 lg:px-16">
-        <!-- Category Tabs -->
-        <div class="border-b border-gray-100 mb-12 overflow-x-auto">
-            <div class="flex gap-8 min-w-max justify-center">
-                <a href="/products" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if not request.args.get('category') %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
-                {{ T.common.all[lang] }}
-            </a>
-            {% for cat in categories %}
-                <a href="/products?category={{ cat.id }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase {% if request.args.get('category', '')|string == cat.id|string %}active text-[#1a1a2e]{% else %}text-gray-400 hover:text-[#1a1a2e]{% endif %} transition whitespace-nowrap">
-                {{ cat.get_name(lang) }}
+        <div class="max-w-3xl mb-8 lg:mb-10">
+            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-2">{% if lang == 'ru' %}Направления{% elif lang == 'en' %}Directions{% else %}Asosiy yo'nalishlar{% endif %}</p>
+            <h2 class="text-2xl md:text-3xl font-bold text-[#1a1a2e] leading-tight">
+                {% if lang == 'ru' %}Выберите тип пространства{% elif lang == 'en' %}Choose your space type{% else %}Makon turini tanlang{% endif %}
+            </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
+            {% for main_cat in main_categories %}
+            <a href="/main-category/{{ main_cat.slug }}" class="category-card group relative aspect-[3/4] md:aspect-[2/3] rounded-sm">
+                {% if main_cat.image %}
+                <img src="/uploads/{{ main_cat.image }}" alt="{{ main_cat.get_name(lang) }}" class="absolute inset-0 w-full h-full object-cover">
+                {% else %}
+                <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] to-[#2d2d44]"></div>
+                {% endif %}
+                <div class="absolute inset-0 z-10 flex flex-col justify-end p-6 lg:p-8">
+                    <span class="text-[#f59e0b] text-xs tracking-wider uppercase mb-2">0{{ loop.index }}</span>
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-2">{{ main_cat.get_name(lang) }}</h3>
+                    <span class="text-white/70 text-sm group-hover:text-[#f59e0b] transition-colors">{% if lang == 'ru' %}Перейти{% elif lang == 'en' %}Open{% else %}O'tish{% endif %} →</span>
+                </div>
             </a>
             {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Kichik kategoriyalar + barcha mahsulotlar -->
+<section class="bg-white py-12 lg:py-20 reveal-section revealed">
+    <div class="container mx-auto px-6 lg:px-16">
+        {% if categories %}
+        <div class="mb-4 text-center">
+            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-2">{% if lang == 'ru' %}Категории{% elif lang == 'en' %}Categories{% else %}Kichik kategoriyalar{% endif %}</p>
+            <p class="text-gray-500 text-sm max-w-xl mx-auto">{% if lang == 'ru' %}Откройте отдельную страницу каталога по категории{% elif lang == 'en' %}Open a dedicated catalog page per category{% else %}Har bir kategoriya uchun alohida katalog sahifasi{% endif %}</p>
+        </div>
+        <div class="border-b border-gray-100 mb-12 overflow-x-auto">
+            <div class="flex gap-8 min-w-max justify-center">
+                <a href="/products" class="category-tab py-4 text-sm font-medium tracking-wider uppercase active text-[#1a1a2e] transition whitespace-nowrap">
+                    {{ T.common.all[lang] }}
+                </a>
+                {% for cat in categories %}
+                <a href="/category/{{ cat.slug }}" class="category-tab py-4 text-sm font-medium tracking-wider uppercase text-gray-400 hover:text-[#1a1a2e] transition whitespace-nowrap">
+                    {{ cat.get_name(lang) }}
+                </a>
+                {% endfor %}
             </div>
         </div>
+        {% endif %}
         
         <!-- Products Grid -->
         {% if products %}
@@ -199,7 +256,9 @@
                 
                 <div class="card-content">
                     <p class="text-[11px] text-[#f59e0b] tracking-widest uppercase mb-2">
-                        {{ product.category.get_name(lang) if product.category else 'Mebel' }}
+                        {% if product.category %}
+                        <a href="/category/{{ product.category.slug }}" class="hover:underline">{{ product.category.get_name(lang) }}</a>
+                        {% else %}Mebel{% endif %}
                     </p>
                     <a href="/product/{{ product.id }}" class="block">
                         <h3 class="text-[#1a1a2e] font-medium mb-3 line-clamp-1 group-hover:text-[#f59e0b] transition-colors">

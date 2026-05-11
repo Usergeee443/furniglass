@@ -549,7 +549,7 @@ def search():
             'id': c.id,
             'name': c.name_uz,
             'image': c.image,
-            'url': f'/products?category={c.id}'
+            'url': f'/category/{c.slug}'
         } for c in categories],
         'portfolios': [{
             'id': p.id,
@@ -564,16 +564,18 @@ def search():
 @app.route('/products')
 def products():
     category_id = request.args.get('category', type=int)
+    if category_id:
+        cat = Category.query.get(category_id)
+        if cat and cat.slug:
+            return redirect(url_for('category_detail', slug=cat.slug), code=301)
+
     min_price = request.args.get('min_price', type=float)
     max_price = request.args.get('max_price', type=float)
     material = request.args.get('material')
     size = request.args.get('size')
     search_query = request.args.get('q', '').strip()
-    
+
     query = Product.query
-    
-    if category_id:
-        query = query.filter_by(category_id=category_id)
     rate = get_exchange_rate()
 
     # Filtrlar frontendda so'mda, bazada esa USD da saqlanadi
@@ -595,18 +597,24 @@ def products():
             )
         )
     
-    products = query.all()
-    categories = Category.query.all()
-    
+    products = query.order_by(Product.created_at.desc()).all()
+    categories = Category.query.order_by(Category.id.desc()).all()
+    main_categories = MainCategory.query.order_by(MainCategory.order).all()
+
     # Get unique materials and sizes for filters
     materials = db.session.query(Product.material).distinct().all()
     sizes = db.session.query(Product.size).distinct().all()
-    
-    return render_template('products.html', products=products, categories=categories,
-                         materials=[m[0] for m in materials if m[0]], 
-                         sizes=[s[0] for s in sizes if s[0]],
-                         search_query=search_query,
-                         usd_rate=rate)
+
+    return render_template(
+        'products.html',
+        products=products,
+        categories=categories,
+        main_categories=main_categories,
+        materials=[m[0] for m in materials if m[0]],
+        sizes=[s[0] for s in sizes if s[0]],
+        search_query=search_query,
+        usd_rate=rate,
+    )
 
 @app.route('/main-category/<slug>')
 def main_category_detail(slug):
@@ -617,13 +625,18 @@ def main_category_detail(slug):
     # O'sha asosiy kategoriyaga tegishli kategoriyalar
     categories = Category.query.filter_by(main_category_id=main_category.id).all()
     category_ids = [c.id for c in categories]
-    
-    # Mahsulotlar: category query param bo'lsa shu kategoriyadagilar, yo'q bo'lsa barchasi
+
     category_id = request.args.get('category', type=int)
-    if category_id and category_id in category_ids:
-        products = Product.query.filter_by(category_id=category_id).order_by(Product.created_at.desc()).all()
-    else:
-        products = Product.query.filter(Product.category_id.in_(category_ids)).order_by(Product.created_at.desc()).all() if category_ids else []
+    if category_id:
+        cat = Category.query.get(category_id)
+        if cat and cat.slug and cat.main_category_id == main_category.id:
+            return redirect(url_for('category_detail', slug=cat.slug), code=301)
+
+    products = (
+        Product.query.filter(Product.category_id.in_(category_ids)).order_by(Product.created_at.desc()).all()
+        if category_ids
+        else []
+    )
     
     all_products = products  # soni va boshqa uchun
     reviews = Review.query.filter_by(main_category_id=main_category.id).order_by(Review.created_at.desc()).all()
@@ -750,19 +763,12 @@ def sitemap():
         categories = Category.query.all()
         category_pages = []
         for category in categories:
-            if category and category.id:
+            if category and getattr(category, 'slug', None):
                 category_pages.append({
-                    'loc': f'{base_url}/products?category={category.id}',
+                    'loc': f'{base_url}/category/{category.slug}',
                     'changefreq': 'weekly',
-                    'priority': '0.8'
+                    'priority': '0.85'
                 })
-                # Yangi kategoriya sahifasi (SEO-friendly)
-                if getattr(category, 'slug', None):
-                    category_pages.append({
-                        'loc': f'{base_url}/category/{category.slug}',
-                        'changefreq': 'weekly',
-                        'priority': '0.85'
-                    })
     except Exception as e:
         # Agar categories'da muammo bo'lsa, bo'sh ro'yxat qaytaramiz
         category_pages = []
