@@ -73,6 +73,15 @@
         height: 100%;
         object-fit: cover;
     }
+    @media (max-width: 767px) {
+        .portfolio-card .before-after-wrap img {
+            object-fit: contain;
+            object-position: center;
+        }
+        .portfolio-card .before-after-wrap {
+            background: #1a1a2e;
+        }
+    }
     .portfolio-card .before-label, .portfolio-card .after-label {
         position: absolute;
         bottom: 8px;
@@ -126,26 +135,14 @@
             <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if not request.args.get('room_type') %}active{% endif %}" data-room-type="">
                 {% if lang == 'ru' %}Все{% elif lang == 'en' %}All{% else %}Barchasi{% endif %}
             </button>
-            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Oshxona' %}active{% endif %}" data-room-type="Oshxona">
-                {% if lang == 'ru' %}Кухня{% elif lang == 'en' %}Kitchen{% else %}Oshxona{% endif %}
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Restoran va kafe' %}active{% endif %}" data-room-type="Restoran va kafe">
+                {% if lang == 'ru' %}Ресторан и кафе{% elif lang == 'en' %}Restaurant &amp; cafe{% else %}Restoran va kafe{% endif %}
             </button>
-            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Yotoqxona' %}active{% endif %}" data-room-type="Yotoqxona">
-                {% if lang == 'ru' %}Спальня{% elif lang == 'en' %}Bedroom{% else %}Yotoqxona{% endif %}
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Klinika' %}active{% endif %}" data-room-type="Klinika">
+                {% if lang == 'ru' %}Клиника{% elif lang == 'en' %}Clinic{% else %}Klinika{% endif %}
             </button>
-            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Zal' %}active{% endif %}" data-room-type="Zal">
-                {% if lang == 'ru' %}Гостиная{% elif lang == 'en' %}Living Room{% else %}Zal{% endif %}
-            </button>
-            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Ofis' %}active{% endif %}" data-room-type="Ofis">
-                {% if lang == 'ru' %}Офис{% elif lang == 'en' %}Office{% else %}Ofis{% endif %}
-            </button>
-            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Kabinet' %}active{% endif %}" data-room-type="Kabinet">
-                {% if lang == 'ru' %}Кабинет{% elif lang == 'en' %}Cabinet{% else %}Kabinet{% endif %}
-            </button>
-            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Bolalar xonasi' %}active{% endif %}" data-room-type="Bolalar xonasi">
-                {% if lang == 'ru' %}Детская{% elif lang == 'en' %}Kids room{% else %}Bolalar xonasi{% endif %}
-            </button>
-            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Boshqa' %}active{% endif %}" data-room-type="Boshqa">
-                {% if lang == 'ru' %}Другое{% elif lang == 'en' %}Other{% else %}Boshqa{% endif %}
+            <button type="button" class="filter-btn px-6 py-3 text-xs tracking-wider uppercase border border-gray-200 hover:border-[#1a1a2e] font-medium rounded-none {% if request.args.get('room_type') == 'Xonadon' %}active{% endif %}" data-room-type="Xonadon">
+                {% if lang == 'ru' %}Дом{% elif lang == 'en' %}Home{% else %}Xonadon{% endif %}
             </button>
         </div>
     
@@ -181,7 +178,15 @@
                 </div>
                 <div class="p-5 bg-white border border-t-0 border-gray-200">
                     {% if portfolio.room_type_uz %}
-                    <span class="block text-[#f59e0b] text-xs tracking-wider uppercase mb-1">{{ portfolio.room_type_uz }}</span>
+                    <span class="block text-[#f59e0b] text-xs tracking-wider uppercase mb-1">
+                        {% if portfolio.room_type_uz == 'Restoran va kafe' %}
+                            {% if lang == 'ru' %}Ресторан и кафе{% elif lang == 'en' %}Restaurant &amp; cafe{% else %}Restoran va kafe{% endif %}
+                        {% elif portfolio.room_type_uz == 'Klinika' %}
+                            {% if lang == 'ru' %}Клиника{% elif lang == 'en' %}Clinic{% else %}Klinika{% endif %}
+                        {% elif portfolio.room_type_uz == 'Xonadon' %}
+                            {% if lang == 'ru' %}Дом{% elif lang == 'en' %}Home{% else %}Xonadon{% endif %}
+                        {% else %}{{ portfolio.room_type_uz }}{% endif %}
+                    </span>
                     {% endif %}
                     <h3 class="text-[#1a1a2e] text-lg font-bold">{{ portfolio.get_title(lang) }}</h3>
                     {% if portfolio.get_description(lang) %}
@@ -272,6 +277,11 @@
         keyin: "{% if lang == 'ru' %}После{% elif lang == 'en' %}After{% else %}Keyin{% endif %}",
         empty: "{% if lang == 'ru' %}Проекты не найдены{% elif lang == 'en' %}No projects found{% else %}Loyihalar topilmadi{% endif %}"
     };
+    var roomTypeLabels = {
+        'Restoran va kafe': "{% if lang == 'ru' %}Ресторан и кафе{% elif lang == 'en' %}Restaurant and cafe{% else %}Restoran va kafe{% endif %}",
+        'Klinika': "{% if lang == 'ru' %}Клиника{% elif lang == 'en' %}Clinic{% else %}Klinika{% endif %}",
+        'Xonadon': "{% if lang == 'ru' %}Дом{% elif lang == 'en' %}Home{% else %}Xonadon{% endif %}"
+    };
     
     function renderCards(portfolios) {
         if (!portfolios || portfolios.length === 0) {
@@ -281,7 +291,8 @@
         portfolios.forEach(function(p) {
             var beforeImg = p.before_image ? '<img src="/uploads/' + p.before_image + '" alt="Oldin">' : '<div class="w-full h-full min-h-[180px] bg-[#2a2a3e] flex items-center justify-center text-white/40 text-sm">—</div>';
             var afterImg = p.after_image ? '<img src="/uploads/' + p.after_image + '" alt="Keyin">' : '<div class="w-full h-full min-h-[180px] bg-[#2a2a3e] flex items-center justify-center text-white/40 text-sm">—</div>';
-            var roomSpan = p.room_type_uz ? '<span class="block text-[#f59e0b] text-xs tracking-wider uppercase mb-1">' + escapeHtml(p.room_type_uz) + '</span>' : '';
+            var roomTxt = p.room_type_uz ? (roomTypeLabels[p.room_type_uz] || p.room_type_uz) : '';
+            var roomSpan = roomTxt ? '<span class="block text-[#f59e0b] text-xs tracking-wider uppercase mb-1">' + escapeHtml(roomTxt) + '</span>' : '';
             var desc = p.description ? '<p class="text-gray-500 text-sm mt-2 line-clamp-3">' + escapeHtml(p.description) + '</p>' : '';
             html += '<div class="portfolio-card group">';
             html += '<div class="aspect-[4/3] relative overflow-hidden bg-[#1a1a2e]"><div class="before-after-wrap absolute inset-0">';

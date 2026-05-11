@@ -21,6 +21,9 @@ from decimal import Decimal, ROUND_HALF_UP
 
 from storage_utils import delete_uploaded_file, public_storage_url, save_uploaded_file
 
+# Portfolio: faqat ushbu room_type_uz qiymatlari (admin forma bilan mos)
+PORTFOLIO_ALLOWED_ROOM_TYPES = ('Restoran va kafe', 'Klinika', 'Xonadon')
+
 # ============ MONEY HELPERS (avoid float drift) ============
 def _to_decimal(value) -> Decimal:
     if value is None:
@@ -812,8 +815,8 @@ Sitemap: {base_url}/sitemap.xml
 @app.route('/portfolio')
 def portfolio():
     room_type = request.args.get('room_type')
-    query = Portfolio.query
-    if room_type:
+    query = Portfolio.query.filter(Portfolio.room_type_uz.in_(PORTFOLIO_ALLOWED_ROOM_TYPES))
+    if room_type and room_type in PORTFOLIO_ALLOWED_ROOM_TYPES:
         query = query.filter_by(room_type_uz=room_type)
     portfolios = query.order_by(Portfolio.created_at.desc()).all()
     return render_template('portfolio.html', portfolios=portfolios)
@@ -824,8 +827,8 @@ def api_portfolio():
     """Portfolio ro'yxati JSON (filtr refresh siz ishlashi uchun)."""
     room_type = request.args.get('room_type')
     lang = get_locale()
-    query = Portfolio.query
-    if room_type:
+    query = Portfolio.query.filter(Portfolio.room_type_uz.in_(PORTFOLIO_ALLOWED_ROOM_TYPES))
+    if room_type and room_type in PORTFOLIO_ALLOWED_ROOM_TYPES:
         query = query.filter_by(room_type_uz=room_type)
     portfolios = query.order_by(Portfolio.created_at.desc()).all()
     items = []

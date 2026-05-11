@@ -70,12 +70,12 @@
                 <label class="block text-sm font-medium text-[#232339] mb-2">Xona turi (O'zbekcha)</label>
                 <select name="room_type_uz" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 text-gray-700 focus:ring-2 focus:ring-[#232339] outline-none transition">
                     <option value="">Tanlang</option>
-                    <option value="Yotoqxona" {% if portfolio and portfolio.room_type_uz == 'Yotoqxona' %}selected{% endif %}>Yotoqxona</option>
-                    <option value="Zal" {% if portfolio and portfolio.room_type_uz == 'Zal' %}selected{% endif %}>Zal</option>
-                    <option value="Oshxona" {% if portfolio and portfolio.room_type_uz == 'Oshxona' %}selected{% endif %}>Oshxona</option>
-                    <option value="Kabinet" {% if portfolio and portfolio.room_type_uz == 'Kabinet' %}selected{% endif %}>Kabinet</option>
-                    <option value="Bolalar xonasi" {% if portfolio and portfolio.room_type_uz == 'Bolalar xonasi' %}selected{% endif %}>Bolalar xonasi</option>
-                    <option value="Boshqa" {% if portfolio and portfolio.room_type_uz == 'Boshqa' %}selected{% endif %}>Boshqa</option>
+                    <option value="Restoran va kafe" {% if portfolio and portfolio.room_type_uz == 'Restoran va kafe' %}selected{% endif %}>Restoran va kafe</option>
+                    <option value="Klinika" {% if portfolio and portfolio.room_type_uz == 'Klinika' %}selected{% endif %}>Klinika</option>
+                    <option value="Xonadon" {% if portfolio and portfolio.room_type_uz == 'Xonadon' %}selected{% endif %}>Xonadon</option>
+                    {% if portfolio and portfolio.room_type_uz and portfolio.room_type_uz not in ['Restoran va kafe', 'Klinika', 'Xonadon'] %}
+                    <option value="{{ portfolio.room_type_uz }}" selected>{{ portfolio.room_type_uz }} (eski tur)</option>
+                    {% endif %}
                 </select>
             </div>
             
