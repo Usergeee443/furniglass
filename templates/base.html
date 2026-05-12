@@ -601,6 +601,9 @@
                     <a href="/products" class="nav-link {% if request.endpoint == 'products' %}active{% endif %}">
                         {{ T.nav.products[lang] }}
                     </a>
+                    <a href="/brands" class="nav-link {% if request.endpoint == 'brands_page' %}active{% endif %}">
+                        {{ T.nav.brands[lang] }}
+                    </a>
                     <a href="/portfolio" class="nav-link {% if request.endpoint == 'portfolio' %}active{% endif %}">
                         Portfolio
                     </a>
@@ -690,6 +693,7 @@
                             <nav class="space-y-4 lg:space-y-6">
                                 <a href="/" class="mobile-nav-link block">{{ T.nav.home[lang] }}</a>
                                 <a href="/products" class="mobile-nav-link block">{{ T.nav.products[lang] }}</a>
+                                <a href="/brands" class="mobile-nav-link block">{{ T.nav.brands[lang] }}</a>
                                 <a href="/portfolio" class="mobile-nav-link block">Portfolio</a>
                                 <a href="/about" class="mobile-nav-link block">{{ T.nav.about[lang] }}</a>
                                 <a href="/contact" class="mobile-nav-link block">{{ T.nav.contact[lang] }}</a>
@@ -847,6 +851,7 @@
                     <h4 class="text-xs font-medium uppercase tracking-wider mb-6">{{ T.footer.quick_links[lang] }}</h4>
                     <ul class="space-y-3">
                         <li><a href="/products" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{{ T.nav.products[lang] }}</a></li>
+                        <li><a href="/brands" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{{ T.nav.brands[lang] }}</a></li>
                         <li><a href="/portfolio" class="text-white/50 hover:text-[#f59e0b] text-sm transition">Portfolio</a></li>
                         <li><a href="/about" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{{ T.nav.about[lang] }}</a></li>
                         <li><a href="/contact" class="text-white/50 hover:text-[#f59e0b] text-sm transition">{{ T.nav.contact[lang] }}</a></li>

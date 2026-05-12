@@ -431,6 +431,8 @@ def track_user_activity():
             page_name = 'Portfolio'
         elif request.path.startswith('/collections'):
             page_name = 'Kolleksiyalar'
+        elif request.path.startswith('/brands'):
+            page_name = 'Brendlar'
         elif request.path.startswith('/about'):
             page_name = 'Biz haqimizda'
         elif request.path.startswith('/contact'):
@@ -713,6 +715,7 @@ def sitemap():
     static_pages = [
         {'loc': base_url, 'changefreq': 'daily', 'priority': '1.0'},
         {'loc': f'{base_url}/products', 'changefreq': 'daily', 'priority': '0.9'},
+        {'loc': f'{base_url}/brands', 'changefreq': 'weekly', 'priority': '0.65'},
         {'loc': f'{base_url}/custom', 'changefreq': 'weekly', 'priority': '0.9'},
         {'loc': f'{base_url}/portfolio', 'changefreq': 'weekly', 'priority': '0.8'},
         {'loc': f'{base_url}/about', 'changefreq': 'monthly', 'priority': '0.7'},
@@ -848,6 +851,13 @@ def api_portfolio():
             'after_image': p.after_image,
         })
     return jsonify(ok=True, portfolios=items)
+
+@app.route('/brands')
+def brands_page():
+    """Bizga ishonch bildirgan brendlar."""
+    brands = Brand.query.filter_by(is_active=True).order_by(Brand.order).all()
+    return render_template('brands.html', brands=brands)
+
 
 @app.route('/about')
 def about():

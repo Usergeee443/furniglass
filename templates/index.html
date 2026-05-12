@@ -229,57 +229,95 @@
         transform: translateY(0);
     }
     
-    /* Brands Carousel */
-    .brands-carousel-wrapper {
-        position: relative;
+    /* Brands marquee — 3 ta bir xil qator (gap muammosiz), cheksiz silliq aylanish */
+    .brands-marquee {
         overflow: hidden;
-    }
-    
-    .brands-carousel {
         width: 100%;
-        overflow: hidden;
+        mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
     }
-    
     .brands-track {
         display: flex;
-        gap: 3rem;
-        animation: scroll-brands 30s linear infinite;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: max-content;
+        gap: 0;
+        animation: brands-marquee-scroll var(--brands-scroll-duration, 40s) linear infinite;
         will-change: transform;
     }
-    
     .brands-track:hover {
         animation-play-state: paused;
     }
-    
-    @keyframes scroll-brands {
+    .brands-set {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        flex-shrink: 0;
+        gap: 2.5rem;
+    }
+    @media (min-width: 1024px) {
+        .brands-set {
+            gap: 3.5rem;
+        }
+    }
+    @keyframes brands-marquee-scroll {
         0% {
             transform: translateX(0);
         }
         100% {
-            transform: translateX(-50%);
+            transform: translateX(calc(-100% / 3));
         }
     }
-    
+    @media (prefers-reduced-motion: reduce) {
+        .brands-track {
+            animation: none;
+            transform: translateX(0);
+        }
+    }
     .brand-item {
         flex-shrink: 0;
     }
-    
     .brand-logo-wrapper {
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 3.5rem;
+        padding: 0 1rem;
         transition: opacity 0.3s ease;
     }
-    
+    @media (min-width: 768px) {
+        .brand-logo-wrapper {
+            height: 4.5rem;
+            padding: 0 1.25rem;
+        }
+    }
+    @media (min-width: 1024px) {
+        .brand-logo-wrapper {
+            height: 5.5rem;
+            padding: 0 1.75rem;
+        }
+    }
     .brand-logo-wrapper img {
-        max-width: 150px;
+        max-width: min(140px, 28vw);
         max-height: 100%;
+        width: auto;
+        height: auto;
         object-fit: contain;
         transition: opacity 0.3s ease;
     }
-    
+    @media (min-width: 768px) {
+        .brand-logo-wrapper img {
+            max-width: 160px;
+        }
+    }
+    @media (min-width: 1024px) {
+        .brand-logo-wrapper img {
+            max-width: 180px;
+        }
+    }
     .brand-logo-wrapper:hover img {
-        opacity: 0.8;
+        opacity: 0.85;
     }
     
     /* Clients Carousel - Premium Design */
@@ -462,22 +500,6 @@
         
         .clients-nav-btn.next {
             right: -0.5rem;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .brands-track {
-            gap: 2rem;
-            animation-duration: 20s;
-        }
-        
-        .brand-logo-wrapper {
-            height: 3rem;
-            padding: 0 1rem;
-        }
-        
-        .brand-logo-wrapper img {
-            max-width: 100px;
         }
     }
     
@@ -748,43 +770,37 @@
     </div>
 </section>
 
-<!-- Brands Carousel -->
+<!-- Brands marquee -->
 {% if brands %}
-<section class="py-12 lg:py-16 bg-[#f8f8f8] reveal-section">
-    <div class="container mx-auto px-6 lg:px-16">
-        <div class="brands-carousel-wrapper relative">
-            <div class="brands-carousel overflow-hidden">
-                <div class="brands-track flex gap-8 lg:gap-12 animate-scroll">
-                    <!-- First set of brands -->
-                    {% for brand in brands %}
-                    <div class="brand-item flex-shrink-0 flex items-center justify-center">
-                        <div class="brand-logo-wrapper h-16 md:h-20 lg:h-24 w-auto px-4 md:px-6 lg:px-8 flex items-center justify-center opacity-100 transition-opacity">
-                            {% if brand.website %}
-                            <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
-                                <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
-                            </a>
-                    {% else %}
-                            <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
-                    {% endif %}
-                        </div>
+{% set _bs = [28, [20 + (brands|length * 5), 55]|min]|max %}
+<section class="py-12 lg:py-16 bg-[#f8f8f8] reveal-section" id="brands-section">
+    <div class="container mx-auto px-6 lg:px-16 mb-8 text-center">
+        <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3 font-medium">{% if lang == 'ru' %}Партнёры{% elif lang == 'en' %}Partners{% else %}Hamkorlar{% endif %}</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-3">{% if lang == 'ru' %}Бренды, которым мы доверяем{% elif lang == 'en' %}Brands that trust us{% else %}Bizga ishonch bildirgan brendlar{% endif %}</h2>
+        <a href="/brands" class="inline-flex items-center gap-2 text-sm font-medium text-[#1a1a2e] border-b border-[#f59e0b] border-opacity-0 hover:border-opacity-100 hover:text-[#f59e0b] transition-colors pb-0.5">
+            {% if lang == 'ru' %}Все бренды{% elif lang == 'en' %}All brands{% else %}Barcha brendlar{% endif %}
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+    </div>
+    <div class="brands-marquee relative">
+        <div class="brands-track" style="--brands-scroll-duration: {{ _bs }}s;">
+            {% for _cycle in [1, 2, 3] %}
+            <div class="brands-set" aria-hidden="{% if _cycle > 1 %}true{% else %}false{% endif %}">
+                {% for brand in brands %}
+                <div class="brand-item flex items-center justify-center">
+                    <div class="brand-logo-wrapper">
+                        {% if brand.website %}
+                        <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="flex h-full w-full items-center justify-center" title="{{ brand.get_name(lang) }}">
+                            <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" loading="lazy" decoding="async">
+                        </a>
+                        {% else %}
+                        <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" loading="lazy" decoding="async">
+                        {% endif %}
                     </div>
-                    {% endfor %}
-                    <!-- Duplicate for seamless loop -->
-                    {% for brand in brands %}
-                    <div class="brand-item flex-shrink-0 flex items-center justify-center">
-                        <div class="brand-logo-wrapper h-16 md:h-20 lg:h-24 w-auto px-4 md:px-6 lg:px-8 flex items-center justify-center opacity-100 transition-opacity">
-                            {% if brand.website %}
-                            <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
-                                <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
-                            </a>
-                            {% else %}
-                            <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-all">
-                            {% endif %}
-                        </div>
-                    </div>
-            {% endfor %}
                 </div>
+                {% endfor %}
             </div>
+            {% endfor %}
         </div>
     </div>
 </section>

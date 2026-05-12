@@ -18,6 +18,7 @@ TRANSLATIONS = {
         'search': {'uz': 'Qidiruv', 'ru': 'Поиск', 'en': 'Search'},
         'language': {'uz': 'Til', 'ru': 'Язык', 'en': 'Language'},
         'more': {'uz': "Ko'proq", 'ru': 'Ещё', 'en': 'More'},
+        'brands': {'uz': 'Brendlar', 'ru': 'Бренды', 'en': 'Brands'},
     },
     
     # Common
