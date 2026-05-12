@@ -49,6 +49,10 @@
         <!-- Info -->
         <div class="p-4">
             <h3 class="text-lg font-semibold text-[#232339] mb-1">{{ brand.name_uz }}</h3>
+            {% if brand.slug %}
+            <p class="text-xs text-gray-400 mb-2 font-mono truncate">/{{ brand.slug }}</p>
+            <a href="/brands/{{ brand.slug }}" target="_blank" class="text-xs text-[#232339] hover:text-[#F5C242] underline mb-2 inline-block">Saytda ko'rish</a>
+            {% endif %}
             {% if brand.website %}
             <p class="text-sm text-gray-500 mb-3 truncate">
                 <i class="fas fa-link text-xs"></i> {{ brand.website }}

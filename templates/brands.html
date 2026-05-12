@@ -6,6 +6,18 @@
 
 {% block canonical %}{{ request.url_root.rstrip('/') }}/brands{% endblock %}
 
+{% block extra_css %}
+<style>
+    .brand-card {
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.25s ease;
+    }
+    .brand-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 24px 48px rgba(26, 26, 46, 0.12);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="bg-[#1a1a2e] py-16 lg:py-24">
     <div class="container mx-auto px-6 lg:px-16 text-center">
@@ -17,31 +29,32 @@
         </p>
         <h1 class="text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{{ T.nav.brands[lang] }}</h1>
         <p class="text-white/60 max-w-2xl mx-auto text-base md:text-lg">
-            {% if lang == 'ru' %}Нам доверяют ведущие бренды индустрии — мы используем их материалы и решения в наших проектах.{% elif lang == 'en' %}Leading industry brands trust us — we use their materials and solutions in our projects.{% else %}Yetakchi sanoat brendlari bizga ishonadi — loyihalarimizda ularning materiallari va yechimlaridan foydalanamiz.{% endif %}
+            {% if lang == 'ru' %}Нам доверяют ведущие бренды индустрии — нажмите на карточку, чтобы узнать подробнее.{% elif lang == 'en' %}Leading industry brands trust us — tap a card to read more.{% else %}Yetakchi sanoat brendlari bizga ishonadi — batafsil uchun kartochkani bosing.{% endif %}
         </p>
     </div>
 </section>
 
-<section class="py-14 lg:py-20 bg-white">
+<section class="py-14 lg:py-20 bg-gradient-to-b from-[#fafafa] to-white">
     <div class="container mx-auto px-6 lg:px-16">
         {% if brands %}
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
             {% for brand in brands %}
-            <article class="group flex flex-col items-center justify-center rounded-2xl border border-gray-100 bg-[#fafafa] p-6 lg:p-8 transition-all hover:border-[#f59e0b]/40 hover:shadow-lg hover:shadow-[#1a1a2e]/5">
-                <div class="flex h-20 md:h-24 w-full items-center justify-center mb-4">
-                    {% if brand.website %}
-                    <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="flex h-full w-full items-center justify-center" title="{{ brand.get_name(lang) }}">
-                        <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-opacity group-hover:opacity-90" loading="lazy" decoding="async">
-                    </a>
-                    {% else %}
-                    <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain" loading="lazy" decoding="async">
-                    {% endif %}
+            <a href="/brands/{{ brand.slug }}" class="brand-card group flex flex-col rounded-2xl border border-gray-200/80 bg-white p-8 text-center overflow-hidden ring-1 ring-transparent hover:border-[#f59e0b]/35 hover:ring-[#f59e0b]/10">
+                <div class="flex h-28 md:h-32 w-full items-center justify-center mb-5">
+                    <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async">
                 </div>
-                <p class="text-center text-sm font-medium text-[#1a1a2e] line-clamp-2">{{ brand.get_name(lang) }}</p>
-                {% if brand.website %}
-                <span class="mt-2 text-[11px] uppercase tracking-wider text-[#f59e0b] opacity-0 group-hover:opacity-100 transition-opacity">{% if lang == 'ru' %}Сайт{% elif lang == 'en' %}Website{% else %}Sayt{% endif %}</span>
+                <h2 class="text-lg font-bold text-[#1a1a2e] mb-2 group-hover:text-[#f59e0b] transition-colors">{{ brand.get_name(lang) }}</h2>
+                {% if brand.get_tagline(lang) %}
+                <p class="text-sm text-gray-500 line-clamp-3 leading-relaxed mb-4">{{ brand.get_tagline(lang) }}</p>
+                {% else %}
+                <p class="text-[#f59e0b]/90 mb-4 text-xs font-semibold uppercase tracking-widest">
+                    {% if lang == 'ru' %}Подробнее{% elif lang == 'en' %}Details{% else %}Batafsil{% endif %} →
+                </p>
                 {% endif %}
-            </article>
+                <span class="mt-auto text-xs font-semibold uppercase tracking-widest text-gray-400 group-hover:text-[#1a1a2e] transition-colors">
+                    {% if lang == 'ru' %}Открыть{% elif lang == 'en' %}Open{% else %}Ochish{% endif %}
+                </span>
+            </a>
             {% endfor %}
         </div>
         {% else %}

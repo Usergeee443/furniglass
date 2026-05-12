@@ -354,14 +354,21 @@ class UserActivity(db.Model):
 
 
 class Brand(db.Model):
-    """Brend logolari carousel uchun"""
+    """Brend logolari — carousel va batafsil sahifa"""
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     name_uz = db.Column(db.String(200), nullable=False)
     name_ru = db.Column(db.String(200))
     name_en = db.Column(db.String(200))
+    slug = db.Column(db.String(120), unique=True, nullable=False, index=True)
     logo = db.Column(db.String(200), nullable=False)  # Logo fayl path
     website = db.Column(db.String(200))  # Ixtiyoriy: brend veb-sayti
+    tagline_uz = db.Column(db.String(500))
+    tagline_ru = db.Column(db.String(500))
+    tagline_en = db.Column(db.String(500))
+    description_uz = db.Column(db.Text)
+    description_ru = db.Column(db.Text)
+    description_en = db.Column(db.Text)
     order = db.Column(db.Integer, default=0)  # Tartib
     is_active = db.Column(db.Boolean, default=True)  # Faol yoki yo'q
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -373,6 +380,22 @@ class Brand(db.Model):
         elif lang == 'en' and self.name_en:
             return self.name_en
         return self.name_uz or self.name
+
+    def get_tagline(self, lang='uz'):
+        if lang == 'ru' and self.tagline_ru:
+            return self.tagline_ru
+        if lang == 'en' and self.tagline_en:
+            return self.tagline_en
+        return self.tagline_uz or ''
+
+    def get_description(self, lang='uz'):
+        if lang == 'ru' and self.description_ru:
+            return self.description_ru
+        if lang == 'en' and self.description_en:
+            return self.description_en
+        return self.description_uz or ''
+
+
 class Client(db.Model):
     """Bizning mijozlar - testimonial carousel uchun"""
     id = db.Column(db.Integer, primary_key=True)

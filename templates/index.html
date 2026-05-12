@@ -789,13 +789,9 @@
                 {% for brand in brands %}
                 <div class="brand-item flex items-center justify-center">
                     <div class="brand-logo-wrapper">
-                        {% if brand.website %}
-                        <a href="{{ brand.website }}" target="_blank" rel="noopener noreferrer" class="flex h-full w-full items-center justify-center" title="{{ brand.get_name(lang) }}">
+                        <a href="/brands/{{ brand.slug }}" class="flex h-full w-full items-center justify-center" title="{{ brand.get_name(lang) }}">
                             <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" loading="lazy" decoding="async">
                         </a>
-                        {% else %}
-                        <img src="/uploads/{{ brand.logo }}" alt="{{ brand.get_name(lang) }}" loading="lazy" decoding="async">
-                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
@@ -1278,18 +1274,6 @@
 <!-- Individual Configurator Section -->
 <section class="pt-6 md:pt-8 lg:pt-12 pb-0 md:pb-2 lg:pb-4 bg-white reveal-section" id="configurator">
     <div class="container mx-auto px-4 lg:px-16 pb-0">
-        <!-- Header -->
-        <div class="max-w-3xl mb-6 lg:mb-8">
-            <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-2">
-                {% if lang == 'ru' %}Индивидуальный заказ{% elif lang == 'en' %}Custom Order{% else %}Individual buyurtma{% endif %}
-            </p>
-            <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-[#1a1a2e] leading-tight mb-4">
-                {% if lang == 'ru' %}Furni Glass — создаёт мебель в вашем стиле{% elif lang == 'en' %}Furni Glass — creates furniture in your style{% else %}Furni Glass — mebelni siz istagan uslubda yaratadi{% endif %}
-            </h2>
-            <p class="text-gray-600 text-sm md:text-base leading-relaxed">
-                {% if lang == 'ru' %}Вы выбираете каждую деталь: тип ножек, материал, цвет, узор и стиль. Furni Glass производит мебель не стандартную, а по вашему вкусу.{% elif lang == 'en' %}You choose every detail: leg type, material, color, pattern and style. Furni Glass produces furniture not standard, but according to your taste.{% else %}Siz har bir detalni o'zingiz tanlaysiz: oyoq turi, material, rang, naqsh va stil. Furni Glass mebellarni standart emas, sizning didingizga moslab ishlab chiqaradi.{% endif %}
-            </p>
-                        </div>
         
         <!-- Configurator - Compact Design (product_detail uslubida) -->
         <div class="flex flex-col lg:flex-row items-start gap-4 md:gap-6 lg:gap-8">

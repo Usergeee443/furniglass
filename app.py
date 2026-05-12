@@ -81,6 +81,32 @@ def to_som_filter(usd_amount, usd_rate):
 def format_som_filter(usd_amount, usd_rate, sep: str = " "):
     return format_som(usd_amount, usd_rate, sep=sep)
 
+
+def slugify_brand_slug(text: str) -> str:
+    """URL uchun xavfsiz slug (brend nomidan)."""
+    if not (text or "").strip():
+        return "brend"
+    s = text.strip().lower()
+    s = re.sub(r"[^\w\s-]", "", s, flags=re.UNICODE)
+    s = re.sub(r"[-\s]+", "-", s).strip("-")
+    return (s[:100] or "brend").lower()
+
+
+def unique_brand_slug(base: str, exclude_brand_id=None) -> str:
+    """Brend jadvalida noyob slug."""
+    slug = base or "brend"
+    original = slug
+    n = 2
+    while True:
+        q = Brand.query.filter_by(slug=slug)
+        if exclude_brand_id is not None:
+            q = q.filter(Brand.id != exclude_brand_id)
+        if q.first() is None:
+            return slug
+        slug = f"{original}-{n}"
+        n += 1
+
+
 # ============ AUTO-TRANSLATE FUNCTION (FREE) ============
 def auto_translate(text, target_lang='ru'):
     """
@@ -151,6 +177,39 @@ def ensure_schema():
                 db.session.execute(text("ALTER TABLE product ADD COLUMN price_som INTEGER"))
                 db.session.commit()
                 print("Added price_som column to product table (startup)")
+
+            # Brend jadvali — slug va tavsif ustunlari (import/gunicorn uchun)
+            try:
+                if "brand" in inspector.get_table_names():
+                    brand_columns = [c["name"] for c in inspector.get_columns("brand")]
+                    if "slug" not in brand_columns:
+                        db.session.execute(text("ALTER TABLE brand ADD COLUMN slug VARCHAR(120)"))
+                        brand_columns.append("slug")
+                    for colname, coltype in (
+                        ("tagline_uz", "VARCHAR(500)"),
+                        ("tagline_ru", "VARCHAR(500)"),
+                        ("tagline_en", "VARCHAR(500)"),
+                        ("description_uz", "TEXT"),
+                        ("description_ru", "TEXT"),
+                        ("description_en", "TEXT"),
+                    ):
+                        if colname not in brand_columns:
+                            db.session.execute(text(f"ALTER TABLE brand ADD COLUMN {colname} {coltype}"))
+                            brand_columns.append(colname)
+                    db.session.commit()
+                    inspector = inspect(db.engine)
+                    if "slug" in [c["name"] for c in inspector.get_columns("brand")]:
+                        for b in Brand.query.order_by(Brand.id).all():
+                            if not getattr(b, "slug", None) or not str(b.slug).strip():
+                                base = slugify_brand_slug(b.name_uz or b.name or f"brend-{b.id}")
+                                b.slug = unique_brand_slug(base, exclude_brand_id=b.id)
+                        db.session.commit()
+            except Exception as be:
+                print(f"Brand schema ensure note: {be}")
+                try:
+                    db.session.rollback()
+                except Exception:
+                    pass
     except Exception as e:
         # Bu joyda servis yiqilmasin; logga chiqib qoladi.
         print(f"Schema ensure error: {e}")
@@ -431,7 +490,9 @@ def track_user_activity():
             page_name = 'Portfolio'
         elif request.path.startswith('/collections'):
             page_name = 'Kolleksiyalar'
-        elif request.path.startswith('/brands'):
+        elif request.path.startswith('/brands/'):
+            page_name = 'Brend'
+        elif request.path == '/brands':
             page_name = 'Brendlar'
         elif request.path.startswith('/about'):
             page_name = 'Biz haqimizda'
@@ -776,6 +837,19 @@ def sitemap():
         # Agar categories'da muammo bo'lsa, bo'sh ro'yxat qaytaramiz
         category_pages = []
     
+    # Brendlar (batafsil sahifa)
+    brand_pages = []
+    try:
+        for br in Brand.query.filter_by(is_active=True).all():
+            if br and getattr(br, "slug", None):
+                brand_pages.append({
+                    'loc': f'{base_url}/brands/{br.slug}',
+                    'changefreq': 'monthly',
+                    'priority': '0.6',
+                })
+    except Exception:
+        pass
+    
     # Portfolio items
     portfolios = Portfolio.query.all()
     portfolio_pages = []
@@ -791,7 +865,7 @@ def sitemap():
     xml.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
     
     # Add all pages
-    all_pages = static_pages + product_pages + category_pages
+    all_pages = static_pages + product_pages + category_pages + brand_pages + portfolio_pages
     
     for page in all_pages:
         xml.append('  <url>')
@@ -851,6 +925,13 @@ def api_portfolio():
             'after_image': p.after_image,
         })
     return jsonify(ok=True, portfolios=items)
+
+@app.route('/brands/<slug>')
+def brand_detail(slug):
+    """Bitta brend haqida batafsil."""
+    brand = Brand.query.filter_by(slug=slug, is_active=True).first_or_404()
+    return render_template('brand_detail.html', brand=brand)
+
 
 @app.route('/brands')
 def brands_page():
@@ -2051,13 +2132,22 @@ def admin_brand_add():
         website = request.form.get('website', '')
         order = int(request.form.get('order', 0))
         is_active = request.form.get('is_active') == 'on'
-        
+        slug_in = (request.form.get('slug') or '').strip()
+        base_slug = slugify_brand_slug(slug_in or name_uz or 'brend')
+        slug = unique_brand_slug(base_slug)
+        tagline_uz = (request.form.get('tagline_uz') or '').strip() or None
+        tagline_ru = (request.form.get('tagline_ru') or '').strip() or None
+        tagline_en = (request.form.get('tagline_en') or '').strip() or None
+        description_uz = (request.form.get('description_uz') or '').strip() or None
+        description_ru = (request.form.get('description_ru') or '').strip() or None
+        description_en = (request.form.get('description_en') or '').strip() or None
+
         # Logo fayl yuklash
         logo_file = request.files.get('logo')
         if not logo_file or not logo_file.filename:
             flash('Logo fayl yuklash majburiy!', 'error')
             return redirect(url_for('admin_brand_add'))
-        
+
         filename = secure_filename(logo_file.filename)
         from datetime import datetime
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -2065,22 +2155,29 @@ def admin_brand_add():
         filepath = os.path.join('brands', filename)
         os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'brands'), exist_ok=True)
         save_uploaded_file(app, logo_file, filepath)
-        
+
         brand = Brand(
             name=name_uz,
             name_uz=name_uz,
             name_ru=name_ru,
             name_en=name_en,
+            slug=slug,
             logo=filepath,
             website=website,
+            tagline_uz=tagline_uz,
+            tagline_ru=tagline_ru,
+            tagline_en=tagline_en,
+            description_uz=description_uz,
+            description_ru=description_ru,
+            description_en=description_en,
             order=order,
-            is_active=is_active
+            is_active=is_active,
         )
         db.session.add(brand)
         db.session.commit()
         flash('Brend qo\'shildi!', 'success')
         return redirect(url_for('admin_brands'))
-    
+
     return render_template('admin/brand_form.html', brand=None)
 
 @app.route('/admin/brand/<int:brand_id>/edit', methods=['GET', 'POST'])
@@ -2096,7 +2193,16 @@ def admin_brand_edit(brand_id):
         brand.website = request.form.get('website', '')
         brand.order = int(request.form.get('order', 0))
         brand.is_active = request.form.get('is_active') == 'on'
-        
+        slug_in = (request.form.get('slug') or '').strip()
+        base_slug = slugify_brand_slug(slug_in or brand.name_uz or 'brend')
+        brand.slug = unique_brand_slug(base_slug, exclude_brand_id=brand.id)
+        brand.tagline_uz = (request.form.get('tagline_uz') or '').strip() or None
+        brand.tagline_ru = (request.form.get('tagline_ru') or '').strip() or None
+        brand.tagline_en = (request.form.get('tagline_en') or '').strip() or None
+        brand.description_uz = (request.form.get('description_uz') or '').strip() or None
+        brand.description_ru = (request.form.get('description_ru') or '').strip() or None
+        brand.description_en = (request.form.get('description_en') or '').strip() or None
+
         # Logo fayl yangilash
         logo_file = request.files.get('logo')
         if logo_file and logo_file.filename:
@@ -2991,6 +3097,29 @@ if __name__ == '__main__':
             except Exception as e:
                 print(f"Review migration note: {e}")
             
+            # Brand: slug, tagline, description (batafsil sahifa)
+            try:
+                if 'brand' in inspector.get_table_names():
+                    brand_columns = [col['name'] for col in inspector.get_columns('brand')]
+                    if 'slug' not in brand_columns:
+                        db.session.execute(text('ALTER TABLE brand ADD COLUMN slug VARCHAR(120)'))
+                        print("Added slug column to brand table")
+                        brand_columns.append('slug')
+                    for colname, coltype in (
+                        ('tagline_uz', 'VARCHAR(500)'),
+                        ('tagline_ru', 'VARCHAR(500)'),
+                        ('tagline_en', 'VARCHAR(500)'),
+                        ('description_uz', 'TEXT'),
+                        ('description_ru', 'TEXT'),
+                        ('description_en', 'TEXT'),
+                    ):
+                        if colname not in brand_columns:
+                            db.session.execute(text(f'ALTER TABLE brand ADD COLUMN {colname} {coltype}'))
+                            print(f"Added {colname} column to brand table")
+                            brand_columns.append(colname)
+            except Exception as e:
+                print(f"Brand migration note: {e}")
+            
             # Commit all migration changes
             try:
                 db.session.commit()
@@ -3012,6 +3141,22 @@ if __name__ == '__main__':
             db.create_all()
         except Exception as e:
             print(f"Create all tables error: {e}")
+        
+        # Brendlar uchun bo'sh sluglarni to'ldirish (migratsiyadan keyin)
+        try:
+            from sqlalchemy import inspect as sa_inspect
+            if 'brand' in sa_inspect(db.engine).get_table_names():
+                for b in Brand.query.order_by(Brand.id).all():
+                    if not getattr(b, 'slug', None) or not str(b.slug).strip():
+                        base = slugify_brand_slug(b.name_uz or b.name or f"brend-{b.id}")
+                        b.slug = unique_brand_slug(base, exclude_brand_id=b.id)
+                db.session.commit()
+        except Exception as e:
+            print(f"Brand slug backfill note: {e}")
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
         
         # Create default admin user if not exists
         try:
