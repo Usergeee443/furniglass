@@ -239,73 +239,147 @@ login_manager.init_app(app)
 login_manager.login_view = 'admin_login'
 
 
+def _table_column_names(inspector, table_name):
+    try:
+        return [c["name"] for c in inspector.get_columns(table_name)]
+    except Exception:
+        return None
+
+
+def apply_db_migrations():
+    """
+    Render/Gunicorn ishga tushganda migratsiyalar ( __main__ dagi kabi ).
+    Yetishmayotgan ustunlar va jadvallar — 500 xatolarning asosiy sababi.
+    """
+    from sqlalchemy import inspect, text
+
+    inspector = inspect(db.engine)
+    tables = set(inspector.get_table_names())
+
+    # PostgreSQL: `order` rezerv so'z — `orders` ga o'tkazish
+    if "order" in tables and "orders" not in tables:
+        try:
+            if db.engine.dialect.name == "postgresql":
+                db.session.execute(text('ALTER TABLE "order" RENAME TO orders'))
+            else:
+                db.session.execute(text('ALTER TABLE "order" RENAME TO orders'))
+            db.session.commit()
+            tables = set(inspect(db.engine).get_table_names())
+            print("Renamed order table to orders")
+        except Exception as e:
+            print(f"Order table rename note: {e}")
+            db.session.rollback()
+
+    db.create_all()
+    inspector = inspect(db.engine)
+    tables = set(inspector.get_table_names())
+
+    def add_col(table, column, coltype):
+        cols = _table_column_names(inspector, table)
+        if cols is None or column in cols:
+            return
+        db.session.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {coltype}"))
+
+    # category
+    if "category" in tables:
+        add_col("category", "name_ru", "VARCHAR(100)")
+        add_col("category", "name_en", "VARCHAR(100)")
+        add_col("category", "main_category_id", "INTEGER")
+
+    # product
+    if "product" in tables:
+        for col, ctype in (
+            ("name_ru", "VARCHAR(200)"),
+            ("name_en", "VARCHAR(200)"),
+            ("description_ru", "TEXT"),
+            ("description_en", "TEXT"),
+            ("colors", "TEXT"),
+            ("price_som", "INTEGER"),
+            ("discount", "INTEGER DEFAULT 0"),
+            ("material_ru", "VARCHAR(100)"),
+            ("material_en", "VARCHAR(100)"),
+            ("material_uz", "VARCHAR(100)"),
+            ("warranty_uz", "VARCHAR(50)"),
+        ):
+            add_col("product", col, ctype)
+
+    # portfolio
+    if "portfolio" in tables:
+        portfolio_cols = _table_column_names(inspector, "portfolio") or []
+        for col, ctype in (
+            ("title_ru", "VARCHAR(200)"),
+            ("title_en", "VARCHAR(200)"),
+            ("description_ru", "TEXT"),
+            ("description_en", "TEXT"),
+            ("room_type_uz", "VARCHAR(50)"),
+        ):
+            add_col("portfolio", col, ctype)
+        if "room_type_uz" in (_table_column_names(inspector, "portfolio") or []) and "room_type" in portfolio_cols:
+            try:
+                db.session.execute(
+                    text(
+                        "UPDATE portfolio SET room_type_uz = room_type "
+                        "WHERE (room_type_uz IS NULL OR room_type_uz = '') AND room_type IS NOT NULL"
+                    )
+                )
+            except Exception as e:
+                print(f"Portfolio room_type_uz backfill note: {e}")
+
+    # review
+    if "review" in tables:
+        add_col("review", "main_category_id", "INTEGER")
+        add_col("review", "text_ru", "TEXT")
+        add_col("review", "text_en", "TEXT")
+
+    # brand
+    if "brand" in tables:
+        brand_columns = _table_column_names(inspector, "brand") or []
+        if "slug" not in brand_columns:
+            add_col("brand", "slug", "VARCHAR(120)")
+        for colname, coltype in (
+            ("tagline_uz", "VARCHAR(500)"),
+            ("tagline_ru", "VARCHAR(500)"),
+            ("tagline_en", "VARCHAR(500)"),
+            ("description_uz", "TEXT"),
+            ("description_ru", "TEXT"),
+            ("description_en", "TEXT"),
+        ):
+            add_col("brand", colname, coltype)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        print(f"Migration commit error: {e}")
+        db.session.rollback()
+
+    db.create_all()
+
+    try:
+        seed_default_services()
+    except Exception as e:
+        print(f"Service seed note: {e}")
+        db.session.rollback()
+
+    try:
+        if "brand" in inspect(db.engine).get_table_names():
+            slug_cols = _table_column_names(inspect(db.engine), "brand") or []
+            if "slug" in slug_cols:
+                for b in Brand.query.order_by(Brand.id).all():
+                    if not getattr(b, "slug", None) or not str(b.slug).strip():
+                        base = slugify_brand_slug(b.name_uz or b.name or f"brend-{b.id}")
+                        b.slug = unique_brand_slug(base, exclude_brand_id=b.id)
+                db.session.commit()
+    except Exception as e:
+        print(f"Brand slug backfill note: {e}")
+        db.session.rollback()
+
+
 def ensure_schema():
-    """
-    Lightweight schema migration on startup.
-    Render/Gunicorn'da __main__ bloki ishlamasligi mumkin, shuning uchun kerakli ustunlarni
-    app import bo'lganda ham tekshirib qo'yamiz.
-    """
+    """App import vaqtida migratsiyalar (Render/gunicorn uchun)."""
     try:
         with app.app_context():
-            from sqlalchemy import inspect, text
-
-            inspector = inspect(db.engine)
-            try:
-                product_cols = [c["name"] for c in inspector.get_columns("product")]
-            except Exception:
-                # Table hali yo'q bo'lsa, create_all qilamiz
-                db.create_all()
-                product_cols = [c["name"] for c in inspector.get_columns("product")]
-
-            if "price_som" not in product_cols:
-                db.session.execute(text("ALTER TABLE product ADD COLUMN price_som INTEGER"))
-                db.session.commit()
-                print("Added price_som column to product table (startup)")
-
-            # Brend jadvali — slug va tavsif ustunlari (import/gunicorn uchun)
-            try:
-                if "brand" in inspector.get_table_names():
-                    brand_columns = [c["name"] for c in inspector.get_columns("brand")]
-                    if "slug" not in brand_columns:
-                        db.session.execute(text("ALTER TABLE brand ADD COLUMN slug VARCHAR(120)"))
-                        brand_columns.append("slug")
-                    for colname, coltype in (
-                        ("tagline_uz", "VARCHAR(500)"),
-                        ("tagline_ru", "VARCHAR(500)"),
-                        ("tagline_en", "VARCHAR(500)"),
-                        ("description_uz", "TEXT"),
-                        ("description_ru", "TEXT"),
-                        ("description_en", "TEXT"),
-                    ):
-                        if colname not in brand_columns:
-                            db.session.execute(text(f"ALTER TABLE brand ADD COLUMN {colname} {coltype}"))
-                            brand_columns.append(colname)
-                    db.session.commit()
-                    inspector = inspect(db.engine)
-                    if "slug" in [c["name"] for c in inspector.get_columns("brand")]:
-                        for b in Brand.query.order_by(Brand.id).all():
-                            if not getattr(b, "slug", None) or not str(b.slug).strip():
-                                base = slugify_brand_slug(b.name_uz or b.name or f"brend-{b.id}")
-                                b.slug = unique_brand_slug(base, exclude_brand_id=b.id)
-                        db.session.commit()
-            except Exception as be:
-                print(f"Brand schema ensure note: {be}")
-                try:
-                    db.session.rollback()
-                except Exception:
-                    pass
-
-            try:
-                db.create_all()
-                seed_default_services()
-            except Exception as se:
-                print(f"Service schema/seed note: {se}")
-                try:
-                    db.session.rollback()
-                except Exception:
-                    pass
+            apply_db_migrations()
     except Exception as e:
-        # Bu joyda servis yiqilmasin; logga chiqib qoladi.
         print(f"Schema ensure error: {e}")
 
 
@@ -1045,38 +1119,46 @@ def why_us():
 @app.route('/order', methods=['GET', 'POST'])
 def order():
     if request.method == 'POST':
-        furniture_type = request.form.get('furniture_type')
-        size = request.form.get('size')
-        color = request.form.get('color')
-        material = request.form.get('material')
-        phone = request.form.get('phone')
-        name = request.form.get('name')
-        address = request.form.get('address')
-        
-        design_image = None
-        if 'design_image' in request.files:
-            file = request.files['design_image']
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                filepath = os.path.join('designs', filename)
-                save_uploaded_file(app, file, filepath)
-                design_image = filepath
-        
-        order = Order(
-            furniture_type=furniture_type,
-            size=size,
-            color=color,
-            material=material,
-            design_image=design_image,
-            phone=phone,
-            name=name,
-            address=address
-        )
-        db.session.add(order)
-        db.session.commit()
-        flash('Buyurtmangiz qabul qilindi! Tez orada siz bilan bog\'lanamiz.', 'success')
+        try:
+            furniture_type = request.form.get('furniture_type')
+            size = request.form.get('size')
+            color = request.form.get('color')
+            material = request.form.get('material')
+            phone = (request.form.get('phone') or '').strip()
+            name = request.form.get('name')
+            address = request.form.get('address')
+
+            if not phone:
+                flash('Iltimos, telefon raqam kiriting.', 'error')
+                return redirect(url_for('order'))
+
+            design_image = None
+            if 'design_image' in request.files:
+                file = request.files['design_image']
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join('designs', filename)
+                    save_uploaded_file(app, file, filepath)
+                    design_image = filepath
+
+            db.session.add(Order(
+                furniture_type=furniture_type or 'Buyurtma',
+                size=size,
+                color=color,
+                material=material,
+                design_image=design_image,
+                phone=phone,
+                name=name,
+                address=address,
+            ))
+            db.session.commit()
+            flash('Buyurtmangiz qabul qilindi! Tez orada siz bilan bog\'lanamiz.', 'success')
+        except Exception as e:
+            db.session.rollback()
+            print(f"Order form error: {e}")
+            flash('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring.', 'error')
         return redirect(url_for('order'))
-    
+
     categories = Category.query.all()
     return render_template('order.html', categories=categories)
 
@@ -1257,53 +1339,54 @@ def first_visit():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        # Contact form
-        phone = request.form.get('phone')
-        name = request.form.get('name')
-        subject = request.form.get('subject', '')
-        message = request.form.get('message', '')
-        
-        # Telefon raqam validatsiyasi
-        phone_cleaned = phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
-        if not re.match(r'^(\+998|998)?[0-9]{9}$', phone_cleaned):
-            flash('To\'g\'ri telefon raqam kiriting (masalan: +998901234567)', 'error')
-            return redirect(url_for('contact'))
-        
-        # Telegram xabari
-        subject_display = {
-            'order': 'Yangi buyurtma',
-            'consultation': 'Maslahat',
-            'price': 'Narx so\'rovi'
-        }.get(subject, 'Umumiy so\'rov')
-        
-        telegram_message = f"""
+        try:
+            phone = (request.form.get('phone') or '').strip()
+            name = (request.form.get('name') or '').strip()
+            subject = (request.form.get('subject') or '').strip()
+            message = (request.form.get('message') or '').strip()
+
+            if not phone:
+                flash('Iltimos, telefon raqam kiriting.', 'error')
+                return redirect(url_for('contact'))
+
+            phone_cleaned = phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
+            if not re.match(r'^(\+998|998)?[0-9]{9}$', phone_cleaned):
+                flash('To\'g\'ri telefon raqam kiriting (masalan: +998901234567)', 'error')
+                return redirect(url_for('contact'))
+
+            subject_display = {
+                'order': 'Yangi buyurtma',
+                'consultation': 'Maslahat',
+                'price': 'Narx so\'rovi',
+            }.get(subject, 'Umumiy so\'rov')
+
+            telegram_message = f"""
 <b>📧 Yangi Aloqa Formasi</b>
 
 <b>Mijoz ma'lumotlari:</b>
 👤 Ism: {name if name else "Ko'rsatilmagan"}
-📞 Telefon: {phone if phone else "Ko'rsatilmagan"}
+📞 Telefon: {phone}
 📋 Mavzu: {subject_display}
 
 <b>Xabar:</b>
 {message if message else "Qo'shimcha xabar yo'q"}
 """
-        
-        # Telegram'ga yuborish
-        telegram_sent = send_telegram_message(telegram_message)
-        
-        # Database'ga saqlash
-        order = Order(
-            furniture_type=f'Aloqa: {subject_display}',
-            phone=phone,
-            name=name,
-            address=message
-        )
-        db.session.add(order)
-        db.session.commit()
-        
-        flash('Xabaringiz yuborildi! Tez orada siz bilan bog\'lanamiz.', 'success')
+            send_telegram_message(telegram_message)
+
+            db.session.add(Order(
+                furniture_type=f'Aloqa: {subject_display}',
+                phone=phone,
+                name=name or None,
+                address=message or None,
+            ))
+            db.session.commit()
+            flash('Xabaringiz yuborildi! Tez orada siz bilan bog\'lanamiz.', 'success')
+        except Exception as e:
+            db.session.rollback()
+            print(f"Contact form error: {e}")
+            flash('Xatolik yuz berdi. Iltimos, qayta urinib ko\'ring yoki telefon orqali bog\'laning.', 'error')
         return redirect(url_for('contact'))
-    
+
     return render_template('contact.html')
 
 @app.route('/faq')
@@ -3131,222 +3214,9 @@ def uploaded_file(filename):
 
 if __name__ == '__main__':
     with app.app_context():
-        # Ensure upload directories exist
         ensure_upload_dirs()
-        # Database migration: Add new columns for translations
-        try:
-            # Check and add columns to Category table
-            from sqlalchemy import inspect, text
-            inspector = inspect(db.engine)
-            category_columns = [col['name'] for col in inspector.get_columns('category')]
-            
-            if 'name_ru' not in category_columns:
-                db.session.execute(text('ALTER TABLE category ADD COLUMN name_ru VARCHAR(100)'))
-                print("Added name_ru column to category table")
-            
-            if 'name_en' not in category_columns:
-                db.session.execute(text('ALTER TABLE category ADD COLUMN name_en VARCHAR(100)'))
-                print("Added name_en column to category table")
-            
-            # Check and add columns to Product table
-            product_columns = [col['name'] for col in inspector.get_columns('product')]
-            
-            if 'name_ru' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN name_ru VARCHAR(200)'))
-                print("Added name_ru column to product table")
-            
-            if 'name_en' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN name_en VARCHAR(200)'))
-                print("Added name_en column to product table")
-            
-            if 'description_ru' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN description_ru TEXT'))
-                print("Added description_ru column to product table")
-            
-            if 'description_en' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN description_en TEXT'))
-                print("Added description_en column to product table")
-            
-            # Check and add colors column to Product table
-            if 'colors' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN colors TEXT'))
-                db.session.commit()
-                print("Added colors column to product table")
+        apply_db_migrations()
 
-            # Store exact so'm price to avoid float drift
-            if 'price_som' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN price_som INTEGER'))
-                db.session.commit()
-                print("Added price_som column to product table")
-            
-            # Check and add discount column to Product table
-            if 'discount' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN discount INTEGER DEFAULT 0'))
-                db.session.commit()
-                print("Added discount column to product table")
-            
-            # Check and create store table
-            try:
-                store_columns = [col['name'] for col in inspector.get_columns('store')]
-                print("store table exists")
-            except Exception as e:
-                # Create store table
-                db.session.execute(text('''
-                    CREATE TABLE store (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name_uz VARCHAR(200) NOT NULL,
-                        name_ru VARCHAR(200),
-                        name_en VARCHAR(200),
-                        address_uz TEXT NOT NULL,
-                        address_ru TEXT,
-                        address_en TEXT,
-                        phone VARCHAR(50),
-                        email VARCHAR(100),
-                        latitude FLOAT,
-                        longitude FLOAT,
-                        working_hours_uz VARCHAR(200),
-                        working_hours_ru VARCHAR(200),
-                        working_hours_en VARCHAR(200),
-                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                    )
-                '''))
-                db.session.commit()
-                print("Created store table")
-            
-            # Check and create user_activity table
-            try:
-                activity_columns = [col['name'] for col in inspector.get_columns('user_activity')]
-                print("user_activity table exists")
-            except Exception as e:
-                # Table doesn't exist, create it
-                db.create_all()
-                print(f"Created user_activity table")
-            
-            if 'material_ru' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN material_ru VARCHAR(100)'))
-                print("Added material_ru column to product table")
-            
-            if 'material_en' not in product_columns:
-                db.session.execute(text('ALTER TABLE product ADD COLUMN material_en VARCHAR(100)'))
-                print("Added material_en column to product table")
-            
-            # Check and add columns to Portfolio table
-            try:
-                portfolio_columns = [col['name'] for col in inspector.get_columns('portfolio')]
-                
-                if 'title_ru' not in portfolio_columns:
-                    db.session.execute(text('ALTER TABLE portfolio ADD COLUMN title_ru VARCHAR(200)'))
-                    print("Added title_ru column to portfolio table")
-                
-                if 'title_en' not in portfolio_columns:
-                    db.session.execute(text('ALTER TABLE portfolio ADD COLUMN title_en VARCHAR(200)'))
-                    print("Added title_en column to portfolio table")
-                
-                if 'description_ru' not in portfolio_columns:
-                    db.session.execute(text('ALTER TABLE portfolio ADD COLUMN description_ru TEXT'))
-                    print("Added description_ru column to portfolio table")
-                
-                if 'description_en' not in portfolio_columns:
-                    db.session.execute(text('ALTER TABLE portfolio ADD COLUMN description_en TEXT'))
-                    print("Added description_en column to portfolio table")
-            except Exception as e:
-                print(f"Portfolio migration note: {e}")
-            
-            # Check and create main_category table
-            try:
-                main_category_columns = [col['name'] for col in inspector.get_columns('main_category')]
-                print("main_category table exists")
-            except Exception as e:
-                # Table doesn't exist, create it
-                db.create_all()
-                print("Created main_category table")
-                
-            # Check and add main_category_id to category table
-            try:
-                category_columns = [col['name'] for col in inspector.get_columns('category')]
-                if 'main_category_id' not in category_columns:
-                    db.session.execute(text('ALTER TABLE category ADD COLUMN main_category_id INTEGER'))
-                    print("Added main_category_id column to category table")
-            except Exception as e:
-                print(f"Category migration note: {e}")
-            
-            # Check and add main_category_id and text translations to review table
-            try:
-                review_columns = [col['name'] for col in inspector.get_columns('review')]
-                if 'main_category_id' not in review_columns:
-                    db.session.execute(text('ALTER TABLE review ADD COLUMN main_category_id INTEGER'))
-                    print("Added main_category_id column to review table")
-                if 'text_ru' not in review_columns:
-                    db.session.execute(text('ALTER TABLE review ADD COLUMN text_ru TEXT'))
-                    print("Added text_ru column to review table")
-                if 'text_en' not in review_columns:
-                    db.session.execute(text('ALTER TABLE review ADD COLUMN text_en TEXT'))
-                    print("Added text_en column to review table")
-            except Exception as e:
-                print(f"Review migration note: {e}")
-            
-            # Brand: slug, tagline, description (batafsil sahifa)
-            try:
-                if 'brand' in inspector.get_table_names():
-                    brand_columns = [col['name'] for col in inspector.get_columns('brand')]
-                    if 'slug' not in brand_columns:
-                        db.session.execute(text('ALTER TABLE brand ADD COLUMN slug VARCHAR(120)'))
-                        print("Added slug column to brand table")
-                        brand_columns.append('slug')
-                    for colname, coltype in (
-                        ('tagline_uz', 'VARCHAR(500)'),
-                        ('tagline_ru', 'VARCHAR(500)'),
-                        ('tagline_en', 'VARCHAR(500)'),
-                        ('description_uz', 'TEXT'),
-                        ('description_ru', 'TEXT'),
-                        ('description_en', 'TEXT'),
-                    ):
-                        if colname not in brand_columns:
-                            db.session.execute(text(f'ALTER TABLE brand ADD COLUMN {colname} {coltype}'))
-                            print(f"Added {colname} column to brand table")
-                            brand_columns.append(colname)
-            except Exception as e:
-                print(f"Brand migration note: {e}")
-            
-            # Commit all migration changes
-            try:
-                db.session.commit()
-            except Exception as e:
-                print(f"Migration commit error: {e}")
-                try:
-                    db.session.rollback()
-                except:
-                    pass
-        except Exception as e:
-            print(f"Migration error: {e}")
-            try:
-                db.session.rollback()
-            except:
-                pass
-        
-        # Create all tables including new models (UserActivity, etc.)
-        try:
-            db.create_all()
-            seed_default_services()
-        except Exception as e:
-            print(f"Create all tables error: {e}")
-        
-        # Brendlar uchun bo'sh sluglarni to'ldirish (migratsiyadan keyin)
-        try:
-            from sqlalchemy import inspect as sa_inspect
-            if 'brand' in sa_inspect(db.engine).get_table_names():
-                for b in Brand.query.order_by(Brand.id).all():
-                    if not getattr(b, 'slug', None) or not str(b.slug).strip():
-                        base = slugify_brand_slug(b.name_uz or b.name or f"brend-{b.id}")
-                        b.slug = unique_brand_slug(base, exclude_brand_id=b.id)
-                db.session.commit()
-        except Exception as e:
-            print(f"Brand slug backfill note: {e}")
-            try:
-                db.session.rollback()
-            except Exception:
-                pass
-        
         # Create default admin user if not exists
         try:
             if not Admin.query.first():

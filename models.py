@@ -128,6 +128,9 @@ class Product(db.Model):
         return int(self.price_som)
 
 class Order(db.Model):
+    """PostgreSQL da `order` — rezerv so'z; jadval nomi `orders`."""
+    __tablename__ = 'orders'
+
     id = db.Column(db.Integer, primary_key=True)
     furniture_type = db.Column(db.String(200), nullable=False)
     size = db.Column(db.String(100))
