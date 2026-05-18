@@ -450,12 +450,14 @@
                 pointer-events: auto;
             }
             
-            /* translateY scrollHeight ni kengaytiradi (Safari) — mobilda faqat opacity */
+            /* Mobilda fade-in o‘rniga darhol ko‘rinadi — bo‘sh oq joy qolmasin */
             .reveal-section {
+                opacity: 1 !important;
                 transform: none !important;
             }
             
             .reveal-section.revealed {
+                opacity: 1 !important;
                 transform: none !important;
             }
             

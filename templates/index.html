@@ -217,25 +217,41 @@
     
 
     
-    /* Section reveal */
+    /* Section reveal — opacity 0 ishlatilmaydi (mobilda katta oq bo‘sh joy qolardi) */
     .reveal-section {
-        opacity: 0;
-        transform: translateY(50px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
+        transform: translateY(32px);
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
     .reveal-section.revealed {
-        opacity: 1;
         transform: translateY(0);
     }
     
     @media (max-width: 768px) {
-        .reveal-section {
-            transform: none;
-            transition: opacity 0.6s ease;
-        }
+        .reveal-section,
         .reveal-section.revealed {
-            transform: none;
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+        /* Statistika dan keyingi bo‘limlar — ixchamroq */
+        #home-stats ~ section.reveal-section {
+            padding-top: 2.5rem;
+            padding-bottom: 2.5rem;
+        }
+        #home-stats ~ section.reveal-section .product-card .card-image {
+            aspect-ratio: 4 / 3;
+        }
+        /* Konfigurator — pastda ortiqcha bo‘sh joy */
+        #configurator {
+            padding-top: 1.5rem;
+            padding-bottom: 1rem !important;
+        }
+        #configurator .configurator-visual {
+            min-height: 160px;
+        }
+        #configurator .configurator-visual img {
+            max-height: 160px;
         }
     }
     
@@ -830,7 +846,7 @@
         <!-- Clients Grid - Category Card Style -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
             {% for client in clients %}
-            <div class="category-card group relative aspect-[3/4] md:aspect-[2/3]">
+            <div class="category-card group relative aspect-[4/3] md:aspect-[2/3]">
                 {% if client.photo %}
                 <img src="/uploads/{{ client.photo }}" alt="{{ client.get_name(lang) }}"
                      class="absolute inset-0 w-full h-full object-cover">
@@ -871,7 +887,7 @@
         <!-- Categories Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
             {% for main_cat in main_categories %}
-            <a href="/main-category/{{ main_cat.slug }}" class="category-card group relative aspect-[3/4] md:aspect-[2/3]">
+            <a href="/main-category/{{ main_cat.slug }}" class="category-card group relative aspect-[4/3] md:aspect-[2/3]">
                 {% if main_cat.image %}
                 <img src="/uploads/{{ main_cat.image }}" alt="{{ main_cat.get_name(lang) }}"
                      class="absolute inset-0 w-full h-full object-cover">
@@ -898,8 +914,8 @@
 </section>
 {% endif %}
 
-<!-- Services Strip -->
-<section class="py-6 bg-[#1a1a2e]">
+<!-- Statistika / afzalliklar -->
+<section class="py-6 bg-[#1a1a2e]" id="home-stats">
     <div class="container mx-auto px-6 lg:px-16">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div class="flex items-center gap-4">
@@ -1289,7 +1305,7 @@
         <div class="flex flex-col lg:flex-row items-start gap-4 md:gap-6 lg:gap-8">
             <!-- Left: Product Image -->
             <div class="space-y-4 w-full lg:w-1/2 lg:min-w-[50%]">
-                <div class="relative bg-[#fafafa] p-4 lg:p-6 min-h-[220px] md:min-h-[260px] lg:min-h-[320px] flex items-center justify-center">
+                <div class="configurator-visual relative bg-[#fafafa] p-4 lg:p-6 min-h-[220px] md:min-h-[260px] lg:min-h-[320px] flex items-center justify-center">
                     <div class="relative w-full h-full flex items-center justify-center">
                         <img src="/uploads/designs/chair-config.png" alt="Configurable Chair" class="max-w-full max-h-[220px] md:max-h-[260px] lg:max-h-[320px] object-contain" id="config-main-image" onerror="this.src='/uploads/products/default.jpg'">
                         
@@ -1441,10 +1457,10 @@
                     <p class="text-center text-xs text-gray-400 mt-1.5 mb-0 pb-0">
                         {% if lang == 'ru' %}Мы свяжемся с вами для уточнения деталей{% elif lang == 'en' %}We will contact you to clarify details{% else %}Tafsilotlarni aniqlashtirish uchun siz bilan bog'lanamiz{% endif %}
                 </p>
-                        </div>
-                    </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- Testimonials -->
@@ -1528,20 +1544,29 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Section reveal animation
     const revealSections = document.querySelectorAll('.reveal-section');
-    
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('revealed');
-                revealObserver.unobserve(entry.target);
-            }
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+    if (isMobile) {
+        revealSections.forEach(function(section) {
+            section.classList.add('revealed');
         });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    revealSections.forEach(section => revealObserver.observe(section));
+    } else {
+        const revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealSections.forEach(function(section) {
+            revealObserver.observe(section);
+        });
+    }
     
     // ===== CONFIGURATOR FUNCTIONALITY =====
     const config = {
