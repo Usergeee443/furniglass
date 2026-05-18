@@ -91,6 +91,11 @@
                     <span class="text-sm">Brendlar</span>
                 </a>
                 
+                <a href="/admin/services" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_services', 'admin_service_add', 'admin_service_edit'] %}active{% endif %}">
+                    <i class="fas fa-concierge-bell w-5 text-center"></i>
+                    <span class="text-sm">Xizmatlar</span>
+                </a>
+                
                 <a href="/admin/clients" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_clients', 'admin_client_add', 'admin_client_edit'] %}active{% endif %}">
                     <i class="fas fa-users w-5 text-center"></i>
                     <span class="text-sm">Mijozlar</span>
@@ -214,6 +219,11 @@
                     <a href="/admin/brands" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_brands', 'admin_brand_add', 'admin_brand_edit'] %}active{% endif %}">
                         <i class="fas fa-tags w-5 text-center"></i>
                         <span class="text-sm">Brendlar</span>
+                    </a>
+                    
+                    <a href="/admin/services" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_services', 'admin_service_add', 'admin_service_edit'] %}active{% endif %}">
+                        <i class="fas fa-concierge-bell w-5 text-center"></i>
+                        <span class="text-sm">Xizmatlar</span>
                     </a>
                     
                     <a href="/admin/clients" class="nav-item flex items-center gap-3 px-3 py-2.5 text-gray-600 {% if request.endpoint in ['admin_clients', 'admin_client_add', 'admin_client_edit'] %}active{% endif %}">

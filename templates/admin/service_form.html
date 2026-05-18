@@ -1,0 +1,161 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if service %}Xizmatni tahrirlash{% else %}Yangi xizmat{% endif %} - Admin{% endblock %}
+{% block page_title %}{% if service %}Xizmatni tahrirlash{% else %}Yangi xizmat{% endif %}{% endblock %}
+
+{% block content %}
+<a href="/admin/services" class="inline-flex items-center gap-2 text-gray-500 hover:text-[#232339] mb-6 transition">
+    <i class="fas fa-arrow-left"></i> Xizmatlarga qaytish
+</a>
+
+<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden max-w-3xl">
+    <form method="POST" class="p-6 lg:p-8 space-y-5">
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">Sarlavha (O'zbek) *</label>
+            <input type="text" name="title_uz" value="{{ service.title_uz if service else '' }}" required
+                class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Sarlavha (Rus)</label>
+                <input type="text" name="title_ru" value="{{ service.title_ru if service else '' }}"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Sarlavha (Ingliz)</label>
+                <input type="text" name="title_en" value="{{ service.title_en if service else '' }}"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">Tavsif (O'zbek)</label>
+            <textarea name="description_uz" rows="3" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none resize-y">{{ service.description_uz if service else '' }}</textarea>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Tavsif (Rus)</label>
+                <textarea name="description_ru" rows="3" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none resize-y">{{ service.description_ru if service else '' }}</textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Tavsif (Ingliz)</label>
+                <textarea name="description_en" rows="3" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none resize-y">{{ service.description_en if service else '' }}</textarea>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-[#232339] mb-2">Bandlar (O'zbek) — har qator bitta</label>
+            <textarea name="features_uz" rows="4" placeholder="3D vizualizatsiya&#10;Cheksiz tahrirlash"
+                class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none resize-y font-mono text-sm">{{ service.features_uz if service else '' }}</textarea>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Bandlar (Rus)</label>
+                <textarea name="features_ru" rows="4" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none resize-y font-mono text-sm">{{ service.features_ru if service else '' }}</textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Bandlar (Ingliz)</label>
+                <textarea name="features_en" rows="4" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none resize-y font-mono text-sm">{{ service.features_en if service else '' }}</textarea>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Narx yozuvi (UZ)</label>
+                <input type="text" name="price_label_uz" value="{{ service.price_label_uz if service else '' }}" placeholder="BEPUL"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 col-span-2">
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Narx (RU)</label>
+                    <input type="text" name="price_label_ru" value="{{ service.price_label_ru if service else '' }}"
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#232339] mb-2">Narx (EN)</label>
+                    <input type="text" name="price_label_en" value="{{ service.price_label_en if service else '' }}"
+                        class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Narx izohi (UZ)</label>
+                <input type="text" name="price_note_uz" value="{{ service.price_note_uz if service else '' }}" placeholder="*Toshkent bo'ylab"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Narx izohi (RU)</label>
+                <input type="text" name="price_note_ru" value="{{ service.price_note_ru if service else '' }}"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Narx izohi (EN)</label>
+                <input type="text" name="price_note_en" value="{{ service.price_note_en if service else '' }}"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Tugma matni (UZ)</label>
+                <input type="text" name="cta_text_uz" value="{{ service.cta_text_uz if service else '' }}" placeholder="Buyurtma"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Tugma havolasi</label>
+                <input type="text" name="cta_url" value="{{ service.cta_url if service else '/contact' }}"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none" placeholder="/contact">
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Tugma (RU)</label>
+                <input type="text" name="cta_text_ru" value="{{ service.cta_text_ru if service else '' }}"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Tugma (EN)</label>
+                <input type="text" name="cta_text_en" value="{{ service.cta_text_en if service else '' }}"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Ikonka</label>
+                <select name="icon" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+                    {% for key, label in [('design','3D Dizayn'),('measure',"O'lchov"),('production','Ishlab chiqarish'),('delivery','Yetkazish'),('installation',"O'rnatish"),('warranty','Kafolat')] %}
+                    <option value="{{ key }}" {% if service and service.icon == key %}selected{% elif not service and key == 'design' %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Ikonka rangi</label>
+                <select name="icon_theme" class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+                    <option value="dark" {% if not service or service.icon_theme == 'dark' %}selected{% endif %}>To'q</option>
+                    <option value="accent" {% if service and service.icon_theme == 'accent' %}selected{% endif %}>Oltin</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#232339] mb-2">Tartib</label>
+                <input type="number" name="order" value="{{ service.order if service else 0 }}" min="0"
+                    class="w-full bg-[#F5F5F5] border-0 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-[#232339] outline-none">
+            </div>
+        </div>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="is_active" {% if not service or service.is_active %}checked{% endif %} class="w-5 h-5 rounded">
+            <span class="text-sm font-medium text-[#232339]">Saytda ko'rsatish (faol)</span>
+        </label>
+
+        <div class="flex gap-3 pt-4 border-t border-gray-200">
+            <button type="submit" class="flex-1 bg-[#232339] hover:bg-black text-white py-3 rounded-xl font-medium">
+                <i class="fas fa-save"></i> {% if service %}Yangilash{% else %}Qo'shish{% endif %}
+            </button>
+            <a href="/admin/services" class="px-6 py-3 border border-gray-300 rounded-xl font-medium hover:bg-gray-50">Bekor</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

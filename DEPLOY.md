@@ -36,7 +36,7 @@ Render.com'da PostgreSQL database yaratish:
 Render dashboard'da quyidagi buyruqlarni kiriting:
 
 **Build Command:**
-```bash
+```bashP
 pip install -r requirements.txt
 ```
 

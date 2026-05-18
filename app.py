@@ -7,7 +7,7 @@ from sqlalchemy import or_
 from sqlalchemy.exc import OperationalError
 from config import Config
 from db import db
-from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, SiteSettings, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity, MainCategory, Brand, Client, FirstVisit
+from models import Admin, Product, Category, Order, Review, Portfolio, FAQ, ExchangeRate, SiteSettings, Collection, Store, SampleRequest, Article, DesignConsultation, UserActivity, MainCategory, Brand, Client, FirstVisit, Service
 from translations import TRANSLATIONS, get_translation, t
 import os
 import json
@@ -105,6 +105,90 @@ def unique_brand_slug(base: str, exclude_brand_id=None) -> str:
             return slug
         slug = f"{original}-{n}"
         n += 1
+
+
+def seed_default_services():
+    """Birinchi marta — standart 6 ta xizmat."""
+    if Service.query.first():
+        return
+    defaults = [
+        {
+            'title_uz': '3D Dizayn Xizmati', 'title_ru': '3D Дизайн', 'title_en': '3D Design',
+            'description_uz': 'Professional dizaynerlarimiz sizning uyingiz uchun fotorealistik 3D loyiha tayyorlaydi.',
+            'description_ru': 'Профессиональные дизайнеры создадут фотореалистичный 3D проект вашей мебели.',
+            'description_en': 'Professional designers will create a photorealistic 3D project of your furniture.',
+            'features_uz': "3D vizualizatsiya\nCheksiz tahrirlash\nMaterial va rang tanlash",
+            'features_ru': "3D визуализация\nБезлимитные правки\nВыбор материалов",
+            'features_en': "3D visualization\nUnlimited revisions\nMaterial selection",
+            'price_label_uz': 'BEPUL', 'price_label_ru': 'БЕСПЛАТНО', 'price_label_en': 'FREE',
+            'cta_text_uz': 'Buyurtma', 'cta_text_ru': 'Заказать', 'cta_text_en': 'Order',
+            'cta_url': '/contact', 'icon': 'design', 'icon_theme': 'dark', 'order': 1,
+        },
+        {
+            'title_uz': "O'lchov Xizmati", 'title_ru': 'Замер', 'title_en': 'Measurement',
+            'description_uz': "Mutaxassisimiz uyingizga kelib, lazer o'lchagich yordamida millimetrgacha aniq o'lchov oladi.",
+            'description_ru': 'Специалист приедет к вам домой и сделает точные замеры лазерным инструментом.',
+            'description_en': 'A specialist will come to your home and take precise measurements with a laser tool.',
+            'features_uz': "Uyga chiqish\nLazer o'lchov\nTexnik maslahat",
+            'features_ru': "Выезд на дом\nЛазерный замер\nКонсультация",
+            'features_en': "Home visit\nLaser measurement\nConsultation",
+            'price_label_uz': 'BEPUL', 'price_label_ru': 'БЕСПЛАТНО', 'price_label_en': 'FREE',
+            'cta_text_uz': 'Raqam qoldirish', 'cta_text_ru': 'Оставить номер', 'cta_text_en': 'Leave number',
+            'cta_url': '/contact', 'icon': 'measure', 'icon_theme': 'accent', 'order': 2,
+        },
+        {
+            'title_uz': 'Ishlab Chiqarish', 'title_ru': 'Производство', 'title_en': 'Production',
+            'description_uz': '5000 m² zamonaviy fabrikamizda CNC dastgohlarida yuqori aniqlikda ishlab chiqaramiz.',
+            'description_ru': 'Современная фабрика 5000 м² с CNC станками для высокоточного производства.',
+            'description_en': 'Modern 5000 m² factory with CNC machines for high-precision manufacturing.',
+            'features_uz': "CNC texnologiyasi\nImport materiallar\n7-21 kun muddat",
+            'features_ru': "CNC технология\nИмпортные материалы\n7-21 день",
+            'features_en': "CNC technology\nImport materials\n7-21 days",
+            'price_label_uz': "Loyihaga bog'liq", 'price_label_ru': 'Цена по проекту', 'price_label_en': 'Price by project',
+            'cta_text_uz': "Ko'rish", 'cta_text_ru': 'Смотреть', 'cta_text_en': 'View',
+            'cta_url': '/products', 'icon': 'production', 'icon_theme': 'dark', 'order': 3,
+        },
+        {
+            'title_uz': 'Yetkazib Berish', 'title_ru': 'Доставка', 'title_en': 'Delivery',
+            'description_uz': "O'z transportimiz orqali O'zbekiston bo'ylab xavfsiz qadoqlash bilan yetkazamiz.",
+            'description_ru': 'Собственный транспорт для безопасной доставки по всему Узбекистану.',
+            'description_en': 'Own transport for safe delivery throughout Uzbekistan.',
+            'features_uz': "Toshkent - BEPUL\nViloyatlarga yetkazish\nXavfsiz qadoqlash",
+            'features_ru': "Ташкент - бесплатно\nДоставка в регионы\nБезопасная упаковка",
+            'features_en': "Tashkent - free\nRegional delivery\nSafe packaging",
+            'price_label_uz': 'BEPUL*', 'price_label_ru': 'БЕСПЛАТНО*', 'price_label_en': 'FREE*',
+            'price_note_uz': "*Toshkent bo'ylab", 'price_note_ru': '*По Ташкенту', 'price_note_en': '*In Tashkent',
+            'cta_url': '/contact', 'icon': 'delivery', 'icon_theme': 'accent', 'order': 4,
+        },
+        {
+            'title_uz': "O'rnatish Xizmati", 'title_ru': 'Установка', 'title_en': 'Installation',
+            'description_uz': "Tajribali ustalarimiz mebelni professional tarzda o'rnatib, sozlab berishadi.",
+            'description_ru': 'Опытные мастера профессионально установят и настроят вашу мебель.',
+            'description_en': 'Experienced craftsmen will professionally install and adjust your furniture.',
+            'features_uz': "Professional o'rnatish\nChiqindilarni olib ketish\nSozlash va tekshirish",
+            'features_ru': "Профессиональная установка\nВывоз мусора\nНастройка",
+            'features_en': "Professional installation\nWaste removal\nAdjustment",
+            'price_label_uz': "Ko'pincha bepul", 'price_label_ru': 'Часто бесплатно', 'price_label_en': 'Often free',
+            'cta_text_uz': "So'rash", 'cta_text_ru': 'Спросить', 'cta_text_en': 'Ask',
+            'cta_url': '/contact', 'icon': 'installation', 'icon_theme': 'dark', 'order': 5,
+        },
+        {
+            'title_uz': 'Kafolat Xizmati', 'title_ru': 'Гарантия', 'title_en': 'Warranty',
+            'description_uz': "25 yilgacha kafolat. Muammo bo'lsa bepul ta'mirlaymiz yoki almashtiramiz.",
+            'description_ru': 'До 25 лет гарантии. При проблемах бесплатно отремонтируем или заменим.',
+            'description_en': "Up to 25 years warranty. We'll repair or replace for free if there are issues.",
+            'features_uz': "25 yil kafolat\nBepul ta'mirlash\n24/7 qo'llab-quvvatlash",
+            'features_ru': "25 лет гарантии\nБесплатный ремонт\n24/7 поддержка",
+            'features_en': "25 year warranty\nFree repair\n24/7 support",
+            'price_label_uz': '25 YIL', 'price_label_ru': '25 ЛЕТ', 'price_label_en': '25 YEARS',
+            'price_note_uz': 'maksimal kafolat', 'price_note_ru': 'максимум', 'price_note_en': 'maximum',
+            'cta_url': '/contact', 'icon': 'warranty', 'icon_theme': 'accent', 'order': 6,
+        },
+    ]
+    for d in defaults:
+        db.session.add(Service(**d, is_active=True))
+    db.session.commit()
+    print('Created default services')
 
 
 # ============ AUTO-TRANSLATE FUNCTION (FREE) ============
@@ -206,6 +290,16 @@ def ensure_schema():
                         db.session.commit()
             except Exception as be:
                 print(f"Brand schema ensure note: {be}")
+                try:
+                    db.session.rollback()
+                except Exception:
+                    pass
+
+            try:
+                db.create_all()
+                seed_default_services()
+            except Exception as se:
+                print(f"Service schema/seed note: {se}")
                 try:
                     db.session.rollback()
                 except Exception:
@@ -935,7 +1029,7 @@ def brand_detail(slug):
 
 @app.route('/brands')
 def brands_page():
-    """Bizga ishonch bildirgan brendlar."""
+    """Bizga ishongan brendlar."""
     brands = Brand.query.filter_by(is_active=True).order_by(Brand.order).all()
     return render_template('brands.html', brands=brands)
 
@@ -1219,7 +1313,8 @@ def faq():
 
 @app.route('/services')
 def services():
-    return render_template('services.html')
+    services_list = Service.query.filter_by(is_active=True).order_by(Service.order, Service.id).all()
+    return render_template('services.html', services_list=services_list)
 
 @app.route('/team')
 def team():
@@ -2230,6 +2325,99 @@ def admin_brand_delete(brand_id):
     flash('Brend o\'chirildi!', 'success')
     return redirect(url_for('admin_brands'))
 
+
+# ==================== Xizmatlar CRUD ====================
+@app.route('/admin/services')
+@login_required
+def admin_services():
+    services_list = Service.query.order_by(Service.order, Service.id).all()
+    return render_template('admin/services.html', services=services_list)
+
+
+@app.route('/admin/service/add', methods=['GET', 'POST'])
+@login_required
+def admin_service_add():
+    if request.method == 'POST':
+        title_uz = request.form.get('title_uz', '').strip()
+        if not title_uz:
+            flash('Nomi (O\'zbek) majburiy!', 'error')
+            return redirect(url_for('admin_service_add'))
+        svc = Service(
+            title_uz=title_uz,
+            title_ru=request.form.get('title_ru') or auto_translate(title_uz, 'ru'),
+            title_en=request.form.get('title_en') or auto_translate(title_uz, 'en'),
+            description_uz=request.form.get('description_uz', ''),
+            description_ru=request.form.get('description_ru') or auto_translate(request.form.get('description_uz', ''), 'ru'),
+            description_en=request.form.get('description_en') or auto_translate(request.form.get('description_uz', ''), 'en'),
+            features_uz=request.form.get('features_uz', ''),
+            features_ru=request.form.get('features_ru', ''),
+            features_en=request.form.get('features_en', ''),
+            price_label_uz=request.form.get('price_label_uz', ''),
+            price_label_ru=request.form.get('price_label_ru', ''),
+            price_label_en=request.form.get('price_label_en', ''),
+            price_note_uz=request.form.get('price_note_uz', ''),
+            price_note_ru=request.form.get('price_note_ru', ''),
+            price_note_en=request.form.get('price_note_en', ''),
+            cta_text_uz=request.form.get('cta_text_uz', ''),
+            cta_text_ru=request.form.get('cta_text_ru', ''),
+            cta_text_en=request.form.get('cta_text_en', ''),
+            cta_url=request.form.get('cta_url', '/contact') or '/contact',
+            icon=request.form.get('icon', 'design'),
+            icon_theme=request.form.get('icon_theme', 'dark'),
+            order=int(request.form.get('order', 0)),
+            is_active=request.form.get('is_active') == 'on',
+        )
+        db.session.add(svc)
+        db.session.commit()
+        flash('Xizmat qo\'shildi!', 'success')
+        return redirect(url_for('admin_services'))
+    return render_template('admin/service_form.html', service=None)
+
+
+@app.route('/admin/service/<int:service_id>/edit', methods=['GET', 'POST'])
+@login_required
+def admin_service_edit(service_id):
+    svc = Service.query.get_or_404(service_id)
+    if request.method == 'POST':
+        svc.title_uz = request.form.get('title_uz', '').strip()
+        svc.title_ru = request.form.get('title_ru') or auto_translate(svc.title_uz, 'ru')
+        svc.title_en = request.form.get('title_en') or auto_translate(svc.title_uz, 'en')
+        svc.description_uz = request.form.get('description_uz', '')
+        svc.description_ru = request.form.get('description_ru', '')
+        svc.description_en = request.form.get('description_en', '')
+        svc.features_uz = request.form.get('features_uz', '')
+        svc.features_ru = request.form.get('features_ru', '')
+        svc.features_en = request.form.get('features_en', '')
+        svc.price_label_uz = request.form.get('price_label_uz', '')
+        svc.price_label_ru = request.form.get('price_label_ru', '')
+        svc.price_label_en = request.form.get('price_label_en', '')
+        svc.price_note_uz = request.form.get('price_note_uz', '')
+        svc.price_note_ru = request.form.get('price_note_ru', '')
+        svc.price_note_en = request.form.get('price_note_en', '')
+        svc.cta_text_uz = request.form.get('cta_text_uz', '')
+        svc.cta_text_ru = request.form.get('cta_text_ru', '')
+        svc.cta_text_en = request.form.get('cta_text_en', '')
+        svc.cta_url = request.form.get('cta_url', '/contact') or '/contact'
+        svc.icon = request.form.get('icon', 'design')
+        svc.icon_theme = request.form.get('icon_theme', 'dark')
+        svc.order = int(request.form.get('order', 0))
+        svc.is_active = request.form.get('is_active') == 'on'
+        db.session.commit()
+        flash('Xizmat yangilandi!', 'success')
+        return redirect(url_for('admin_services'))
+    return render_template('admin/service_form.html', service=svc)
+
+
+@app.route('/admin/service/<int:service_id>/delete', methods=['POST'])
+@login_required
+def admin_service_delete(service_id):
+    svc = Service.query.get_or_404(service_id)
+    db.session.delete(svc)
+    db.session.commit()
+    flash('Xizmat o\'chirildi!', 'success')
+    return redirect(url_for('admin_services'))
+
+
 # ==================== Mijozlar CRUD ====================
 @app.route('/admin/clients')
 @login_required
@@ -3139,6 +3327,7 @@ if __name__ == '__main__':
         # Create all tables including new models (UserActivity, etc.)
         try:
             db.create_all()
+            seed_default_services()
         except Exception as e:
             print(f"Create all tables error: {e}")
         

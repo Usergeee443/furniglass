@@ -396,6 +396,80 @@ class Brand(db.Model):
         return self.description_uz or ''
 
 
+class Service(db.Model):
+    """Bizning xizmatlar — /services sahifasi kartochkalari"""
+    id = db.Column(db.Integer, primary_key=True)
+    title_uz = db.Column(db.String(200), nullable=False)
+    title_ru = db.Column(db.String(200))
+    title_en = db.Column(db.String(200))
+    description_uz = db.Column(db.Text)
+    description_ru = db.Column(db.Text)
+    description_en = db.Column(db.Text)
+    features_uz = db.Column(db.Text)  # Har qator — bitta band
+    features_ru = db.Column(db.Text)
+    features_en = db.Column(db.Text)
+    price_label_uz = db.Column(db.String(120))
+    price_label_ru = db.Column(db.String(120))
+    price_label_en = db.Column(db.String(120))
+    price_note_uz = db.Column(db.String(200))
+    price_note_ru = db.Column(db.String(200))
+    price_note_en = db.Column(db.String(200))
+    cta_text_uz = db.Column(db.String(100))
+    cta_text_ru = db.Column(db.String(100))
+    cta_text_en = db.Column(db.String(100))
+    cta_url = db.Column(db.String(200), default='/contact')
+    icon = db.Column(db.String(50), default='design')  # design, measure, production, delivery, installation, warranty
+    icon_theme = db.Column(db.String(20), default='dark')  # dark | accent
+    order = db.Column(db.Integer, default=0)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def get_title(self, lang='uz'):
+        if lang == 'ru' and self.title_ru:
+            return self.title_ru
+        if lang == 'en' and self.title_en:
+            return self.title_en
+        return self.title_uz
+
+    def get_description(self, lang='uz'):
+        if lang == 'ru' and self.description_ru:
+            return self.description_ru
+        if lang == 'en' and self.description_en:
+            return self.description_en
+        return self.description_uz or ''
+
+    def get_features(self, lang='uz'):
+        raw = self.features_uz
+        if lang == 'ru' and self.features_ru:
+            raw = self.features_ru
+        elif lang == 'en' and self.features_en:
+            raw = self.features_en
+        if not raw:
+            return []
+        return [line.strip() for line in raw.splitlines() if line.strip()]
+
+    def get_price_label(self, lang='uz'):
+        if lang == 'ru' and self.price_label_ru:
+            return self.price_label_ru
+        if lang == 'en' and self.price_label_en:
+            return self.price_label_en
+        return self.price_label_uz or ''
+
+    def get_price_note(self, lang='uz'):
+        if lang == 'ru' and self.price_note_ru:
+            return self.price_note_ru
+        if lang == 'en' and self.price_note_en:
+            return self.price_note_en
+        return self.price_note_uz or ''
+
+    def get_cta_text(self, lang='uz'):
+        if lang == 'ru' and self.cta_text_ru:
+            return self.cta_text_ru
+        if lang == 'en' and self.cta_text_en:
+            return self.cta_text_en
+        return self.cta_text_uz or ''
+
+
 class Client(db.Model):
     """Bizning mijozlar - testimonial carousel uchun"""
     id = db.Column(db.Integer, primary_key=True)

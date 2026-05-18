@@ -1,0 +1,70 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Xizmatlar - Admin Panel{% endblock %}
+{% block page_title %}Xizmatlar{% endblock %}
+{% block page_subtitle %}Bizning xizmatlar bo'limi{% endblock %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-[#232339] rounded-xl flex items-center justify-center">
+            <i class="fas fa-concierge-bell text-white"></i>
+        </div>
+        <div>
+            <h2 class="text-lg font-bold text-[#232339]">Xizmatlar ro'yxati</h2>
+            <p class="text-sm text-gray-500">Jami: {{ services|length }} ta</p>
+        </div>
+    </div>
+    <a href="/admin/service/add" class="inline-flex items-center justify-center gap-2 bg-[#232339] hover:bg-black text-white px-5 py-2.5 rounded-xl font-medium transition">
+        <i class="fas fa-plus"></i>
+        <span>Yangi xizmat</span>
+    </a>
+</div>
+
+{% if services %}
+<div class="space-y-4">
+    {% for svc in services %}
+    <div class="bg-white rounded-2xl border border-gray-200 p-5 flex flex-col sm:flex-row sm:items-center gap-4 hover:shadow-md transition">
+        <div class="flex items-center gap-4 flex-1 min-w-0">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 {% if svc.icon_theme == 'accent' %}bg-[#F5C242]{% else %}bg-[#232339]{% endif %}">
+                <i class="fas fa-check text-white text-sm"></i>
+            </div>
+            <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <h3 class="font-semibold text-[#232339]">{{ svc.title_uz }}</h3>
+                    {% if svc.is_active %}
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Faol</span>
+                    {% else %}
+                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">Nofaol</span>
+                    {% endif %}
+                </div>
+                <p class="text-sm text-gray-500 truncate">{{ svc.get_price_label('uz') or '—' }} · Tartib: {{ svc.order }}</p>
+            </div>
+        </div>
+        <div class="flex gap-2 flex-shrink-0">
+            <a href="/services" target="_blank" class="px-3 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition" title="Saytda">
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="/admin/service/{{ svc.id }}/edit" class="px-4 py-2 text-sm bg-[#232339] text-white rounded-lg hover:bg-black transition">
+                <i class="fas fa-edit"></i> Tahrirlash
+            </a>
+            <form method="POST" action="/admin/service/{{ svc.id }}/delete" onsubmit="return confirm('Xizmatni o\'chirishni xohlaysizmi?');">
+                <button type="submit" class="px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+    <i class="fas fa-concierge-bell text-6xl text-gray-300 mb-4"></i>
+    <h3 class="text-xl font-semibold text-[#232339] mb-2">Xizmatlar yo'q</h3>
+    <p class="text-gray-500 mb-6">Birinchi xizmatni qo'shing</p>
+    <a href="/admin/service/add" class="inline-flex items-center gap-2 bg-[#232339] text-white px-5 py-2.5 rounded-xl font-medium">
+        <i class="fas fa-plus"></i> Yangi xizmat
+    </a>
+</div>
+{% endif %}
+{% endblock %}

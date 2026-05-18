@@ -221,12 +221,22 @@
     .reveal-section {
         opacity: 0;
         transform: translateY(50px);
-        transition: all 0.8s ease;
+        transition: opacity 0.8s ease, transform 0.8s ease;
     }
     
     .reveal-section.revealed {
         opacity: 1;
         transform: translateY(0);
+    }
+    
+    @media (max-width: 768px) {
+        .reveal-section {
+            transform: none;
+            transition: opacity 0.6s ease;
+        }
+        .reveal-section.revealed {
+            transform: none;
+        }
     }
     
     /* Brands marquee — 3 ta bir xil qator (gap muammosiz), cheksiz silliq aylanish */
@@ -776,7 +786,7 @@
 <section class="py-12 lg:py-16 bg-[#f8f8f8] reveal-section" id="brands-section">
     <div class="container mx-auto px-6 lg:px-16 mb-8 text-center">
         <p class="text-[#f59e0b] text-xs tracking-[0.2em] uppercase mb-3 font-medium">{% if lang == 'ru' %}Партнёры{% elif lang == 'en' %}Partners{% else %}Hamkorlar{% endif %}</p>
-        <h2 class="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-3">{% if lang == 'ru' %}Бренды, которым мы доверяем{% elif lang == 'en' %}Brands that trust us{% else %}Bizga ishonch bildirgan brendlar{% endif %}</h2>
+        <h2 class="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-3">{% if lang == 'ru' %}Бренды, которые нам доверяют{% elif lang == 'en' %}Brands that trust us{% else %}Bizga ishongan brendlar{% endif %}</h2>
         <a href="/brands" class="inline-flex items-center gap-2 text-sm font-medium text-[#1a1a2e] border-b border-[#f59e0b] border-opacity-0 hover:border-opacity-100 hover:text-[#f59e0b] transition-colors pb-0.5">
             {% if lang == 'ru' %}Все бренды{% elif lang == 'en' %}All brands{% else %}Barcha brendlar{% endif %}
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>

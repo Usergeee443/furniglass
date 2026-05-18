@@ -1,0 +1,42 @@
+<div class="service-card bg-white p-8">
+    <div class="w-14 h-14 {% if svc.icon_theme == 'accent' %}bg-[#f59e0b]{% else %}bg-[#1a1a2e]{% endif %} flex items-center justify-center mb-6">
+        {% if svc.icon == 'measure' %}
+        <svg class="w-6 h-6 {% if svc.icon_theme == 'accent' %}text-white{% else %}text-[#f59e0b]{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        {% elif svc.icon == 'production' %}
+        <svg class="w-6 h-6 {% if svc.icon_theme == 'accent' %}text-white{% else %}text-[#f59e0b]{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        {% elif svc.icon == 'delivery' %}
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+        {% elif svc.icon == 'installation' %}
+        <svg class="w-6 h-6 {% if svc.icon_theme == 'accent' %}text-white{% else %}text-[#f59e0b]{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        {% elif svc.icon == 'warranty' %}
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        {% else %}
+        <svg class="w-6 h-6 {% if svc.icon_theme == 'accent' %}text-white{% else %}text-[#f59e0b]{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+        {% endif %}
+    </div>
+    <h3 class="text-xl font-bold text-[#1a1a2e] mb-4">{{ svc.get_title(lang) }}</h3>
+    {% if svc.get_description(lang) %}
+    <p class="text-gray-600 mb-6">{{ svc.get_description(lang) }}</p>
+    {% endif %}
+    {% set features = svc.get_features(lang) %}
+    {% if features %}
+    <ul class="space-y-3 mb-6">
+        {% for feat in features %}
+        <li class="flex items-center gap-3 text-gray-600 text-sm">
+            <svg class="w-4 h-4 text-[#f59e0b] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            {{ feat }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="flex items-center justify-between pt-6 border-t border-gray-100 gap-4 flex-wrap">
+        {% if svc.get_price_label(lang) %}
+        <span class="text-xl font-bold {% if svc.get_price_label(lang)|upper in ['BEPUL', 'FREE', 'БЕСПЛАТНО', 'БЕСПЛАТНО*', 'FREE*'] %}text-[#f59e0b]{% else %}text-gray-500 text-sm font-bold{% endif %}">{{ svc.get_price_label(lang) }}</span>
+        {% endif %}
+        {% if svc.get_cta_text(lang) and svc.cta_url %}
+        <a href="{{ svc.cta_url }}" class="text-[#1a1a2e] font-bold hover:text-[#f59e0b] transition text-sm ml-auto">{{ svc.get_cta_text(lang) }} →</a>
+        {% elif svc.get_price_note(lang) %}
+        <span class="text-sm text-gray-400 ml-auto">{{ svc.get_price_note(lang) }}</span>
+        {% endif %}
+    </div>
+</div>

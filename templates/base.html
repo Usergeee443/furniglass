@@ -419,48 +419,44 @@
             }
         }
         
-        /* Mobile-specific scroll behavior - Optimized for performance */
+        /* Mobile-specific scroll — bitta scroll konteyner, pastda ortiqcha oq joy yo'q */
         @media (max-width: 768px) {
             html {
-                /* Only prevent horizontal overscroll bounce */
                 overscroll-behavior-x: none;
                 overscroll-behavior-y: none;
-                /* Ensure scrolling works - remove overflow restrictions */
-                overflow-y: scroll !important;
+                overflow-x: hidden;
+                overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-                height: 100%;
-                /* Force scroll to work */
-                position: relative;
-                /* Disable smooth scroll for better performance */
+                height: auto;
+                min-height: 100%;
                 scroll-behavior: auto;
                 margin: 0;
                 padding: 0;
-                padding-bottom: 0 !important;
             }
             
             body {
-                /* Allow vertical scroll, only prevent bounce effect */
                 overscroll-behavior-y: none;
                 overscroll-behavior-x: none;
                 -webkit-overflow-scrolling: touch;
-                /* Ensure touch scrolling works - critical for mobile scroll */
-                touch-action: pan-y pan-x;
-                /* Ensure body can scroll - use scroll instead of auto */
-                overflow-y: scroll !important;
+                touch-action: pan-y;
                 overflow-x: hidden;
+                overflow-y: visible;
                 position: relative;
                 height: auto;
-                /* Ensure body is scrollable - use auto instead of 100vh to prevent blank spaces */
-                min-height: auto;
-                /* Force scroll to work on mobile */
-                -webkit-overflow-scrolling: touch;
-                /* Disable smooth scroll for better performance */
+                min-height: 0;
                 scroll-behavior: auto;
-                /* Add padding for bottom nav and safe area - minimal to prevent extra space */
-                padding-bottom: calc(0rem + env(safe-area-inset-bottom, 0px)) !important;
+                padding-bottom: 0 !important;
                 margin-bottom: 0 !important;
-                /* Ensure body can receive touch events */
                 pointer-events: auto;
+            }
+            
+            /* translateY scrollHeight ni kengaytiradi (Safari) — mobilda faqat opacity */
+            .reveal-section {
+                transform: none !important;
+            }
+            
+            .reveal-section.revealed {
+                transform: none !important;
             }
             
             /* Ensure main content is scrollable */
@@ -485,42 +481,25 @@
                 -webkit-backdrop-filter: blur(20px) saturate(150%);
             }
             
-            /* Footer margin for bottom nav - remove duplicate margin and extra padding */
+            /* Pastki nav uchun joy — footer ichida (oq bo'shlik emas) */
             footer {
                 margin-bottom: 0 !important;
-                padding-bottom: 0 !important;
+                padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)) !important;
             }
             
-            /* Remove any extra space after footer */
             footer::after {
                 display: none !important;
             }
             
-            /* Remove any extra space from footer's last child */
-            footer > *:last-child {
-                margin-bottom: 0 !important;
-                padding-bottom: 0 !important;
-            }
-            
-            /* Ensure no extra space in footer container */
             footer .container {
-                padding-bottom: 0 !important;
                 margin-bottom: 0 !important;
             }
             
-            /* Remove extra space from footer's bottom bar */
             footer .border-t {
                 margin-bottom: 0 !important;
             }
         }
         
-        @supports (-webkit-touch-callout: none) {
-            @media (max-width: 768px) {
-                body {
-                    min-height: -webkit-fill-available;
-                }
-            }
-        }
         
         /* Search Modal */
         .search-modal {
